@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Core", "Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "TestApi\TestApi.csproj", "{0557E972-A181-4805-A209-4B6A0CB77A08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "src\TestApi\TestApi.csproj", "{0557E972-A181-4805-A209-4B6A0CB77A08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

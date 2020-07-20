@@ -20,7 +20,7 @@ namespace TestApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddGoogleServices(options => options.UseKey("AIzaSyA2WMBXwBGpeJ7PIi9JIIREPvn6nQxrEk4"));
+            services.AddGoogleServices(options => options.UseKey(string.Empty));
             services.AddSwaggerDocument();
         }
 

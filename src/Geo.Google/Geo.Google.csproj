@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Geo.Core\Geo.Core.csproj" />
+    <ProjectReference Include="..\Geo.Core\Geo.Core.csproj" />
   </ItemGroup>
 
 </Project>

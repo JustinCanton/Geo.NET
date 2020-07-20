@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Geo.Google\Geo.Google.csproj" />
+    <ProjectReference Include="..\Geo.Google\Geo.Google.csproj" />
   </ItemGroup>
 
 
