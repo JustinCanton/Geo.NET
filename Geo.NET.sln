@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "src\TestApi\TestApi.csproj", "{0557E972-A181-4805-A209-4B6A0CB77A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApi", "src\TestApi\TestApi.csproj", "{0557E972-A181-4805-A209-4B6A0CB77A08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Bing", "src\Geo.Bing\Geo.Bing.csproj", "{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0557E972-A181-4805-A209-4B6A0CB77A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0557E972-A181-4805-A209-4B6A0CB77A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0557E972-A181-4805-A209-4B6A0CB77A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
