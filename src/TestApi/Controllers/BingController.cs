@@ -6,7 +6,7 @@ namespace TestApi.Controllers
 {
     using System.Threading.Tasks;
     using Geo.Bing.Abstractions;
-    using Geo.Bing.Models;
+    using Geo.Bing.Models.Parameters;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -32,12 +32,12 @@ namespace TestApi.Controllers
             return Ok(results);
         }
 
-        /*[HttpGet("reverse-geocoding")]
+        [HttpGet("reverse-geocoding")]
         public async Task<IActionResult> GetReverseGeocodingResults([FromQuery] ReverseGeocodingParameters parameters)
         {
-            var results = await _googleGeocoding.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var results = await _bingGeocoding.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
 
             return Ok(results);
-        }*/
+        }
     }
 }
