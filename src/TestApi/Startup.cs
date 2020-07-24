@@ -1,12 +1,17 @@
-using Geo.Google.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+// <copyright file="Startup.cs" company="Geo.NET">
+// Copyright (c) Geo.NET. All rights reserved.
+// </copyright>
 
 namespace TestApi
 {
+    using Geo.Bing.DependencyInjection;
+    using Geo.Google.DependencyInjection;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -21,6 +26,7 @@ namespace TestApi
         {
             services.AddControllers();
             services.AddGoogleServices(options => options.UseKey(string.Empty));
+            services.AddBingServices(options => options.UseKey(string.Empty));
             services.AddSwaggerDocument();
         }
 
