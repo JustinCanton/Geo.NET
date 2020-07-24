@@ -6,7 +6,6 @@ namespace Geo.Google.Services
 {
     using System;
     using System.Net.Http;
-    using System.Reflection.Metadata;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,11 +17,11 @@ namespace Geo.Google.Services
     using Geo.Google.Models;
 
     /// <summary>
-    /// A service to call the google geocoding api.
+    /// A service to call the Google geocoding api.
     /// </summary>
     public class GoogleGeocoding : ClientExecutor, IGoogleGeocoding
     {
-        private readonly string baseUri = "https://maps.googleapis.com/maps/api/geocode/json";
+        private readonly string _baseUri = "https://maps.googleapis.com/maps/api/geocode/json";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleGeocoding"/> class.
@@ -66,7 +65,7 @@ namespace Geo.Google.Services
         /// <returns>A <see cref="Uri"/> with the completed Google geocoding uri.</returns>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(baseUri);
+            var uriBuilder = new UriBuilder(_baseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.Address != null)
@@ -76,7 +75,7 @@ namespace Geo.Google.Services
 
             if (parameters.Components != null)
             {
-                query.Add("components ", parameters.Components);
+                query.Add("components", parameters.Components);
             }
 
             if (parameters.Bounds != null &&
@@ -96,7 +95,7 @@ namespace Geo.Google.Services
                 query.Add("language", parameters.Language);
             }
 
-            query.Add("key", KeyContainer.GetKey());
+            query.Add("key", GoogleKeyContainer.GetKey());
 
             uriBuilder.Query = query.ToString();
 
@@ -110,7 +109,7 @@ namespace Geo.Google.Services
         /// <returns>A <see cref="Uri"/> with the completed Google reverse geocoding uri.</returns>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(baseUri);
+            var uriBuilder = new UriBuilder(_baseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.Coordinate != null)
@@ -155,7 +154,7 @@ namespace Geo.Google.Services
                 query.Add("language", parameters.Language);
             }
 
-            query.Add("key", KeyContainer.GetKey());
+            query.Add("key", GoogleKeyContainer.GetKey());
 
             uriBuilder.Query = query.ToString();
 

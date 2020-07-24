@@ -15,7 +15,7 @@ namespace Geo.Google.Models
     public class AddressComponent
     {
         [JsonProperty("types")]
-        private readonly List<AddressType> types = new List<AddressType>();
+        private readonly List<AddressType> _types = new List<AddressType>();
 
         /// <summary>
         /// Gets or sets the full text description or name of the address component as returned by the Geocoder.
@@ -36,7 +36,7 @@ namespace Geo.Google.Models
         {
             get
             {
-                return types.AsReadOnly();
+                return _types.AsReadOnly();
             }
         }
 
@@ -46,7 +46,7 @@ namespace Geo.Google.Models
         /// <param name="type">The type to add.</param>
         public void AddType(AddressType type)
         {
-            types.Add(type);
+            _types.Add(type);
         }
     }
 }

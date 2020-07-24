@@ -19,13 +19,17 @@ namespace Geo.Google.DependencyInjection
         /// Adds the Google services to the service collection.
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the Google services to.</param>
+        /// <param name="optionsBuilder">A <see cref="Action{GoogleOptionsBuilder}"/> with the options to add to the Google configuration.</param>
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddGoogleServices(this IServiceCollection services, Action<GoogleOptionsBuilder> optionsBuilder)
         {
-            var options = new GoogleOptionsBuilder();
-            optionsBuilder(options);
+            if (optionsBuilder != null)
+            {
+                var options = new GoogleOptionsBuilder();
+                optionsBuilder(options);
 
-            KeyContainer.SetKey(options.Key);
+                GoogleKeyContainer.SetKey(options.Key);
+            }
 
             services.AddHttpClient<IGoogleGeocoding, GoogleGeocoding>();
 

@@ -12,7 +12,7 @@ namespace Geo.Google.Models
     public class GoogleOptionsBuilder
     {
         /// <summary>
-        /// Gets or sets the key associated with the Google API calls.
+        /// Gets the key associated with the Google API calls.
         /// </summary>
         public string Key { get; private set; }
 

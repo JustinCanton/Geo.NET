@@ -1,4 +1,4 @@
-﻿// <copyright file="Client.cs" company="Geo.NET">
+﻿// <copyright file="ClientExecutor.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -30,7 +30,7 @@ namespace Geo.Core
         /// Places a call to the API based on a uri.
         /// </summary>
         /// <typeparam name="T">The return type to pasre the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="uri">The <see cref=\"Uri\"/> to call.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="T"/>.</returns>
         public async Task<T> CallAsync<T>(Uri uri, CancellationToken cancellationToken = default)
