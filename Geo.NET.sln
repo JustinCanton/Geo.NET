@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Google", "src\Geo.Google\Geo.Google.csproj", "{CCC422FD-3B45-457B-87A7-461D50E91334}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{B3BD11A7-1752-49E3-AE50-A65B5FE7B7B2}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.build.props = Directory.build.props
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "src\TestApi\TestApi.csproj", "{0557E972-A181-4805-A209-4B6A0CB77A08}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0557E972-A181-4805-A209-4B6A0CB77A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0557E972-A181-4805-A209-4B6A0CB77A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0557E972-A181-4805-A209-4B6A0CB77A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0557E972-A181-4805-A209-4B6A0CB77A08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4B688C4-40EC-4577-9EB2-4CF2412DA0B1}
+	EndGlobalSection
+EndGlobal
