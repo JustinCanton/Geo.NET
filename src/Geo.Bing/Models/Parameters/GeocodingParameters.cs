@@ -4,8 +4,6 @@
 
 namespace Geo.Bing.Models.Parameters
 {
-    using System.ComponentModel.DataAnnotations;
-
     /// <summary>
     /// Parameters for the Bing geocoding query.
     /// </summary>

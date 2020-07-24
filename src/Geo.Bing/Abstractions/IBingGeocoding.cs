@@ -21,6 +21,7 @@ namespace Geo.Bing.Abstractions
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response"/> with the response from Bing.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null.</exception>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or empty.</exception>
         Task<Response> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
 
@@ -30,7 +31,18 @@ namespace Geo.Bing.Abstractions
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response"/> with the response from Bing.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null.</exception>
         /// <exception cref="ArgumentException">Thrown when the 'Point' parameter is null or invalid.</exception>
         Task<Response> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calls the Bing address geocoding API and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="AddressGeocodingParameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="Response"/> with the response from Bing.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when there are no parameters passed in.</exception>
+        Task<Response> AddressGeocodingAsync(AddressGeocodingParameters parameters, CancellationToken cancellationToken = default);
     }
 }

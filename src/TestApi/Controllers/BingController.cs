@@ -39,5 +39,13 @@ namespace TestApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("address-geocoding")]
+        public async Task<IActionResult> GetAddressGeocodingResults([FromQuery] AddressGeocodingParameters parameters)
+        {
+            var results = await _bingGeocoding.AddressGeocodingAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
     }
 }

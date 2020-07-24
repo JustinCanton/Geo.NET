@@ -57,6 +57,17 @@ namespace Geo.Bing.Services
             return await CallAsync<Response>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
+        public async Task<Response> AddressGeocodingAsync(AddressGeocodingParameters parameters, CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<Response>(BuildAddressGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Builds the geocoding uri based on the passed parameters.
         /// </summary>
@@ -87,8 +98,8 @@ namespace Geo.Bing.Services
         /// <summary>
         /// Builds the reverse geocoding uri based on the passed parameters.
         /// </summary>
-        /// <param name="parameters">A <see cref="GeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed Google reverse geocoding uri.</returns>
+        /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Bing reverse geocoding uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Point' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
@@ -172,6 +183,60 @@ namespace Geo.Bing.Services
             }
 
             BuildBaseQuery(parameters, ref query);
+
+            query.Add("key", BingKeyContainer.GetKey());
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the address geocoding uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="AddressGeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Bing reverse geocoding uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Point' parameter is null or invalid.</exception>
+        internal Uri BuildAddressGeocodingRequest(AddressGeocodingParameters parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters.AdministrationDistrict) &&
+                string.IsNullOrWhiteSpace(parameters.Locality) &&
+                string.IsNullOrWhiteSpace(parameters.PostalCode) &&
+                string.IsNullOrWhiteSpace(parameters.AddressLine) &&
+                string.IsNullOrWhiteSpace(parameters.CountryRegion))
+            {
+                throw new ArgumentException("The address information cannot all be null or empty", nameof(parameters));
+            }
+
+            var uriBuilder = new UriBuilder(_baseUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (!string.IsNullOrWhiteSpace(parameters.AdministrationDistrict))
+            {
+                query.Add("adminDistrict", parameters.AdministrationDistrict);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Locality))
+            {
+                query.Add("locality", parameters.Locality);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.PostalCode))
+            {
+                query.Add("postalCode", parameters.PostalCode);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.AddressLine))
+            {
+                query.Add("addressLine", parameters.AddressLine);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.CountryRegion))
+            {
+                query.Add("countryRegion", parameters.CountryRegion);
+            }
+
+            BuildLimitedResultQuery(parameters, ref query);
 
             query.Add("key", BingKeyContainer.GetKey());
 
