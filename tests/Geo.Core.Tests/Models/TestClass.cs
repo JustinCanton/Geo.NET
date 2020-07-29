@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Core.Tests.TestModels
+namespace Geo.Core.Tests.Models
 {
     /// <summary>
     /// A test data class used during testing.

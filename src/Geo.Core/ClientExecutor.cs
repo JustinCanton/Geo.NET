@@ -43,50 +43,11 @@ namespace Geo.Core
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
         public async Task<T> CallAsync<T>(Uri uri, CancellationToken cancellationToken = default)
         {
-            TaskCompletionSource<T> task = new TaskCompletionSource<T>();
+            var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-            Task<HttpResponseMessage> response;
+            var json = response.Content.ReadAsStringAsync().Result;
 
-            try
-            {
-                response = _client.GetAsync(uri, cancellationToken);
-                await response.ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                task.SetException(ex);
-
-                return await task.Task.ConfigureAwait(false);
-            }
-            catch (HttpRequestException ex)
-            {
-                task.SetException(ex);
-
-                return await task.Task.ConfigureAwait(false);
-            }
-            catch (TaskCanceledException)
-            {
-                task.SetCanceled();
-
-                return await task.Task.ConfigureAwait(false);
-            }
-
-            var json = response.Result.Content.ReadAsStringAsync().Result;
-
-            try
-            {
-                task.SetResult(JsonConvert.DeserializeObject<T>(json));
-            }
-            catch (JsonReaderException ex)
-            {
-                task.SetException(ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                task.SetException(ex);
-            }
-
-            return await task.Task.ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

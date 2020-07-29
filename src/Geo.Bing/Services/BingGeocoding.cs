@@ -87,7 +87,7 @@ namespace Geo.Bing.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                throw new ArgumentException("The query cannot be null or empty", nameof(parameters.Query));
+                throw new ArgumentException("The query cannot be null or empty.", nameof(parameters.Query));
             }
 
             query.Add("query", parameters.Query);
@@ -111,7 +111,7 @@ namespace Geo.Bing.Services
         {
             if (parameters.Point is null)
             {
-                throw new ArgumentException("The point cannot be null", nameof(parameters.Point));
+                throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
             }
 
             var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.Latitude},{parameters.Point.Longitude}");
@@ -211,7 +211,7 @@ namespace Geo.Bing.Services
                 string.IsNullOrWhiteSpace(parameters.AddressLine) &&
                 string.IsNullOrWhiteSpace(parameters.CountryRegion))
             {
-                throw new ArgumentException("The address information cannot all be null or empty", nameof(parameters));
+                throw new ArgumentException("The address information cannot all be null or empty.", nameof(parameters));
             }
 
             var uriBuilder = new UriBuilder(_baseUri);

@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Tests.TestEnums
+namespace Geo.Google.Tests.Enums
 {
     using System.Runtime.Serialization;
 
@@ -11,6 +11,11 @@ namespace Geo.Google.Tests.TestEnums
     /// </summary>
     public enum Test
     {
+        /// <summary>
+        /// A default enum value.
+        /// </summary>
+        Unknown,
+
         /// <summary>
         /// An enum value with an enum member attribute.
         /// </summary>

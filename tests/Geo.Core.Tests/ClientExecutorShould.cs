@@ -11,7 +11,7 @@ namespace Geo.Core.Tests
     using System.Threading.Tasks;
     using FluentAssertions;
     using Geo.Core;
-    using Geo.Core.Tests.TestModels;
+    using Geo.Core.Tests.Models;
     using Moq;
     using Moq.Protected;
     using Newtonsoft.Json;
@@ -81,10 +81,7 @@ namespace Geo.Core.Tests
                     Content = new StringContent("{'TestField':1}"),
                 });
 
-            _httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://testing.com/"),
-            };
+            _httpClient = new HttpClient(handlerMock.Object);
         }
 
         /// <summary>

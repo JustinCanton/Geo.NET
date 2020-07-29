@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Core.Tests.TestModels
+namespace Geo.Core.Tests.Models
 {
     using System.Net.Http;
     using Geo.Core;

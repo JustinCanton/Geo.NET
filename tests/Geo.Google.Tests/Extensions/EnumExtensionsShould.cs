@@ -2,12 +2,12 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Tests
+namespace Geo.Google.Tests.Extensions
 {
     using System;
     using FluentAssertions;
     using Geo.Google.Extensions;
-    using Geo.Google.Tests.TestEnums;
+    using Geo.Google.Tests.Enums;
     using NUnit.Framework;
 
     /// <summary>

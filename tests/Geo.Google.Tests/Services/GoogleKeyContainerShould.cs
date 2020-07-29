@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Tests
+namespace Geo.Google.Tests.Services
 {
     using FluentAssertions;
     using Geo.Google.Services;

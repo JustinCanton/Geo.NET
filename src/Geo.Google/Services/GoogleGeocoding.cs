@@ -1,6 +1,9 @@
 ﻿// <copyright file="GoogleGeocoding.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.Google.Tests")]
 
 namespace Geo.Google.Services
 {
@@ -77,7 +80,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Address))
             {
-                throw new ArgumentException("The address cannot be null or empty", nameof(parameters.Address));
+                throw new ArgumentException("The address cannot be null or empty.", nameof(parameters.Address));
             }
 
             query.Add("address", parameters.Address);
@@ -124,7 +127,7 @@ namespace Geo.Google.Services
 
             if (parameters.Coordinate is null)
             {
-                throw new ArgumentException("The coordinates cannot be null", nameof(parameters.Coordinate));
+                throw new ArgumentException("The coordinates cannot be null.", nameof(parameters.Coordinate));
             }
 
             query.Add("latlng", parameters.Coordinate.ToString());
@@ -158,7 +161,7 @@ namespace Geo.Google.Services
                     locationTypesBuilder.Append(locationType.ToEnumString<LocationType>());
                 }
 
-                query.Add("location_type ", locationTypesBuilder.ToString());
+                query.Add("location_type", locationTypesBuilder.ToString());
             }
 
             if (parameters.Language != null)
