@@ -28,7 +28,11 @@ namespace Geo.Bing.DependencyInjection
                 var options = new BingOptionsBuilder();
                 optionsBuilder(options);
 
-                BingKeyContainer.SetKey(options.Key);
+                services.AddSingleton<IBingKeyContainer>(new BingKeyContainer(options.Key));
+            }
+            else
+            {
+                services.AddSingleton<IBingKeyContainer>(new BingKeyContainer(string.Empty));
             }
 
             services.AddHttpClient<IBingGeocoding, BingGeocoding>();

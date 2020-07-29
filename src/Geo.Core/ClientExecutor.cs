@@ -33,14 +33,23 @@ namespace Geo.Core
         /// <param name="uri">The <see cref=\"Uri\"/> to call.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the request uri is null.</exception>
+        /// <exception cref="HttpRequestException">
+        /// Thrown when the request failed due to an underlying issue such as network connectivity,
+        /// DNS failure, server certificate validation or timeout.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">Thrown when the request is cancelled.</exception>
+        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
+        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
         public async Task<T> CallAsync<T>(Uri uri, CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<T> task = new TaskCompletionSource<T>();
 
-            var response = _client.GetAsync(uri, cancellationToken);
+            Task<HttpResponseMessage> response;
 
             try
             {
+                response = _client.GetAsync(uri, cancellationToken);
                 await response.ConfigureAwait(false);
             }
             catch (ArgumentNullException ex)
@@ -55,19 +64,26 @@ namespace Geo.Core
 
                 return await task.Task.ConfigureAwait(false);
             }
-
-            if (response.IsFaulted)
-            {
-                task.SetException(response.Exception);
-            }
-            else if (response.IsCanceled)
+            catch (TaskCanceledException)
             {
                 task.SetCanceled();
+
+                return await task.Task.ConfigureAwait(false);
             }
-            else
+
+            var json = response.Result.Content.ReadAsStringAsync().Result;
+
+            try
             {
-                var json = response.Result.Content.ReadAsStringAsync().Result;
                 task.SetResult(JsonConvert.DeserializeObject<T>(json));
+            }
+            catch (JsonReaderException ex)
+            {
+                task.SetException(ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                task.SetException(ex);
             }
 
             return await task.Task.ConfigureAwait(false);

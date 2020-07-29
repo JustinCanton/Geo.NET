@@ -28,7 +28,11 @@ namespace Geo.Google.DependencyInjection
                 var options = new GoogleOptionsBuilder();
                 optionsBuilder(options);
 
-                GoogleKeyContainer.SetKey(options.Key);
+                services.AddSingleton<IGoogleKeyContainer>(new GoogleKeyContainer(options.Key));
+            }
+            else
+            {
+                services.AddSingleton<IGoogleKeyContainer>(new GoogleKeyContainer(string.Empty));
             }
 
             services.AddHttpClient<IGoogleGeocoding, GoogleGeocoding>();

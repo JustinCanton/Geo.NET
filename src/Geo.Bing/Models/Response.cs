@@ -4,6 +4,7 @@
 
 namespace Geo.Bing.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace Geo.Bing.Models
         /// Gets or sets a URL that references a brand image to support contractual branding requirements.
         /// </summary>
         [JsonProperty("brandLogoUri")]
-        public string BrandLogoUri { get; set; }
+        public Uri BrandLogoUri { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP Status code for the request.

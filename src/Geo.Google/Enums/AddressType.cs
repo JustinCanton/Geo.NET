@@ -247,5 +247,11 @@ namespace Geo.Google.Enums
         /// </summary>
         [EnumMember(Value = "transit_station")]
         TransitStation,
+
+        /// <summary>
+        /// Indicates the location of a public store.
+        /// </summary>
+        [EnumMember(Value = "store")]
+        Store,
     }
 }

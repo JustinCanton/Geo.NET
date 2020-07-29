@@ -4,31 +4,28 @@
 
 namespace Geo.Bing.Models
 {
-    using System;
-    using Geo.Core.Services;
+    using Geo.Bing.Abstractions;
 
     /// <summary>
     /// A container class for keeping the Bing API key.
     /// </summary>
-    public class BingKeyContainer : KeyContainer
+    public class BingKeyContainer : IBingKeyContainer
     {
-        /// <summary>
-        /// Gets the current Bing API key.
-        /// </summary>
-        /// <returns>The Bing API key.</returns>
-        public static string GetKey()
-        {
-            return GetKey(typeof(BingKeyContainer));
-        }
+        private readonly string _key = string.Empty;
 
         /// <summary>
-        /// Sets the Bing API key.
+        /// Initializes a new instance of the <see cref="BingKeyContainer"/> class.
         /// </summary>
-        /// <param name="key">The key to set.</param>
-        /// <exception cref="InvalidOperationException">Thrown when the key tries to be overwritten.</exception>
-        public static void SetKey(string key)
+        /// <param name="key">The key to use for Bing requests.</param>
+        public BingKeyContainer(string key)
         {
-            SetKey(typeof(BingKeyContainer), key);
+            _key = key;
+        }
+
+        /// <inheritdoc/>
+        public string GetKey()
+        {
+            return _key;
         }
     }
 }
