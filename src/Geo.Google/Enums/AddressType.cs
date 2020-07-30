@@ -247,5 +247,35 @@ namespace Geo.Google.Enums
         /// </summary>
         [EnumMember(Value = "transit_station")]
         TransitStation,
+
+        /// <summary>
+        /// Indicates the location of a public store.
+        /// </summary>
+        [EnumMember(Value = "store")]
+        Store,
+
+        /// <summary>
+        /// Indicates the postal code suffix.
+        /// </summary>
+        [EnumMember(Value = "postal_code_suffix")]
+        PostalCodeSuffix,
+
+        /// <summary>
+        /// Indicates the location has an atm.
+        /// </summary>
+        [EnumMember(Value = "atm")]
+        Atm,
+
+        /// <summary>
+        /// Indicates the location has an bank.
+        /// </summary>
+        [EnumMember(Value = "bank")]
+        Bank,
+
+        /// <summary>
+        /// Indicates the location is a financial institution.
+        /// </summary>
+        [EnumMember(Value = "finance")]
+        Finance,
     }
 }

@@ -6,6 +6,7 @@ namespace Geo.Google.Models
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Geo.Google.Converters;
     using Geo.Google.Enums;
     using Newtonsoft.Json;
 
@@ -14,7 +15,7 @@ namespace Geo.Google.Models
     /// </summary>
     public class AddressComponent
     {
-        [JsonProperty("types")]
+        [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
         private readonly List<AddressType> _types = new List<AddressType>();
 
         /// <summary>

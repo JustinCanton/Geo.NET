@@ -2,9 +2,14 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.Google.Tests")]
+
 namespace Geo.Google.Services
 {
     using System;
+    using System.Collections.Specialized;
     using System.Net.Http;
     using System.Text;
     using System.Threading;
@@ -22,14 +27,19 @@ namespace Geo.Google.Services
     public class GoogleGeocoding : ClientExecutor, IGoogleGeocoding
     {
         private readonly string _baseUri = "https://maps.googleapis.com/maps/api/geocode/json";
+        private readonly IGoogleKeyContainer _keyContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Google Geocoding API.</param>
-        public GoogleGeocoding(HttpClient client)
+        /// <param name="keyContainer">A <see cref="IGoogleKeyContainer"/> used for fetching the Google key.</param>
+        public GoogleGeocoding(
+            HttpClient client,
+            IGoogleKeyContainer keyContainer)
             : base(client)
         {
+            _keyContainer = keyContainer;
         }
 
         /// <inheritdoc/>
@@ -63,15 +73,18 @@ namespace Geo.Google.Services
         /// </summary>
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the geocoding parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed Google geocoding uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Address' parameter is null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(_baseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
-            if (parameters.Address != null)
+            if (string.IsNullOrWhiteSpace(parameters.Address))
             {
-                query.Add("address", parameters.Address);
+                throw new ArgumentException("The address cannot be null or empty.", nameof(parameters.Address));
             }
+
+            query.Add("address", parameters.Address);
 
             if (parameters.Components != null)
             {
@@ -95,7 +108,7 @@ namespace Geo.Google.Services
                 query.Add("language", parameters.Language);
             }
 
-            query.Add("key", GoogleKeyContainer.GetKey());
+            AddGoogleKey(query);
 
             uriBuilder.Query = query.ToString();
 
@@ -107,15 +120,18 @@ namespace Geo.Google.Services
         /// </summary>
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed Google reverse geocoding uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Coordinate' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(_baseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
-            if (parameters.Coordinate != null)
+            if (parameters.Coordinate is null)
             {
-                query.Add("latlng", parameters.Coordinate.ToString());
+                throw new ArgumentException("The coordinates cannot be null.", nameof(parameters.Coordinate));
             }
+
+            query.Add("latlng", parameters.Coordinate.ToString());
 
             if (parameters.ResultTypes != null)
             {
@@ -146,7 +162,7 @@ namespace Geo.Google.Services
                     locationTypesBuilder.Append(locationType.ToEnumString<LocationType>());
                 }
 
-                query.Add("location_type ", locationTypesBuilder.ToString());
+                query.Add("location_type", locationTypesBuilder.ToString());
             }
 
             if (parameters.Language != null)
@@ -154,11 +170,20 @@ namespace Geo.Google.Services
                 query.Add("language", parameters.Language);
             }
 
-            query.Add("key", GoogleKeyContainer.GetKey());
+            AddGoogleKey(query);
 
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Adds the Google key to the query parameters.
+        /// </summary>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddGoogleKey(NameValueCollection query)
+        {
+            query.Add("key", _keyContainer.GetKey());
         }
     }
 }

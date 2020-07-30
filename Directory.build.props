@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Geo.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
   </ItemGroup>

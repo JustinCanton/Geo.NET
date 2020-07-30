@@ -2,10 +2,15 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.Bing.Tests")]
+
 namespace Geo.Bing.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,14 +26,19 @@ namespace Geo.Bing.Services
     public class BingGeocoding : ClientExecutor, IBingGeocoding
     {
         private readonly string _baseUri = "http://dev.virtualearth.net/REST/v1/Locations";
+        private readonly IBingKeyContainer _keyContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Google Geocoding API.</param>
-        public BingGeocoding(HttpClient client)
+        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
+        /// <param name="keyContainer">A <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
+        public BingGeocoding(
+            HttpClient client,
+            IBingKeyContainer keyContainer)
             : base(client)
         {
+            _keyContainer = keyContainer;
         }
 
         /// <inheritdoc/>
@@ -81,14 +91,14 @@ namespace Geo.Bing.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                throw new ArgumentException("The query cannot be null or empty", nameof(parameters.Query));
+                throw new ArgumentException("The query cannot be null or empty.", nameof(parameters.Query));
             }
 
             query.Add("query", parameters.Query);
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            query.Add("key", BingKeyContainer.GetKey());
+            AddBingKey(query);
 
             uriBuilder.Query = query.ToString();
 
@@ -105,10 +115,10 @@ namespace Geo.Bing.Services
         {
             if (parameters.Point is null)
             {
-                throw new ArgumentException("The point cannot be null", nameof(parameters.Point));
+                throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.Latitude},{parameters.Point.Longitude}");
+            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.ToString()}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             var includes = string.Empty;
@@ -184,7 +194,7 @@ namespace Geo.Bing.Services
 
             BuildBaseQuery(parameters, ref query);
 
-            query.Add("key", BingKeyContainer.GetKey());
+            AddBingKey(query);
 
             uriBuilder.Query = query.ToString();
 
@@ -205,7 +215,7 @@ namespace Geo.Bing.Services
                 string.IsNullOrWhiteSpace(parameters.AddressLine) &&
                 string.IsNullOrWhiteSpace(parameters.CountryRegion))
             {
-                throw new ArgumentException("The address information cannot all be null or empty", nameof(parameters));
+                throw new ArgumentException("The address information cannot all be null or empty.", nameof(parameters));
             }
 
             var uriBuilder = new UriBuilder(_baseUri);
@@ -238,7 +248,7 @@ namespace Geo.Bing.Services
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            query.Add("key", BingKeyContainer.GetKey());
+            AddBingKey(query);
 
             uriBuilder.Query = query.ToString();
 
@@ -254,7 +264,7 @@ namespace Geo.Bing.Services
         {
             if (parameters.MaximumResults > 0 && parameters.MaximumResults <= 20)
             {
-                query.Add("maxResults", parameters.MaximumResults.ToString());
+                query.Add("maxResults", parameters.MaximumResults.ToString(CultureInfo.InvariantCulture));
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -292,6 +302,15 @@ namespace Geo.Bing.Services
             {
                 query.Add("include", includes);
             }
+        }
+
+        /// <summary>
+        /// Adds the Bing key to the query parameters.
+        /// </summary>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddBingKey(NameValueCollection query)
+        {
+            query.Add("key", _keyContainer.GetKey());
         }
     }
 }

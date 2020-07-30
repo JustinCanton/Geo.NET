@@ -19,6 +19,7 @@ namespace Geo.Google.Extensions
         /// <typeparam name="T">The enum type to convert.</typeparam>
         /// <param name="value">The enum value to convert.</param>
         /// <returns>A string with the enum value name.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when there is no <see cref="EnumMemberAttribute"/> on the enum.</exception>
         public static string ToEnumString<T>(this T value)
         {
             var enumType = typeof(T);

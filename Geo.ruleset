@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Geo .NET Rules" Description="These rules are set for better organization of code" ToolsVersion="15.0">
+	<Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+		<Rule Id="IDE0001" Action="None"/>
+	</Rules>
+	<Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+		<Rule Id="SA1101" Action="None"/>
+		<Rule Id="SA1305" Action="Warning"/>
+		<Rule Id="SA1309" Action="None"/>
+		<Rule Id="SX1101" Action="Warning"/>
+		<Rule Id="SX1309" Action="Warning"/>
+	</Rules>
+</RuleSet>
