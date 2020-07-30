@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Bing.Models
+namespace Geo.Bing.Services
 {
     using Geo.Bing.Abstractions;
 

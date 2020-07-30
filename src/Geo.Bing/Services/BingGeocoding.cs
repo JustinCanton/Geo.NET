@@ -2,6 +2,10 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.Bing.Tests")]
+
 namespace Geo.Bing.Services
 {
     using System;
@@ -114,7 +118,7 @@ namespace Geo.Bing.Services
                 throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.Latitude},{parameters.Point.Longitude}");
+            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.ToString()}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             var includes = string.Empty;

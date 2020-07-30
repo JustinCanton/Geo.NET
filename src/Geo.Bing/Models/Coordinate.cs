@@ -24,5 +24,11 @@ namespace Geo.Bing.Models
         /// </summary>
         [JsonProperty("longitude")]
         public double Longitude { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{Latitude},{Longitude}";
+        }
     }
 }

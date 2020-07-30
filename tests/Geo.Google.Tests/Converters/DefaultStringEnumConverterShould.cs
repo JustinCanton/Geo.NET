@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Tests.Services
+namespace Geo.Google.Tests.Converters
 {
     using FluentAssertions;
     using Geo.Google.Converters;

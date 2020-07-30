@@ -220,7 +220,7 @@ namespace Geo.Google.Tests.Services
             var service = new GoogleGeocoding(_httpClient, _keyContainer);
             var parameters = new GeocodingParameters()
             {
-                Address = "123 East",
+                Address = "1600 Amphitheatre Pkwy, Mountain View",
             };
 
             var response = await service.GeocodingAsync(parameters).ConfigureAwait(false);
