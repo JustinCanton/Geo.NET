@@ -29,7 +29,7 @@ namespace Geo.Core
         /// <summary>
         /// Places a call to the API based on a uri.
         /// </summary>
-        /// <typeparam name="T">The return type to pasre the response into.</typeparam>
+        /// <typeparam name="T">The return type to parse the response into.</typeparam>
         /// <param name="uri">The <see cref=\"Uri\"/> to call.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="T"/>.</returns>
