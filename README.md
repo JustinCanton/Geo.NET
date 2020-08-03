@@ -31,12 +31,15 @@ The planned support for this project includes:
 	 - [ ] Api
 		 - [ ] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [ ] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
+ - MapBox
+	 - [ ] [Geocoding](https://docs.mapbox.com/api/search/#forward-geocoding)
+	 - [ ] [Reverse Geocoding](https://docs.mapbox.com/api/search/#reverse-geocoding)
 
 ## Get Started
 
 Use a form of [Visual Studio](https://www.visualstudio.com/)  to work with the project for a seamless experience.
 
-Pull the project open the Geo.NET.sln file.
+Pull the project, and open the Geo.NET.sln file to build this library.
 
 Some of the best ways to contribute are to try things out, file issues, join in design conversations, and make pull-requests.
 
