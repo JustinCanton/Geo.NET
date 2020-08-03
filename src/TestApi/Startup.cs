@@ -4,6 +4,7 @@
 
 namespace TestApi
 {
+    using Geo.ArcGIS.DependencyInjection;
     using Geo.Bing.DependencyInjection;
     using Geo.Google.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,7 @@ namespace TestApi
             services.AddControllers();
             services.AddGoogleServices(options => options.UseKey(string.Empty));
             services.AddBingServices(options => options.UseKey(string.Empty));
+            services.AddArcGISServices(options => options.UseClientKeys(string.Empty, string.Empty));
             services.AddSwaggerDocument();
         }
 

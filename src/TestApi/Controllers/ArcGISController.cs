@@ -55,5 +55,13 @@ namespace TestApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("geocoding")]
+        public async Task<IActionResult> GetGeocodingResults([FromQuery] GeocodingParameters parameters)
+        {
+            var results = await _arcGISGeocoding.GeocodingAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
     }
 }

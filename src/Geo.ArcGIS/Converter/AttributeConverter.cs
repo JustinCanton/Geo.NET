@@ -51,7 +51,11 @@ namespace Geo.ArcGIS.Converter
             }
 
             Models.Responses.Attribute attr;
-            if (!string.IsNullOrWhiteSpace((string)obj["Match_addr"]))
+            if (!string.IsNullOrWhiteSpace((string)obj["LongLabel"]))
+            {
+                attr = new LocationAttribute();
+            }
+            else if (!string.IsNullOrWhiteSpace((string)obj["Match_addr"]))
             {
                 attr = new AddressAttribute();
             }

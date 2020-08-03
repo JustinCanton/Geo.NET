@@ -78,7 +78,7 @@ namespace Geo.ArcGIS.Models.Responses
         public string Neighborhood { get; set; }
 
         /// <summary>
-        /// Gets of sets the district of the address.
+        /// Gets or sets the district of the address.
         /// </summary>
         [JsonProperty("District")]
         public string District { get; set; }

@@ -5,10 +5,10 @@ This is a simple, light-weight solution for interfacing with multiple geocoding 
 The planned support for this project includes:
 
  - Google
-	 - [x] Geocoding
-	 - [x] Reverse Geocoding
-	 - [ ] Places
-	 - [ ] Autocomplete
+	 - [x] [Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
+	 - [x] [Reverse Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
+	 - [ ] Places ([Search](https://developers.google.com/places/web-service/search) and [Details](https://developers.google.com/places/web-service/details))
+	 - [ ] [Autocomplete](https://developers.google.com/places/web-service/query)
  - Bing
 	 - [x] [Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query)
 	 - [x] [Reverse Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-point)
@@ -17,7 +17,7 @@ The planned support for this project includes:
 	 - [x] [Suggest](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-suggest.htm)
 	 - [x] [Address Candidate](https://developers.arcgis.com/labs/rest/search-for-an-address/)
 	 - [x] [Place Candidate](https://developers.arcgis.com/labs/rest/find-places/)
-	 - [ ] [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
+	 - [x] [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
 	 - [x] [Reverse Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm)
  - here
 	 - [ ] [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)

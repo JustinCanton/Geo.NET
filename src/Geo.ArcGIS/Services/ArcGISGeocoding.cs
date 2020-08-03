@@ -5,6 +5,7 @@
 namespace Geo.ArcGIS.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Net.Http;
@@ -18,6 +19,7 @@ namespace Geo.ArcGIS.Services
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the ArcGIS geocoding api.
@@ -89,6 +91,17 @@ namespace Geo.ArcGIS.Services
             }
 
             return await CallAsync<ReverseGeocodingResponse>(await BuildReverseGeocodingRequest(parameters, cancellationToken).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<GeocodingResponse> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<GeocodingResponse>(await BuildGeocodingRequest(parameters, cancellationToken).ConfigureAwait(false), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -254,6 +267,84 @@ namespace Geo.ArcGIS.Services
             }
 
             AddStorageParameter(parameters, query);
+
+            await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the geocoding uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="GeocodingParameters"/> with the geocoding parameters to build the uri with.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
+        internal async Task<Uri> BuildGeocodingRequest(GeocodingParameters parameters, CancellationToken cancellationToken)
+        {
+            var uriBuilder = new UriBuilder(_geocodingUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            query.Add("f", "json");
+
+            if (parameters.AddressAttributes is null)
+            {
+                throw new ArgumentException("The address attributes cannot be null.", nameof(parameters.AddressAttributes));
+            }
+
+            List<object> attributes = new List<object>();
+
+            foreach (var attribute in parameters.AddressAttributes)
+            {
+                attributes.Add(new
+                {
+                    attributes = attribute,
+                });
+            }
+
+            var addresses = new
+            {
+                records = attributes,
+            };
+
+            query.Add("addresses", JsonConvert.SerializeObject(addresses));
+
+            query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+
+            if (!string.IsNullOrWhiteSpace(parameters.Category))
+            {
+                query.Add("category", parameters.Category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SourceCountry))
+            {
+                query.Add("sourceCountry", parameters.SourceCountry);
+            }
+
+            if (parameters.OutSpatialReference > 0)
+            {
+                query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (parameters.SearchExtent != null)
+            {
+                query.Add("searchExtent", parameters.SearchExtent.ToString());
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.LanguageCode))
+            {
+                query.Add("langCode", parameters.LanguageCode);
+            }
+
+            if (parameters.LocationType >= 0)
+            {
+                query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
+            }
+
+            if (parameters.PreferredLabelValue >= 0)
+            {
+                query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
+            }
 
             await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
