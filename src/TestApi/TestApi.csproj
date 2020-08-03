@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Geo.ArcGIS\Geo.ArcGIS.csproj" />
     <ProjectReference Include="..\Geo.Bing\Geo.Bing.csproj" />
     <ProjectReference Include="..\Geo.Google\Geo.Google.csproj" />
   </ItemGroup>
