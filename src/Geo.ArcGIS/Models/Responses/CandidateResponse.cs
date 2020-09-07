@@ -1,4 +1,4 @@
-﻿// <copyright file="AddressResponse.cs" company="Geo.NET">
+﻿// <copyright file="CandidateResponse.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 

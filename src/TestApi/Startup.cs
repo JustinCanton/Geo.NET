@@ -7,6 +7,7 @@ namespace TestApi
     using Geo.ArcGIS.DependencyInjection;
     using Geo.Bing.DependencyInjection;
     using Geo.Google.DependencyInjection;
+    using Geo.Here.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace TestApi
             services.AddGoogleServices(options => options.UseKey(string.Empty));
             services.AddBingServices(options => options.UseKey(string.Empty));
             services.AddArcGISServices(options => options.UseClientKeys(string.Empty, string.Empty));
+            services.AddHereServices(options => options.UseKey(string.Empty));
             services.AddSwaggerDocument();
         }
 
