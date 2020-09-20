@@ -39,5 +39,13 @@ namespace TestApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("discover")]
+        public async Task<IActionResult> GetDiscoverResults([FromQuery] DiscoverParameters parameters)
+        {
+            var results = await _hereGeocoding.DiscoverAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
     }
 }

@@ -34,5 +34,11 @@ namespace Geo.Here.Models
         /// </summary>
         [JsonProperty("north")]
         public double North { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{West},{South},{East},{North}";
+        }
     }
 }

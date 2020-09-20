@@ -17,7 +17,7 @@ namespace Geo.Here.Models
         /// countryCode:USA
         /// countryCode:CAN,MEX,USA.
         /// </summary>
-        public string In { get; set; }
+        public string InCountry { get; set; }
 
         /// <summary>
         /// Gets or sets a free-text query.

@@ -1,4 +1,4 @@
-﻿// <copyright file="GeocodingResponse.cs" company="Geo.NET">
+﻿// <copyright file="DiscoverResponse.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -8,14 +8,14 @@ namespace Geo.Here.Models
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The response from a geocoding request.
+    /// The response from a discover request.
     /// </summary>
-    public class GeocodingResponse
+    public class DiscoverResponse
     {
         /// <summary>
-        /// Gets or sets the list of locations that match the geocoding request.
+        /// Gets or sets the list of locations that match the discover request.
         /// </summary>
         [JsonProperty("items")]
-        public List<GeocodeLocation> Items { get; set; }
+        public List<DiscoverLocation> Items { get; set; }
     }
 }

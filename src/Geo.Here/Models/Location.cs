@@ -103,11 +103,5 @@ namespace Geo.Here.Models
         /// </summary>
         [JsonProperty("houseNumberFallback")]
         public bool HouseNumberFallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets the score for this location.
-        /// </summary>
-        [JsonProperty("scoring")]
-        public Score Score { get; set; }
     }
 }
