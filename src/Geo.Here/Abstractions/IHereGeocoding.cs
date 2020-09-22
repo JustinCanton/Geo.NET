@@ -9,6 +9,7 @@ namespace Geo.Here.Abstractions
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.Here.Models;
+    using Geo.Here.Models.Parameters;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -19,7 +20,7 @@ namespace Geo.Here.Abstractions
         /// <summary>
         /// Calls the here geocoding API and returns the results.
         /// </summary>
-        /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
+        /// <param name="parameters">A <see cref="GeocodeParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="GeocodingResponse"/> with the response from here.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
@@ -31,12 +32,12 @@ namespace Geo.Here.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<GeocodingResponse> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
+        Task<GeocodingResponse> GeocodingAsync(GeocodeParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the here reverse geocoding API and returns the results.
         /// </summary>
-        /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
+        /// <param name="parameters">A <see cref="ReverseGeocodeParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="ReverseGeocodingResponse"/> with the response from here.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
@@ -48,7 +49,7 @@ namespace Geo.Here.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<ReverseGeocodingResponse> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
+        Task<ReverseGeocodingResponse> ReverseGeocodingAsync(ReverseGeocodeParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the here discover API and returns the results.

@@ -1,24 +1,14 @@
-﻿// <copyright file="DiscoverParameters.cs" company="Geo.NET">
+﻿// <copyright file="AreaParameters.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Parameters
 {
     /// <summary>
-    /// The parameters possible to use during a discover request.
+    /// Parameters used for narrowing down the geographical area in a here request.
     /// </summary>
-    public class DiscoverParameters : BaseParameters
+    public class AreaParameters : BaseFilterParameters
     {
-        /// <summary>
-        /// Gets or sets a free-text query.
-        /// Examples:
-        /// 125, Berliner, berlin
-        /// Beacon, Boston, Hospital
-        /// Schnurrbart German Pub and Restaurant, Hong Kong
-        /// Note: Whitespace, urls, email addresses, or other out-of-scope queries will yield no results.
-        /// </summary>
-        public string Query { get; set; }
-
         /// <summary>
         /// Gets or sets the search within a geographic area. This is a hard filter. Results will be returned if they are located within the specified area.
         /// A geographic area can be a country (or multiple countries), provided as comma-separated ISO 3166-1 alpha-3 country codes.

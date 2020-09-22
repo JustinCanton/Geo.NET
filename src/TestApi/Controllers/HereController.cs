@@ -6,7 +6,7 @@ namespace TestApi.Controllers
 {
     using System.Threading.Tasks;
     using Geo.Here.Abstractions;
-    using Geo.Here.Models;
+    using Geo.Here.Models.Parameters;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -25,7 +25,7 @@ namespace TestApi.Controllers
         }
 
         [HttpGet("geocoding")]
-        public async Task<IActionResult> GetGeocodingResults([FromQuery] GeocodingParameters parameters)
+        public async Task<IActionResult> GetGeocodingResults([FromQuery] GeocodeParameters parameters)
         {
             var results = await _hereGeocoding.GeocodingAsync(parameters).ConfigureAwait(false);
 
@@ -33,7 +33,7 @@ namespace TestApi.Controllers
         }
 
         [HttpGet("reverse-geocoding")]
-        public async Task<IActionResult> GetReverseGeocodingResults([FromQuery] ReverseGeocodingParameters parameters)
+        public async Task<IActionResult> GetReverseGeocodingResults([FromQuery] ReverseGeocodeParameters parameters)
         {
             var results = await _hereGeocoding.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
 

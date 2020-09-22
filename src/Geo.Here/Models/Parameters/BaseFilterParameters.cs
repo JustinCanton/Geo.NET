@@ -1,15 +1,15 @@
-﻿// <copyright file="BaseParameters.cs" company="Geo.NET">
+﻿// <copyright file="BaseFilterParameters.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Parameters
 {
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// The base parameters possible for all here requests.
+    /// The base filter parameters that are used with almost all here requests.
     /// </summary>
-    public class BaseParameters
+    public class BaseFilterParameters : BaseParameters
     {
         /// <summary>
         /// Gets or sets the center of the search context expressed as coordinates.
@@ -23,10 +23,5 @@ namespace Geo.Here.Models
         /// </summary>
         [Range(0, 100)]
         public uint Limit { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the language to be used for result rendering from a list of BCP47 compliant Language Codes.
-        /// </summary>
-        public string Language { get; set; }
     }
 }

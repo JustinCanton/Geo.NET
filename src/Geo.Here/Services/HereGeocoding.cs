@@ -18,6 +18,7 @@ namespace Geo.Here.Services
     using Geo.Core;
     using Geo.Here.Abstractions;
     using Geo.Here.Models;
+    using Geo.Here.Models.Parameters;
 
     /// <summary>
     /// A service to call the here geocoding api.
@@ -27,6 +28,9 @@ namespace Geo.Here.Services
         private readonly string _geocodeUri = "https://geocode.search.hereapi.com/v1/geocode";
         private readonly string _reverseGeocodeUri = "https://revgeocode.search.hereapi.com/v1/revgeocode";
         private readonly string _discoverUri = "https://discover.search.hereapi.com/v1/discover";
+        private readonly string _autosuggestUri = "https://autosuggest.search.hereapi.com/v1/autosuggest";
+        private readonly string _browseUri = "https://browse.search.hereapi.com/v1/browse";
+        private readonly string _lookupUri = "https://lookup.search.hereapi.com/v1/lookup";
         private readonly IHereKeyContainer _keyContainer;
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace Geo.Here.Services
 
         /// <inheritdoc/>
         public async Task<GeocodingResponse> GeocodingAsync(
-            GeocodingParameters parameters,
+            GeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
             if (parameters is null)
@@ -57,7 +61,7 @@ namespace Geo.Here.Services
 
         /// <inheritdoc/>
         public async Task<ReverseGeocodingResponse> ReverseGeocodingAsync(
-            ReverseGeocodingParameters parameters,
+            ReverseGeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
             if (parameters is null)
@@ -84,10 +88,10 @@ namespace Geo.Here.Services
         /// <summary>
         /// Builds the geocoding uri based on the passed parameters.
         /// </summary>
-        /// <param name="parameters">A <see cref="GeocodingParameters"/> with the geocoding parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="GeocodeParameters"/> with the geocoding parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed here geocoding uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter and the 'QualifiedQuery' parameter are null or invalid.</exception>
-        internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
+        internal Uri BuildGeocodingRequest(GeocodeParameters parameters)
         {
             var uriBuilder = new UriBuilder(_geocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -112,12 +116,7 @@ namespace Geo.Here.Services
                 query.Add("in", parameters.InCountry);
             }
 
-            if (parameters.At != null)
-            {
-                query.Add("at", parameters.At.ToString());
-            }
-
-            AddBaseParameters(parameters, query);
+            AddLocatingParameters(parameters, query);
 
             AddHereKey(query);
 
@@ -129,10 +128,10 @@ namespace Geo.Here.Services
         /// <summary>
         /// Builds the reverse geocoding uri based on the passed parameters.
         /// </summary>
-        /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="ReverseGeocodeParameters"/> with the reverse geocoding parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed here reverse geocoding uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
-        internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
+        internal Uri BuildReverseGeocodingRequest(ReverseGeocodeParameters parameters)
         {
             var uriBuilder = new UriBuilder(_reverseGeocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -142,12 +141,7 @@ namespace Geo.Here.Services
                 throw new ArgumentException("The at coordinates cannot be null.", nameof(parameters.At));
             }
 
-            if (parameters.At != null)
-            {
-                query.Add("at", parameters.At.ToString());
-            }
-
-            AddBaseParameters(parameters, query);
+            AddLocatingParameters(parameters, query);
 
             AddHereKey(query);
 
@@ -159,9 +153,9 @@ namespace Geo.Here.Services
         /// <summary>
         /// Builds the discover uri based on the passed parameters.
         /// </summary>
-        /// <param name="parameters">A <see cref="GeocodingParameters"/> with the discover parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="DiscoverParameters"/> with the discover parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed here discover uri.</returns>
-        /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
+        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         internal Uri BuildDiscoverRequest(DiscoverParameters parameters)
         {
             var uriBuilder = new UriBuilder(_discoverUri);
@@ -169,20 +163,102 @@ namespace Geo.Here.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                throw new ArgumentException("The at query cannot be null.", nameof(parameters.Query));
+                throw new ArgumentException("The query cannot be null.", nameof(parameters.Query));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.Query))
+            query.Add("q", parameters.Query);
+
+            AddBoundingParameters(parameters, query);
+
+            AddHereKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the autosuggest uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="AutosuggestParameters"/> with the autosuggest parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed here autosuggest uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
+        internal Uri BuildAutosuggestRequest(AutosuggestParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_autosuggestUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                query.Add("q", parameters.Query);
+                throw new ArgumentException("The query cannot be null.", nameof(parameters.Query));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.Route))
+            query.Add("q", parameters.Query);
+
+            if (parameters.TermsLimit >= 0 && parameters.TermsLimit <= 10)
             {
-                query.Add("route", parameters.Route);
+                query.Add("termsLimit", parameters.TermsLimit.ToString(CultureInfo.InvariantCulture));
             }
 
             AddBoundingParameters(parameters, query);
+
+            AddHereKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the browse uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BrowseParameters"/> with the browse parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed here browse uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
+        internal Uri BuildBrowseRequest(BrowseParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_browseUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (parameters.At is null)
+            {
+                throw new ArgumentException("The at coordinates cannot be null.", nameof(parameters.At));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Categories))
+            {
+                query.Add("categories", parameters.Categories);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Name))
+            {
+                query.Add("name", parameters.Name);
+            }
+
+            AddBoundingParameters(parameters, query);
+
+            AddHereKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the lookup uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="LookupParameters"/> with the lookup parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed here discover uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Id' parameter is null or invalid.</exception>
+        internal Uri BuildLookupRequest(LookupParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_lookupUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Id))
+            {
+                throw new ArgumentException("The id cannot be null.", nameof(parameters.Id));
+            }
 
             AddBaseParameters(parameters, query);
 
@@ -194,29 +270,11 @@ namespace Geo.Here.Services
         }
 
         /// <summary>
-        /// Adds the base query parameters.
-        /// </summary>
-        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
-        {
-            if (parameters.Limit > 0 && parameters.Limit <= 100)
-            {
-                query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
-            }
-
-            if (!string.IsNullOrWhiteSpace(parameters.Language))
-            {
-                query.Add("lang", parameters.Language);
-            }
-        }
-
-        /// <summary>
         /// Adds the bounding query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="DiscoverParameters"/> with the bounding parameters to build the uri with.</param>
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBoundingParameters(DiscoverParameters parameters, NameValueCollection query)
+        internal void AddBoundingParameters(AreaParameters parameters, NameValueCollection query)
         {
             var hasAt = parameters.At != null &&
                 (parameters.At.Latitude != 0 || parameters.At.Longitude != 0);
@@ -256,6 +314,56 @@ namespace Geo.Here.Services
             if (hasBoundingBox)
             {
                 query.Add("in", $"bbox:{parameters.InBoundingBox.ToString()}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Route))
+            {
+                query.Add("route", parameters.Route);
+            }
+
+            AddLimitingParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the locating query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddLocatingParameters(BaseFilterParameters parameters, NameValueCollection query)
+        {
+            if (parameters.At != null)
+            {
+                query.Add("at", parameters.At.ToString());
+            }
+
+            AddLimitingParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the base limiting query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddLimitingParameters(BaseFilterParameters parameters, NameValueCollection query)
+        {
+            if (parameters.Limit > 0 && parameters.Limit <= 100)
+            {
+                query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
+            }
+
+            AddBaseParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the base query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        {
+            if (!string.IsNullOrWhiteSpace(parameters.Language))
+            {
+                query.Add("lang", parameters.Language);
             }
         }
 
