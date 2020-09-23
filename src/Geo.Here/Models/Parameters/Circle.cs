@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Parameters
 {
     /// <summary>
     /// Circle information for search bounds.

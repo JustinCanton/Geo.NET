@@ -1,19 +1,19 @@
-﻿// <copyright file="GeocodingResponse.cs" company="Geo.NET">
+﻿// <copyright file="ReverseGeocodingResponse.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The response from a geocoding request.
+    /// The response from a reverse geocoding request.
     /// </summary>
-    public class GeocodingResponse
+    public class ReverseGeocodingResponse
     {
         /// <summary>
-        /// Gets or sets the list of locations that match the geocoding request.
+        /// Gets or sets the list of locations that match the reverse geocoding request.
         /// </summary>
         [JsonProperty("items")]
         public List<GeocodeLocation> Items { get; set; }

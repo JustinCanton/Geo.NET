@@ -47,5 +47,21 @@ namespace TestApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("autosuggest")]
+        public async Task<IActionResult> GetAutosuggestResults([FromQuery] AutosuggestParameters parameters)
+        {
+            var results = await _hereGeocoding.AutosuggestAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("lookup")]
+        public async Task<IActionResult> GetLookupResults([FromQuery] LookupParameters parameters)
+        {
+            var results = await _hereGeocoding.LookupAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
     }
 }

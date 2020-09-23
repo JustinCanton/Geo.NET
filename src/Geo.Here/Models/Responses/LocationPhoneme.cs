@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

@@ -1,23 +1,17 @@
-﻿// <copyright file="DiscoverLocation.cs" company="Geo.NET">
+﻿// <copyright file="LookupLocation.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Discover location matches.
+    /// Lookup location matches.
     /// </summary>
-    public class DiscoverLocation : Location
+    public class LookupLocation : FullLocation
     {
-        /// <summary>
-        /// Gets or sets the related ontology id.
-        /// </summary>
-        [JsonProperty("ontologyId")]
-        public string OntologyId { get; set; }
-
         /// <summary>
         /// Gets or sets the list of chains assigned to this place.
         /// </summary>
@@ -47,5 +41,11 @@ namespace Geo.Here.Models
         /// </summary>
         [JsonProperty("phonemes")]
         public List<LocationPhoneme> Phonemes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the additional attributes are added for BYOD use cases. Can hold arbitrary data.
+        /// </summary>
+        [JsonProperty("additionalAttributes")]
+        public object AdditionalAttributes { get; set; }
     }
 }

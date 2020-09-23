@@ -8,8 +8,8 @@ namespace Geo.Here.Abstractions
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.Here.Models;
     using Geo.Here.Models.Parameters;
+    using Geo.Here.Models.Responses;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -67,5 +67,39 @@ namespace Geo.Here.Abstractions
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
         Task<DiscoverResponse> DiscoverAsync(DiscoverParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calls the here autosuggest API and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="AutosuggestParameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="AutosuggestResponse"/> with the response from here.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null.</exception>
+        /// <exception cref="HttpRequestException">
+        /// Thrown when the request failed due to an underlying issue such as network connectivity,
+        /// DNS failure, server certificate validation or timeout.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
+        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
+        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        Task<AutosuggestResponse> AutosuggestAsync(AutosuggestParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calls the here lookup API and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="LookupParameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="LookupResponse"/> with the response from here.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the 'Id' parameter is null.</exception>
+        /// <exception cref="HttpRequestException">
+        /// Thrown when the request failed due to an underlying issue such as network connectivity,
+        /// DNS failure, server certificate validation or timeout.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
+        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
+        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        Task<LookupResponse> LookupAsync(LookupParameters parameters, CancellationToken cancellationToken = default);
     }
 }

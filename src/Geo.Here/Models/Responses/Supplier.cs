@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Models
+namespace Geo.Here.Models.Responses
 {
     using Geo.Here.Enums;
     using Newtonsoft.Json;

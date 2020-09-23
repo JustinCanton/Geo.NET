@@ -17,8 +17,8 @@ namespace Geo.Here.Services
     using System.Web;
     using Geo.Core;
     using Geo.Here.Abstractions;
-    using Geo.Here.Models;
     using Geo.Here.Models.Parameters;
+    using Geo.Here.Models.Responses;
 
     /// <summary>
     /// A service to call the here geocoding api.
@@ -83,6 +83,32 @@ namespace Geo.Here.Services
             }
 
             return await CallAsync<DiscoverResponse>(BuildDiscoverRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<AutosuggestResponse> AutosuggestAsync(
+            AutosuggestParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<AutosuggestResponse>(BuildAutosuggestRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<LookupResponse> LookupAsync(
+            LookupParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<LookupResponse>(BuildLookupRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -259,6 +285,8 @@ namespace Geo.Here.Services
             {
                 throw new ArgumentException("The id cannot be null.", nameof(parameters.Id));
             }
+
+            query.Add("id", parameters.Id);
 
             AddBaseParameters(parameters, query);
 
