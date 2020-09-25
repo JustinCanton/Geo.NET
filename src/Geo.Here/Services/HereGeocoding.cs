@@ -111,6 +111,19 @@ namespace Geo.Here.Services
             return await CallAsync<LookupResponse>(BuildLookupRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
+        public async Task<BrowseResponse> BrowseAsync(
+            BrowseParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<BrowseResponse>(BuildBrowseRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Builds the geocoding uri based on the passed parameters.
         /// </summary>

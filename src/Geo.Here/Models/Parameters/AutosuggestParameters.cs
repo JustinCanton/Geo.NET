@@ -24,7 +24,7 @@ namespace Geo.Here.Models.Parameters
         /// <summary>
         /// Gets or sets the maximum number of Query Terms Suggestions to be returned.
         /// </summary>
-        [Range(1, 10)]
+        [Range(0, 10)]
         public int TermsLimit { get; set; }
     }
 }

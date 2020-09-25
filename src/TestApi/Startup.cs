@@ -27,11 +27,12 @@ namespace TestApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerDocument();
+            
             services.AddGoogleServices(options => options.UseKey(string.Empty));
             services.AddBingServices(options => options.UseKey(string.Empty));
             services.AddArcGISServices(options => options.UseClientKeys(string.Empty, string.Empty));
             services.AddHereServices(options => options.UseKey(string.Empty));
-            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

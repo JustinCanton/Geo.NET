@@ -86,6 +86,23 @@ namespace Geo.Here.Abstractions
         Task<AutosuggestResponse> AutosuggestAsync(AutosuggestParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Calls the here browse API and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BrowseParameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="BrowseResponse"/> with the response from here.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null.</exception>
+        /// <exception cref="HttpRequestException">
+        /// Thrown when the request failed due to an underlying issue such as network connectivity,
+        /// DNS failure, server certificate validation or timeout.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
+        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
+        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        Task<BrowseResponse> BrowseAsync(BrowseParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Calls the here lookup API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="LookupParameters"/> with the parameters of the request.</param>

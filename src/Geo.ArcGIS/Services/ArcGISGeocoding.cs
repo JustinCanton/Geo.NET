@@ -309,7 +309,9 @@ namespace Geo.ArcGIS.Services
 
             query.Add("addresses", JsonConvert.SerializeObject(addresses));
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
@@ -360,7 +362,9 @@ namespace Geo.ArcGIS.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddStorageParameter(StorageParameters parameters, NameValueCollection query)
         {
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("forStorage", parameters.ForStorage.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>

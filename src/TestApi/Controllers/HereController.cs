@@ -56,6 +56,14 @@ namespace TestApi.Controllers
             return Ok(results);
         }
 
+        [HttpGet("browse")]
+        public async Task<IActionResult> GetBrowseResults([FromQuery] BrowseParameters parameters)
+        {
+            var results = await _hereGeocoding.BrowseAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
         [HttpGet("lookup")]
         public async Task<IActionResult> GetLookupResults([FromQuery] LookupParameters parameters)
         {
