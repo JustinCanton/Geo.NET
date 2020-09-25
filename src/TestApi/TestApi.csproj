@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.6.2" />
   </ItemGroup>
 
@@ -12,6 +13,7 @@
     <ProjectReference Include="..\Geo.ArcGIS\Geo.ArcGIS.csproj" />
     <ProjectReference Include="..\Geo.Bing\Geo.Bing.csproj" />
     <ProjectReference Include="..\Geo.Google\Geo.Google.csproj" />
+    <ProjectReference Include="..\Geo.Here\Geo.Here.csproj" />
   </ItemGroup>
 
 

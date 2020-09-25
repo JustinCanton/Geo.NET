@@ -20,10 +20,12 @@ The planned support for this project includes:
 	 - [x] [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
 	 - [x] [Reverse Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm)
  - here
-	 - [ ] [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
-	 - [ ] [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
-	 - [ ] [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)
-	 - [ ] [Auto Suggest](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-autosuggest-brief.html)
+	 - [x] [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
+	 - [x] [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
+	 - [x] [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)
+	 - [x] [Auto Suggest](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-autosuggest-brief.html)
+	 - [x] [Browse](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-browse-brief.html)
+	 - [x] [Lookup](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-lookup-brief.html)
  - MapQuest
 	 - [ ] Open API
 		 - [ ] [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
@@ -49,6 +51,6 @@ The configuration and sample usage for each supported interface can be found wit
  - [Google](https://github.com/JustinCanton/Geo.NET/src/Geo.Google)
  - [Bing](https://github.com/JustinCanton/Geo.NET/src/Geo.Bing)
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
- - here
+ - [here](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
  - MapQuest
  - MapBox

@@ -233,7 +233,6 @@ namespace Geo.ArcGIS.Models.Responses
         [JsonProperty("StDir")]
         public string StreetDirection { get; set; }
 
-
         /// <summary>
         /// Gets or sets the building type of a location.
         /// </summary>

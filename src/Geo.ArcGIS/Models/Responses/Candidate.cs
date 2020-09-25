@@ -11,7 +11,6 @@ namespace Geo.ArcGIS.Models.Responses
     /// </summary>
     public class Candidate : LocationInformation
     {
-
         /// <summary>
         /// Gets or sets a rectangular bounding box around the location lat/lng coordinates.
         /// </summary>
