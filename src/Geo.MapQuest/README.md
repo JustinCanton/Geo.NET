@@ -1,18 +1,18 @@
-# here Geocoding
+# MapQuest Geocoding
 
-This allows the simple calling of here Geocoding API's. The supported here geocoding endpoints are:
-- [x] [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
-- [x] [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
-- [x] [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)
-- [x] [Auto Suggest](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-autosuggest-brief.html)
-- [x] [Browse](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-browse-brief.html)
-- [x] [Lookup](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-lookup-brief.html)
+This allows the simple calling of MapQuest Geocoding API's. The supported MapQuest geocoding endpoints are:
+- [x] Open API
+	- [x] [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
+	 - [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
+- [x] Lisenced Api
+	- [x] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
+	- [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 
 ## Configuration
 
-In the startup `ConfigureServices` method, add the configuration for the here service:
+In the startup `ConfigureServices` method, add the configuration for the MapQuest service:
 ```
-using Geo.Here.DependencyInjection;
+using Geo.MapQuest.DependencyInjection;
 .
 .
 .
@@ -21,7 +21,25 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddHereServices(options => options.UseKey(your_here_api_key_here));
+    services.AddMapQuestServices(options => options.UseKey(your_here_api_key_here));
+    .
+    .
+    .
+}
+```
+
+MapQuest has 2 endpoint types, open and lisenced. They are not able to be used together. For more information, refer to the MapQuest [Terms of Service](https://developer.mapquest.com/legal). To specify whether to use the lisenced endpoint or not, call the options method `UseLicensedEndpoints`. The default endpoint that is used is the open endpoint.
+```
+using Geo.MapQuest.DependencyInjection;
+.
+.
+.
+public void ConfigureServices(IServiceCollection services)
+{
+    .
+    .
+    .
+    services.AddMapQuestServices(options => options.UseKey(your_here_api_key_here).UseLicensedEndpoints());
     .
     .
     .
@@ -30,9 +48,9 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Sample Usage
 
-By calling `AddHereServices`, the `IHereGeocoding` interface has been added to the IOC container. Just request it as a DI item:
+By calling `AddMapQuestServices`, the `IMapQuestGeocoding` interface has been added to the IOC container. Just request it as a DI item:
 ```
-public MyService(IHereGeocoding hereGeocoding)
+public MyService(IMapQuestGeocoding mapQuestGeocoding)
 {
     ...
 }
