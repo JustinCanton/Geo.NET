@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.ArcGIS", "src\Geo.ArcGI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Here", "src\Geo.Here\Geo.Here.csproj", "{DF4A57B8-8457-4E55-93AD-4F2360624EAC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapQuest", "src\Geo.MapQuest\Geo.MapQuest.csproj", "{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{DF4A57B8-8457-4E55-93AD-4F2360624EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF4A57B8-8457-4E55-93AD-4F2360624EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF4A57B8-8457-4E55-93AD-4F2360624EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

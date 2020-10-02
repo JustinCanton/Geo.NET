@@ -8,6 +8,7 @@ namespace TestApi
     using Geo.Bing.DependencyInjection;
     using Geo.Google.DependencyInjection;
     using Geo.Here.DependencyInjection;
+    using Geo.MapQuest.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -33,6 +34,7 @@ namespace TestApi
             services.AddBingServices(options => options.UseKey(string.Empty));
             services.AddArcGISServices(options => options.UseClientKeys(string.Empty, string.Empty));
             services.AddHereServices(options => options.UseKey(string.Empty));
+            services.AddMapQuestServices(options => options.UseKey(string.Empty).UseLicensedEndpoints());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
