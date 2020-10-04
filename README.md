@@ -27,12 +27,12 @@ The planned support for this project includes:
 	 - [x] [Browse](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-browse-brief.html)
 	 - [x] [Lookup](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-lookup-brief.html)
  - MapQuest
-	 - [ ] Open API
-		 - [ ] [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-		 - [ ] [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-	 - [ ] Api
-		 - [ ] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
-		 - [ ] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
+	 - [x] Open API
+		 - [x] [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
+		 - [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
+	 - [x] Lisenced Api
+		 - [x] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
+		 - [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
  - MapBox
 	 - [ ] [Geocoding](https://docs.mapbox.com/api/search/#forward-geocoding)
 	 - [ ] [Reverse Geocoding](https://docs.mapbox.com/api/search/#reverse-geocoding)
@@ -52,5 +52,5 @@ The configuration and sample usage for each supported interface can be found wit
  - [Bing](https://github.com/JustinCanton/Geo.NET/src/Geo.Bing)
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
  - [here](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
- - MapQuest
+ - [MapQuest](https://github.com/JustinCanton/Geo.NET/src/Geo.MapQuest)
  - MapBox
