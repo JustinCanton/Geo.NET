@@ -4,7 +4,7 @@ This allows the simple calling of MapQuest Geocoding API's. The supported MapQue
 - [x] Open API
 	- [x] [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 	 - [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-- [x] Lisenced Api
+- [x] Licensed  Api
 	- [x] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 	- [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 
@@ -28,7 +28,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-MapQuest has 2 endpoint types, open and lisenced. They are not able to be used together. For more information, refer to the MapQuest [Terms of Service](https://developer.mapquest.com/legal). To specify whether to use the lisenced endpoint or not, call the options method `UseLicensedEndpoints`. The default endpoint that is used is the open endpoint.
+MapQuest has 2 endpoint types, open and licensed. They are not able to be used together. For more information, refer to the MapQuest [Terms of Service](https://developer.mapquest.com/legal). To specify whether to use the licensed endpoint or not, call the options method `UseLicensedEndpoints`. The default endpoint that is used is the open endpoint.
 ```
 using Geo.MapQuest.DependencyInjection;
 .

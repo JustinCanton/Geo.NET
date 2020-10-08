@@ -26,7 +26,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// (https://www.esri.com/en-us/arcgis/products/credits/overview?rmedium=esri_com_redirects01&rsource=https://www.esri.com/en-us/arcgis/products/arcgis-online/pricing/credits)
         /// for more information on how credits are charged.
         ///
-        /// To learn more about free and paid geocoding operations, see Free vs.paid operations
+        /// To learn more about free and paid geocoding operations, see
         /// (https://developers.arcgis.com/rest/geocode/api-reference/geocoding-free-vs-paid.htm).
         /// </summary>
         public bool ForStorage { get; set; } = false;

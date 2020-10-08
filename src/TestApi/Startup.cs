@@ -35,6 +35,7 @@ namespace TestApi
             services.AddArcGISServices(options => options.UseClientKeys(string.Empty, string.Empty));
             services.AddHereServices(options => options.UseKey(string.Empty));
             services.AddMapQuestServices(options => options.UseKey(string.Empty).UseLicensedEndpoints());
+            services.AddMapBoxServices(options => options.UseKey(string.Empty));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
