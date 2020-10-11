@@ -18,7 +18,8 @@ namespace Geo.MapBox.Models.Parameters
 
         /// <summary>
         /// Gets or sets how results are sorted in a reverse geocoding query if multiple results are requested using a limit other than 1.
+        /// The default is distance.
         /// </summary>
-        public ReverseMode ReverseMode { get; set; }
+        public ReverseMode ReverseMode { get; set; } = ReverseMode.Distance;
     }
 }

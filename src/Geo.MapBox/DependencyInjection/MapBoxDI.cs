@@ -1,0 +1,43 @@
+﻿// <copyright file="MapBoxDI.cs" company="Geo.NET">
+// Copyright (c) Geo.NET. All rights reserved.
+// </copyright>
+
+namespace Geo.MapBox.DependencyInjection
+{
+    using System;
+    using Geo.MapBox.Abstractions;
+    using Geo.MapBox.Models;
+    using Geo.MapBox.Services;
+    using Microsoft.Extensions.DependencyInjection;
+
+    /// <summary>
+    /// Dependency injection methods for the MapBox APIs.
+    /// </summary>
+    public static class MapBoxDI
+    {
+        /// <summary>
+        /// Adds the MapBox services to the service collection.
+        /// </summary>
+        /// <param name="services">A <see cref="IServiceCollection"/> to add the MapBox services to.</param>
+        /// <param name="optionsBuilder">A <see cref="Action{MapBoxOptionsBuilder}"/> with the options to add to the MapBox configuration.</param>
+        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
+        public static IServiceCollection AddMapBoxServices(this IServiceCollection services, Action<MapBoxOptionsBuilder> optionsBuilder)
+        {
+            if (optionsBuilder != null)
+            {
+                var options = new MapBoxOptionsBuilder();
+                optionsBuilder(options);
+
+                services.AddSingleton<IMapBoxKeyContainer>(new MapBoxKeyContainer(options.Key));
+            }
+            else
+            {
+                services.AddSingleton<IMapBoxKeyContainer>(new MapBoxKeyContainer(string.Empty));
+            }
+
+            services.AddHttpClient<IMapBoxGeocoding, MapBoxGeocoding>();
+
+            return services;
+        }
+    }
+}

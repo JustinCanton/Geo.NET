@@ -4,11 +4,13 @@
 
 namespace Geo.MapBox.Models
 {
+    using Geo.MapBox.Converters;
     using Newtonsoft.Json;
 
     /// <summary>
     /// The coordinates (latitude, longitude) of a pin on a map corresponding to the searched place.
     /// </summary>
+    [JsonConverter(typeof(CoordinateConverter))]
     public class Coordinate
     {
         /// <summary>

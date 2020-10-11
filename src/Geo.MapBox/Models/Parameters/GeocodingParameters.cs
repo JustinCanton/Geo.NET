@@ -7,7 +7,7 @@ namespace Geo.MapBox.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodingParameters
+    public class GeocodingParameters : BaseParameters
     {
         /// <summary>
         /// Gets or sets the feature you’re trying to look up.
@@ -33,7 +33,7 @@ namespace Geo.MapBox.Models.Parameters
         /// matching when performing searches (true, default), or whether it should opt out of this behavior and only attempt exact matching (false).
         /// For example, the default setting might return Washington, DC for a query of wahsington, even though the query was misspelled.
         /// </summary>
-        public bool FuzzyMatch { get; set; }
+        public bool FuzzyMatch { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a coordinate that will bias the response to favor results that are closer to this location.

@@ -42,7 +42,7 @@ namespace Geo.MapBox.Enums
         /// <summary>
         /// The result must be a neighbourhood type.
         /// </summary>
-        Neighbourhood,
+        Neighborhood,
 
         /// <summary>
         /// The result must be an address type.

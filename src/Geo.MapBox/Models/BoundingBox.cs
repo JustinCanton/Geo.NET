@@ -4,11 +4,13 @@
 
 namespace Geo.MapBox.Models
 {
+    using Geo.MapBox.Converters;
     using Newtonsoft.Json;
 
     /// <summary>
     /// The north/south/east/west bounding box for a map view.
     /// </summary>
+    [JsonConverter(typeof(BoundingBoxConverter))]
     public class BoundingBox
     {
         /// <summary>

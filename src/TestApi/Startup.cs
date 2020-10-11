@@ -8,6 +8,7 @@ namespace TestApi
     using Geo.Bing.DependencyInjection;
     using Geo.Google.DependencyInjection;
     using Geo.Here.DependencyInjection;
+    using Geo.MapBox.DependencyInjection;
     using Geo.MapQuest.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

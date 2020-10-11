@@ -14,8 +14,9 @@ namespace Geo.MapBox.Models.Parameters
     {
         /// <summary>
         /// Gets or sets the type of endpoint to call.
+        /// The default is non-permanent.
         /// </summary>
-        public EndpointType EndpointType { get; set; }
+        public EndpointType EndpointType { get; set; } = EndpointType.Places;
 
         /// <summary>
         /// Gets or sets the list of countries to limit the request to.

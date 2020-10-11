@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Geo.Bing\Geo.Bing.csproj" />
     <ProjectReference Include="..\Geo.Google\Geo.Google.csproj" />
     <ProjectReference Include="..\Geo.Here\Geo.Here.csproj" />
+    <ProjectReference Include="..\Geo.MapBox\Geo.MapBox.csproj" />
     <ProjectReference Include="..\Geo.MapQuest\Geo.MapQuest.csproj" />
   </ItemGroup>
 
