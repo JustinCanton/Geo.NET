@@ -11,7 +11,7 @@ namespace Geo.Bing.Converters
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// A converter for a <see cref="double[]"/> to a <see cref="Point"/>.
+    /// A converter for a <see cref="double[]"/> to a <see cref="Coordinate"/>.
     /// </summary>
     public class CoordinateConverter : JsonConverter
     {

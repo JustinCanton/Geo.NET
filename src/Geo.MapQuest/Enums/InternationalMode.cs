@@ -22,6 +22,6 @@ namespace Geo.MapQuest.Enums
         /// <summary>
         /// Handles the query in a way deemed most optimal by MapQuest. Currently, this converts a 5-box query to a 1-box query across the board.
         /// </summary>
-        Auto
+        Auto,
     }
 }

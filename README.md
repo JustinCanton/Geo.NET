@@ -34,8 +34,8 @@ The planned support for this project includes:
 		 - [x] [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [x] [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
  - MapBox
-	 - [ ] [Geocoding](https://docs.mapbox.com/api/search/#forward-geocoding)
-	 - [ ] [Reverse Geocoding](https://docs.mapbox.com/api/search/#reverse-geocoding)
+	 - [x] [Geocoding](https://docs.mapbox.com/api/search/#forward-geocoding)
+	 - [x] [Reverse Geocoding](https://docs.mapbox.com/api/search/#reverse-geocoding)
 
 ## Get Started
 
@@ -53,4 +53,4 @@ The configuration and sample usage for each supported interface can be found wit
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
  - [here](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/src/Geo.MapQuest)
- - MapBox
+ - [MapBox](https://github.com/JustinCanton/Geo.NET/src/Geo.MapBox)

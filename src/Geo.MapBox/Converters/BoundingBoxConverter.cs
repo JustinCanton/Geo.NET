@@ -1,18 +1,19 @@
-﻿// <copyright file="AutosuggestJsonConverter.cs" company="Geo.NET">
+﻿// <copyright file="BoundingBoxConverter.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Here.Converters
+namespace Geo.MapBox.Converters
 {
     using System;
-    using Geo.Here.Models.Responses;
+    using System.Linq;
+    using Geo.MapBox.Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// A json converter for the autosuggest json response.
+    /// A converter for a <see cref="double[]"/> to a <see cref="BoundingBox"/>.
     /// </summary>
-    public class AutosuggestJsonConverter : JsonConverter
+    public class BoundingBoxConverter : JsonConverter
     {
         /// <inheritdoc />
         public override bool CanConvert(Type type)
@@ -22,10 +23,10 @@ namespace Geo.Here.Converters
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return typeof(BaseLocation).IsAssignableFrom(type);
+            return type == typeof(double[]);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader == null)
@@ -43,22 +44,29 @@ namespace Geo.Here.Converters
                 throw new ArgumentNullException(nameof(serializer));
             }
 
-            var jobj = JObject.Load(reader);
-            if (jobj.TryGetValue(nameof(AutosuggestEntityLocation.Address), StringComparison.OrdinalIgnoreCase, out _))
+            var token = JArray.Load(reader);
+            double[] items = token.Select(jv => (double)jv).ToArray();
+
+            if (items is null)
             {
-                var obj = new AutosuggestEntityLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                return null;
             }
-            else
+
+            if (items.Length != 4)
             {
-                var obj = new AutosuggestQueryLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                return null;
             }
+
+            return new BoundingBox()
+            {
+                West = items[0],
+                South = items[1],
+                East = items[2],
+                North = items[3],
+            };
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             if (writer == null)
