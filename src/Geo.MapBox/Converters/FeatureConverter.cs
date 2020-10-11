@@ -100,11 +100,25 @@ namespace Geo.MapBox.Converters
             serializer.Serialize(writer, value);
         }
 
-        private class FeatureFields
+        /// <summary>
+        /// A class containing the names of the fields in the feature response JSON.
+        /// </summary>
+        private static class FeatureFields
         {
-            public static string Language = "language";
-            public static string Text = "text";
-            public static string PlaceName = "place_name";
+            /// <summary>
+            /// Gets the language field name.
+            /// </summary>
+            public static string Language => "language";
+
+            /// <summary>
+            /// Gets the text field name.
+            /// </summary>
+            public static string Text => "text";
+
+            /// <summary>
+            /// Gets the place name field name.
+            /// </summary>
+            public static string PlaceName => "place_name";
         }
     }
 }

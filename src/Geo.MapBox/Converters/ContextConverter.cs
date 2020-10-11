@@ -109,13 +109,35 @@ namespace Geo.MapBox.Converters
             serializer.Serialize(writer, value);
         }
 
-        private class ContextFields
+        /// <summary>
+        /// A class containing the names of the fields in the context response JSON.
+        /// </summary>
+        private static class ContextFields
         {
-            public static string Id = "id";
-            public static string Wikidata = "wikidata";
-            public static string ShortCode = "short_code";
-            public static string Language = "language";
-            public static string Text = "text";
+            /// <summary>
+            /// Gets the id field name.
+            /// </summary>
+            public static string Id => "id";
+
+            /// <summary>
+            /// Gets the wikidata field name.
+            /// </summary>
+            public static string Wikidata => "wikidata";
+
+            /// <summary>
+            /// Gets the short code field name.
+            /// </summary>
+            public static string ShortCode => "short_code";
+
+            /// <summary>
+            /// Gets the language field name.
+            /// </summary>
+            public static string Language => "language";
+
+            /// <summary>
+            /// Gets the text field name.
+            /// </summary>
+            public static string Text => "text";
         }
     }
 }
