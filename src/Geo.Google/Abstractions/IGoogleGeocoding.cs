@@ -8,7 +8,8 @@ namespace Geo.Google.Abstractions
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
+    using Geo.Google.Models.Responses;
     using Newtonsoft.Json;
 
     /// <summary>

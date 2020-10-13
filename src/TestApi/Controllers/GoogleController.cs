@@ -6,7 +6,7 @@ namespace TestApi.Controllers
 {
     using System.Threading.Tasks;
     using Geo.Google.Abstractions;
-    using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]

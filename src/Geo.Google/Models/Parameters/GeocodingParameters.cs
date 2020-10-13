@@ -2,14 +2,14 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Models
+namespace Geo.Google.Models.Parameters
 {
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// The parameters for the gecoding Google API.
     /// </summary>
-    public class GeocodingParameters
+    public class GeocodingParameters : BaseParameters
     {
         /// <summary>
         /// Gets or sets the street address or plus code that you want to geocode.
@@ -35,10 +35,5 @@ namespace Geo.Google.Models
         /// This parameter will only influence, not fully restrict, results from the geocoder.
         /// </summary>
         public string Region { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language in which to return results.
-        /// </summary>
-        public string Language { get; set; }
     }
 }

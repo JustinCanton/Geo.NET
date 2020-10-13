@@ -9,7 +9,7 @@ namespace Geo.Google.Models
     /// <summary>
     /// Contains  two latitude,longitude values defining the southwest and northeast corner of the bounding box.
     /// </summary>
-    public class Boundaries
+    public class Boundaries : BaseBounding
     {
         /// <summary>
         /// Gets or sets the northeast coordinate of the bounding box.

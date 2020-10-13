@@ -19,7 +19,8 @@ namespace Geo.Google.Services
     using Geo.Google.Abstractions;
     using Geo.Google.Enums;
     using Geo.Google.Extensions;
-    using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
+    using Geo.Google.Models.Responses;
 
     /// <summary>
     /// A service to call the Google geocoding api.

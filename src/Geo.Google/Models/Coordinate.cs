@@ -9,7 +9,7 @@ namespace Geo.Google.Models
     /// <summary>
     /// A latitude/longitude pair forming a coordinate.
     /// </summary>
-    public class Coordinate
+    public class Coordinate : BaseBounding
     {
         /// <summary>
         /// Gets or sets the latitude of a location.
