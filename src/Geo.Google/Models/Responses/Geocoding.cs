@@ -5,7 +5,6 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using Geo.Google.Converters;
     using Geo.Google.Enums;
     using Newtonsoft.Json;
@@ -15,15 +14,6 @@ namespace Geo.Google.Models.Responses
     /// </summary>
     public class Geocoding
     {
-        [JsonProperty("address_components")]
-        private readonly List<AddressComponent> _addressComponents = new List<AddressComponent>();
-
-        [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        private readonly List<AddressType> _types = new List<AddressType>();
-
-        [JsonProperty("postcode_localities")]
-        private readonly List<string> _postcodeLocalities = new List<string>();
-
         /// <summary>
         /// Gets or sets a string containing the human-readable address of this location.
         /// </summary>
@@ -33,30 +23,20 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets an array containing the separate components applicable to this address.
         /// </summary>
-        public ReadOnlyCollection<AddressComponent> AddressComponents
-        {
-            get
-            {
-                return _addressComponents.AsReadOnly();
-            }
-        }
+        [JsonProperty("address_components")]
+        public List<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
 
         /// <summary>
         /// Gets an array indicates the type of the returned result.
         /// </summary>
-        public ReadOnlyCollection<AddressType> Types
-        {
-            get
-            {
-                return _types.AsReadOnly();
-            }
-        }
+        [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
+        public List<AddressType> Types { get; } = new List<AddressType>();
 
         /// <summary>
         /// Gets or sets the geometry information for the location.
         /// </summary>
         [JsonProperty("geometry")]
-        public Geometry Geometry { get; set; }
+        public GeocodingGeometry Geometry { get; set; }
 
         /// <summary>
         /// Gets or sets an encoded location reference, derived from latitude and longitude coordinates,
@@ -82,39 +62,7 @@ namespace Geo.Google.Models.Responses
         /// Gets an array denoting all the localities contained in a postal code.
         /// This is only populated when the result is a postal code that contains multiple localities.
         /// </summary>
-        public ReadOnlyCollection<string> PostcodeLocalities
-        {
-            get
-            {
-                return _postcodeLocalities.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Adds an address component to the list of geocoding address components.
-        /// </summary>
-        /// <param name="addressComponent">A <see cref="AddressComponent"/> to add.</param>
-        public void AddAddressComponent(AddressComponent addressComponent)
-        {
-            _addressComponents.Add(addressComponent);
-        }
-
-        /// <summary>
-        /// Adds a type to the list of address component types.
-        /// </summary>
-        /// <param name="type">The type to add.</param>
-        public void AddType(AddressType type)
-        {
-            _types.Add(type);
-        }
-
-        /// <summary>
-        /// Adds a postcode locality to the list of postcode localities.
-        /// </summary>
-        /// <param name="postcodeLocality">The postcode locality to add.</param>
-        public void AddPostcodeLocality(string postcodeLocality)
-        {
-            _postcodeLocalities.Add(postcodeLocality);
-        }
+        [JsonProperty("postcode_localities")]
+        public List<string> PostcodeLocalities { get; } = new List<string>();
     }
 }
