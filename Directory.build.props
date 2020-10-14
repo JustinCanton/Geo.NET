@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Geo.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Geo.NET.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
