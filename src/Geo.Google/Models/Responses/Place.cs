@@ -1,4 +1,4 @@
-﻿// <copyright file="BasePlace.cs" company="Geo.NET">
+﻿// <copyright file="Place.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -13,7 +13,7 @@ namespace Geo.Google.Models.Responses
     /// The base fields shared across place requests.
     /// </summary>
     /// <typeparam name="TOpeningHours">The type of the opening hours.</typeparam>
-    public class BasePlace<TOpeningHours> : BaseResponse
+    public class Place<TOpeningHours> : BaseResponse
     {
         /// <summary>
         /// Gets or sets a string containing the human-readable address of this location.
