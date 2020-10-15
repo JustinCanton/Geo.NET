@@ -17,13 +17,5 @@ namespace Geo.Google.Models.Responses
         /// </summary>
         [JsonProperty("opening_hours")]
         public OpeningHours OpeningHours { get; set; }
-
-        /// <summary>
-        /// Gets an array of photo objects, each containing a reference to an image.
-        /// A Place Search will return at most one photo object.
-        /// Performing a Place Details request on the place may return up to ten photos.
-        /// </summary>
-        [JsonProperty("photos")]
-        public List<Photo> Photos { get; }
     }
 }

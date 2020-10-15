@@ -12,7 +12,7 @@ namespace Geo.Google.Models.Responses
     /// <summary>
     /// A geocoding result returned by Google.
     /// </summary>
-    public class Geocoding
+    public class Geocoding : BaseResponse
     {
         /// <summary>
         /// Gets or sets a string containing the human-readable address of this location.
@@ -44,12 +44,6 @@ namespace Geo.Google.Models.Responses
         /// </summary>
         [JsonProperty("plus_code")]
         public PlusCode PlusCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets a unique identifier that can be used with other Google APIs.
-        /// </summary>
-        [JsonProperty("place_id")]
-        public string PlaceId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the geocoder did not return an exact match for the original request,

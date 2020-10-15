@@ -5,21 +5,13 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Geo.Google.Converters;
-    using Geo.Google.Enums;
     using Newtonsoft.Json;
 
     /// <summary>
     /// A query autocomplete result returned by Google.
     /// </summary>
-    public class QueryAutocomplete
+    public class QueryAutocomplete : BaseResponse
     {
-        /// <summary>
-        /// Gets or sets a unique identifier that can be used with other Google APIs.
-        /// </summary>
-        [JsonProperty("place_id")]
-        public string PlaceId { get; set; }
-
         /// <summary>
         /// Gets or sets the human-readable name for the returned result.
         /// For establishment results, this is usually the business name.
