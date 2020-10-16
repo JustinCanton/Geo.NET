@@ -100,7 +100,7 @@ namespace Geo.MapQuest.Services
                 query.Add("boundingBox", parameters.BoundingBox.ToString());
             }
 
-            query.Add("ignoreLatLngInput", parameters.IgnoreLatLngInput.ToString(CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture));
+            query.Add("ignoreLatLngInput", parameters.IgnoreLatLngInput.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 
             if (parameters.MaxResults > 0)
             {
@@ -147,9 +147,9 @@ namespace Geo.MapQuest.Services
 
             query.Add("location", parameters.Location.ToString());
 
-            query.Add("includeNearestIntersection", parameters.IncludeNearestIntersection.ToString(CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture));
+            query.Add("includeNearestIntersection", parameters.IncludeNearestIntersection.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 
-            query.Add("includeRoadMetadata", parameters.IncludeRoadMetadata.ToString(CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture));
+            query.Add("includeRoadMetadata", parameters.IncludeRoadMetadata.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 
             AddBaseParameters(parameters, query);
 
@@ -167,7 +167,7 @@ namespace Geo.MapQuest.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
         {
-            query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture));
+            query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
         }
 
         /// <summary>
