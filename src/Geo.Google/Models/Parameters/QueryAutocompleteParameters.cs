@@ -7,7 +7,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used in an autocomplete request.
     /// </summary>
-    public class AutocompleteParameters : CoordinateParameters
+    public class QueryAutocompleteParameters : CoordinateParameters
     {
         /// <summary>
         /// Gets or sets the text string on which to search.

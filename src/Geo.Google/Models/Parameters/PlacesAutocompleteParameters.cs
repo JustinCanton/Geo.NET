@@ -10,7 +10,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used in an places autocomplete request.
     /// </summary>
-    public class PlacesAutocompleteParameters : AutocompleteParameters
+    public class PlacesAutocompleteParameters : QueryAutocompleteParameters
     {
         /// <summary>
         /// Gets or sets a random string which identifies an autocomplete session for billing purposes.

@@ -9,7 +9,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used for the nearby search request.
     /// </summary>
-    public class NearbySearchParameters
+    public class NearbySearchParameters : BaseSearchParameters
     {
         /// <summary>
         /// Gets or sets a term to be matched against all content that Google has indexed for this place,
