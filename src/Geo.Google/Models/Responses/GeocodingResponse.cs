@@ -2,24 +2,24 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Models
+namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The Google Geocoding response object.
+    /// The Google geocoding response object.
     /// </summary>
     public class GeocodingResponse
     {
         /// <summary>
-        /// A list of the results for the Google Geocoding API call.
+        /// Gets a list of the results for the Google Geocoding API call.
         /// </summary>
         [JsonProperty("results")]
-        public IEnumerable<Geocoding> Results { get; set; }
+        public IEnumerable<Geocoding> Results { get; } = new List<Geocoding>();
 
         /// <summary>
-        /// The status of the Google Geocoding API call.
+        /// Gets or sets the status of the Google Geocoding API call.
         /// </summary>
         [JsonProperty("status")]
         public string Status { get; set; }

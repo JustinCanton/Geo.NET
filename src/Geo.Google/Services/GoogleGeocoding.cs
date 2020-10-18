@@ -10,6 +10,8 @@ namespace Geo.Google.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading;
@@ -20,13 +22,21 @@ namespace Geo.Google.Services
     using Geo.Google.Enums;
     using Geo.Google.Extensions;
     using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
+    using Geo.Google.Models.Responses;
 
     /// <summary>
     /// A service to call the Google geocoding api.
     /// </summary>
     public class GoogleGeocoding : ClientExecutor, IGoogleGeocoding
     {
-        private readonly string _baseUri = "https://maps.googleapis.com/maps/api/geocode/json";
+        private readonly string _geocodingUri = "https://maps.googleapis.com/maps/api/geocode/json";
+        private readonly string _findPlaceUri = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
+        private readonly string _nearbySearchUri = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+        private readonly string _textSearchUri = "https://maps.googleapis.com/maps/api/place/textsearch/json";
+        private readonly string _detailsUri = "https://maps.googleapis.com/maps/api/place/details/json";
+        private readonly string _placeAutocompleteUri = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+        private readonly string _queryAutocompleteUri = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json";
         private readonly IGoogleKeyContainer _keyContainer;
 
         /// <summary>
@@ -68,6 +78,84 @@ namespace Geo.Google.Services
             return await CallAsync<GeocodingResponse>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
+        public async Task<FindPlaceResponse> FindPlacesAsync(
+            FindPlacesParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<FindPlaceResponse>(BuildFindPlaceRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<PlaceResponse> NearbySearchAsync(
+            NearbySearchParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<PlaceResponse>(BuildNearbySearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<PlaceResponse> TextSearchAsync(
+            TextSearchParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<PlaceResponse>(BuildTextSearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<DetailsResponse> DetailsAsync(
+            DetailsParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<DetailsResponse>(BuildDetailsRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<AutocompleteResponse<PlaceAutocomplete>> PlaceAutocompleteAsync(
+            PlacesAutocompleteParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<AutocompleteResponse<PlaceAutocomplete>>(BuildPlaceAutocompleteRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<AutocompleteResponse<QueryAutocomplete>> QueryAutocompleteAsync(
+            QueryAutocompleteParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            return await CallAsync<AutocompleteResponse<QueryAutocomplete>>(BuildQueryAutocompleteRequest(parameters), cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Builds the geocoding uri based on the passed parameters.
         /// </summary>
@@ -76,7 +164,7 @@ namespace Geo.Google.Services
         /// <exception cref="ArgumentException">Thrown when the 'Address' parameter is null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_baseUri);
+            var uriBuilder = new UriBuilder(_geocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Address))
@@ -103,10 +191,7 @@ namespace Geo.Google.Services
                 query.Add("region", parameters.Region);
             }
 
-            if (parameters.Language != null)
-            {
-                query.Add("language", parameters.Language);
-            }
+            AddBaseParameters(parameters, query);
 
             AddGoogleKey(query);
 
@@ -123,7 +208,7 @@ namespace Geo.Google.Services
         /// <exception cref="ArgumentException">Thrown when the 'Coordinate' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_baseUri);
+            var uriBuilder = new UriBuilder(_geocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.Coordinate is null)
@@ -165,16 +250,355 @@ namespace Geo.Google.Services
                 query.Add("location_type", locationTypesBuilder.ToString());
             }
 
-            if (parameters.Language != null)
-            {
-                query.Add("language", parameters.Language);
-            }
+            AddBaseParameters(parameters, query);
 
             AddGoogleKey(query);
 
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the find place uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="FindPlacesParameters"/> with the find place parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google find place uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Input' parameter is null or invalid or the 'InputType' parameter is invalid.</exception>
+        internal Uri BuildFindPlaceRequest(FindPlacesParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_findPlaceUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Input))
+            {
+                throw new ArgumentException("The input cannot be null or empty.", nameof(parameters.Input));
+            }
+
+            if (parameters.InputType > InputType.PhoneNumber || parameters.InputType < InputType.TextQuery)
+            {
+                throw new ArgumentException("The input type must be valid.", nameof(parameters.InputType));
+            }
+
+            query.Add("input", parameters.Input);
+
+            query.Add("inputtype", parameters.InputType.ToEnumString());
+
+            if (parameters.Fields != null && parameters.Fields.Count > 0)
+            {
+                query.Add("fields", string.Join(",", parameters.Fields));
+            }
+
+            if (parameters.LocationBias != null)
+            {
+                if (parameters.LocationBias.GetType() == typeof(Coordinate))
+                {
+                    query.Add("locationbias", $"point:{parameters.LocationBias}");
+                }
+                else if (parameters.LocationBias.GetType() == typeof(Boundaries))
+                {
+                    query.Add("locationbias", $"rectangle:{parameters.LocationBias}");
+                }
+                else
+                {
+                    query.Add("locationbias", $"circle:{parameters.LocationBias}");
+                }
+            }
+
+            AddBaseParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the nearby search uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="NearbySearchParameters"/> with the nearby search parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google nearby search uri.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the 'Location' parameter is null or invalid.
+        /// Thrown when the 'RankBy' is Distance and a 'Radius' is entered or a 'Keyword' or 'Type' is not entered.
+        /// Thrown when the 'RankBy' is not Distance and the 'Radius' is not > 0.
+        /// </exception>
+        internal Uri BuildNearbySearchRequest(NearbySearchParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_nearbySearchUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (parameters.Location == null)
+            {
+                throw new ArgumentException("The location cannot be null.", nameof(parameters.Location));
+            }
+
+            if (parameters.RankBy == RankType.Distance)
+            {
+                if (parameters.Radius > 0)
+                {
+                    throw new ArgumentException("The radius must not be greater than 0 on a rank by distance request.", nameof(parameters.Radius));
+                }
+
+                if (string.IsNullOrWhiteSpace(parameters.Keyword) && string.IsNullOrWhiteSpace(parameters.Type))
+                {
+                    throw new ArgumentException("The keyword or type must be specified when ranking by distance.", nameof(parameters.RankBy));
+                }
+            }
+            else if (parameters.Radius <= 0)
+            {
+                throw new ArgumentException("The radius must be greater than 0.", nameof(parameters.Radius));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Keyword))
+            {
+                query.Add("keyword", parameters.Keyword);
+            }
+
+            if (parameters.RankBy >= RankType.Prominence && parameters.RankBy <= RankType.Distance)
+            {
+                query.Add("rankby", parameters.RankBy.ToEnumString());
+            }
+
+            AddBaseSearchParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the text search uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="TextSearchParameters"/> with the text search parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google text search uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
+        internal Uri BuildTextSearchRequest(TextSearchParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_textSearchUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Query))
+            {
+                throw new ArgumentException("The query cannot be null or invalid.", nameof(parameters.Query));
+            }
+
+            query.Add("query", parameters.Query);
+
+            if (!string.IsNullOrWhiteSpace(parameters.Region))
+            {
+                query.Add("region", parameters.Region);
+            }
+
+            AddBaseSearchParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the details uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="DetailsParameters"/> with the details parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google details uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'PlaceId' parameter is null or invalid.</exception>
+        internal Uri BuildDetailsRequest(DetailsParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_detailsUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.PlaceId))
+            {
+                throw new ArgumentException("The place id cannot be null or invalid.", nameof(parameters.PlaceId));
+            }
+
+            query.Add("place_id", parameters.PlaceId);
+
+            if (!string.IsNullOrWhiteSpace(parameters.Region))
+            {
+                query.Add("region", parameters.Region);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SessionToken))
+            {
+                query.Add("sessiontoken", parameters.SessionToken);
+            }
+
+            if (parameters.Fields != null && parameters.Fields.Count > 0)
+            {
+                query.Add("fields", string.Join(",", parameters.Fields));
+            }
+
+            AddBaseParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the place autocomplete uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="PlacesAutocompleteParameters"/> with the place autocomplete parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google place autocomplete uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Input' parameter is null or invalid.</exception>
+        internal Uri BuildPlaceAutocompleteRequest(PlacesAutocompleteParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_placeAutocompleteUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Input))
+            {
+                throw new ArgumentException("The input cannot be null or invalid.", nameof(parameters.Input));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SessionToken))
+            {
+                query.Add("sessiontoken", parameters.SessionToken);
+            }
+
+            if (parameters.Origin != null)
+            {
+                query.Add("origin", parameters.Origin.ToString());
+            }
+
+            if (parameters.Types != null && parameters.Types.Count > 0)
+            {
+                query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToEnumString())));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Components))
+            {
+                query.Add("components", parameters.Components);
+            }
+
+            query.Add("strictbounds", parameters.StrictBounds.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+
+            AddAutocompleteParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the query autocomplete uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="QueryAutocompleteParameters"/> with the query autocomplete parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed Google query autocomplete uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Input' parameter is null or invalid.</exception>
+        internal Uri BuildQueryAutocompleteRequest(QueryAutocompleteParameters parameters)
+        {
+            var uriBuilder = new UriBuilder(_queryAutocompleteUri);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (string.IsNullOrWhiteSpace(parameters.Input))
+            {
+                throw new ArgumentException("The input cannot be null or invalid.", nameof(parameters.Input));
+            }
+
+            AddAutocompleteParameters(parameters, query);
+
+            AddGoogleKey(query);
+
+            uriBuilder.Query = query.ToString();
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Adds the autocomplete parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="QueryAutocompleteParameters"/> with the autocomplete parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddAutocompleteParameters(QueryAutocompleteParameters parameters, NameValueCollection query)
+        {
+            if (parameters.Offset > 0)
+            {
+                query.Add("offset", parameters.Offset.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Input))
+            {
+                query.Add("input", parameters.Input);
+            }
+
+            AddCoordinateParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the base search parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseSearchParameters"/> with the base search parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddBaseSearchParameters(BaseSearchParameters parameters, NameValueCollection query)
+        {
+            if (parameters.MinimumPrice >= 0 && parameters.MinimumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
+            {
+                query.Add("minprice", parameters.MinimumPrice.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (parameters.MaximumPrice >= 0 && parameters.MaximumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
+            {
+                query.Add("maxprice", parameters.MinimumPrice.ToString(CultureInfo.InvariantCulture));
+            }
+
+            query.Add("opennow", parameters.OpenNow.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+
+            if (parameters.PageToken > 0)
+            {
+                query.Add("pagetoken", parameters.PageToken.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Type))
+            {
+                query.Add("type", parameters.Type);
+            }
+
+            AddCoordinateParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the coordinate parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="CoordinateParameters"/> with the coordinate parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddCoordinateParameters(CoordinateParameters parameters, NameValueCollection query)
+        {
+            if (parameters.Location != null)
+            {
+                query.Add("location", parameters.Location.ToString());
+            }
+
+            if (parameters.Radius > 0 && parameters.Radius <= 50000)
+            {
+                query.Add("radius", parameters.Radius.ToString(CultureInfo.InvariantCulture));
+            }
+
+            AddBaseParameters(parameters, query);
+        }
+
+        /// <summary>
+        /// Adds the base query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        {
+            if (parameters.Language != null)
+            {
+                query.Add("language", parameters.Language);
+            }
         }
 
         /// <summary>

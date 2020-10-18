@@ -6,7 +6,7 @@ namespace TestApi.Controllers
 {
     using System.Threading.Tasks;
     using Geo.Google.Abstractions;
-    using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -36,6 +36,54 @@ namespace TestApi.Controllers
         public async Task<IActionResult> GetReverseGeocodingResults([FromQuery] ReverseGeocodingParameters parameters)
         {
             var results = await _googleGeocoding.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("find-places")]
+        public async Task<IActionResult> GetFindPlacesResults([FromQuery] FindPlacesParameters parameters)
+        {
+            var results = await _googleGeocoding.FindPlacesAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("nearby-search")]
+        public async Task<IActionResult> GetNearbySearchResults([FromQuery] NearbySearchParameters parameters)
+        {
+            var results = await _googleGeocoding.NearbySearchAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("text-search")]
+        public async Task<IActionResult> GetTextSearchResults([FromQuery] TextSearchParameters parameters)
+        {
+            var results = await _googleGeocoding.TextSearchAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("details")]
+        public async Task<IActionResult> GetDetailsResults([FromQuery] DetailsParameters parameters)
+        {
+            var results = await _googleGeocoding.DetailsAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("place-autocomplete")]
+        public async Task<IActionResult> GetPlaceAutocompleteResults([FromQuery] PlacesAutocompleteParameters parameters)
+        {
+            var results = await _googleGeocoding.PlaceAutocompleteAsync(parameters).ConfigureAwait(false);
+
+            return Ok(results);
+        }
+
+        [HttpGet("query-autocomplete")]
+        public async Task<IActionResult> GetQueryAutocompleteResults([FromQuery] QueryAutocompleteParameters parameters)
+        {
+            var results = await _googleGeocoding.QueryAutocompleteAsync(parameters).ConfigureAwait(false);
 
             return Ok(results);
         }

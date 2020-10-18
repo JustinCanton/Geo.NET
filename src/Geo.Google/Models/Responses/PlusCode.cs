@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Models
+namespace Geo.Google.Models.Responses
 {
     using Newtonsoft.Json;
 

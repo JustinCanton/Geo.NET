@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Models
+namespace Geo.Google.Models.Parameters
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,7 @@ namespace Geo.Google.Models
     /// <summary>
     /// The parameters for the reverse gecoding Google API.
     /// </summary>
-    public class ReverseGeocodingParameters
+    public class ReverseGeocodingParameters : BaseParameters
     {
         /// <summary>
         /// Gets or sets the latitude and longitude values specifying the location
@@ -37,10 +37,5 @@ namespace Geo.Google.Models
         /// then discards those results that do not match the specified location type(s).
         /// </summary>
         public IEnumerable<LocationType> LocationTypes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language in which to return results.
-        /// </summary>
-        public string Language { get; set; }
     }
 }

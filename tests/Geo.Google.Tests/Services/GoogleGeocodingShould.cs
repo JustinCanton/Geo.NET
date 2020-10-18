@@ -17,6 +17,7 @@ namespace Geo.Google.Tests.Services
     using Geo.Google.Enums;
     using Geo.Google.Extensions;
     using Geo.Google.Models;
+    using Geo.Google.Models.Parameters;
     using Geo.Google.Services;
     using Moq;
     using Moq.Protected;

@@ -1,10 +1,10 @@
 # Google Geocoding
 
 This allows the simple calling of Google Geocoding API's. The supported Google geocoding endpoints are:
-- [x] [Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
-- [x] [Reverse Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
-- [ ] Places ([Search](https://developers.google.com/places/web-service/search) and [Details](https://developers.google.com/places/web-service/details))
-- [ ] [Autocomplete](https://developers.google.com/places/web-service/query)
+ - [Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
+ - [Reverse Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
+ - Places ([Search](https://developers.google.com/places/web-service/search) and [Details](https://developers.google.com/places/web-service/details))
+ - Autocomplete([Places](https://developers.google.com/places/web-service/autocomplete) and [Query](https://developers.google.com/places/web-service/query))
 
 ## Configuration
 
