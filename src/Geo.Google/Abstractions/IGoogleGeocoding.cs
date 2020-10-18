@@ -56,7 +56,7 @@ namespace Geo.Google.Abstractions
         /// </summary>
         /// <param name="parameters">A <see cref="FindPlacesParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="PlaceResponse{Place{OpeningHours}}"/> with the response from Google.</returns>
+        /// <returns>A <see cref="FindPlaceResponse"/> with the response from Google.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
         /// <exception cref="ArgumentException">Thrown when the 'Input' parameter is null or invalid or the 'InputType' parameter is invalid.</exception>
         /// <exception cref="HttpRequestException">
@@ -66,14 +66,14 @@ namespace Geo.Google.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<PlaceResponse<Place<OpeningHours>>> FindPlacesAsync(FindPlacesParameters parameters, CancellationToken cancellationToken = default);
+        Task<FindPlaceResponse> FindPlacesAsync(FindPlacesParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the Google nearby search API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="NearbySearchParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="PlaceResponse{Place{OpeningHours}}"/> with the response from Google.</returns>
+        /// <returns>A <see cref="PlaceResponse}"/> with the response from Google.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
         /// <exception cref="ArgumentException">
         /// Thrown when the 'Location' parameter is null or invalid.
@@ -87,14 +87,14 @@ namespace Geo.Google.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<PlaceResponse<Place<OpeningHours>>> NearbySearchAsync(NearbySearchParameters parameters, CancellationToken cancellationToken = default);
+        Task<PlaceResponse> NearbySearchAsync(NearbySearchParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the Google text search API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="TextSearchParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="PlaceResponse{Place{OpeningHours}}"/> with the response from Google.</returns>
+        /// <returns>A <see cref="PlaceResponse"/> with the response from Google.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         /// <exception cref="HttpRequestException">
@@ -104,14 +104,14 @@ namespace Geo.Google.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<PlaceResponse<Place<OpeningHours>>> TextSearchAsync(TextSearchParameters parameters, CancellationToken cancellationToken = default);
+        Task<PlaceResponse> TextSearchAsync(TextSearchParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the Google place details API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="DetailsParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="PlaceResponse{Details}"/> with the response from Google.</returns>
+        /// <returns>A <see cref="DetailsResponse"/> with the response from Google.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
         /// <exception cref="ArgumentException">Thrown when the 'Coordinate' parameter is null.</exception>
         /// <exception cref="HttpRequestException">
@@ -121,7 +121,7 @@ namespace Geo.Google.Abstractions
         /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        Task<PlaceResponse<Details>> DetailsAsync(DetailsParameters parameters, CancellationToken cancellationToken = default);
+        Task<DetailsResponse> DetailsAsync(DetailsParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the Google place autocomplete API and returns the results.

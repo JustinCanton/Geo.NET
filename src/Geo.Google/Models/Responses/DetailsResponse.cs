@@ -1,4 +1,4 @@
-﻿// <copyright file="PlaceResponse.cs" company="Geo.NET">
+﻿// <copyright file="DetailsResponse.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -8,9 +8,9 @@ namespace Geo.Google.Models.Responses
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The Google place response object.
+    /// The Google details response object.
     /// </summary>
-    public class PlaceResponse
+    public class DetailsResponse
     {
         /// <summary>
         /// Gets a list of html attributions about this listing which must be displayed to the user.
@@ -19,10 +19,10 @@ namespace Geo.Google.Models.Responses
         public List<string> HtmlAttributes { get; } = new List<string>();
 
         /// <summary>
-        /// Gets a list of the results for the Google request.
+        /// Gets or sets the results of the google details request.
         /// </summary>
-        [JsonProperty("results")]
-        public IEnumerable<Place<OpeningHours>> Results { get; } = new List<Place<OpeningHours>>();
+        [JsonProperty("result")]
+        public Details Result { get; set; }
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.

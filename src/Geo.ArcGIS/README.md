@@ -1,11 +1,11 @@
 # ArcGIS Geocoding
 
 This allows the simple calling of ArcGIS Geocoding API's. The supported ArcGIS geocoding endpoints are:
-- [x] [Suggest](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-suggest.htm)
-- [x] [Address Candidate](https://developers.arcgis.com/labs/rest/search-for-an-address/)
-- [x] [Place Candidate](https://developers.arcgis.com/labs/rest/find-places/)
-- [x] [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
-- [x] [Reverse Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm)
+- [Suggest](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-suggest.htm)
+- [Address Candidate](https://developers.arcgis.com/labs/rest/search-for-an-address/)
+- [Place Candidate](https://developers.arcgis.com/labs/rest/find-places/)
+- [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
+- [Reverse Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm)
 
 ## Configuration
 

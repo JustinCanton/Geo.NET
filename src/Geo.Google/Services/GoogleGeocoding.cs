@@ -79,7 +79,7 @@ namespace Geo.Google.Services
         }
 
         /// <inheritdoc/>
-        public async Task<PlaceResponse<Place<OpeningHours>>> FindPlacesAsync(
+        public async Task<FindPlaceResponse> FindPlacesAsync(
             FindPlacesParameters parameters,
             CancellationToken cancellationToken = default)
         {
@@ -88,11 +88,11 @@ namespace Geo.Google.Services
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            return await CallAsync<PlaceResponse<Place<OpeningHours>>>(BuildFindPlaceRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallAsync<FindPlaceResponse>(BuildFindPlaceRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<PlaceResponse<Place<OpeningHours>>> NearbySearchAsync(
+        public async Task<PlaceResponse> NearbySearchAsync(
             NearbySearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
@@ -101,11 +101,11 @@ namespace Geo.Google.Services
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            return await CallAsync<PlaceResponse<Place<OpeningHours>>>(BuildNearbySearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallAsync<PlaceResponse>(BuildNearbySearchRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<PlaceResponse<Place<OpeningHours>>> TextSearchAsync(
+        public async Task<PlaceResponse> TextSearchAsync(
             TextSearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
@@ -114,11 +114,11 @@ namespace Geo.Google.Services
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            return await CallAsync<PlaceResponse<Place<OpeningHours>>>(BuildTextSearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallAsync<PlaceResponse>(BuildTextSearchRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<PlaceResponse<Details>> DetailsAsync(
+        public async Task<DetailsResponse> DetailsAsync(
             DetailsParameters parameters,
             CancellationToken cancellationToken = default)
         {
@@ -127,7 +127,7 @@ namespace Geo.Google.Services
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            return await CallAsync<PlaceResponse<Details>>(BuildDetailsRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallAsync<DetailsResponse>(BuildDetailsRequest(parameters), cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -282,7 +282,7 @@ namespace Geo.Google.Services
 
             query.Add("input", parameters.Input);
 
-            query.Add("inputtype", parameters.InputType.ToString());
+            query.Add("inputtype", parameters.InputType.ToEnumString());
 
             if (parameters.Fields != null && parameters.Fields.Count > 0)
             {
@@ -418,7 +418,7 @@ namespace Geo.Google.Services
                 throw new ArgumentException("The place id cannot be null or invalid.", nameof(parameters.PlaceId));
             }
 
-            query.Add("query", parameters.PlaceId);
+            query.Add("place_id", parameters.PlaceId);
 
             if (!string.IsNullOrWhiteSpace(parameters.Region))
             {
