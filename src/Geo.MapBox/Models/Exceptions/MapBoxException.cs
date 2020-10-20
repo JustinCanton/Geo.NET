@@ -24,7 +24,7 @@ namespace Geo.MapBox.Models.Exceptions
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class MapBoxException : Exception
     {
-        private static readonly string _defaultMessage = "{0} Please see the inner exception for more information.";
+        private const string _defaultMessage = "{0} Please see the inner exception for more information.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxException"/> class.

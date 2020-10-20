@@ -4,12 +4,11 @@
 
 namespace Geo.MapQuest.Abstractions
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// An interface for calling the here geocoding methods.
@@ -22,15 +21,7 @@ namespace Geo.MapQuest.Abstractions
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response{GeocodeResult}"/> with the response from MapQuest.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="MapQuestException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<GeocodeResult>> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -39,15 +30,7 @@ namespace Geo.MapQuest.Abstractions
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response{ReverseGeocodeResult}"/> with the response from MapQuest.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="MapQuestException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<ReverseGeocodeResult>> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
     }
 }

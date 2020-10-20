@@ -18,8 +18,10 @@ namespace Geo.MapQuest.Services
     using Geo.Core;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Enums;
+    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the MapQuest geocoding api.
@@ -54,12 +56,9 @@ namespace Geo.MapQuest.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<GeocodeResult>>(BuildGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallMapQuestAsync<Response<GeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -67,12 +66,72 @@ namespace Geo.MapQuest.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
+            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+
+            return await CallMapQuestAsync<Response<ReverseGeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Validates the uri and builds it based on the parameter type.
+        /// </summary>
+        /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+        /// <param name="parameters">The parameters to validate and create a uri from.</param>
+        /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
+        /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
+        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        {
             if (parameters is null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new MapQuestException("The MapQuest parameters are null.", new ArgumentNullException(nameof(parameters)));
             }
 
-            return await CallAsync<Response<ReverseGeocodeResult>>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return uriBuilderFunction(parameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new MapQuestException("Failed to create the MapQuest uri.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Calls MapQuest with the request information.
+        /// </summary>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
+        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        internal async Task<TResult> CallMapQuestAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new MapQuestException("The MapQuest uri is null.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new MapQuestException("The MapQuest request failed.", ex);
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new MapQuestException("The MapQuest request was cancelled.", ex);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new MapQuestException("Failed to parse the MapQuest response properly.", ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new MapQuestException("Failed to parse the MapQuest response properly.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new MapQuestException("The call to MapBox failed with an exception.", ex);
+            }
         }
 
         /// <summary>
