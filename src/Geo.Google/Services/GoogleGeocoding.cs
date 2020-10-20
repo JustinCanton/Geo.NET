@@ -66,8 +66,8 @@ namespace Geo.Google.Services
 
         /// <inheritdoc/>
         public async Task<GeocodingResponse> ReverseGeocodingAsync(
-        ReverseGeocodingParameters parameters,
-        CancellationToken cancellationToken = default)
+            ReverseGeocodingParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 

@@ -47,7 +47,9 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <inheritdoc/>
-        public async Task<CandidateResponse> AddressCandidateAsync(AddressCandidateParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<CandidateResponse> AddressCandidateAsync(
+            AddressCandidateParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = await ValidateAndCraftUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
@@ -55,7 +57,9 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <inheritdoc/>
-        public async Task<CandidateResponse> PlaceCandidateAsync(PlaceCandidateParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<CandidateResponse> PlaceCandidateAsync(
+            PlaceCandidateParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = await ValidateAndCraftUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
@@ -63,7 +67,9 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <inheritdoc/>
-        public async Task<SuggestResponse> SuggestAsync(SuggestParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<SuggestResponse> SuggestAsync(
+            SuggestParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = await ValidateAndCraftUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
@@ -71,7 +77,9 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ReverseGeocodingResponse> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<ReverseGeocodingResponse> ReverseGeocodingAsync(
+            ReverseGeocodingParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = await ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
@@ -79,7 +87,9 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <inheritdoc/>
-        public async Task<GeocodingResponse> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<GeocodingResponse> GeocodingAsync(
+            GeocodingParameters parameters,
+            CancellationToken cancellationToken = default)
         {
             var uri = await ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
@@ -94,7 +104,10 @@ namespace Geo.ArcGIS.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the paramter building.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal async Task<Uri> ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, CancellationToken, Task<Uri>> uriBuilderFunction, CancellationToken cancellationToken)
+        internal async Task<Uri> ValidateAndCraftUri<TParameters>(
+            TParameters parameters,
+            Func<TParameters, CancellationToken, Task<Uri>> uriBuilderFunction,
+            CancellationToken cancellationToken)
         {
             if (parameters is null)
             {
