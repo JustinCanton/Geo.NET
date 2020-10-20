@@ -22,8 +22,10 @@ namespace Geo.Google.Services
     using Geo.Google.Enums;
     using Geo.Google.Extensions;
     using Geo.Google.Models;
+    using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the Google geocoding api.
@@ -57,12 +59,9 @@ namespace Geo.Google.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<GeocodingResponse>(BuildGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<GeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -70,12 +69,9 @@ namespace Geo.Google.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<GeocodingResponse>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<GeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -83,12 +79,9 @@ namespace Geo.Google.Services
             FindPlacesParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<FindPlacesParameters>(parameters, BuildFindPlaceRequest);
 
-            return await CallAsync<FindPlaceResponse>(BuildFindPlaceRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<FindPlaceResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -96,12 +89,9 @@ namespace Geo.Google.Services
             NearbySearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<NearbySearchParameters>(parameters, BuildNearbySearchRequest);
 
-            return await CallAsync<PlaceResponse>(BuildNearbySearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<PlaceResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -109,12 +99,9 @@ namespace Geo.Google.Services
             TextSearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<TextSearchParameters>(parameters, BuildTextSearchRequest);
 
-            return await CallAsync<PlaceResponse>(BuildTextSearchRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<PlaceResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -122,12 +109,9 @@ namespace Geo.Google.Services
             DetailsParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<DetailsParameters>(parameters, BuildDetailsRequest);
 
-            return await CallAsync<DetailsResponse>(BuildDetailsRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<DetailsResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -135,12 +119,9 @@ namespace Geo.Google.Services
             PlacesAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<PlacesAutocompleteParameters>(parameters, BuildPlaceAutocompleteRequest);
 
-            return await CallAsync<AutocompleteResponse<PlaceAutocomplete>>(BuildPlaceAutocompleteRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallGoogleAsync<AutocompleteResponse<PlaceAutocomplete>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -148,12 +129,72 @@ namespace Geo.Google.Services
             QueryAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
+            var uri = ValidateAndCraftUri<QueryAutocompleteParameters>(parameters, BuildQueryAutocompleteRequest);
+
+            return await CallGoogleAsync<AutocompleteResponse<QueryAutocomplete>>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Validates the uri and builds it based on the parameter type.
+        /// </summary>
+        /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+        /// <param name="parameters">The parameters to validate and create a uri from.</param>
+        /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
+        /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
+        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        {
             if (parameters is null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new GoogleException("The Google parameters are null.", new ArgumentNullException(nameof(parameters)));
             }
 
-            return await CallAsync<AutocompleteResponse<QueryAutocomplete>>(BuildQueryAutocompleteRequest(parameters), cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return uriBuilderFunction(parameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new GoogleException("Failed to create the Google uri.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Calls Google with the request information.
+        /// </summary>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
+        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        internal async Task<TResult> CallGoogleAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new GoogleException("The Google uri is null.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new GoogleException("The Google request failed.", ex);
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new GoogleException("The Google request was cancelled.", ex);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new GoogleException("Failed to parse the Google response properly.", ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new GoogleException("Failed to parse the Google response properly.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new GoogleException("The call to Google failed with an exception.", ex);
+            }
         }
 
         /// <summary>

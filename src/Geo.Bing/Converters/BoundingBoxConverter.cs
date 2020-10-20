@@ -6,7 +6,7 @@ namespace Geo.Bing.Converters
 {
     using System;
     using System.Linq;
-    using Geo.Bing.Models;
+    using Geo.Bing.Models.Responses;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 

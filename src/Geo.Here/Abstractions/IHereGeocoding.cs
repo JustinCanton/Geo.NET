@@ -4,13 +4,11 @@
 
 namespace Geo.Here.Abstractions
 {
-    using System;
-    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// An interface for calling the here geocoding methods.
@@ -23,15 +21,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="GeocodeParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="GeocodingResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter and the 'QualifiedQuery' parameter are null or invalid.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<GeocodingResponse> GeocodingAsync(GeocodeParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -40,15 +30,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="ReverseGeocodeParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="ReverseGeocodingResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<ReverseGeocodingResponse> ReverseGeocodingAsync(ReverseGeocodeParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -57,15 +39,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="DiscoverParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="DiscoverResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<DiscoverResponse> DiscoverAsync(DiscoverParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -74,15 +48,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="AutosuggestParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="AutosuggestResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<AutosuggestResponse> AutosuggestAsync(AutosuggestParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -91,15 +57,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="BrowseParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="BrowseResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<BrowseResponse> BrowseAsync(BrowseParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -108,15 +66,7 @@ namespace Geo.Here.Abstractions
         /// <param name="parameters">A <see cref="LookupParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="LookupResponse"/> with the response from here.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when the 'Id' parameter is null.</exception>
-        /// <exception cref="HttpRequestException">
-        /// Thrown when the request failed due to an underlying issue such as network connectivity,
-        /// DNS failure, server certificate validation or timeout.
-        /// </exception>
-        /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="HereException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<LookupResponse> LookupAsync(LookupParameters parameters, CancellationToken cancellationToken = default);
     }
 }

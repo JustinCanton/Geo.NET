@@ -20,8 +20,10 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
+    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the MapBox geocoding api.
@@ -52,12 +54,9 @@ namespace Geo.MapBox.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<List<string>>>(BuildGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallMapBoxAsync<Response<List<string>>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -65,12 +64,72 @@ namespace Geo.MapBox.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
+            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+
+            return await CallMapBoxAsync<Response<Coordinate>>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Validates the uri and builds it based on the parameter type.
+        /// </summary>
+        /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+        /// <param name="parameters">The parameters to validate and create a uri from.</param>
+        /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
+        /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
+        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        {
             if (parameters is null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new MapBoxException("The MapBox parameters are null.", new ArgumentNullException(nameof(parameters)));
             }
 
-            return await CallAsync<Response<Coordinate>>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return uriBuilderFunction(parameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new MapBoxException("Failed to create the MapBox uri.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Calls MapBox with the request information.
+        /// </summary>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
+        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        internal async Task<TResult> CallMapBoxAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new MapBoxException("The MapBox uri is null.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new MapBoxException("The MapBox request failed.", ex);
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new MapBoxException("The MapBox request was cancelled.", ex);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new MapBoxException("Failed to parse the MapBox response properly.", ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new MapBoxException("Failed to parse the MapBox response properly.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new MapBoxException("The call to MapBox failed with an exception.", ex);
+            }
         }
 
         /// <summary>
