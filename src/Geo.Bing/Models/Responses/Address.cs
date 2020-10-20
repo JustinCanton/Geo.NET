@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Bing.Models
+namespace Geo.Bing.Models.Responses
 {
     using Newtonsoft.Json;
 

@@ -4,7 +4,7 @@
 
 namespace Geo.Bing.Tests.Models
 {
-    using Geo.Bing.Models;
+    using Geo.Bing.Models.Responses;
 
     public class BoundingBoxObject
     {

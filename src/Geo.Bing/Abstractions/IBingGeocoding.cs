@@ -8,8 +8,8 @@ namespace Geo.Bing.Abstractions
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.Bing.Models;
     using Geo.Bing.Models.Parameters;
+    using Geo.Bing.Models.Responses;
     using Newtonsoft.Json;
 
     /// <summary>

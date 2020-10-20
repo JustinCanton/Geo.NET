@@ -16,9 +16,11 @@ namespace Geo.Bing.Services
     using System.Threading.Tasks;
     using System.Web;
     using Geo.Bing.Abstractions;
-    using Geo.Bing.Models;
+    using Geo.Bing.Models.Exceptions;
     using Geo.Bing.Models.Parameters;
+    using Geo.Bing.Models.Responses;
     using Geo.Core;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the Bing geocoding api.
@@ -46,12 +48,9 @@ namespace Geo.Bing.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response>(BuildGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -59,23 +58,80 @@ namespace Geo.Bing.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response>(BuildReverseGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task<Response> AddressGeocodingAsync(AddressGeocodingParameters parameters, CancellationToken cancellationToken = default)
         {
+            var uri = ValidateAndCraftUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
+
+            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Validates the uri and builds it based on the parameter type.
+        /// </summary>
+        /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+        /// <param name="parameters">The parameters to validate and create a uri from.</param>
+        /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
+        /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
+        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        {
             if (parameters is null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new BingException("The Bing parameters are null.", new ArgumentNullException(nameof(parameters)));
             }
 
-            return await CallAsync<Response>(BuildAddressGeocodingRequest(parameters), cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return uriBuilderFunction(parameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new BingException("Failed to create the Google uri.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Calls Bing with the request information.
+        /// </summary>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
+        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        internal async Task<TResult> CallBingAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new BingException("The Bing uri is null.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new BingException("The Bing request failed.", ex);
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new BingException("The Bing request was cancelled.", ex);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new BingException("Failed to parse the Bing response properly.", ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new BingException("Failed to parse the Bing response properly.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BingException("The call to Bing failed with an exception.", ex);
+            }
         }
 
         /// <summary>
