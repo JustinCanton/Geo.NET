@@ -6,7 +6,7 @@ namespace Geo.Google.Tests.Extensions
 {
     using System;
     using FluentAssertions;
-    using Geo.Google.Extensions;
+    using Geo.Core.Extensions;
     using Geo.Google.Tests.Enums;
     using NUnit.Framework;
 
