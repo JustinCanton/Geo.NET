@@ -14,8 +14,8 @@ namespace Geo.Google.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
+    using Geo.Core.Extensions;
     using Geo.Google.Enums;
-    using Geo.Google.Extensions;
     using Geo.Google.Models;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Services;

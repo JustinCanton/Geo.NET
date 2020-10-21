@@ -44,15 +44,15 @@ namespace Geo.Here.Models.Responses
         public Address Address { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of categories assigned to this place.
+        /// Gets the list of categories assigned to this place.
         /// </summary>
         [JsonProperty("categories")]
-        public List<Category> Categories { get; set; }
+        public List<Category> Categories { get; } = new List<Category>();
 
         /// <summary>
-        /// Gets or sets the list of food types assigned to this place.
+        /// Gets the list of food types assigned to this place.
         /// </summary>
         [JsonProperty("foodTypes")]
-        public List<Category> FoodTypes { get; set; }
+        public List<Category> FoodTypes { get; } = new List<Category>();
     }
 }

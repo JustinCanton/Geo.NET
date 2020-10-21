@@ -21,7 +21,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddMapQuestServices(options => options.UseKey(your_here_api_key_here));
+    services.AddMapQuestServices(options => options.UseKey(your_mapquest_api_key_here));
     .
     .
     .
@@ -39,7 +39,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddMapQuestServices(options => options.UseKey(your_here_api_key_here).UseLicensedEndpoints());
+    services.AddMapQuestServices(options => options.UseKey(your_mapquest_api_key_here).UseLicensedEndpoints());
     .
     .
     .

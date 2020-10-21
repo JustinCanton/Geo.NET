@@ -68,7 +68,6 @@ namespace Geo.MapBox.Converters
             context.Wikidata = wikidata;
             contextInfo.TryGetValue(ContextFields.ShortCode, out var shortCode);
             context.ShortCode = shortCode;
-            context.ContextText = new List<ContextText>();
 
             // There will be {languages.Count()} items in this context group.
             foreach (var language in languages)

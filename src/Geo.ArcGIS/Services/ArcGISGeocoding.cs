@@ -15,11 +15,11 @@ namespace Geo.ArcGIS.Services
     using System.Web;
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
-    using Geo.ArcGIS.Extensions;
     using Geo.ArcGIS.Models.Exceptions;
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;
+    using Geo.Core.Extensions;
     using Newtonsoft.Json;
 
     /// <summary>

@@ -25,9 +25,9 @@ namespace Geo.MapQuest.Models.Responses
         public Copyright Copyright { get; set; }
 
         /// <summary>
-        /// Gets or sets the extra messages for the request.
+        /// Gets the extra messages for the request.
         /// </summary>
         [JsonProperty("messages")]
-        public List<string> Messages { get; set; }
+        public List<string> Messages { get; } = new List<string>();
     }
 }

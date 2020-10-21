@@ -19,9 +19,9 @@ namespace Geo.MapQuest.Models.Responses
         public GeocodeProvidedLocation ProvidedLocation { get; set; }
 
         /// <summary>
-        /// Gets or sets the locations that match the geocode request.
+        /// Gets the locations that match the geocode request.
         /// </summary>
         [JsonProperty("locations")]
-        public List<GeocodeLocation> Locations { get; set; }
+        public List<GeocodeLocation> Locations { get; } = new List<GeocodeLocation>();
     }
 }

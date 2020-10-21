@@ -5,7 +5,6 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -13,9 +12,6 @@ namespace Geo.Bing.Models.Responses
     /// </summary>
     public class ResourceSet
     {
-        [JsonProperty("resources")]
-        private readonly List<Location> _resources = new List<Location>();
-
         /// <summary>
         /// Gets or sets an estimate of the total number of resources in the ResourceSet.
         /// </summary>
@@ -25,21 +21,7 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets a collection of one or more resources. The resources that are returned depend on the request.
         /// </summary>
-        public ReadOnlyCollection<Location> Resources
-        {
-            get
-            {
-                return _resources.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Adds a location to the list of resources.
-        /// </summary>
-        /// <param name="location">A <see cref="Location"/> with the location to add.</param>
-        public void AddResource(Location location)
-        {
-            _resources.Add(location);
-        }
+        [JsonProperty("resources")]
+        public List<Location> Resources { get; } = new List<Location>();
     }
 }

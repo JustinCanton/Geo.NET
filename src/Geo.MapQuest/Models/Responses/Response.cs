@@ -27,9 +27,9 @@ namespace Geo.MapQuest.Models.Responses
         public Options Options { get; set; }
 
         /// <summary>
-        /// Gets or sets the results from the request.
+        /// Gets the results from the request.
         /// </summary>
         [JsonProperty("results")]
-        public List<T> Results { get; set; }
+        public List<T> Results { get; } = new List<T>();
     }
 }

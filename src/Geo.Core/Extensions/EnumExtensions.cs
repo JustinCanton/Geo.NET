@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.Google.Extensions
+namespace Geo.Core.Extensions
 {
     using System;
     using System.Linq;

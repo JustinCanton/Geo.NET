@@ -18,9 +18,9 @@ namespace Geo.Google.Services
     using System.Threading.Tasks;
     using System.Web;
     using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.Google.Abstractions;
     using Geo.Google.Enums;
-    using Geo.Google.Extensions;
     using Geo.Google.Models;
     using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
