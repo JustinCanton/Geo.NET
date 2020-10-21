@@ -49,8 +49,6 @@ namespace Geo.MapBox.Converters
             var feature = new Feature();
             serializer.Populate(token.CreateReader(), feature);
 
-            feature.PlaceInformation = new List<PlaceInformation>();
-
             var featureInformation = token.ToObject<Dictionary<string, object>>();
             var languages = featureInformation.Where(x => x.Key.Contains(FeatureFields.Language, StringComparison.OrdinalIgnoreCase));
             if (!languages.Any())
