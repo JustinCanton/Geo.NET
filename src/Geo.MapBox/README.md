@@ -17,7 +17,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddMapBoxServices(options => options.UseKey(your_here_api_key_here));
+    services.AddMapBoxServices(options => options.UseKey(your_mapbox_api_key_here));
     .
     .
     .

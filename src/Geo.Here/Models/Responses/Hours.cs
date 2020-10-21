@@ -25,9 +25,9 @@ namespace Geo.Here.Models.Responses
         public bool IsOpen { get; set; }
 
         /// <summary>
-        /// Gets or sets the time periods for these hours.
+        /// Gets the time periods for these hours.
         /// </summary>
         [JsonProperty("structured")]
-        public List<TimePeriod> Structured { get; set; }
+        public List<TimePeriod> Structured { get; } = new List<TimePeriod>();
     }
 }

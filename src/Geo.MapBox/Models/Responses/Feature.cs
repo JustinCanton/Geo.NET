@@ -28,13 +28,13 @@ namespace Geo.MapBox.Models.Responses
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the feature types describing the feature.
+        /// Gets the feature types describing the feature.
         /// Options are country, region, postcode, district, place, locality, neighborhood, address, and poi.
         /// Most features have only one type, but if the feature has multiple types, all applicable types will be listed in the array.
         /// (For example, Vatican City is a country, region, and place.)
         /// </summary>
         [JsonProperty("place_type")]
-        public List<string> PlaceType { get; set; }
+        public List<string> PlaceType { get; } = new List<string>();
 
         /// <summary>
         /// gets or sets a value that indicates how well the returned feature matches the user's query on a scale from 0 to 1.
@@ -57,9 +57,9 @@ namespace Geo.MapBox.Models.Responses
         public Properties Properties { get; set; }
 
         /// <summary>
-        /// Gets or sets the information about the place in different languages.
+        /// Gets the information about the place in different languages.
         /// </summary>
-        public List<PlaceInformation> PlaceInformation { get; set; }
+        public List<PlaceInformation> PlaceInformation { get; } = new List<PlaceInformation>();
 
         /// <summary>
         /// Gets or sets a string analogous to the text field that more closely matches the query than results in the specified language.
@@ -97,10 +97,10 @@ namespace Geo.MapBox.Models.Responses
         public Geometry Geometry { get; set; }
 
         /// <summary>
-        /// Gets or sets the hierarchy of encompassing parent features.
+        /// Gets the hierarchy of encompassing parent features.
         /// Each parent feature may include any of the above properties.
         /// </summary>
         [JsonProperty("context")]
-        public List<Context> Contexts { get; set; }
+        public List<Context> Contexts { get; } = new List<Context>();
     }
 }

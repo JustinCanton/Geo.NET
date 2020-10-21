@@ -5,7 +5,6 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -13,9 +12,6 @@ namespace Geo.Bing.Models.Responses
     /// </summary>
     public class Point
     {
-        [JsonProperty("usageTypes")]
-        private readonly List<string> _usageTypes = new List<string>();
-
         /// <summary>
         /// Gets or sets the type of the underlying shape.
         /// </summary>
@@ -50,13 +46,8 @@ namespace Geo.Bing.Models.Responses
         /// Display
         /// Route.
         /// </summary>
-        public ReadOnlyCollection<string> UsageTypes
-        {
-            get
-            {
-                return _usageTypes.AsReadOnly();
-            }
-        }
+        [JsonProperty("usageTypes")]
+        public List<string> UsageTypes { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the geographic area that contains the location.
@@ -64,14 +55,5 @@ namespace Geo.Bing.Models.Responses
         /// </summary>
         [JsonProperty("boundingBox")]
         public BoundingBox BoundingBox { get; set; }
-
-        /// <summary>
-        /// Adds a usage type to the list of usage types.
-        /// </summary>
-        /// <param name="usageType">The usage type to add.</param>
-        public void AddUsageType(string usageType)
-        {
-            _usageTypes.Add(usageType);
-        }
     }
 }

@@ -13,9 +13,9 @@ namespace Geo.Here.Models.Responses
     public class DiscoverResponse
     {
         /// <summary>
-        /// Gets or sets the list of locations that match the discover request.
+        /// Gets the list of locations that match the discover request.
         /// </summary>
         [JsonProperty("items")]
-        public List<DiscoverLocation> Items { get; set; }
+        public List<DiscoverLocation> Items { get; } = new List<DiscoverLocation>();
     }
 }

@@ -18,7 +18,7 @@ namespace Geo.Here.Models.Responses
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets a flag indicating whether or not it is a primary category. This field is visible only when the value is 'true'.
+        /// Gets or sets a value indicating whether or not it is a primary category. This field is visible only when the value is 'true'.
         /// </summary>
         [JsonProperty("primary")]
         public bool Primary { get; set; }

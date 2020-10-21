@@ -19,9 +19,9 @@ namespace Geo.MapQuest.Models.Responses
         public ReverseGeocodeProvidedLocation ProvidedLocation { get; set; }
 
         /// <summary>
-        /// Gets or sets the locations that match the reverse geocode request.
+        /// Gets the locations that match the reverse geocode request.
         /// </summary>
         [JsonProperty("locations")]
-        public List<ReverseGeocodeLocation> Locations { get; set; }
+        public List<ReverseGeocodeLocation> Locations { get; } = new List<ReverseGeocodeLocation>();
     }
 }

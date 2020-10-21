@@ -5,7 +5,6 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -13,15 +12,6 @@ namespace Geo.Bing.Models.Responses
     /// </summary>
     public class Location
     {
-        [JsonProperty("matchCodes")]
-        private readonly List<string> _matchCodes = new List<string>();
-
-        [JsonProperty("geocodePoints")]
-        private readonly List<Point> _geocodePoints = new List<Point>();
-
-        [JsonProperty("queryParseValues")]
-        private readonly List<QueryParseValue> _queryParseValues = new List<QueryParseValue>();
-
         /// <summary>
         /// Gets or sets the type of the underlying resource.
         /// </summary>
@@ -104,24 +94,14 @@ namespace Geo.Bing.Models.Responses
         /// UpHierarchy: The location represents a move up the geographic hierarchy.This occurs when a match for the location request was not found, so a less precise result is returned.
         /// For example, if a match for the requested address cannot be found, then a match code of UpHierarchy with a RoadBlock entity type may be returned.
         /// </summary>
-        public ReadOnlyCollection<string> MatchCodes
-        {
-            get
-            {
-                return _matchCodes.AsReadOnly();
-            }
-        }
+        [JsonProperty("matchCodes")]
+        public List<string> MatchCodes { get; } = new List<string>();
 
         /// <summary>
         /// Gets a collection of geocoded points that differ in how they were calculated and their suggested use.
         /// </summary>
-        public ReadOnlyCollection<Point> GeocodePoints
-        {
-            get
-            {
-                return _geocodePoints.AsReadOnly();
-            }
-        }
+        [JsonProperty("geocodePoints")]
+        public List<Point> GeocodePoints { get; } = new List<Point>();
 
         /// <summary>
         /// Gets a collection of parsed values that shows how a location query string was parsed into one or more of the following address values.
@@ -133,39 +113,7 @@ namespace Geo.Bing.Models.Responses
         /// CountryRegion
         /// Landmark.
         /// </summary>
-        public ReadOnlyCollection<QueryParseValue> QueryParseValues
-        {
-            get
-            {
-                return _queryParseValues.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Adds a match code to the list of match codes.
-        /// </summary>
-        /// <param name="matchCode">The match code to add.</param>
-        public void AddMatchCode(string matchCode)
-        {
-            _matchCodes.Add(matchCode);
-        }
-
-        /// <summary>
-        /// Adds a geocode point to the list of geocode points.
-        /// </summary>
-        /// <param name="geocodePoint">A <see cref="Point"/> with the geocode point to add.</param>
-        public void AddGeocodePoint(Point geocodePoint)
-        {
-            _geocodePoints.Add(geocodePoint);
-        }
-
-        /// <summary>
-        /// Adds a query parse value to the list of query parse values.
-        /// </summary>
-        /// <param name="queryParseValue">A <see cref="QueryParseValue"/> with the query parse value to add.</param>
-        public void AddUsageType(QueryParseValue queryParseValue)
-        {
-            _queryParseValues.Add(queryParseValue);
-        }
+        [JsonProperty("queryParseValues")]
+        public List<QueryParseValue> QueryParseValues { get; } = new List<QueryParseValue>();
     }
 }
