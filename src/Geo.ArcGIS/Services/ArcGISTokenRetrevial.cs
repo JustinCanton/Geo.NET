@@ -2,6 +2,10 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.ArcGIS.Tests")]
+
 namespace Geo.ArcGIS.Services
 {
     using System;
@@ -53,20 +57,34 @@ namespace Geo.ArcGIS.Services
                 };
             }
 
-            var collection = new List<KeyValuePair<string, string>>();
-            collection.Add(new KeyValuePair<string, string>("client_id", keys.Item1));
-            collection.Add(new KeyValuePair<string, string>("client_secret", keys.Item2));
-            collection.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
-
-            using var content = new FormUrlEncodedContent(collection);
-            content.Headers.Clear();
-            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
+            using var content = BuildContent();
             var response = await _client.PostAsync(_tokenRefreshAddress, content, cancellationToken).ConfigureAwait(false);
 
             var json = response.Content.ReadAsStringAsync().Result;
 
             return JsonConvert.DeserializeObject<Token>(json);
+        }
+
+        /// <summary>
+        /// Builds the content for the http request.
+        /// </summary>
+        /// <returns>A <see cref="FormUrlEncodedContent"/> with the built up content information.</returns>
+        internal FormUrlEncodedContent BuildContent()
+        {
+            var keys = _keyContainer.GetKeys();
+
+            var collection = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("client_id", keys.Item1),
+                new KeyValuePair<string, string>("client_secret", keys.Item2),
+                new KeyValuePair<string, string>("grant_type", "client_credentials"),
+            };
+
+            var content = new FormUrlEncodedContent(collection);
+            content.Headers.Clear();
+            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+            return content;
         }
     }
 }
