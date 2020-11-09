@@ -9,7 +9,7 @@ namespace Geo.ArcGIS.Tests.Services
     using NUnit.Framework;
 
     /// <summary>
-    /// Unit tests for the <see cref="ArcGISKeyContainerShould"/> class.
+    /// Unit tests for the <see cref="ArcGISKeyContainer"/> class.
     /// </summary>
     [TestFixture]
     public class ArcGISKeyContainerShould

@@ -15,7 +15,7 @@ namespace Geo.ArcGIS.Tests.Services
     using NUnit.Framework;
 
     /// <summary>
-    /// Unit tests for the <see cref="ArcGISGeocodingShould"/> class.
+    /// Unit tests for the <see cref="ArcGISTokenRetrevial"/> class.
     /// </summary>
     [TestFixture]
     public class ArcGISTokenRetrevialShould
@@ -69,7 +69,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Test]
-        public async Task GetTokenAsyncShouldReturnEmptyWithNoKey()
+        public async Task GetTokenShouldReturnEmptyWithNoKey()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);
             var keyContainer = new ArcGISKeyContainer(string.Empty, string.Empty);
@@ -85,7 +85,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Test]
-        public async Task GetTokenAsyncShouldReturnValidToken()
+        public async Task GetTokenShouldReturnValidToken()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);
             var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
