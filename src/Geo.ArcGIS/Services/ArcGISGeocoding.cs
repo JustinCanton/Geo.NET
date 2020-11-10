@@ -2,6 +2,10 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Geo.ArcGIS.Tests")]
+
 namespace Geo.ArcGIS.Services
 {
     using System;
@@ -28,7 +32,7 @@ namespace Geo.ArcGIS.Services
     public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
     {
         private readonly string _candidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
-        private readonly string _suggestUri = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
+        private readonly string _suggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
         private readonly string _reverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
         private readonly string _geocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
         private readonly IArcGISTokenContainer _tokenContainer;
@@ -171,6 +175,11 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildAddressCandidateRequest(AddressCandidateParameters parameters, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
+            {
+                throw new ArgumentException("The single line address cannot be null or empty.", nameof(parameters.SingleLineAddress));
+            }
+
             var uriBuilder = new UriBuilder(_candidatesUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
@@ -250,7 +259,7 @@ namespace Geo.ArcGIS.Services
                 query.Add("location", parameters.Location.ToString());
             }
 
-            if (string.IsNullOrWhiteSpace(parameters.Category))
+            if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
                 query.Add("category", parameters.Category);
             }
