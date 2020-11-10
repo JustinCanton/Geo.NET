@@ -221,7 +221,7 @@ namespace Geo.ArcGIS.Tests.Services
             var parameters = new PlaceCandidateParameters()
             {
                 Category = "restaurant",
-                Location = new Models.Responses.Coordinate()
+                Location = new Coordinate()
                 {
                     Latitude = 56.789,
                     Longitude = 123.456,

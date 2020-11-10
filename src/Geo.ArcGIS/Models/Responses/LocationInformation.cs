@@ -4,7 +4,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Geo.ArcGIS.Converter;
+    using Geo.ArcGIS.Converters;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -36,7 +36,6 @@ namespace Geo.ArcGIS.Models.Responses
         /// This will contain either PlaceName and PlaceAddress or MatchAddress and AddressType.
         /// </summary>
         [JsonProperty("attributes")]
-        [JsonConverter(typeof(AttributeConverter))]
         public Attribute Attributes { get; set; }
     }
 }
