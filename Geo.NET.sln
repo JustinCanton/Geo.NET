@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapQuest", "src\Geo.Map
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapBox", "src\Geo.MapBox\Geo.MapBox.csproj", "{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.ArcGIS.Tests", "tests\Geo.ArcGIS.Tests\Geo.ArcGIS.Tests.csproj", "{E7302F39-7639-4C03-8A28-8855849B5DC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{E4659FE2-0285-46CA-9ECF-842F30D6C594} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 		{35450863-2923-488A-9A43-B5E7A1A72AD1} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 		{95E452E3-9DC1-4D07-B238-A952FA6B6D96} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
+		{E7302F39-7639-4C03-8A28-8855849B5DC0} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4B688C4-40EC-4577-9EB2-4CF2412DA0B1}

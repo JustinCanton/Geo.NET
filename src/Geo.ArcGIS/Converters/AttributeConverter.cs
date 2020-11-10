@@ -2,7 +2,7 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-namespace Geo.ArcGIS.Converter
+namespace Geo.ArcGIS.Converters
 {
     using System;
     using Geo.ArcGIS.Models.Responses;
