@@ -18,9 +18,4 @@
     <ProjectReference Include="..\..\src\Geo.Here\Geo.Here.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
