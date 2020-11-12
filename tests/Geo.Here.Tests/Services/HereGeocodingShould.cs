@@ -386,5 +386,277 @@ namespace Geo.Here.Tests.Services
                 .Throw<ArgumentException>()
                 .WithMessage("The combination of bounding parameters is not valid.");
         }
+
+        /// <summary>
+        /// Tests the building of the geocoding parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildGeocodingRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new GeocodeParameters()
+            {
+                Query = "123 East",
+                QualifiedQuery = "123 West",
+                InCountry = "DEN",
+                At = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                Limit = 91,
+                Language = "dl",
+            };
+
+            var uri = service.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("q=123 East");
+            query.Should().Contain("qq=123 West");
+            query.Should().Contain("in=DEN");
+            query.Should().Contain("at=56.789,123.456");
+            query.Should().Contain("limit=91");
+            query.Should().Contain("lang=dl");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the geocoding parameters fails if no query is provided.
+        /// </summary>
+        [Test]
+        public void BuildGeocodingRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildGeocodingRequest(new GeocodeParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("Both query items (Query, QualifiedQuery) cannot be null or empty.");
+        }
+
+        /// <summary>
+        /// Tests the building of the reverse geocoding parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildReverseGeocodingRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new ReverseGeocodeParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 76.789,
+                    Longitude = -12.456,
+                },
+                Limit = 1,
+                Language = "en",
+            };
+
+            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("at=76.789,-12.456");
+            query.Should().Contain("limit=1");
+            query.Should().Contain("lang=en");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the reverse geocoding parameters fails if no query is provided.
+        /// </summary>
+        [Test]
+        public void BuildReverseGeocodingRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodeParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The at coordinates cannot be null. (Parameter 'At')");
+        }
+
+        /// <summary>
+        /// Tests the building of the discover parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildDiscoverRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new DiscoverParameters()
+            {
+                Query = "123 East",
+                InCountry = "POL",
+                InBoundingBox = new BoundingBox()
+                {
+                    North = 54.99,
+                    South = 45.99,
+                    West = -43.5,
+                    East = -39.5,
+                },
+                Limit = 33,
+                Language = "pl",
+            };
+
+            var uri = service.BuildDiscoverRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("q=123 East");
+            query.Should().Contain("in=countryCode:POL");
+            query.Should().Contain("in=bbox:-43.5,45.99,-39.5,54.99");
+            query.Should().Contain("limit=33");
+            query.Should().Contain("lang=pl");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the discover parameters fails if no query is provided.
+        /// </summary>
+        [Test]
+        public void BuildDiscoverRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildDiscoverRequest(new DiscoverParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The query cannot be null. (Parameter 'Query')");
+        }
+
+        /// <summary>
+        /// Tests the building of the autosuggest parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildAutosuggestRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new AutosuggestParameters()
+            {
+                Query = "123 Weast",
+                TermsLimit = 7,
+                InCountry = "CAD",
+                InBoundingBox = new BoundingBox()
+                {
+                    North = 54.2,
+                    South = 45.2,
+                    West = -43.1,
+                    East = -39.1,
+                },
+                Limit = 44,
+                Language = "en",
+            };
+
+            var uri = service.BuildAutosuggestRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("q=123 Weast");
+            query.Should().Contain("termsLimit=7");
+            query.Should().Contain("in=countryCode:CAD");
+            query.Should().Contain("in=bbox:-43.1,45.2,-39.1,54.2");
+            query.Should().Contain("limit=44");
+            query.Should().Contain("lang=en");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the autosuggest parameters fails if no query is provided.
+        /// </summary>
+        [Test]
+        public void BuildAutosuggestRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildAutosuggestRequest(new AutosuggestParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The query cannot be null. (Parameter 'Query')");
+        }
+
+        /// <summary>
+        /// Tests the building of the browse parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildBrowseRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new BrowseParameters()
+            {
+                Categories = "Resturants",
+                Name = "Place",
+                InCountry = "CAD",
+                At = new Coordinate()
+                {
+                    Latitude = 54.2,
+                    Longitude = 45.2,
+                },
+                Limit = 44,
+                Language = "en",
+            };
+
+            var uri = service.BuildBrowseRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("categories=Resturants");
+            query.Should().Contain("name=Place");
+            query.Should().Contain("at=54.2,45.2");
+            query.Should().Contain("in=countryCode:CAD");
+            query.Should().Contain("limit=44");
+            query.Should().Contain("lang=en");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the browse parameters fails if no at is provided.
+        /// </summary>
+        [Test]
+        public void BuildBrowseRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildBrowseRequest(new BrowseParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The at coordinates cannot be null. (Parameter 'At')");
+        }
+
+        /// <summary>
+        /// Tests the building of the lookup parameters is done successfully.
+        /// </summary>
+        [Test]
+        public void BuildLookupRequestSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new LookupParameters()
+            {
+                Id = "12345sudfinm",
+                Language = "jp",
+            };
+
+            var uri = service.BuildLookupRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("id=12345sudfinm");
+            query.Should().Contain("lang=jp");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the building of the lookup parameters fails if no id is provided.
+        /// </summary>
+        [Test]
+        public void BuildLookupRequestFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.BuildLookupRequest(new LookupParameters());
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The id cannot be null. (Parameter 'Id')");
+        }
     }
 }
