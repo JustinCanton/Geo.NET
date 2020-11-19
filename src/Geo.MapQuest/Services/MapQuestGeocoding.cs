@@ -112,6 +112,10 @@ namespace Geo.MapQuest.Services
             {
                 throw new MapQuestException("The MapQuest uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new MapQuestException("The MapQuest uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new MapQuestException("The MapQuest request failed.", ex);

@@ -110,6 +110,10 @@ namespace Geo.MapBox.Services
             {
                 throw new MapBoxException("The MapBox uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new MapBoxException("The MapBox uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new MapBoxException("The MapBox request failed.", ex);

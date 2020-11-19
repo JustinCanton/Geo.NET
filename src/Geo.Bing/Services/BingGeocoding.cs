@@ -112,6 +112,10 @@ namespace Geo.Bing.Services
             {
                 throw new BingException("The Bing uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new BingException("The Bing uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new BingException("The Bing request failed.", ex);

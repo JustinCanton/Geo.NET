@@ -175,6 +175,10 @@ namespace Geo.Google.Services
             {
                 throw new GoogleException("The Google uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new GoogleException("The Google uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new GoogleException("The Google request failed.", ex);

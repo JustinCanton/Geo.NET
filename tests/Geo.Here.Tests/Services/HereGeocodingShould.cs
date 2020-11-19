@@ -53,73 +53,105 @@ namespace Geo.Here.Tests.Services
                 {
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(
-                        "{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"locations\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
-                        "\"score\":100,\"attributes\":{\"ResultID\":0,\"Loc_name\":\"World\",\"Status\":\"M\",\"Score\":100,\"Match_addr\":\"123 East\",\"LongLabel\":\"123 East, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
-                        "\"ShortLabel\":\"123 East\",\"Addr_type\":\"POI\",\"Type\":\"American Food\",\"PlaceName\":\"123 East\",\"Place_addr\":\"3046 Dolphin Dr, Elizabethtown, Kentucky, 42701\",\"Phone\":\"(270) 982 - 5311\"," +
-                        "\"URL\":\"\",\"Rank\":19,\"AddBldg\":\"\",\"AddNum\":\"3046\",\"AddNumFrom\":\"\",\"AddNumTo\":\"\",\"AddRange\":\"\",\"Side\":\"R\",\"StPreDir\":\"\",\"StPreType\":\"\",\"StName\":\"Dolphin\"," +
-                        "\"StType\":\"Dr\",\"StDir\":\"\",\"BldgType\":\"\",\"BldgName\":\"\",\"LevelType\":\"\",\"LevelName\":\"\",\"UnitType\":\"\",\"UnitName\":\"\",\"SubAddr\":\"\",\"StAddr\":\"3046 Dolphin Dr\"," +
-                        "\"Block\":\"\",\"Sector\":\"\",\"Nbrhd\":\"\",\"District\":\"\",\"City\":\"Elizabethtown\",\"MetroArea\":\"\",\"Subregion\":\"Hardin County\",\"Region\":\"Kentucky\",\"RegionAbbr\":\"KY\"," +
-                        "\"Territory\":\"\",\"Zone\":\"\",\"Postal\":\"42701\",\"PostalExt\":\"\",\"Country\":\"USA\",\"LangCode\":\"ENG\",\"Distance\":0,\"X\":-85.837509973310887,\"Y\":37.710570043857146," +
-                        "\"DisplayX\":-85.837039999999945,\"DisplayY\":37.710620000000063,\"Xmin\":-85.84203999999994,\"Xmax\":-85.832039999999949,\"Ymin\":37.70562000000006,\"Ymax\":37.715620000000065,\"ExInfo\":\"\"}}]}"),
+                        "{\"items\":" +
+                        "[{\"title\":\"123 East Hill, London, SW18 2QB, England\",\"id\":\"here: af:streetsection: Op7KzT7e2gH8G99rgRWJUB:EAIaAzEyMyhk\",\"resultType\":\"houseNumber\",\"houseNumberType\":\"interpolated\"," +
+                        "\"address\":{\"label\":\"123 East Hill, London, SW18 2QB, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
+                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2QB\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.45697,\"lng\":-0.18835},\"access\":[{\"lat\":51.4571,\"lng\":-0.18842}]," +
+                        "\"mapView\":{\"west\":-0.18979,\"south\":51.45607,\"east\":-0.18691,\"north\":51.45787},\"scoring\":{\"queryScore\":0.99,\"fieldScore\":{\"streets\":[0.9],\"houseNumber\":1.0}}}]}"),
                 });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/reverseGeocode")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/revgeocode")),
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(
-                        "{ \"address\":{ \"Match_addr\":\"Cali's California Style Burritos\", \"LongLabel\":\"Cali's California Style Burritos, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
-                        "\"ShortLabel\":\"Cali's California Style Burritos\", \"Addr_type\":\"POI\", \"Type\":\"Mexican Food\", \"PlaceName\":\"Cali's California Style Burritos\"," +
-                        "\"AddNum\":\"3046\", \"Address\":\"3046 Dolphin Dr\", \"Block\":\"\", \"Sector\":\"\", \"Neighborhood\":\"\", \"District\":\"\", \"City\":\"Elizabethtown\", \"MetroArea\":\"\"," +
-                        "\"Subregion\":\"Hardin County\", \"Region\":\"Kentucky\", \"Territory\":\"\", \"Postal\":\"42701\", \"PostalExt\":\"\", \"CountryCode\":\"USA\" }," +
-                        "\"location\":{ \"x\":-85.837039999999945,\"y\":37.710620000000063,\"spatialReference\":{ \"wkid\":4326,\"latestWkid\":4326} }}"),
+                        "{\"items\":" +
+                        "[{\"title\":\"Royal Oak\",\"id\":\"here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f\",\"resultType\":\"place\"," +
+                        "\"address\":{\"label\":\"Royal Oak, 135 East Hill, London, SW18 2, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
+                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2\",\"houseNumber\":\"135\"},\"position\":{\"lat\":51.45696,\"lng\":-0.18844},\"access\":[{\"lat\":51.45709,\"lng\":-0.18847}]," +
+                        "\"distance\":6,\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true},{\"id\":\"100 - 1000 - 0000\",\"name\":\"Restaurant\"}]}]}"),
                 });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/suggest")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/discover")),
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"suggestions\":[" +
-                        "{ \"text\":\"123 East, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\", \"magicKey\":\"dHA9MCNsb2M9OTk2MzI1I2xuZz0zMyNwbD0yOTIyODAjbGJzPTE0OjU2ODczNg==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Rd, Martinsburg, WV, 25404, USA\", \"magicKey\":\"dHA9MCNsb2M9NDkwODAjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMzQ3\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave NE, Coeburn, VA, 24230, USA\", \"magicKey\":\"dHA9MCNsb2M9MTQ0OTYzI2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4Nw==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave, Hampton, VA, 23661, USA\", \"magicKey\":\"dHA9MCNsb2M9MjUwMjE3I2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4NQ==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave, Middlebourne, WV, 26149, USA\", \"magicKey\":\"dHA9MCNsb2M9NTM3NDQjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMTg1\", \"isCollection\":false }]}"),
+                    Content = new StringContent(
+                        "{\"items\":" +
+                        "[{\"title\":\"123 East India Dock Road, London, E14 0, England\",\"id\":\"here: af:streetsection: ku2Yqc - Y2Nto7kjX9fjdPC:CggIBCD9_YPsAhABGgMxMjMoZA\",\"resultType\":\"houseNumber\"," +
+                        "\"houseNumberType\":\"PA\",\"address\":{\"label\":\"123 East India Dock Road, London, E14 0, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\"," +
+                        "\"county\":\"London\",\"city\":\"London\",\"district\":\"Poplar\",\"street\":\"East India Dock Road\",\"postalCode\":\"E14 0\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.51144," +
+                        "\"lng\":-0.01137},\"access\":[{\"lat\":51.51129,\"lng\":-0.01135}],\"distance\":3452941,\"mapView\":{\"west\":-0.02104,\"south\":51.51082,\"east\":0.00436,\"north\":51.51477}}]}"),
                 });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("singleLine")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/autosuggest")),
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
-                        "\"score\":100,\"attributes\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"},\"extent\":{\"xmin\":-85.84203999999994,\"ymin\":37.70562000000006,\"xmax\":-85.832039999999949,\"ymax\":37.715620000000065}}]}"),
+                    Content = new StringContent(
+                        "{\"items\":" +
+                        "[{\"title\":\"123 East Coast Rd, Singapore 428808, Singapore\",\"id\":\"here: af:streetsection: e0X59kKoq7enolh0iTsyvB:CggIBCDU9MSlARABGgMxMjMoZA\",\"resultType\":\"houseNumber\"," +
+                        "\"houseNumberType\":\"PA\",\"address\":{\"label\":\"123 East Coast Rd, Singapore 428808, Singapore\"},\"position\":{\"lat\":1.306,\"lng\":103.90468},\"access\":[{\"lat\":1.30587,\"lng\":103.90473}]," +
+                        "\"distance\":7413232,\"mapView\":{\"west\":103.90204,\"south\":1.30201,\"east\":103.91773,\"north\":1.31018},\"highlights\":{\"title\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}]," +
+                        "\"address\":{\"label\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}]}}},{\"title\":\"123 East Hill, London, SW18 2QB, England\",\"id\":\"here: af:streetsection: Op7KzT7e2gH8G99rgRWJUB:EAIaAzEyMyhk\"," +
+                        "\"resultType\":\"houseNumber\",\"houseNumberType\":\"interpolated\",\"address\":{\"label\":\"123 East Hill, London, SW18 2QB, England\"},\"position\":{\"lat\":51.45697,\"lng\":-0.18835}," +
+                        "\"access\":[{\"lat\":51.4571,\"lng\":-0.18842}],\"distance\":3466446,\"mapView\":{\"west\":-0.18966,\"south\":51.45683,\"east\":-0.17991,\"north\":51.45962}," +
+                        "\"highlights\":{\"title\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}],\"address\":{\"label\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}]}}}],\"queryTerms\":[]}"),
                 });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("category")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/browse")),
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[]}"),
+                    Content = new StringContent(
+                        "{\"items\":" +
+                        "[{\"title\":\"Саида Әсем\",\"id\":\"here: pds:place: 398jx7ps - 9d1139f0b66a0fc43cdb4f0aacf1c8ee\",\"resultType\":\"place\",\"address\":{\"label\":\"Саида Әсем, Жаңақала ауданы, Қазақстан\"," +
+                        "\"countryCode\":\"KAZ\",\"countryName\":\"Қазақстан\",\"county\":\"Батыс Қазақстан облысы\",\"city\":\"Жаңақала ауданы\",\"district\":\"Қызылоба\"},\"position\":{\"lat\":49.6511,\"lng\":50.64354}," +
+                        "\"access\":[{\"lat\":49.65112,\"lng\":50.64352}],\"distance\":60301,\"categories\":[{\"id\":\"600 - 6000 - 0061\",\"name\":\"Азық - түлік дүкені\",\"primary\":true},{\"id\":\"100 - 1000 - 0000\"," +
+                        "\"name\":\"Мейрамхана\"}],\"references\":[{\"supplier\":{\"id\":\"core\"},\"id\":\"1175170365\"},{\"supplier\":{\"id\":\"core\"},\"id\":\"1175170366\"}],\"foodTypes\":[{\"id\":\"800 - 064\"," +
+                        "\"name\":\"Халықаралық\",\"primary\":true}]},{\"title\":\"Кафе\",\"id\":\"here: pds:place: 398jx7ps - 01389f86bfca0514c45361a326c22cad\",\"resultType\":\"place\"," +
+                        "\"address\":{\"label\":\"Кафе, Ақжайық ауданы, Қазақстан\",\"countryCode\":\"KAZ\",\"countryName\":\"Қазақстан\",\"county\":\"Батыс Қазақстан облысы\",\"city\":\"Ақжайық ауданы\"}," +
+                        "\"position\":{\"lat\":50.21434,\"lng\":51.12206},\"access\":[{\"lat\":50.21433,\"lng\":51.12205}],\"distance\":83493,\"categories\":[{\"id\":\"100 - 1000 - 0000\",\"name\":\"Мейрамхана\",\"primary\":true}]," +
+                        "\"references\":[{\"supplier\":{\"id\":\"core\"},\"id\":\"1175964311\"}],\"foodTypes\":[{\"id\":\"800 - 064\",\"name\":\"Халықаралық\",\"primary\":true}]}]}"),
+                });
+
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/lookup")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(
+                        "{\"title\":\"Royal Oak\",\"id\":\"here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f\",\"resultType\":\"place\",\"address\":{\"label\":\"Royal Oak, 135 East Hill, London, SW18 2, England\"," +
+                        "\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\",\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2\"," +
+                        "\"houseNumber\":\"135\"},\"position\":{\"lat\":51.45696,\"lng\":-0.18844},\"access\":[{\"lat\":51.45709,\"lng\":-0.18847}],\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true}," +
+                        "{\"id\":\"100 - 1000 - 0000\",\"name\":\"Restaurant\"}],\"references\":[{\"supplier\":{\"id\":\"yelp\"},\"id\":\"3cGjx7b4Kcwmaz5HNLEEHA\"},{\"supplier\":{\"id\":\"yelp\"},\"id\":\"BoDwT7dYuxxxWp0XnfloqQ\"}]," +
+                        "\"contacts\":[{\"phone\":[{\"value\":\" + 442088744892\"}]}],\"openingHours\":[{\"text\":[\"Mon: 12:00 - 15:00\",\"Tue - Thu, Sat: 12:00 - 15:00, 18:00 - 23:00\",\"Fri: 12:00 - 15:00, 23:00 - 23:00\",\"Sun: 12:00 - 23:00\"]," +
+                        "\"isOpen\":false,\"structured\":[{\"start\":\"T120000\",\"duration\":\"PT03H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: MO,TU,WE,TH,FR,SA\"},{\"start\":\"T180000\",\"duration\":\"PT05H00M\"," +
+                        "\"recurrence\":\"FREQ: DAILY; BYDAY: TU,WE,TH,SA\"},{\"start\":\"T230000\",\"duration\":\"PT24H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: FR\"},{\"start\":\"T120000\",\"duration\":\"PT11H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: SU\"}]}]}"),
                 });
         }
 
@@ -693,7 +725,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("The here parameters are null.")
+                .WithMessage("The here parameters are null. Please see the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -709,9 +741,47 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("Failed to create the here uri.")
+                .WithMessage("Failed to create the here uri. Please see the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
                 .WithMessage("The id cannot be null. (Parameter 'Id')");
+        }
+
+        /// <summary>
+        /// Tests the calling is done successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task CallHereAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new LookupParameters()
+            {
+                Id = "12345sudfinm",
+                Language = "jp",
+            };
+
+            var uri = service.ValidateAndCraftUri<LookupParameters>(parameters, service.BuildLookupRequest);
+            var result = await service.CallHereAsync<LookupResponse>(uri).ConfigureAwait(false);
+            result.Title.Should().Be("Royal Oak");
+            result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
+        }
+
+        /// <summary>
+        /// Tests the calling fails and the exception is wrapped.
+        /// </summary>
+        [Test]
+        public void CallHereAsyncFailsWithException()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+
+            Action act = () => service.CallHereAsync<LookupResponse>(null).GetAwaiter().GetResult();
+
+            act.Should()
+                .Throw<HereException>()
+                .WithMessage("The here uri is invalid. Please see the inner exception for more information.")
+                .WithInnerException<InvalidOperationException>();
         }
     }
 }
