@@ -16,6 +16,7 @@ namespace Geo.Here.Tests.Services
     using Geo.Here.Abstractions;
     using Geo.Here.Enums;
     using Geo.Here.Models;
+    using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
     using Geo.Here.Services;
@@ -656,6 +657,60 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+                .WithMessage("The id cannot be null. (Parameter 'Id')");
+        }
+
+        /// <summary>
+        /// Tests the validation and creation of the lookup uri is done successfully.
+        /// </summary>
+        [Test]
+        public void ValidateAndCraftUriSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new LookupParameters()
+            {
+                Id = "12345sudfinm",
+                Language = "jp",
+            };
+
+            var uri = service.ValidateAndCraftUri<LookupParameters>(parameters, service.BuildLookupRequest);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("id=12345sudfinm");
+            query.Should().Contain("lang=jp");
+            query.Should().Contain("apiKey=abc123");
+        }
+
+        /// <summary>
+        /// Tests the validation and creation of the lookup uri fails if the parameters are null.
+        /// </summary>
+        [Test]
+        public void ValidateAndCraftUriFailsWithException1()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.ValidateAndCraftUri<LookupParameters>(null, service.BuildLookupRequest);
+
+            act.Should()
+                .Throw<HereException>()
+                .WithMessage("The here parameters are null.")
+                .WithInnerException<ArgumentNullException>();
+        }
+
+        /// <summary>
+        /// Tests the validation and creation of the lookup uri fails if no id is provided and the exception is wrapped in a here exception.
+        /// </summary>
+        [Test]
+        public void ValidateAndCraftUriFailsWithException2()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            Action act = () => service.ValidateAndCraftUri<LookupParameters>(new LookupParameters(), service.BuildLookupRequest);
+
+            act.Should()
+                .Throw<HereException>()
+                .WithMessage("Failed to create the here uri.")
+                .WithInnerException<ArgumentException>()
                 .WithMessage("The id cannot be null. (Parameter 'Id')");
         }
     }
