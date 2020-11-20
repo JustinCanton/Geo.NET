@@ -783,5 +783,160 @@ namespace Geo.Here.Tests.Services
                 .WithMessage("The here uri is invalid. Please see the inner exception for more information.")
                 .WithInnerException<InvalidOperationException>();
         }
+
+        /// <summary>
+        /// Tests the geocoding call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task GeocodingAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new GeocodeParameters()
+            {
+                Query = "123 East",
+                QualifiedQuery = "123 West",
+                InCountry = "DEN",
+                At = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                Limit = 91,
+                Language = "dl",
+            };
+
+            var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
+            result.Items.Count.Should().Be(1);
+        }
+
+        /// <summary>
+        /// Tests the reverse geocoding call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task ReverseGeocodingAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new ReverseGeocodeParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 76.789,
+                    Longitude = -12.456,
+                },
+                Limit = 1,
+                Language = "en",
+            };
+
+            var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            result.Items.Count.Should().Be(1);
+        }
+
+        /// <summary>
+        /// Tests the discover call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task DiscoverAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new DiscoverParameters()
+            {
+                Query = "123 East",
+                InCountry = "POL",
+                InBoundingBox = new BoundingBox()
+                {
+                    North = 54.99,
+                    South = 45.99,
+                    West = -43.5,
+                    East = -39.5,
+                },
+                Limit = 33,
+                Language = "pl",
+            };
+
+            var result = await service.DiscoverAsync(parameters).ConfigureAwait(false);
+            result.Items.Count.Should().Be(1);
+        }
+
+        /// <summary>
+        /// Tests the autosuggest call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task AutosuggestAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new AutosuggestParameters()
+            {
+                Query = "123 Weast",
+                TermsLimit = 7,
+                InCountry = "CAD",
+                InBoundingBox = new BoundingBox()
+                {
+                    North = 54.2,
+                    South = 45.2,
+                    West = -43.1,
+                    East = -39.1,
+                },
+                Limit = 44,
+                Language = "en",
+            };
+
+            var result = await service.AutosuggestAsync(parameters).ConfigureAwait(false);
+            result.Items.Count.Should().Be(2);
+        }
+
+        /// <summary>
+        /// Tests the lookup call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task LookupAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new LookupParameters()
+            {
+                Id = "12345sudfinm",
+                Language = "jp",
+            };
+
+            var result = await service.LookupAsync(parameters).ConfigureAwait(false);
+            result.Title.Should().Be("Royal Oak");
+            result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
+        }
+
+        /// <summary>
+        /// Tests the browse call returns successfully.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Test]
+        public async Task BrowseAsyncSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new HereGeocoding(httpClient, _keyContainer);
+            var parameters = new BrowseParameters()
+            {
+                Categories = "Resturants",
+                Name = "Place",
+                InCountry = "CAD",
+                At = new Coordinate()
+                {
+                    Latitude = 54.2,
+                    Longitude = 45.2,
+                },
+                Limit = 44,
+                Language = "en",
+            };
+
+            var result = await service.BrowseAsync(parameters).ConfigureAwait(false);
+            result.Items.Count.Should().Be(2);
+        }
     }
 }
