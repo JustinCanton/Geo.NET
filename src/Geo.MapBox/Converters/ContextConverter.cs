@@ -56,9 +56,25 @@ namespace Geo.MapBox.Converters
             var languages = contextInfo.Where(x => x.Key.Contains(ContextFields.Language, StringComparison.OrdinalIgnoreCase));
             if (!languages.Any())
             {
-                // There are no extra languages, only the default.
-                // Add in the default language item.
-                languages = languages.Append(new KeyValuePair<string, string>(ContextFields.Language, string.Empty));
+                // There are 2 cases here:
+                // Either there are no extra languages, only the default.
+                // Or there is a context group without the language tags.
+                var textItems = contextInfo.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase));
+                if (textItems.Count() > 1)
+                {
+                    // This context group does not contain any language keys for an unknown reason.
+                    // Try to use the text items language names.
+                    foreach (var item in textItems)
+                    {
+                        var language = item.Substring(4);
+                        languages = languages.Append(new KeyValuePair<string, string>(string.Concat(ContextFields.Language, language), language.Length > 0 ? language.Substring(1) : string.Empty));
+                    }
+                }
+                else
+                {
+                    // Add in the default language item.
+                    languages = languages.Append(new KeyValuePair<string, string>(ContextFields.Language, string.Empty));
+                }
             }
 
             var context = new Context();
@@ -76,7 +92,12 @@ namespace Geo.MapBox.Converters
 
                 var languageEnding = language.Key.Substring(8);
                 contextInfo.TryGetValue(string.Concat(ContextFields.Language, languageEnding), out var lang);
-                contextText.Language = lang;
+                if (lang == null)
+                {
+                    lang = language.Value;
+                }
+
+                contextText.Language = language.Value;
                 contextInfo.TryGetValue(string.Concat(ContextFields.Text, languageEnding), out var text);
                 contextText.Text = text;
                 contextText.Default = string.IsNullOrWhiteSpace(languageEnding);
