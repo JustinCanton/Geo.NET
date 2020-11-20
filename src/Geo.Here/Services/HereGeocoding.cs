@@ -149,6 +149,10 @@ namespace Geo.Here.Services
             {
                 throw new HereException("The here uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new HereException("The here uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new HereException("The here request failed.", ex);

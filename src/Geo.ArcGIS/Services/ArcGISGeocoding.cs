@@ -145,6 +145,10 @@ namespace Geo.ArcGIS.Services
             {
                 throw new ArcGISException("The ArcGIS uri is null.", ex);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw new ArcGISException("The ArcGIS uri is invalid.", ex);
+            }
             catch (HttpRequestException ex)
             {
                 throw new ArcGISException("The ArcGIS request failed.", ex);

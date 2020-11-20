@@ -34,6 +34,7 @@ namespace Geo.Core
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="T"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the request uri is null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the request uri is invalid.</exception>
         /// <exception cref="HttpRequestException">
         /// Thrown when the request failed due to an underlying issue such as network connectivity,
         /// DNS failure, server certificate validation or timeout.
