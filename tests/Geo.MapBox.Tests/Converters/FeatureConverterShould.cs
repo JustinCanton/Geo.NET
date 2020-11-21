@@ -1,4 +1,4 @@
-﻿// <copyright file="ContextConverterShould.cs" company="Geo.NET">
+﻿// <copyright file=\"FeatureConverterShould.cs\" company=\"Geo.NET\">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -11,18 +11,51 @@ namespace Geo.MapBox.Tests.Converters
     using NUnit.Framework;
 
     /// <summary>
-    /// Unit tests for the <see cref="ContextConverter"/> class.
+    /// Unit tests for the <see cref="FeatureConverter"/> class.
     /// </summary>
     [TestFixture]
-    public class ContextConverterShould
+    public class FeatureConverterShould
     {
         /// <summary>
         /// Tests the context information is parsed into a proper list of context items.
         /// </summary>
         [Test]
-        public void CorrectlyParseContextInformation()
+        public void CorrectlyParseFeatureInformation()
         {
-            var obj = JsonConvert.DeserializeObject<ContextObject>("{\"Contexts\": [" +
+            var obj = JsonConvert.DeserializeObject<FeatureObject>("{\"Features\": [" +
+            "{" +
+                "\"id\": \"address.4562086697174018\"," +
+                "\"type\": \"Feature\"," +
+                "\"place_type\": [" +
+                "\"address\"" +
+                "]," +
+                "\"relevance\": 1," +
+                "\"properties\": {" +
+                    "\"accuracy\": \"point\"" +
+                "}," +
+                "\"text_de\": \"Easthill Drive\"," +
+                "\"place_name_de\": \"123 Easthill Drive, Robina Queensland 4226, Australien\"," +
+                "\"text\": \"Easthill Drive\"," +
+                "\"place_name\": \"123 Easthill Drive, Robina Queensland 4226, Australien\"," +
+                "\"text_fr\": \"Easthill Drive\"," +
+                "\"place_name_fr\": \"123 Easthill Drive, Robina Queensland 4226, Australie\"," +
+                "\"text_en\": \"Easthill Drive\"," +
+                "\"place_name_en\": \"123 Easthill Drive, Robina Queensland 4226, Australia\"," +
+                "\"text_es\": \"Easthill Drive\"," +
+                "\"place_name_es\": \"123 Easthill Drive, Robina Queensland 4226, Australia\"," +
+                "\"center\": [" +
+                    "153.379627," +
+                    "-28.081626" +
+                "]," +
+                "\"geometry\": {" +
+                    "\"type\": \"Point\"," +
+                    "\"coordinates\": [" +
+                        "153.379627," +
+                        "-28.081626" +
+                    "]" +
+                "}," +
+                "\"address\": \"123\"," +
+                "\"context\": [" +
                 "{" +
                     "\"id\": \"postcode.7266040401534490\"," +
                     "\"text_de\": \"4226\"," +
@@ -88,20 +121,21 @@ namespace Geo.MapBox.Tests.Converters
                     "\"language_en\": \"en\"," +
                     "\"text_es\": \"Australia\"," +
                     "\"language_es\": \"es\"" +
-                "}" +
-            "]}");
+                "}]" +
+            "}]}");
 
-            obj.Contexts.Count.Should().Be(5);
-            obj.Contexts[0].Id.Should().Be("postcode.7266040401534490");
-            obj.Contexts[0].ContextText.Count.Should().Be(5);
-            obj.Contexts[1].Id.Should().Be("locality.3059244982453840");
-            obj.Contexts[1].ContextText.Count.Should().Be(5);
-            obj.Contexts[2].Id.Should().Be("place.12294497843533720");
-            obj.Contexts[2].ContextText.Count.Should().Be(5);
-            obj.Contexts[3].Id.Should().Be("region.19496380243439240");
-            obj.Contexts[3].ContextText.Count.Should().Be(5);
-            obj.Contexts[4].Id.Should().Be("country.9968792518346070");
-            obj.Contexts[4].ContextText.Count.Should().Be(5);
+            obj.Features.Count.Should().Be(1);
+            obj.Features[0].PlaceInformation.Count.Should().Be(5);
+            obj.Features[0].PlaceInformation[0].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australien");
+            obj.Features[0].PlaceInformation[0].Language.Should().Be("de");
+            obj.Features[0].PlaceInformation[1].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australien");
+            obj.Features[0].PlaceInformation[1].Language.Should().Be(string.Empty);
+            obj.Features[0].PlaceInformation[2].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australie");
+            obj.Features[0].PlaceInformation[2].Language.Should().Be("fr");
+            obj.Features[0].PlaceInformation[3].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australia");
+            obj.Features[0].PlaceInformation[3].Language.Should().Be("en");
+            obj.Features[0].PlaceInformation[4].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australia");
+            obj.Features[0].PlaceInformation[4].Language.Should().Be("es");
         }
     }
 }

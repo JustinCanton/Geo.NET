@@ -21,6 +21,6 @@ namespace Geo.ArcGIS.Models
         /// Gets or sets the expiry time for the ArcGIS API token.
         /// </summary>
         [JsonProperty("expires_in")]
-        public int ExpiresIn { get; set;  }
+        public int ExpiresIn { get; set; }
     }
 }
