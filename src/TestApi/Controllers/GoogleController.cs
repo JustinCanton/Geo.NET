@@ -25,7 +25,7 @@ namespace TestApi.Controllers
         }
 
         [HttpGet("geocoding")]
-        public async Task<IActionResult> GetGeocodingResults([FromQuery]GeocodingParameters parameters)
+        public async Task<IActionResult> GetGeocodingResults([FromQuery] GeocodingParameters parameters)
         {
             var results = await _googleGeocoding.GeocodingAsync(parameters).ConfigureAwait(false);
 

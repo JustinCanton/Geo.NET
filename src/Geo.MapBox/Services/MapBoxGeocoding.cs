@@ -4,7 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Geo.Here.Tests")]
+[assembly: InternalsVisibleTo("Geo.MapBox.Tests")]
 
 namespace Geo.MapBox.Services
 {
@@ -12,6 +12,7 @@ namespace Geo.MapBox.Services
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -228,7 +229,7 @@ namespace Geo.MapBox.Services
 
             if (parameters.Types != null && parameters.Types.Count > 0)
             {
-                query.Add("types", string.Join(",", parameters.Types.ToString().ToLowerInvariant()));
+                query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToString().ToLowerInvariant())));
             }
         }
 
