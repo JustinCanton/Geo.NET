@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Justin Canton</Authors>
+    <Company>Geo.NET</Company>
+    <Product>Geo.NET Bing</Product>
+    <PackageTags>geocoding geo.net bing</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

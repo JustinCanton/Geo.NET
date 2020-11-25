@@ -2,10 +2,6 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Geo.Bing.Tests")]
-
 namespace Geo.Bing.Services
 {
     using System;
