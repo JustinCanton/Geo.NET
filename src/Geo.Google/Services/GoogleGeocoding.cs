@@ -2,10 +2,6 @@
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Geo.Google.Tests")]
-
 namespace Geo.Google.Services
 {
     using System;

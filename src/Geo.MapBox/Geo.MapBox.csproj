@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Justin Canton</Authors>
+    <Company>Geo.NET</Company>
+    <Product>Geo.NET MapBox</Product>
+    <PackageTags>geocoding geo.net mapbox</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
