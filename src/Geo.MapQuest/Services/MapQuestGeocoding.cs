@@ -151,14 +151,14 @@ namespace Geo.MapQuest.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
-                throw new ArgumentException("The Location parameter cannot be null or empty.", nameof(parameters.Location));
+                throw new ArgumentException("The location cannot be null or empty.", nameof(parameters.Location));
             }
 
             query.Add("location", parameters.Location);
 
             if (!(parameters.BoundingBox is null) &&
-                (parameters.BoundingBox.East == 0 && parameters.BoundingBox.North == 0 &&
-                parameters.BoundingBox.West == 0 && parameters.BoundingBox.South == 0))
+                (parameters.BoundingBox.East != 0 && parameters.BoundingBox.North != 0 &&
+                parameters.BoundingBox.West != 0 && parameters.BoundingBox.South != 0))
             {
                 query.Add("boundingBox", parameters.BoundingBox.ToString());
             }
@@ -205,7 +205,7 @@ namespace Geo.MapQuest.Services
 
             if (parameters.Location is null)
             {
-                throw new ArgumentException("The Location parameter cannot be null.", nameof(parameters.Location));
+                throw new ArgumentException("The location cannot be null.", nameof(parameters.Location));
             }
 
             query.Add("location", parameters.Location.ToString());
