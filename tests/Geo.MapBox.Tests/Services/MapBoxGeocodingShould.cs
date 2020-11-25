@@ -13,7 +13,6 @@ namespace Geo.MapBox.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
-    using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
     using Geo.MapBox.Models.Exceptions;

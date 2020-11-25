@@ -5,7 +5,6 @@
 namespace Geo.Here.Tests.Services
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Net;
     using System.Net.Http;
@@ -13,8 +12,6 @@ namespace Geo.Here.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
-    using Geo.Here.Abstractions;
-    using Geo.Here.Enums;
     using Geo.Here.Models;
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
