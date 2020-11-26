@@ -41,9 +41,8 @@ jobs:
         echo "SemVer: $GITVERSION_SEMVER"
         echo "SemVer: $GITVERSION_PRERELEASETAG"
         echo "SemVer: $GITVERSION_MAJORMINORPATCH"
-        echo "SemVer: $GITVERSION_FULLSEMVER"
     - name: Package
-      run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_MAJORMINORPATCH --version-suffix $GITVERSION_MAJORMINORPATCH
+      run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_MAJORMINORPATCH --version-suffix $GITVERSION_PRERELEASETAG
     - name: Display SemVer
       run: |
         cd Packages
