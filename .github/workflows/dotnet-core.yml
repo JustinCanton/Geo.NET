@@ -21,11 +21,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+        dotnet-version: '3.1.x'
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -49,4 +45,6 @@ jobs:
       run: |
         cd Packages
         ls
-        dotnet nuget push Geo.Core.0.1.0-GithubAction.1.nupkg --source https://api.nuget.org/v3/index.json --api-key test123
+        dotnet nuget push Geo.Core.0.1.0-GithubAction.1.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
