@@ -2,7 +2,9 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master 
+      - develop
   pull_request:
     branches: [ develop ]
 
@@ -12,14 +14,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: '3.1.x'
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      if: ${{ contains(github.event_name, 'push') }}
+      with:
+        versionSpec: '5.x'
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      if: ${{ contains(github.event_name, 'push') }}
+      with:
+        useConfigFile: true
+    - name: Display SemVer
+      if: ${{ contains(github.event_name, 'push') }}
+      run: |
+        echo "SemVer: $GITVERSION_SEMVER"
+    - name: Package
+      if: ${{ contains(github.event_name, 'push') }}
+      run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
+    - name: Push
+      if: ${{ contains(github.event_name, 'push') }}
+      run: |
+        cd Packages
+        ls
+        dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
