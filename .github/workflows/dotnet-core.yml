@@ -22,6 +22,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -39,11 +43,9 @@ jobs:
     - name: Display SemVer
       run: |
         echo "SemVer: $GITVERSION_SEMVER"
-        echo "SemVer: $GITVERSION_PRERELEASETAG"
-        echo "SemVer: $GITVERSION_MAJORMINORPATCH"
     - name: Package
       run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
-    - name: Display SemVer
+    - name: Check Packages
       run: |
         cd Packages
         ls
