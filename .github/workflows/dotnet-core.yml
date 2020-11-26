@@ -49,4 +49,4 @@ jobs:
       run: |
         cd Packages
         ls
-        dotnet nuget push Geo.Core.0.1.0-GithubAction.1.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+        dotnet nuget push Geo.Core.0.1.0-GithubAction.1.nupkg --source https://api.nuget.org/v3/index.json --api-key test123
