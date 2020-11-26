@@ -32,19 +32,24 @@ jobs:
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
         versionSpec: '5.x'
+      if: ${{ github.event_name == "push" }}
     - name: Determine Version
       uses: gittools/actions/gitversion/execute@v0.9.7
       with:
         useConfigFile: true
+      if: ${{ github.event_name == "push" }}
     - name: Display SemVer
       run: |
         echo "SemVer: $GITVERSION_SEMVER"
+      if: ${{ github.event_name == "push" }}
     - name: Package
       run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
+      if: ${{ github.event_name == "push" }}
     - name: Push
       run: |
         cd Packages
         ls
-        dotnet nuget push Geo.Core.0.1.0-GithubAction.1.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+        dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      if: ${{ github.event_name == "push" }}
