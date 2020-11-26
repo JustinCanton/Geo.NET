@@ -45,11 +45,8 @@ jobs:
         echo "SemVer: $GITVERSION_SEMVER"
     - name: Package
       run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
-    - name: Check Packages
-      run: |
-        cd Packages
-        ls
     - name: Push
       run: |
         cd Packages
-        dotnet nuget push '*.nupkg' --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+        ls
+        dotnet nuget push *.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
