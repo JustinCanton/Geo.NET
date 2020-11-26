@@ -49,3 +49,7 @@ jobs:
       run: |
         cd Packages
         ls
+    - name: Push
+      run: |
+        cd Packages
+        dotnet nuget push '*.nupkg' --api-key $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
