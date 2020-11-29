@@ -744,44 +744,6 @@ namespace Geo.Here.Tests.Services
         }
 
         /// <summary>
-        /// Tests the calling is done successfully.
-        /// </summary>
-        /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
-        public async Task CallHereAsyncSuccessfully()
-        {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
-            var parameters = new LookupParameters()
-            {
-                Id = "12345sudfinm",
-                Language = "jp",
-            };
-
-            var uri = service.ValidateAndCraftUri<LookupParameters>(parameters, service.BuildLookupRequest);
-            var result = await service.CallHereAsync<LookupResponse>(uri).ConfigureAwait(false);
-            result.Title.Should().Be("Royal Oak");
-            result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
-        }
-
-        /// <summary>
-        /// Tests the calling fails and the exception is wrapped.
-        /// </summary>
-        [Test]
-        public void CallHereAsyncFailsWithException()
-        {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
-
-            Action act = () => service.CallHereAsync<LookupResponse>(null).GetAwaiter().GetResult();
-
-            act.Should()
-                .Throw<HereException>()
-                .WithMessage("The here uri is invalid. Please see the inner exception for more information.")
-                .WithInnerException<InvalidOperationException>();
-        }
-
-        /// <summary>
         /// Tests the geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>

@@ -363,56 +363,6 @@ namespace Geo.MapQuest.Tests.Services
         }
 
         /// <summary>
-        /// Tests the calling is done successfully.
-        /// </summary>
-        /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
-        public async Task CallMapQuestAsyncSuccessfully()
-        {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-            var parameters = new ReverseGeocodingParameters()
-            {
-                Location = new Coordinate()
-                {
-                    Latitude = 56.78,
-                    Longitude = 78.91,
-                },
-                IncludeNearestIntersection = false,
-                IncludeRoadMetadata = false,
-                IncludeThumbMaps = true,
-            };
-
-            var uri = service.ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, service.BuildReverseGeocodingRequest);
-            var result = await service.CallMapQuestAsync<Response<ReverseGeocodeResult>>(uri).ConfigureAwait(false);
-            result.Results.Count.Should().Be(1);
-            result.Results[0].Locations.Count.Should().Be(1);
-            result.Results[0].Locations.Count.Should().Be(1);
-            result.Results[0].ProvidedLocation.Coordinate.ToString().Should().Be(new Coordinate()
-            {
-                Latitude = 56.78,
-                Longitude = 123.45,
-            }.ToString());
-        }
-
-        /// <summary>
-        /// Tests the calling fails and the exception is wrapped.
-        /// </summary>
-        [Test]
-        public void CallMapBoxAsyncFailsWithException()
-        {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-
-            Action act = () => service.CallMapQuestAsync<Response<GeocodeResult>>(null).GetAwaiter().GetResult();
-
-            act.Should()
-                .Throw<MapQuestException>()
-                .WithMessage("The MapQuest uri is invalid. Please see the inner exception for more information.")
-                .WithInnerException<InvalidOperationException>();
-        }
-
-        /// <summary>
         /// Tests the geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>

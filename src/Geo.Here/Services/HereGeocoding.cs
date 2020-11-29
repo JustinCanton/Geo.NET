@@ -23,6 +23,7 @@ namespace Geo.Here.Services
     /// </summary>
     public class HereGeocoding : ClientExecutor, IHereGeocoding
     {
+        private const string _apiName = "Here";
         private readonly string _geocodeUri = "https://geocode.search.hereapi.com/v1/geocode";
         private readonly string _reverseGeocodeUri = "https://revgeocode.search.hereapi.com/v1/revgeocode";
         private readonly string _discoverUri = "https://discover.search.hereapi.com/v1/discover";
@@ -51,7 +52,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallHereAsync<GeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<GeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -61,7 +62,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallHereAsync<ReverseGeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<ReverseGeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -71,7 +72,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
 
-            return await CallHereAsync<DiscoverResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<DiscoverResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -81,7 +82,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
 
-            return await CallHereAsync<AutosuggestResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<AutosuggestResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -91,7 +92,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<LookupParameters>(parameters, BuildLookupRequest);
 
-            return await CallHereAsync<LookupResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<LookupResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -101,7 +102,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndCraftUri<BrowseParameters>(parameters, BuildBrowseRequest);
 
-            return await CallHereAsync<BrowseResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<BrowseResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -125,49 +126,6 @@ namespace Geo.Here.Services
             catch (ArgumentException ex)
             {
                 throw new HereException("Failed to create the here uri.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Calls here with the request information.
-        /// </summary>
-        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
-        internal async Task<TResult> CallHereAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new HereException("The here uri is null.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new HereException("The here uri is invalid.", ex);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new HereException("The here request failed.", ex);
-            }
-            catch (TaskCanceledException ex)
-            {
-                throw new HereException("The here request was cancelled.", ex);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new HereException("Failed to parse the here response properly.", ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                throw new HereException("Failed to parse the here response properly.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new HereException("The call to here failed with an exception.", ex);
             }
         }
 

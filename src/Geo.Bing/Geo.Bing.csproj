@@ -6,6 +6,7 @@
     <Company>Geo.NET</Company>
     <Product>Geo.NET Bing</Product>
     <PackageTags>geocoding geo.net bing</PackageTags>
+    <Description>A lightweight method for communicating with the Bing geocoding APIs. This includes models and interfaces for calling Bing.</Description>
   </PropertyGroup>
 
   <ItemGroup>

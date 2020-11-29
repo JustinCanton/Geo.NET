@@ -6,6 +6,7 @@
     <Company>Geo.NET</Company>
     <Product>Geo.NET Google</Product>
     <PackageTags>geocoding geo.net google</PackageTags>
+    <Description>A lightweight method for communicating with the Google geocoding APIs. This includes models and interfaces for calling Google.</Description>
   </PropertyGroup>
 
   <ItemGroup>

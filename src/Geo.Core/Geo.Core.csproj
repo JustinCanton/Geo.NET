@@ -6,6 +6,7 @@
     <Company>Geo.NET</Company>
     <Product>Geo.NET Core</Product>
     <PackageTags>geocoding geo.net core</PackageTags>
+    <Description>The core functionality used by Geo.NET for calling out to different online geocoding APIs.</Description>
   </PropertyGroup>
 
   <ItemGroup>

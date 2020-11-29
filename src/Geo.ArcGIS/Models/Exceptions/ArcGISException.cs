@@ -38,7 +38,7 @@ namespace Geo.ArcGIS.Models.Exceptions
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public ArcGISException(string message)
-            : base(string.Format(CultureInfo.InvariantCulture, _defaultMessage, message))
+            : base(message)
         {
         }
 
