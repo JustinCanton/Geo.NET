@@ -6,6 +6,7 @@
     <Company>Geo.NET</Company>
     <Product>Geo.NET ArcGIS</Product>
     <PackageTags>geocoding geo.net arcgis</PackageTags>
+    <Description>A lightweight method for communicating with the ArcGIS geocoding APIs. This includes models and interfaces for calling ArcGIS.</Description>
   </PropertyGroup>
 
   <ItemGroup>

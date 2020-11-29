@@ -38,7 +38,7 @@ namespace Geo.Bing.Models.Exceptions
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public BingException(string message)
-            : base(string.Format(CultureInfo.InvariantCulture, _defaultMessage, message))
+            : base(message)
         {
         }
 

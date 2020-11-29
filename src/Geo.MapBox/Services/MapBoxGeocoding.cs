@@ -27,6 +27,7 @@ namespace Geo.MapBox.Services
     /// </summary>
     public class MapBoxGeocoding : ClientExecutor, IMapBoxGeocoding
     {
+        private const string _apiName = "MapBox";
         private readonly string _geocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
         private readonly string _reverseGeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
         private readonly string _placesEndpoint = "mapbox.places";
@@ -53,7 +54,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallMapBoxAsync<Response<List<string>>>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<List<string>>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -63,7 +64,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallMapBoxAsync<Response<Coordinate>>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<Coordinate>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -87,49 +88,6 @@ namespace Geo.MapBox.Services
             catch (ArgumentException ex)
             {
                 throw new MapBoxException("Failed to create the MapBox uri.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Calls MapBox with the request information.
-        /// </summary>
-        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
-        internal async Task<TResult> CallMapBoxAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new MapBoxException("The MapBox uri is null.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new MapBoxException("The MapBox uri is invalid.", ex);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MapBoxException("The MapBox request failed.", ex);
-            }
-            catch (TaskCanceledException ex)
-            {
-                throw new MapBoxException("The MapBox request was cancelled.", ex);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new MapBoxException("Failed to parse the MapBox response properly.", ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                throw new MapBoxException("Failed to parse the MapBox response properly.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new MapBoxException("The call to MapBox failed with an exception.", ex);
             }
         }
 

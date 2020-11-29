@@ -38,7 +38,7 @@ namespace Geo.MapBox.Models.Exceptions
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public MapBoxException(string message)
-            : base(string.Format(CultureInfo.InvariantCulture, _defaultMessage, message))
+            : base(message)
         {
         }
 

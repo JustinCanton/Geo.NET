@@ -24,6 +24,7 @@ namespace Geo.MapQuest.Services
     /// </summary>
     public class MapQuestGeocoding : ClientExecutor, IMapQuestGeocoding
     {
+        private const string _apiName = "MapQuest";
         private readonly string _openGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/address";
         private readonly string _openReverseGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/reverse";
         private readonly string _geocodeUri = "http://www.mapquestapi.com/geocoding/v1/address";
@@ -54,7 +55,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallMapQuestAsync<Response<GeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<GeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -64,7 +65,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallMapQuestAsync<Response<ReverseGeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<ReverseGeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -88,49 +89,6 @@ namespace Geo.MapQuest.Services
             catch (ArgumentException ex)
             {
                 throw new MapQuestException("Failed to create the MapQuest uri.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Calls MapQuest with the request information.
-        /// </summary>
-        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
-        internal async Task<TResult> CallMapQuestAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new MapQuestException("The MapQuest uri is null.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new MapQuestException("The MapQuest uri is invalid.", ex);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MapQuestException("The MapQuest request failed.", ex);
-            }
-            catch (TaskCanceledException ex)
-            {
-                throw new MapQuestException("The MapQuest request was cancelled.", ex);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new MapQuestException("Failed to parse the MapQuest response properly.", ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                throw new MapQuestException("Failed to parse the MapQuest response properly.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new MapQuestException("The call to MapBox failed with an exception.", ex);
             }
         }
 

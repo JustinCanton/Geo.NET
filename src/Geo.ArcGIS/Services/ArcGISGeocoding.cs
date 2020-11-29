@@ -27,6 +27,7 @@ namespace Geo.ArcGIS.Services
     /// </summary>
     public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
     {
+        private const string _apiName = "ArcGIS";
         private readonly string _candidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
         private readonly string _suggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
         private readonly string _reverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
@@ -53,7 +54,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndCraftUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallArcGISAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -63,7 +64,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndCraftUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallArcGISAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -73,7 +74,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndCraftUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallArcGISAsync<SuggestResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<SuggestResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -83,7 +84,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallArcGISAsync<ReverseGeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -93,7 +94,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallArcGISAsync<GeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<GeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -121,49 +122,6 @@ namespace Geo.ArcGIS.Services
             catch (ArgumentException ex)
             {
                 throw new ArcGISException("Failed to create the ArcGIS uri.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Calls ArcGIS with the request information.
-        /// </summary>
-        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
-        internal async Task<TResult> CallArcGISAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new ArcGISException("The ArcGIS uri is null.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new ArcGISException("The ArcGIS uri is invalid.", ex);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new ArcGISException("The ArcGIS request failed.", ex);
-            }
-            catch (TaskCanceledException ex)
-            {
-                throw new ArcGISException("The ArcGIS request was cancelled.", ex);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new ArcGISException("Failed to parse the ArcGIS response properly.", ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                throw new ArcGISException("Failed to parse the ArcGIS response properly.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new ArcGISException("The call to ArcGIS failed with an exception.", ex);
             }
         }
 

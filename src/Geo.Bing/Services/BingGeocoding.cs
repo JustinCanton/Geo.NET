@@ -23,6 +23,7 @@ namespace Geo.Bing.Services
     /// </summary>
     public class BingGeocoding : ClientExecutor, IBingGeocoding
     {
+        private const string _apiName = "Bing";
         private readonly string _baseUri = "http://dev.virtualearth.net/REST/v1/Locations";
         private readonly IBingKeyContainer _keyContainer;
 
@@ -46,7 +47,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -56,7 +57,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -64,7 +65,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndCraftUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
 
-            return await CallBingAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -88,49 +89,6 @@ namespace Geo.Bing.Services
             catch (ArgumentException ex)
             {
                 throw new BingException("Failed to create the Google uri.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Calls Bing with the request information.
-        /// </summary>
-        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
-        /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
-        internal async Task<TResult> CallBingAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new BingException("The Bing uri is null.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new BingException("The Bing uri is invalid.", ex);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new BingException("The Bing request failed.", ex);
-            }
-            catch (TaskCanceledException ex)
-            {
-                throw new BingException("The Bing request was cancelled.", ex);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new BingException("Failed to parse the Bing response properly.", ex);
-            }
-            catch (JsonSerializationException ex)
-            {
-                throw new BingException("Failed to parse the Bing response properly.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new BingException("The call to Bing failed with an exception.", ex);
             }
         }
 

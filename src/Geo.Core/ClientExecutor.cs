@@ -29,10 +29,69 @@ namespace Geo.Core
         /// <summary>
         /// Places a call to the API based on a uri.
         /// </summary>
-        /// <typeparam name="T">The return type to parse the response into.</typeparam>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
+        /// <typeparam name="TException">The exception type to return in case of any failure.</typeparam>
+        /// <param name="uri">The <see cref="Uri"/> to call.</param>
+        /// <param name="apiName">The name of the api being called for exception logging purposes.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        /// <exception cref="TException">Thrown when any exception occurs and wraps the original exception.</exception>
+        public async Task<TResult> CallAsync<TResult, TException>(Uri uri, string apiName, CancellationToken cancellationToken = default)
+            where TResult : class
+            where TException : Exception
+        {
+            Tuple<TResult, string> response;
+
+            try
+            {
+                response = await CallAsync<TResult>(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"The {apiName} uri is null.", ex) as TException;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"The {apiName} uri is invalid.", ex) as TException;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"The {apiName} request failed.", ex) as TException;
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"The {apiName} request was cancelled.", ex) as TException;
+            }
+            catch (JsonReaderException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"Failed to parse the {apiName} response properly.", ex) as TException;
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"Failed to parse the {apiName} response properly.", ex) as TException;
+            }
+            catch (Exception ex)
+            {
+                throw Activator.CreateInstance(typeof(TException), $"The call to {apiName} failed with an exception.", ex) as TException;
+            }
+
+            if (response.Item1 is null || !string.IsNullOrEmpty(response.Item2))
+            {
+                var ex = Activator.CreateInstance(typeof(TException), $"The call to {apiName} did not return a successful http status code. Please see the exception data for more information.") as TException;
+                ex.Data.Add("responseBody", response.Item2);
+                throw ex;
+            }
+
+            return response.Item1;
+        }
+
+        /// <summary>
+        /// Places a call to the API based on a uri.
+        /// </summary>
+        /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
         /// <param name="uri">The <see cref="Uri"/> to call.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="T"/>.</returns>
+        /// <returns>A <typeparamref name="TResult"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the request uri is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the request uri is invalid.</exception>
         /// <exception cref="HttpRequestException">
@@ -42,13 +101,19 @@ namespace Geo.Core
         /// <exception cref="TaskCanceledException">Thrown when the request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        public async Task<T> CallAsync<T>(Uri uri, CancellationToken cancellationToken = default)
+        internal async Task<Tuple<TResult, string>> CallAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+            where TResult : class
         {
             var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             var json = response.Content.ReadAsStringAsync().Result;
 
-            return JsonConvert.DeserializeObject<T>(json);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new Tuple<TResult, string>(null, json);
+            }
+
+            return new Tuple<TResult, string>(JsonConvert.DeserializeObject<TResult>(json), string.Empty);
         }
     }
 }

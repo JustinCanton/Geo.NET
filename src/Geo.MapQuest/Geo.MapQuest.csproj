@@ -6,6 +6,7 @@
     <Company>Geo.NET</Company>
     <Product>Geo.NET MapQuest</Product>
     <PackageTags>geocoding geo.net mapquest</PackageTags>
+    <Description>A lightweight method for communicating with the MapQuest geocoding APIs. This includes models and interfaces for calling MapQuest.</Description>
   </PropertyGroup>
 
   <ItemGroup>
