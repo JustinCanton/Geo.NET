@@ -591,7 +591,7 @@ namespace Geo.Google.Services
 
             if (parameters.MaximumPrice >= 0 && parameters.MaximumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
             {
-                query.Add("maxprice", parameters.MinimumPrice.ToString(CultureInfo.InvariantCulture));
+                query.Add("maxprice", parameters.MaximumPrice.ToString(CultureInfo.InvariantCulture));
             }
 
             query.Add("opennow", parameters.OpenNow.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());

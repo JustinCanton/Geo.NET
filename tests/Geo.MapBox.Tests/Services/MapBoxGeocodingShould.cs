@@ -98,7 +98,7 @@ namespace Geo.MapBox.Tests.Services
         }
 
         /// <summary>
-        /// Tests the base parameters is properly set into the query string.
+        /// Tests the base parameters are properly set into the query string.
         /// </summary>
         [Test]
         public void AddBaseParametersSuccessfully()
