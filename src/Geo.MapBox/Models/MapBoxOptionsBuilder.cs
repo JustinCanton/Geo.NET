@@ -26,7 +26,7 @@ namespace Geo.MapBox.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The MapBox API key can not be null or empty");
+                throw new ArgumentException("The MapBox API key cannot be null or empty");
             }
 
             Key = key;

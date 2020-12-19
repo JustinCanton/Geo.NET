@@ -26,7 +26,7 @@ namespace Geo.Google.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The Google API key can not be null or empty");
+                throw new ArgumentException("The Google API key cannot be null or empty");
             }
 
             Key = key;

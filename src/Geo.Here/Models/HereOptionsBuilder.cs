@@ -26,7 +26,7 @@ namespace Geo.Here.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The here API key can not be null or empty");
+                throw new ArgumentException("The here API key cannot be null or empty");
             }
 
             Key = key;

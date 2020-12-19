@@ -32,7 +32,7 @@ namespace Geo.MapQuest.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The MapQuest API key can not be null or empty");
+                throw new ArgumentException("The MapQuest API key cannot be null or empty");
             }
 
             Key = key;

@@ -26,7 +26,7 @@ namespace Geo.Bing.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The Bing API key can not be null or empty");
+                throw new ArgumentException("The Bing API key cannot be null or empty");
             }
 
             Key = key;

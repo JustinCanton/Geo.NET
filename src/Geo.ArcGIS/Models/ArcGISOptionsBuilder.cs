@@ -34,12 +34,12 @@ namespace Geo.ArcGIS.Models
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
-                throw new ArgumentException("The ArcGIS API client id can not be null or empty");
+                throw new ArgumentException("The ArcGIS API client id cannot be null or empty");
             }
 
             if (string.IsNullOrWhiteSpace(clientSecret))
             {
-                throw new ArgumentException("The ArcGIS API client secret can not be null or empty");
+                throw new ArgumentException("The ArcGIS API client secret cannot be null or empty");
             }
 
             ClientId = clientId;
