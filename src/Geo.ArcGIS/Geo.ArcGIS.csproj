@@ -7,6 +7,16 @@
     <Product>Geo.NET ArcGIS</Product>
     <PackageTags>geocoding geo.net arcgis</PackageTags>
     <Description>A lightweight method for communicating with the ArcGIS geocoding APIs. This includes models and interfaces for calling ArcGIS.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.ArcGIS.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.ArcGIS.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,6 +7,16 @@
     <Product>Geo.NET Here</Product>
     <PackageTags>geocoding geo.net here</PackageTags>
     <Description>A lightweight method for communicating with the Here geocoding APIs. This includes models and interfaces for calling Here.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Here.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Here.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
