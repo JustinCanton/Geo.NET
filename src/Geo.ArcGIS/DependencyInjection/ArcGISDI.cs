@@ -28,11 +28,11 @@ namespace Geo.ArcGIS.DependencyInjection
                 var options = new ArcGISOptionsBuilder();
                 optionsBuilder(options);
 
-                services.AddSingleton<IArcGISKeyContainer>(new ArcGISKeyContainer(options.ClientId, options.ClientSecret));
+                services.AddSingleton<IArcGISCredentialsContainer>(new ArcGISCredentialsContainer(options.ClientId, options.ClientSecret));
             }
             else
             {
-                services.AddSingleton<IArcGISKeyContainer>(new ArcGISKeyContainer(string.Empty, string.Empty));
+                services.AddSingleton<IArcGISCredentialsContainer>(new ArcGISCredentialsContainer(string.Empty, string.Empty));
             }
 
             services.AddHttpClient<IArcGISTokenRetrevial, ArcGISTokenRetrevial>();

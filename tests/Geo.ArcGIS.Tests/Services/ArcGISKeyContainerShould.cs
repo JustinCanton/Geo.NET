@@ -9,7 +9,7 @@ namespace Geo.ArcGIS.Tests.Services
     using NUnit.Framework;
 
     /// <summary>
-    /// Unit tests for the <see cref="ArcGISKeyContainer"/> class.
+    /// Unit tests for the <see cref="ArcGISCredentialsContainer"/> class.
     /// </summary>
     [TestFixture]
     public class ArcGISKeyContainerShould
@@ -20,10 +20,10 @@ namespace Geo.ArcGIS.Tests.Services
         [Test]
         public void SetKey()
         {
-            var keyContainer = new ArcGISKeyContainer("abc123", "secret123");
-            var keys = keyContainer.GetKeys();
-            keys.Item1.Should().Be("abc123");
-            keys.Item2.Should().Be("secret123");
+            var credentialsContainer = new ArcGISCredentialsContainer("abc123", "secret123");
+            var credentials = credentialsContainer.GetCredentials();
+            credentials.ClientId.Should().Be("abc123");
+            credentials.ClientSecret.Should().Be("secret123");
         }
     }
 }

@@ -19,30 +19,28 @@ namespace Geo.ArcGIS.Services
     public class ArcGISTokenRetrevial : IArcGISTokenRetrevial
     {
         private readonly Uri _tokenRefreshAddress = new Uri("https://www.arcgis.com/sharing/rest/oauth2/token");
-
         private readonly HttpClient _client;
-
-        private readonly IArcGISKeyContainer _keyContainer;
+        private readonly IArcGISCredentialsContainer _credentialsContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISTokenRetrevial"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the ArcGIS token generation API.</param>
-        /// <param name="keyContainer">A <see cref="IArcGISKeyContainer"/> used for fetching the ArcGIS keys.</param>
+        /// <param name="credentialsContainer">A <see cref="IArcGISCredentialsContainer"/> used for fetching the ArcGIS credentials.</param>
         public ArcGISTokenRetrevial(
             HttpClient client,
-            IArcGISKeyContainer keyContainer)
+            IArcGISCredentialsContainer credentialsContainer)
         {
             _client = client;
-            _keyContainer = keyContainer;
+            _credentialsContainer = credentialsContainer;
         }
 
         /// <inheritdoc/>
         public async Task<Token> GetTokenAsync(CancellationToken cancellationToken)
         {
-            var keys = _keyContainer.GetKeys();
+            var credentials = _credentialsContainer.GetCredentials();
 
-            if (string.IsNullOrWhiteSpace(keys.Item1) || string.IsNullOrWhiteSpace(keys.Item2))
+            if (string.IsNullOrWhiteSpace(credentials.ClientId) || string.IsNullOrWhiteSpace(credentials.ClientSecret))
             {
                 // The key information isn't set.
                 // Return an object with an infinite time in the future so more calls aren't made.
@@ -67,12 +65,12 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="FormUrlEncodedContent"/> with the built up content information.</returns>
         internal FormUrlEncodedContent BuildContent()
         {
-            var keys = _keyContainer.GetKeys();
+            var credentials = _credentialsContainer.GetCredentials();
 
             var collection = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("client_id", keys.Item1),
-                new KeyValuePair<string, string>("client_secret", keys.Item2),
+                new KeyValuePair<string, string>("client_id", credentials.ClientId),
+                new KeyValuePair<string, string>("client_secret", credentials.ClientSecret),
                 new KeyValuePair<string, string>("grant_type", "client_credentials"),
             };
 

@@ -16,7 +16,6 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
-    using Geo.MapQuest.Models.Responses;
     using Geo.MapQuest.Services;
     using Moq;
     using Moq.Protected;

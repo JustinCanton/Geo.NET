@@ -17,7 +17,6 @@ namespace Geo.MapBox.Tests.Services
     using Geo.MapBox.Models;
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
-    using Geo.MapBox.Models.Responses;
     using Geo.MapBox.Services;
     using Moq;
     using Moq.Protected;

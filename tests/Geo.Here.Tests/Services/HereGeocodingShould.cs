@@ -15,7 +15,6 @@ namespace Geo.Here.Tests.Services
     using Geo.Here.Models;
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
-    using Geo.Here.Models.Responses;
     using Geo.Here.Services;
     using Moq;
     using Moq.Protected;

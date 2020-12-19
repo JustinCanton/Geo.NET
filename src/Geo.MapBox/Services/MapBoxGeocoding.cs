@@ -20,7 +20,6 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the MapBox geocoding api.

@@ -21,7 +21,7 @@ namespace Geo.ArcGIS.Tests.Services
     public class ArcGISTokenRetrevialShould
     {
         private Mock<HttpMessageHandler> _handlerMock;
-        private ArcGISKeyContainer _keyContainer;
+        private ArcGISCredentialsContainer _keyContainer;
 
         /// <summary>
         /// One time setup information.
@@ -29,7 +29,7 @@ namespace Geo.ArcGIS.Tests.Services
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _keyContainer = new ArcGISKeyContainer("abc123", "secret123");
+            _keyContainer = new ArcGISCredentialsContainer("abc123", "secret123");
 
             _handlerMock = new Mock<HttpMessageHandler>();
             _handlerMock
@@ -72,7 +72,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task GetTokenShouldReturnEmptyWithNoKey()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);
-            var keyContainer = new ArcGISKeyContainer(string.Empty, string.Empty);
+            var keyContainer = new ArcGISCredentialsContainer(string.Empty, string.Empty);
             var service = new ArcGISTokenRetrevial(httpClient, keyContainer);
 
             var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
