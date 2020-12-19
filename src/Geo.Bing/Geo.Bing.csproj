@@ -7,6 +7,16 @@
     <Product>Geo.NET Bing</Product>
     <PackageTags>geocoding geo.net bing</PackageTags>
     <Description>A lightweight method for communicating with the Bing geocoding APIs. This includes models and interfaces for calling Bing.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Bing.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Bing.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

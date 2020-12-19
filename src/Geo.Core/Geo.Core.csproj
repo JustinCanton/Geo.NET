@@ -7,6 +7,16 @@
     <Product>Geo.NET Core</Product>
     <PackageTags>geocoding geo.net core</PackageTags>
     <Description>The core functionality used by Geo.NET for calling out to different online geocoding APIs.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
