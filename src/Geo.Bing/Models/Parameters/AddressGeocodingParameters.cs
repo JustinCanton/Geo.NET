@@ -18,7 +18,7 @@ namespace Geo.Bing.Models.Parameters
         public string AdministrationDistrict { get; set; }
 
         /// <summary>
-        /// Gets or sets the locality, such as the city or neighborhood, that corresponds to an address.
+        /// Gets or sets the locality, such as the city or neighbourhood, that corresponds to an address.
         /// </summary>
         public string Locality { get; set; }
 

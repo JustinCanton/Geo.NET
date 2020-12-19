@@ -140,7 +140,7 @@ namespace Geo.Bing.Services
                 includes += "Address";
             }
 
-            if (parameters.IncludeAddressNeighborhood == true)
+            if (parameters.IncludeAddressNeighbourhood == true)
             {
                 if (includes.Length > 0)
                 {
@@ -290,7 +290,7 @@ namespace Geo.Bing.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the built up query parameters.</param>
         internal void BuildBaseQuery(BaseParameters parameters, ref NameValueCollection query)
         {
-            if (parameters.IncludeNeighborhood == true)
+            if (parameters.IncludeNeighbourhood == true)
             {
                 query.Add("includeNeighborhood", "1");
             }

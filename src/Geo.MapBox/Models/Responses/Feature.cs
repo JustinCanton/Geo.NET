@@ -29,7 +29,7 @@ namespace Geo.MapBox.Models.Responses
 
         /// <summary>
         /// Gets the feature types describing the feature.
-        /// Options are country, region, postcode, district, place, locality, neighborhood, address, and poi.
+        /// Options are country, region, postcode, district, place, locality, neighbourhood, address, and poi.
         /// Most features have only one type, but if the feature has multiple types, all applicable types will be listed in the array.
         /// (For example, Vatican City is a country, region, and place.)
         /// </summary>

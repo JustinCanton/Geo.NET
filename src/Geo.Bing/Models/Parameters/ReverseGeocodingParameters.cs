@@ -22,7 +22,7 @@ namespace Geo.Bing.Models.Parameters
         /// <summary>
         /// Gets or sets a value indicating whether or not to return the neighbourhood information.
         /// </summary>
-        public bool IncludeAddressNeighborhood { get; set; }
+        public bool IncludeAddressNeighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to return the populated place information.

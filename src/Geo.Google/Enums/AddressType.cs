@@ -133,10 +133,10 @@ namespace Geo.Google.Enums
         Sublocality5,
 
         /// <summary>
-        /// Indicates a named neighborhood.
+        /// Indicates a named neighbourhood.
         /// </summary>
         [EnumMember(Value = "neighborhood")]
-        Neighborhood,
+        Neighbourhood,
 
         /// <summary>
         /// Indicates a named location, usually a building or collection of buildings with a common name.

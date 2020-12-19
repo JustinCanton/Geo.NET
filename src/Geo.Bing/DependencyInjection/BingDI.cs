@@ -19,7 +19,7 @@ namespace Geo.Bing.DependencyInjection
         /// Adds the Bing services to the service collection.
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the Bing services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{GoogleOptionsBuilder}"/> with the options to add to the Bing configuration.</param>
+        /// <param name="optionsBuilder">A <see cref="Action{BingOptionsBuilder}"/> with the options to add to the Bing configuration.</param>
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddBingServices(this IServiceCollection services, Action<BingOptionsBuilder> optionsBuilder)
         {

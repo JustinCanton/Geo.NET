@@ -19,7 +19,7 @@ namespace Geo.MapQuest.Models.Responses
         public string Street { get; set; }
 
         /// <summary>
-        /// Gets or sets the neighborhood name.
+        /// Gets or sets the neighbourhood name.
         /// </summary>
         [JsonProperty("adminArea6")]
         public string Neighbourhood { get; set; }

@@ -48,7 +48,7 @@ namespace Geo.Here.Models.Responses
         public string City { get; set; }
 
         /// <summary>
-        /// Gets or sets a division of city; typically an administrative unit within a larger city or a customary name of a city's neighborhood.
+        /// Gets or sets a division of city; typically an administrative unit within a larger city or a customary name of a city's neighbourhood.
         /// For example: "Bad Oyenhausen".
         /// </summary>
         [JsonProperty("district")]

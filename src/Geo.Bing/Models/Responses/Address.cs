@@ -63,7 +63,7 @@ namespace Geo.Bing.Models.Responses
         /// Gets or sets the neighbourhood of the address.
         /// </summary>
         [JsonProperty("neighborhood")]
-        public string Neighborhood { get; set; }
+        public string Neighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets any landmarks near the address.

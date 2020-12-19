@@ -61,7 +61,7 @@ namespace Geo.Google.Models.Responses
 
         /// <summary>
         /// Gets or sets a feature name of a nearby location.
-        /// Often this feature refers to a street or neighborhood within the given results.
+        /// Often this feature refers to a street or neighbourhood within the given results.
         /// </summary>
         [JsonProperty("vicinity")]
         public string Vicinity { get; set; }
