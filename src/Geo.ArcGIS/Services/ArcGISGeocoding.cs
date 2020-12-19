@@ -180,7 +180,7 @@ namespace Geo.ArcGIS.Services
                 query.Add("location", parameters.Location.ToString());
             }
 
-            if (parameters.MaximumLocations > 0)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 51)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
@@ -227,7 +227,7 @@ namespace Geo.ArcGIS.Services
                 query.Add("searchExtent", parameters.SearchExtent.ToString());
             }
 
-            if (parameters.MaximumLocations > 0)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }

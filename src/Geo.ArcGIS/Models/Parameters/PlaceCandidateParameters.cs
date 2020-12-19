@@ -23,7 +23,10 @@ namespace Geo.ArcGIS.Models.Parameters
 
         /// <summary>
         /// Gets or sets the maximum number of candidates to return.
+        /// The maximum allowable is 50.
+        /// The minimum is 1.
+        /// If any other value is specified, then all matching candidates up to the service maximum are returned.
         /// </summary>
-        public int MaximumLocations { get; set; } = 0;
+        public uint MaximumLocations { get; set; } = 0;
     }
 }
