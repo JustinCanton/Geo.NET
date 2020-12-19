@@ -1,4 +1,4 @@
-﻿// <copyright file="ArcGISKeyContainerShould.cs" company="Geo.NET">
+﻿// <copyright file="ArcGISCredentialsContainerShould.cs" company="Geo.NET">
 // Copyright (c) Geo.NET. All rights reserved.
 // </copyright>
 
@@ -12,7 +12,7 @@ namespace Geo.ArcGIS.Tests.Services
     /// Unit tests for the <see cref="ArcGISCredentialsContainer"/> class.
     /// </summary>
     [TestFixture]
-    public class ArcGISKeyContainerShould
+    public class ArcGISCredentialsContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
