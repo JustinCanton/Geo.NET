@@ -20,7 +20,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddArcGISServices(options => options.UseClientKeys(your_arcgis_client_id_here, your_arcgis_client_secret_here));
+    services.AddArcGISServices(options => options.UseClientCredentials(your_arcgis_client_id_here, your_arcgis_client_secret_here));
     .
     .
     .

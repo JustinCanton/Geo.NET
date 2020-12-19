@@ -22,13 +22,13 @@ namespace Geo.ArcGIS.Models
         public string ClientSecret { get; private set; }
 
         /// <summary>
-        /// Sets the ArcGIS API keys to be used during calls.
+        /// Sets the ArcGIS API credentials to be used during calls.
         /// </summary>
         /// <param name="clientId">The ArcGIS API client id to use.</param>
         /// <param name="clientSecret">The ArcGIS API client secret to use.</param>
-        /// <returns>A <see cref="ArcGISOptionsBuilder"/> configured with the keys.</returns>
+        /// <returns>A <see cref="ArcGISOptionsBuilder"/> configured with the credentials.</returns>
         /// <exception cref="ArgumentException">If the client id/secret passed in are null or empty.</exception>
-        public ArcGISOptionsBuilder UseClientKeys(
+        public ArcGISOptionsBuilder UseClientCredentials(
             string clientId,
             string clientSecret)
         {

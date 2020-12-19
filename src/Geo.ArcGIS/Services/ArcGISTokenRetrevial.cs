@@ -42,7 +42,7 @@ namespace Geo.ArcGIS.Services
 
             if (string.IsNullOrWhiteSpace(credentials.ClientId) || string.IsNullOrWhiteSpace(credentials.ClientSecret))
             {
-                // The key information isn't set.
+                // The credential information isn't set.
                 // Return an object with an infinite time in the future so more calls aren't made.
                 return new Token()
                 {
