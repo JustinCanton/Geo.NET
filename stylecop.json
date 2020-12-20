@@ -9,7 +9,7 @@
   "settings": {
     "documentationRules": {
       "companyName": "Geo.NET",
-	  "copyrightText": "Copyright (c) {companyName}.\nLicensed under the {licenseName} license. See {licenseFile} file in the solution root for full license information.",
+	  "copyrightText": "Copyright (c) {companyName}.\nLicensed under the {licenseName} license. See the {licenseFile} file in the solution root for full license information.",
       "variables": {
         "licenseName": "MIT",
         "licenseFile": "LICENSE"
