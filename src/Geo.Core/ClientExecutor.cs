@@ -40,7 +40,7 @@ namespace Geo.Core
             where TResult : class
             where TException : Exception
         {
-            Tuple<TResult, string> response;
+            (TResult Result, string JSON) response;
 
             try
             {
@@ -75,14 +75,14 @@ namespace Geo.Core
                 throw Activator.CreateInstance(typeof(TException), $"The call to {apiName} failed with an exception.", ex) as TException;
             }
 
-            if (response.Item1 is null || !string.IsNullOrEmpty(response.Item2))
+            if (response.Result is null || !string.IsNullOrEmpty(response.JSON))
             {
                 var ex = Activator.CreateInstance(typeof(TException), $"The call to {apiName} did not return a successful http status code. Please see the exception data for more information.") as TException;
-                ex.Data.Add("responseBody", response.Item2);
+                ex.Data.Add("responseBody", response.JSON);
                 throw ex;
             }
 
-            return response.Item1;
+            return response.Result;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Geo.Core
         /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
         /// <param name="uri">The <see cref="Uri"/> to call.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
-        /// <returns>A <typeparamref name="TResult"/>.</returns>
+        /// <returns>A named <see cref="Tuple{T1, T2}"/> with the Result <typeparamref name="TResult"/> if successful or the JSON string if unsuccessful.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the request uri is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the request uri is invalid.</exception>
         /// <exception cref="HttpRequestException">
@@ -101,7 +101,7 @@ namespace Geo.Core
         /// <exception cref="TaskCanceledException">Thrown when the request is cancelled.</exception>
         /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
         /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-        internal async Task<Tuple<TResult, string>> CallAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
+        internal async Task<(TResult Result, string JSON)> CallAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
             where TResult : class
         {
             var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
@@ -110,10 +110,10 @@ namespace Geo.Core
 
             if (!response.IsSuccessStatusCode)
             {
-                return new Tuple<TResult, string>(null, json);
+                return (null, json);
             }
 
-            return new Tuple<TResult, string>(JsonConvert.DeserializeObject<TResult>(json), string.Empty);
+            return (JsonConvert.DeserializeObject<TResult>(json), string.Empty);
         }
     }
 }

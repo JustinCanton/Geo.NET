@@ -14,6 +14,6 @@ namespace Geo.Bing.Models.Parameters
         /// Allowable values are between 1 and 20. The default value is 5.
         /// If the value is 0, the default value will be used.
         /// </summary>
-        public int MaximumResults { get; set; } = 0;
+        public int MaximumResults { get; set; } = 5;
     }
 }

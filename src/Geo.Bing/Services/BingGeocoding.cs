@@ -6,6 +6,7 @@ namespace Geo.Bing.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Configuration;
     using System.Globalization;
     using System.Net.Http;
     using System.Threading;
@@ -295,25 +296,20 @@ namespace Geo.Bing.Services
                 query.Add("includeNeighborhood", "1");
             }
 
-            var includes = string.Empty;
+            var includes = new CommaDelimitedStringCollection();
             if (parameters.IncludeQueryParse == true)
             {
-                includes += "queryParse";
+                includes.Add("queryParse");
             }
 
             if (parameters.IncludeCiso2 == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "ciso2";
+                includes.Add("ciso2");
             }
 
-            if (includes.Length > 0)
+            if (includes.Count > 0)
             {
-                query.Add("include", includes);
+                query.Add("include", includes.ToString());
             }
         }
 
