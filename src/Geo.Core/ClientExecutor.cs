@@ -78,7 +78,7 @@ namespace Geo.Core
 
             if (response.Result is null || !string.IsNullOrEmpty(response.JSON))
             {
-                var ex = Activator.CreateInstance(typeof(TException), $"The call to {apiName} did not return a successful http status code. Please see the exception data for more information.") as TException;
+                var ex = Activator.CreateInstance(typeof(TException), $"The call to {apiName} did not return a successful http status code. See the exception data for more information.") as TException;
                 ex.Data.Add("responseBody", response.JSON);
                 throw ex;
             }

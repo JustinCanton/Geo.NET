@@ -722,7 +722,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("The here parameters are null. Please see the inner exception for more information.")
+                .WithMessage("The here parameters are null. See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -738,7 +738,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("Failed to create the here uri. Please see the inner exception for more information.")
+                .WithMessage("Failed to create the here uri. See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
                 .WithMessage("The id cannot be null. (Parameter 'Id')");
         }

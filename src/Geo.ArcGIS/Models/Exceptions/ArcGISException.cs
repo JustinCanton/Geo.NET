@@ -25,7 +25,7 @@ namespace Geo.ArcGIS.Models.Exceptions
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class ArcGISException : Exception
     {
-        private const string _defaultMessage = "{0} Please see the inner exception for more information.";
+        private const string _defaultMessage = "{0} See the inner exception for more information.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISException"/> class.

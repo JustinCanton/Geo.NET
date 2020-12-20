@@ -341,7 +341,7 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("The MapQuest parameters are null. Please see the inner exception for more information.")
+                .WithMessage("The MapQuest parameters are null. See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -357,7 +357,7 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("Failed to create the MapQuest uri. Please see the inner exception for more information.")
+                .WithMessage("Failed to create the MapQuest uri. See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
                 .WithMessage("The location cannot be null. (Parameter 'Location')");
         }

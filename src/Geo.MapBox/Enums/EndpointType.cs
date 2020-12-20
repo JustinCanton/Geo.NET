@@ -19,6 +19,6 @@ namespace Geo.MapBox.Enums
         /// <summary>
         /// Used for fetching data that can be stored and displayed on any map.
         /// </summary>
-        Permenant,
+        Permanent,
     }
 }
