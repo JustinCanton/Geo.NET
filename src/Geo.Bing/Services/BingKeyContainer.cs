@@ -1,5 +1,6 @@
 ﻿// <copyright file="BingKeyContainer.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Services

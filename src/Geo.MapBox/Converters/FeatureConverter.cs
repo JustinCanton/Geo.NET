@@ -1,5 +1,6 @@
 ﻿// <copyright file="FeatureConverter.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Converters
@@ -54,8 +55,8 @@ namespace Geo.MapBox.Converters
             if (!languages.Any())
             {
                 // There are 2 cases here:
-                // Either there are no extra languages, only the default.
-                // Or there is a context group without the language tags.
+                // Either there are no extra languages, only the default,
+                // or there is a context group without the language tags.
                 var textItems = featureInformation.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase) && !x.Contains("context", StringComparison.OrdinalIgnoreCase));
                 if (textItems.Count() > 1)
                 {

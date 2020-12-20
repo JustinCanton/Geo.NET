@@ -1,5 +1,6 @@
-﻿// <copyright file="AutocompleteParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+﻿// <copyright file="QueryAutocompleteParameters.cs" company="Geo.NET">
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models.Parameters
