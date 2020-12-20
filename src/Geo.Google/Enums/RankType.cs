@@ -20,7 +20,7 @@ namespace Geo.Google.Enums
         Prominence,
 
         /// <summary>
-        /// Indicates tobiases search results in ascending order by their distance from the specified location.
+        /// Indicates to bias the search results in ascending order by their distance from the specified location.
         /// </summary>
         [EnumMember(Value = "distance")]
         Distance,

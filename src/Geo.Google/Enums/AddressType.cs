@@ -268,7 +268,7 @@ namespace Geo.Google.Enums
         Atm,
 
         /// <summary>
-        /// Indicates the location has an bank.
+        /// Indicates the location has a bank.
         /// </summary>
         [EnumMember(Value = "bank")]
         Bank,

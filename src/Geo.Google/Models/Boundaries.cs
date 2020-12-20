@@ -8,7 +8,7 @@ namespace Geo.Google.Models
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Contains  two latitude,longitude values defining the southwest and northeast corner of the bounding box.
+    /// Contains two latitude,longitude values defining the southwest and northeast corner of the bounding box.
     /// </summary>
     public class Boundaries : BaseBounding
     {
