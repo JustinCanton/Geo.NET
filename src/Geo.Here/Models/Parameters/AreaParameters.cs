@@ -39,7 +39,7 @@ namespace Geo.Here.Models.Parameters
         /// In regular expression syntax, the values of route look like:
         /// [a-zA-Z0-9_-]+(;w=\d+)?
         /// "[a-zA-Z0-9._-]+" is the encoded flexible polyline.
-        /// "w=\d+" is the optional width.The width is specified in meters from the center of the path. If no width is provided, the default is 1000 meters.
+        /// "w=\d+" is the optional width. The width is specified in meters from the center of the path. If no width is provided, the default is 1000 meters.
         /// Examples:
         /// BFoz5xJ67i1B1B7PzIhaxL7Y
         /// BFoz5xJ67i1B1B7PzIhaxL7Y; w=5000

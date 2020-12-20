@@ -298,7 +298,7 @@ namespace Geo.Google.Services
                 {
                     query.Add("locationbias", $"rectangle:{parameters.LocationBias}");
                 }
-                else
+                else if (parameters.LocationBias.GetType() == typeof(Circle))
                 {
                     query.Add("locationbias", $"circle:{parameters.LocationBias}");
                 }
@@ -319,7 +319,7 @@ namespace Geo.Google.Services
         /// <param name="parameters">A <see cref="NearbySearchParameters"/> with the nearby search parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed Google nearby search uri.</returns>
         /// <exception cref="ArgumentException">
-        /// Thrown when the 'Location' parameter is null or invalid.
+        /// Thrown when the 'Location' parameter is null.
         /// Thrown when the 'RankBy' is Distance and a 'Radius' is entered or a 'Keyword' or 'Type' is not entered.
         /// Thrown when the 'RankBy' is not Distance and the 'Radius' is not > 0.
         /// </exception>

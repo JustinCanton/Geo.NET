@@ -1,6 +1,6 @@
 # Google Geocoding
 
-This allows the simple calling of Google Geocoding API's. The supported Google geocoding endpoints are:
+This allows the simple calling of Google geocoding API's. The supported Google geocoding endpoints are:
  - [Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
  - [Reverse Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
  - Places ([Search](https://developers.google.com/places/web-service/search) and [Details](https://developers.google.com/places/web-service/details))

@@ -31,7 +31,7 @@ namespace Geo.Here.Models.Responses
         public string CountryName { get; set; }
 
         /// <summary>
-        /// Gets or sets a code/abbreviation for the state division of a country.For example: "North Rhine-Westphalia".
+        /// Gets or sets a code/abbreviation for the state division of a country. For example: "North Rhine-Westphalia".
         /// </summary>
         [JsonProperty("state")]
         public string State { get; set; }
@@ -56,7 +56,7 @@ namespace Geo.Here.Models.Responses
         public string District { get; set; }
 
         /// <summary>
-        /// Gets or sets a subdivision of a district.For example: "Minden-Lübbecke".
+        /// Gets or sets a subdivision of a district. For example: "Minden-Lübbecke".
         /// </summary>
         [JsonProperty("subdistrict")]
         public string SubDistrict { get; set; }
@@ -87,7 +87,7 @@ namespace Geo.Here.Models.Responses
         public string PostalCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the house number.For example: "4".
+        /// Gets or sets the house number. For example: "4".
         /// For example: "32547".
         /// </summary>
         [JsonProperty("houseNumber")]

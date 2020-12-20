@@ -70,7 +70,7 @@ namespace Geo.Bing.Models.Responses
         /// (such as user location or the relative importance of the location), the confidence is set to Medium.
         /// For example, a location query for "148th Ave, Bellevue" may return "148th Ave SE" and "148th Ave NE" both with Medium confidence.
         /// If the location information in the query does not provide enough information to geocode a specific location,
-        /// a less precise location value may be returned and the confidence is set to Medium.For example, if an address is provided,
+        /// a less precise location value may be returned and the confidence is set to Medium. For example, if an address is provided,
         /// but a match is not found for the house number, the geocode result with a Roadblock entity type may be returned.
         /// You can check the entityType field value to determine what type of entity the geocode result represents.
         /// </summary>
@@ -89,10 +89,10 @@ namespace Geo.Bing.Models.Responses
         /// The possible values are:
         /// Good: The location has only one match or all returned matches are considered strong matches. For example, a query for New York returns several Good matches.
         ///
-        /// Ambiguous: The location is one of a set of possible matches.For example, when you query for the street address 128 Main St.,
-        /// the response may return two locations for 128 North Main St.and 128 South Main St.because there is not enough information to determine which option to choose.
+        /// Ambiguous: The location is one of a set of possible matches. For example, when you query for the street address 128 Main St.,
+        /// the response may return two locations for 128 North Main St. and 128 South Main St. because there is not enough information to determine which option to choose.
         ///
-        /// UpHierarchy: The location represents a move up the geographic hierarchy.This occurs when a match for the location request was not found, so a less precise result is returned.
+        /// UpHierarchy: The location represents a move up the geographic hierarchy. This occurs when a match for the location request was not found, so a less precise result is returned.
         /// For example, if a match for the requested address cannot be found, then a match code of UpHierarchy with a RoadBlock entity type may be returned.
         /// </summary>
         [JsonProperty("matchCodes")]

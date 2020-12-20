@@ -13,7 +13,7 @@ namespace Geo.MapBox.Models.Responses
     public class Properties
     {
         /// <summary>
-        /// Gets or sets a point accuracy metric for the returned address feature.Can be one of rooftop, parcel, point, interpolated, intersection, street.
+        /// Gets or sets a point accuracy metric for the returned address feature. Can be one of rooftop, parcel, point, interpolated, intersection, street.
         /// </summary>
         [JsonProperty("accuracy")]
         public string Accuracy { get; set; }
