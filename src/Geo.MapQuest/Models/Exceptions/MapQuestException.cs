@@ -1,5 +1,6 @@
 ﻿// <copyright file="MapQuestException.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapQuest.Models.Exceptions
@@ -19,12 +20,12 @@ namespace Geo.MapQuest.Models.Exceptions
     /// Thrown when the request failed due to an underlying issue such as network connectivity,
     /// DNS failure, server certificate validation or timeout.
     /// </exception>
-    /// <exception cref="TaskCanceledException">Thrown when the MapBox request is cancelled.</exception>
+    /// <exception cref="TaskCanceledException">Thrown when the MapQuest request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class MapQuestException : Exception
     {
-        private const string _defaultMessage = "{0} Please see the inner exception for more information.";
+        private const string _defaultMessage = "{0} See the inner exception for more information.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestException"/> class.

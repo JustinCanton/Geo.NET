@@ -1,5 +1,6 @@
 ﻿// <copyright file="AddressGeocodingParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Models.Parameters
@@ -18,7 +19,7 @@ namespace Geo.Bing.Models.Parameters
         public string AdministrationDistrict { get; set; }
 
         /// <summary>
-        /// Gets or sets the locality, such as the city or neighborhood, that corresponds to an address.
+        /// Gets or sets the locality, such as the city or neighbourhood, that corresponds to an address.
         /// </summary>
         public string Locality { get; set; }
 

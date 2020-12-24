@@ -1,5 +1,6 @@
 ﻿// <copyright file="Review.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models.Responses
@@ -13,7 +14,7 @@ namespace Geo.Google.Models.Responses
     public class Review
     {
         /// <summary>
-        /// Gets or sets the name of the user who submitted the review.Anonymous reviews are attributed to "A Google user".
+        /// Gets or sets the name of the user who submitted the review. Anonymous reviews are attributed to "A Google user".
         /// </summary>
         [JsonProperty("author_name")]
         public string AuthorName { get; set; }

@@ -1,5 +1,6 @@
 ﻿// <copyright file="HereDI.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.DependencyInjection
@@ -11,15 +12,15 @@ namespace Geo.Here.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the here APIs.
+    /// Dependency injection methods for the HERE APIs.
     /// </summary>
     public static class HereDI
     {
         /// <summary>
-        /// Adds the here services to the service collection.
+        /// Adds the HERE services to the service collection.
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the here services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{HereOptionsBuilder}"/> with the options to add to the here configuration.</param>
+        /// <param name="services">A <see cref="IServiceCollection"/> to add the HERE services to.</param>
+        /// <param name="optionsBuilder">A <see cref="Action{HereOptionsBuilder}"/> with the options to add to the HERE configuration.</param>
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddHereServices(this IServiceCollection services, Action<HereOptionsBuilder> optionsBuilder)
         {

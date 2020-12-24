@@ -1,5 +1,6 @@
 ﻿// <copyright file="BaseParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Models.Parameters
@@ -11,10 +12,10 @@ namespace Geo.Bing.Models.Parameters
     {
         /// <summary>
         /// Gets or sets a value indicating whether or not to include the neighbourhood information.
-        /// true: Include neighborhood information when available.
-        /// false [default]: Do not include neighborhood information.
+        /// true: Include neighbourhood information when available.
+        /// false [default]: Do not include neighbourhood information.
         /// </summary>
-        public bool IncludeNeighborhood { get; set; } = false;
+        public bool IncludeNeighbourhood { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to have the response show how the query string was parsed into address values,

@@ -1,6 +1,6 @@
 # Bing Geocoding
 
-This allows the simple calling of Bing Geocoding API's. The supported Bing geocoding endpoints are:
+This allows the simple calling of Bing geocoding APIs. The supported Bing geocoding endpoints are:
 - [Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query)
 - [Reverse Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-point)
 - [By Address](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-address)

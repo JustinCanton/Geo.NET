@@ -1,5 +1,6 @@
 ﻿// <copyright file="BingOptionsBuilder.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Models
@@ -21,12 +22,12 @@ namespace Geo.Bing.Models
         /// </summary>
         /// <param name="key">The Bing API key to use.</param>
         /// <returns>A <see cref="BingOptionsBuilder"/> configured with the key.</returns>
-        /// <exception cref="ArgumentException">If the key passedf in is null or empty.</exception>
+        /// <exception cref="ArgumentException">If the key passed in is null or empty.</exception>
         public BingOptionsBuilder UseKey(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The Bing API key can not be null or empty");
+                throw new ArgumentException("The Bing API key cannot be null or empty");
             }
 
             Key = key;

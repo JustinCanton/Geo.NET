@@ -1,5 +1,6 @@
 ﻿// <copyright file="MapQuestGeocoding.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapQuest.Services
@@ -17,10 +18,9 @@ namespace Geo.MapQuest.Services
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
-    /// A service to call the MapQuest geocoding api.
+    /// A service to call the MapQuest geocoding API.
     /// </summary>
     public class MapQuestGeocoding : ClientExecutor, IMapQuestGeocoding
     {
@@ -53,7 +53,7 @@ namespace Geo.MapQuest.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<Response<GeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -63,7 +63,7 @@ namespace Geo.MapQuest.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<Response<ReverseGeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -75,7 +75,7 @@ namespace Geo.MapQuest.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {

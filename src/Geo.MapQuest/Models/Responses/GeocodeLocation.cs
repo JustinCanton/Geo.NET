@@ -1,10 +1,13 @@
 ﻿// <copyright file="GeocodeLocation.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapQuest.Models.Responses
 {
     using System;
+    using Geo.MapQuest.Converters;
+    using Geo.MapQuest.Enums;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -19,7 +22,7 @@ namespace Geo.MapQuest.Models.Responses
         public string Street { get; set; }
 
         /// <summary>
-        /// Gets or sets the neighborhood name.
+        /// Gets or sets the neighbourhood name.
         /// </summary>
         [JsonProperty("adminArea6")]
         public string Neighbourhood { get; set; }
@@ -78,13 +81,10 @@ namespace Geo.MapQuest.Models.Responses
 
         /// <summary>
         /// Gets or sets the side of street.
-        /// 'L' = left
-        /// 'R' = right
-        /// 'M' = mixed
-        /// 'N' = none(default).
         /// </summary>
         [JsonProperty("sideOfStreet")]
-        public string SideOfStreet { get; set; }
+        [JsonConverter(typeof(DefaultStringEnumConverter<SideOfStreet>))]
+        public SideOfStreet SideOfStreet { get; set; }
 
         /// <summary>
         /// Gets or sets a string that identifies the closest road to the address for routing purposes.
@@ -100,11 +100,10 @@ namespace Geo.MapQuest.Models.Responses
 
         /// <summary>
         /// Gets or sets the type of location.
-        /// 's' = stop(default)
-        /// 'v' = via.
         /// </summary>
         [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonConverter(typeof(DefaultStringEnumConverter<Enums.Type>))]
+        public Enums.Type Type { get; set; }
 
         /// <summary>
         /// Gets or sets the url for the map with this location.

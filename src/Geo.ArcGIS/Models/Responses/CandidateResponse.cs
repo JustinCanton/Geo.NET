@@ -1,5 +1,6 @@
 ﻿// <copyright file="CandidateResponse.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models.Responses
@@ -20,9 +21,9 @@ namespace Geo.ArcGIS.Models.Responses
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
-        /// Gets or sets an array of possible matches for the place and location passed in.
+        /// Gets an array of possible matches for the place and location passed in.
         /// </summary>
         [JsonProperty("candidates")]
-        public List<Candidate> Candidates { get; set; }
+        public List<Candidate> Candidates { get; } = new List<Candidate>();
     }
 }

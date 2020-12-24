@@ -1,5 +1,6 @@
 ﻿// <copyright file="Coordinate.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.Models
@@ -27,6 +28,15 @@ namespace Geo.Here.Models
         public override string ToString()
         {
             return $"{Latitude},{Longitude}";
+        }
+
+        /// <summary>
+        /// Checks to see if the coordinate is a valid coordinate.
+        /// </summary>
+        /// <returns>A boolean indicating whether the coordinate is valid or not.</returns>
+        internal bool IsValid()
+        {
+            return Latitude != 0 || Longitude != 0;
         }
     }
 }

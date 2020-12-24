@@ -1,5 +1,6 @@
 ﻿// <copyright file="ArcGISOptionsBuilder.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models
@@ -22,24 +23,24 @@ namespace Geo.ArcGIS.Models
         public string ClientSecret { get; private set; }
 
         /// <summary>
-        /// Sets the ArcGIS API keys to be used during calls.
+        /// Sets the ArcGIS API credentials to be used during calls.
         /// </summary>
         /// <param name="clientId">The ArcGIS API client id to use.</param>
         /// <param name="clientSecret">The ArcGIS API client secret to use.</param>
-        /// <returns>A <see cref="ArcGISOptionsBuilder"/> configured with the keys.</returns>
+        /// <returns>A <see cref="ArcGISOptionsBuilder"/> configured with the credentials.</returns>
         /// <exception cref="ArgumentException">If the client id/secret passed in are null or empty.</exception>
-        public ArcGISOptionsBuilder UseClientKeys(
+        public ArcGISOptionsBuilder UseClientCredentials(
             string clientId,
             string clientSecret)
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
-                throw new ArgumentException("The ArcGIS API client id can not be null or empty");
+                throw new ArgumentException("The ArcGIS API client id cannot be null or empty");
             }
 
             if (string.IsNullOrWhiteSpace(clientSecret))
             {
-                throw new ArgumentException("The ArcGIS API client secret can not be null or empty");
+                throw new ArgumentException("The ArcGIS API client secret cannot be null or empty");
             }
 
             ClientId = clientId;

@@ -1,5 +1,6 @@
 ﻿// <copyright file="ContextText.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Models.Responses
@@ -20,8 +21,8 @@ namespace Geo.MapBox.Models.Responses
         public string Text { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the fontext text is the default language and text returned by the API.
+        /// Gets or sets a value indicating whether the context text is the default language and text returned by the API.
         /// </summary>
-        public bool Default { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

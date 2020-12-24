@@ -1,5 +1,6 @@
 ﻿// <copyright file="FindPlacesParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models.Parameters
@@ -25,9 +26,9 @@ namespace Geo.Google.Models.Parameters
         public InputType InputType { get; set; } = InputType.TextQuery;
 
         /// <summary>
-        /// Gets or sets the list of fields to return from the request.
+        /// Gets the list of fields to return from the request.
         /// </summary>
-        public List<string> Fields { get; set; }
+        public List<string> Fields { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets information that will prefer results in a specified area.

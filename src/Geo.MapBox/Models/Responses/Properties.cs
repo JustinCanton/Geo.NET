@@ -1,5 +1,6 @@
 ﻿// <copyright file="Properties.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Models.Responses
@@ -12,7 +13,7 @@ namespace Geo.MapBox.Models.Responses
     public class Properties
     {
         /// <summary>
-        /// Gets or sets a point accuracy metric for the returned address feature.Can be one of rooftop, parcel, point, interpolated, intersection, street.
+        /// Gets or sets a point accuracy metric for the returned address feature. Can be one of rooftop, parcel, point, interpolated, intersection, street.
         /// </summary>
         [JsonProperty("accuracy")]
         public string Accuracy { get; set; }

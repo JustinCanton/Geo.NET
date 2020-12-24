@@ -1,5 +1,6 @@
 ﻿// <copyright file="SuggestParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models.Parameters
@@ -35,7 +36,11 @@ namespace Geo.ArcGIS.Models.Parameters
 
         /// <summary>
         /// Gets or sets the maximum number of candidates to return.
+        /// The default value is 5.
+        /// The maximum allowable is 15.
+        /// The minimum is 1.
+        /// If any other value is specified, the default value is used.
         /// </summary>
-        public int MaximumLocations { get; set; } = 0;
+        public uint MaximumLocations { get; set; } = 5;
     }
 }

@@ -1,5 +1,6 @@
 ﻿// <copyright file="GeocodingResponse.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models.Responses
@@ -19,9 +20,9 @@ namespace Geo.ArcGIS.Models.Responses
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
-        /// Gets or sets the possible locations to match the geocoding.
+        /// Gets the possible locations to match the geocoding.
         /// </summary>
         [JsonProperty("locations")]
-        public List<LocationInformation> Locations { get; set; }
+        public List<LocationInformation> Locations { get; } = new List<LocationInformation>();
     }
 }

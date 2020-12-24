@@ -1,5 +1,6 @@
 ﻿// <copyright file="HereGeocoding.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.Services
@@ -16,10 +17,9 @@ namespace Geo.Here.Services
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
-    /// A service to call the here geocoding api.
+    /// A service to call the HERE geocoding API.
     /// </summary>
     public class HereGeocoding : ClientExecutor, IHereGeocoding
     {
@@ -35,8 +35,8 @@ namespace Geo.Here.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="HereGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
-        /// <param name="keyContainer">A <see cref="IHereKeyContainer"/> used for fetching the here key.</param>
+        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the HERE Geocoding API.</param>
+        /// <param name="keyContainer">A <see cref="IHereKeyContainer"/> used for fetching the HERE key.</param>
         public HereGeocoding(
             HttpClient client,
             IHereKeyContainer keyContainer)
@@ -50,7 +50,7 @@ namespace Geo.Here.Services
             GeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -60,7 +60,7 @@ namespace Geo.Here.Services
             ReverseGeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<ReverseGeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -70,7 +70,7 @@ namespace Geo.Here.Services
             DiscoverParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
+            var uri = ValidateAndBuildUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
 
             return await CallAsync<DiscoverResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -80,7 +80,7 @@ namespace Geo.Here.Services
             AutosuggestParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
+            var uri = ValidateAndBuildUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
 
             return await CallAsync<AutosuggestResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -90,7 +90,7 @@ namespace Geo.Here.Services
             LookupParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<LookupParameters>(parameters, BuildLookupRequest);
+            var uri = ValidateAndBuildUri<LookupParameters>(parameters, BuildLookupRequest);
 
             return await CallAsync<LookupResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -100,7 +100,7 @@ namespace Geo.Here.Services
             BrowseParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<BrowseParameters>(parameters, BuildBrowseRequest);
+            var uri = ValidateAndBuildUri<BrowseParameters>(parameters, BuildBrowseRequest);
 
             return await CallAsync<BrowseResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -112,11 +112,11 @@ namespace Geo.Here.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {
-                throw new HereException("The here parameters are null.", new ArgumentNullException(nameof(parameters)));
+                throw new HereException("The HERE parameters are null.", new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -125,7 +125,7 @@ namespace Geo.Here.Services
             }
             catch (ArgumentException ex)
             {
-                throw new HereException("Failed to create the here uri.", ex);
+                throw new HereException("Failed to create the HERE uri.", ex);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Geo.Here.Services
         /// Builds the geocoding uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="GeocodeParameters"/> with the geocoding parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here geocoding uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE geocoding uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter and the 'QualifiedQuery' parameter are null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodeParameters parameters)
         {
@@ -173,7 +173,7 @@ namespace Geo.Here.Services
         /// Builds the reverse geocoding uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="ReverseGeocodeParameters"/> with the reverse geocoding parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here reverse geocoding uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE reverse geocoding uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodeParameters parameters)
         {
@@ -198,7 +198,7 @@ namespace Geo.Here.Services
         /// Builds the discover uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="DiscoverParameters"/> with the discover parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here discover uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE discover uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         internal Uri BuildDiscoverRequest(DiscoverParameters parameters)
         {
@@ -225,7 +225,7 @@ namespace Geo.Here.Services
         /// Builds the autosuggest uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="AutosuggestParameters"/> with the autosuggest parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here autosuggest uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE autosuggest uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         internal Uri BuildAutosuggestRequest(AutosuggestParameters parameters)
         {
@@ -239,7 +239,7 @@ namespace Geo.Here.Services
 
             query.Add("q", parameters.Query);
 
-            if (parameters.TermsLimit >= 0 && parameters.TermsLimit <= 10)
+            if (parameters.TermsLimit <= 10)
             {
                 query.Add("termsLimit", parameters.TermsLimit.ToString(CultureInfo.InvariantCulture));
             }
@@ -257,7 +257,7 @@ namespace Geo.Here.Services
         /// Builds the browse uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="BrowseParameters"/> with the browse parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here browse uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE browse uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
         internal Uri BuildBrowseRequest(BrowseParameters parameters)
         {
@@ -292,7 +292,7 @@ namespace Geo.Here.Services
         /// Builds the lookup uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="LookupParameters"/> with the lookup parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed here discover uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed HERE discover uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Id' parameter is null or invalid.</exception>
         internal Uri BuildLookupRequest(LookupParameters parameters)
         {
@@ -322,22 +322,22 @@ namespace Geo.Here.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddBoundingParameters(AreaParameters parameters, NameValueCollection query)
         {
-            var hasAt = parameters.At != null &&
-                (parameters.At.Latitude != 0 || parameters.At.Longitude != 0);
-            var hasCountry = !string.IsNullOrWhiteSpace(parameters.InCountry);
-            var hasCircle = parameters.InCircle != null &&
-                parameters.InCircle.Centre != null &&
-                (parameters.InCircle.Centre.Latitude != 0 || parameters.InCircle.Centre.Longitude != 0);
-            var hasBoundingBox = parameters.InBoundingBox != null &&
-                (parameters.InBoundingBox.East != 0 || parameters.InBoundingBox.North != 0 ||
-                parameters.InBoundingBox.West != 0 || parameters.InBoundingBox.South != 0);
+            var hasAt = parameters.At != null && parameters.At.IsValid();
+            var hasCircle = parameters.InCircle != null && parameters.InCircle.IsValid();
+            var hasBoundingBox = parameters.InBoundingBox != null && parameters.InBoundingBox.IsValid();
 
-            if (!((hasAt && !hasCountry && !hasCircle && !hasBoundingBox) ||
-                (hasAt && hasCountry && !hasCircle && !hasBoundingBox) ||
-                (hasCircle && !hasAt && !hasCountry && !hasBoundingBox) ||
-                (hasCircle && hasCountry && !hasAt && !hasBoundingBox) ||
-                (hasBoundingBox && !hasAt && !hasCountry && !hasCircle) ||
-                (hasBoundingBox && hasCountry && !hasAt && !hasCircle)))
+            /*
+             * Allowed combinations
+             * The list of allowed at and in combinations is:
+             *
+             * at
+             * at with in=countryCode
+             * in=circle
+             * in=circle with in=countryCode
+             * in=bbox
+             * in=bbox with in=countryCode
+            */
+            if ((!hasAt && !hasCircle && !hasBoundingBox) || (hasAt && (hasCircle || hasBoundingBox)) || (hasCircle && hasBoundingBox))
             {
                 throw new ArgumentException("The combination of bounding parameters is not valid.");
             }
@@ -347,19 +347,19 @@ namespace Geo.Here.Services
                 query.Add("at", parameters.At.ToString());
             }
 
-            if (hasCountry)
+            if (!string.IsNullOrWhiteSpace(parameters.InCountry))
             {
                 query.Add("in", $"countryCode:{parameters.InCountry}");
             }
 
             if (hasCircle)
             {
-                query.Add("in", $"circle:{parameters.InCircle.ToString()}");
+                query.Add("in", $"circle:{parameters.InCircle}");
             }
 
             if (hasBoundingBox)
             {
-                query.Add("in", $"bbox:{parameters.InBoundingBox.ToString()}");
+                query.Add("in", $"bbox:{parameters.InBoundingBox}");
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Route))
@@ -414,7 +414,7 @@ namespace Geo.Here.Services
         }
 
         /// <summary>
-        /// Adds the here key to the query parameters.
+        /// Adds the HERE key to the query parameters.
         /// </summary>
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddHereKey(NameValueCollection query)

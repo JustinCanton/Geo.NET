@@ -1,5 +1,6 @@
 ﻿// <copyright file="ArcGISGeocodingShould.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Tests.Services
@@ -311,15 +312,16 @@ namespace Geo.ArcGIS.Tests.Services
                 },
                 OutSpatialReference = 12345,
                 LanguageCode = "en",
-                FeatureTypes = new List<FeatureType>()
+                ForStorage = false,
+            };
+
+            parameters.FeatureTypes.AddRange(new List<FeatureType>()
                 {
                     FeatureType.DistanceMarker,
                     FeatureType.POI,
                     FeatureType.Postal,
                     FeatureType.StreetName,
-                },
-                ForStorage = false,
-            };
+                });
 
             var uri = await service.BuildReverseGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -359,19 +361,6 @@ namespace Geo.ArcGIS.Tests.Services
             var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
             var parameters = new GeocodingParameters()
             {
-                AddressAttributes = new List<AddressAttributeParameter>()
-                {
-                    new AddressAttributeParameter()
-                    {
-                        ObjectId = 1,
-                        SingleLine = "123 East",
-                        Address = "Same As Above",
-                        Neighbourhood = "East Hood",
-                        City = "East City",
-                        Subregion = "East Subregion",
-                        Region = "East Region",
-                    },
-                },
                 Category = "restaurant",
                 SourceCountry = "Canada",
                 SearchExtent = new BoundingBox()
@@ -384,6 +373,20 @@ namespace Geo.ArcGIS.Tests.Services
                 OutSpatialReference = 12345,
                 LanguageCode = "en",
             };
+
+            parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
+                {
+                    new AddressAttributeParameter()
+                    {
+                        ObjectId = 1,
+                        SingleLine = "123 East",
+                        Address = "Same As Above",
+                        Neighbourhood = "East Hood",
+                        City = "East City",
+                        Subregion = "East Subregion",
+                        Region = "East Region",
+                    },
+                });
 
             var uri = await service.BuildGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -410,7 +413,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The address attributes cannot be null. (Parameter 'AddressAttributes')");
+                .WithMessage("The address attributes cannot be null or empty. (Parameter 'AddressAttributes')");
         }
 
         /// <summary>
@@ -422,17 +425,16 @@ namespace Geo.ArcGIS.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
-            var parameters = new GeocodingParameters()
-            {
-                AddressAttributes = new List<AddressAttributeParameter>()
+            var parameters = new GeocodingParameters();
+
+            parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
                 {
                     new AddressAttributeParameter()
                     {
                         ObjectId = 1,
                         SingleLine = "123 East",
                     },
-                },
-            };
+                });
 
             var response = await service.GeocodingAsync(parameters).ConfigureAwait(false);
             response.Locations.Count.Should().Be(1);

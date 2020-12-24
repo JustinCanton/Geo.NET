@@ -1,5 +1,6 @@
 ﻿// <copyright file="Place.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models.Responses
@@ -39,7 +40,7 @@ namespace Geo.Google.Models.Responses
         /// Performing a Place Details request on the place may return up to ten photos.
         /// </summary>
         [JsonProperty("photos")]
-        public List<Photo> Photos { get; }
+        public List<Photo> Photos { get; } = new List<Photo>();
 
         /// <summary>
         /// Gets or sets the place's rating, from 1.0 to 5.0, based on aggregated user reviews.
@@ -61,7 +62,7 @@ namespace Geo.Google.Models.Responses
 
         /// <summary>
         /// Gets or sets a feature name of a nearby location.
-        /// Often this feature refers to a street or neighborhood within the given results.
+        /// Often this feature refers to a street or neighbourhood within the given results.
         /// </summary>
         [JsonProperty("vicinity")]
         public string Vicinity { get; set; }

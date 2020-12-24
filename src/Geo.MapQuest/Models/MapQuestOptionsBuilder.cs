@@ -1,5 +1,6 @@
 ﻿// <copyright file="MapQuestOptionsBuilder.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapQuest.Models
@@ -17,7 +18,7 @@ namespace Geo.MapQuest.Models
         public string Key { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether to use the lisenced data endpoints with the MapQuest API calls.
+        /// Gets a value indicating whether to use the licensed data endpoints with the MapQuest API calls.
         /// The default is false.
         /// </summary>
         public bool UseLicensedEndpoint { get; private set; } = false;
@@ -32,7 +33,7 @@ namespace Geo.MapQuest.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The MapQuest API key can not be null or empty");
+                throw new ArgumentException("The MapQuest API key cannot be null or empty");
             }
 
             Key = key;

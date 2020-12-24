@@ -1,5 +1,6 @@
 ﻿// <copyright file="ArcGISException.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models.Exceptions
@@ -24,7 +25,7 @@ namespace Geo.ArcGIS.Models.Exceptions
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class ArcGISException : Exception
     {
-        private const string _defaultMessage = "{0} Please see the inner exception for more information.";
+        private const string _defaultMessage = "{0} See the inner exception for more information.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISException"/> class.

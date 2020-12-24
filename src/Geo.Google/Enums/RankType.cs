@@ -1,5 +1,6 @@
 ﻿// <copyright file="RankType.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Enums
@@ -19,7 +20,7 @@ namespace Geo.Google.Enums
         Prominence,
 
         /// <summary>
-        /// Indicates tobiases search results in ascending order by their distance from the specified location.
+        /// Indicates to bias the search results in ascending order by their distance from the specified location.
         /// </summary>
         [EnumMember(Value = "distance")]
         Distance,

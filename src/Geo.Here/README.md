@@ -1,6 +1,6 @@
-# here Geocoding
+# HERE Geocoding
 
-This allows the simple calling of here Geocoding API's. The supported here geocoding endpoints are:
+This allows the simple calling of HERE geocoding APIs. The supported HERE geocoding endpoints are:
 - [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
 - [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
 - [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)
@@ -10,7 +10,7 @@ This allows the simple calling of here Geocoding API's. The supported here geoco
 
 ## Configuration
 
-In the startup `ConfigureServices` method, add the configuration for the here service:
+In the startup `ConfigureServices` method, add the configuration for the HERE service:
 ```
 using Geo.Here.DependencyInjection;
 .

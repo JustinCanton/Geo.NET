@@ -1,11 +1,13 @@
 ﻿// <copyright file="BingGeocoding.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Configuration;
     using System.Globalization;
     using System.Net.Http;
     using System.Threading;
@@ -16,10 +18,9 @@ namespace Geo.Bing.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
-    using Newtonsoft.Json;
 
     /// <summary>
-    /// A service to call the Bing geocoding api.
+    /// A service to call the Bing geocoding API.
     /// </summary>
     public class BingGeocoding : ClientExecutor, IBingGeocoding
     {
@@ -45,7 +46,7 @@ namespace Geo.Bing.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -55,7 +56,7 @@ namespace Geo.Bing.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -63,7 +64,7 @@ namespace Geo.Bing.Services
         /// <inheritdoc/>
         public async Task<Response> AddressGeocodingAsync(AddressGeocodingParameters parameters, CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
+            var uri = ValidateAndBuildUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
 
             return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -75,7 +76,7 @@ namespace Geo.Bing.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {
@@ -132,7 +133,7 @@ namespace Geo.Bing.Services
                 throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.ToString()}");
+            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             var includes = string.Empty;
@@ -141,7 +142,7 @@ namespace Geo.Bing.Services
                 includes += "Address";
             }
 
-            if (parameters.IncludeAddressNeighborhood == true)
+            if (parameters.IncludeAddressNeighbourhood == true)
             {
                 if (includes.Length > 0)
                 {
@@ -291,30 +292,25 @@ namespace Geo.Bing.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the built up query parameters.</param>
         internal void BuildBaseQuery(BaseParameters parameters, ref NameValueCollection query)
         {
-            if (parameters.IncludeNeighborhood == true)
+            if (parameters.IncludeNeighbourhood == true)
             {
                 query.Add("includeNeighborhood", "1");
             }
 
-            var includes = string.Empty;
+            var includes = new CommaDelimitedStringCollection();
             if (parameters.IncludeQueryParse == true)
             {
-                includes += "queryParse";
+                includes.Add("queryParse");
             }
 
             if (parameters.IncludeCiso2 == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "ciso2";
+                includes.Add("ciso2");
             }
 
-            if (includes.Length > 0)
+            if (includes.Count > 0)
             {
-                query.Add("include", includes);
+                query.Add("include", includes.ToString());
             }
         }
 

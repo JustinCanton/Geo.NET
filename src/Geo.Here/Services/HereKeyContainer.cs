@@ -1,5 +1,6 @@
 ﻿// <copyright file="HereKeyContainer.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.Services
@@ -7,16 +8,16 @@ namespace Geo.Here.Services
     using Geo.Here.Abstractions;
 
     /// <summary>
-    /// A container class for keeping the here API key.
+    /// A container class for keeping the HERE API key.
     /// </summary>
     public class HereKeyContainer : IHereKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HereKeyContainer"/> class.
         /// </summary>
-        /// <param name="key">The key to use for here requests.</param>
+        /// <param name="key">The key to use for HERE requests.</param>
         public HereKeyContainer(string key)
         {
             _key = key;

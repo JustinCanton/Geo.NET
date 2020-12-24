@@ -1,5 +1,6 @@
 ﻿// <copyright file="Feature.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Models.Responses
@@ -29,7 +30,7 @@ namespace Geo.MapBox.Models.Responses
 
         /// <summary>
         /// Gets the feature types describing the feature.
-        /// Options are country, region, postcode, district, place, locality, neighborhood, address, and poi.
+        /// Options are country, region, postcode, district, place, locality, neighbourhood, address, and poi.
         /// Most features have only one type, but if the feature has multiple types, all applicable types will be listed in the array.
         /// (For example, Vatican City is a country, region, and place.)
         /// </summary>

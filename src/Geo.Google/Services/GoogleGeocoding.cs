@@ -1,5 +1,6 @@
 ﻿// <copyright file="GoogleGeocoding.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Services
@@ -21,10 +22,9 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
-    using Newtonsoft.Json;
 
     /// <summary>
-    /// A service to call the Google geocoding api.
+    /// A service to call the Google geocoding API.
     /// </summary>
     public class GoogleGeocoding : ClientExecutor, IGoogleGeocoding
     {
@@ -56,7 +56,7 @@ namespace Geo.Google.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -66,7 +66,7 @@ namespace Geo.Google.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -76,7 +76,7 @@ namespace Geo.Google.Services
             FindPlacesParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<FindPlacesParameters>(parameters, BuildFindPlaceRequest);
+            var uri = ValidateAndBuildUri<FindPlacesParameters>(parameters, BuildFindPlaceRequest);
 
             return await CallAsync<FindPlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -86,7 +86,7 @@ namespace Geo.Google.Services
             NearbySearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<NearbySearchParameters>(parameters, BuildNearbySearchRequest);
+            var uri = ValidateAndBuildUri<NearbySearchParameters>(parameters, BuildNearbySearchRequest);
 
             return await CallAsync<PlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -96,7 +96,7 @@ namespace Geo.Google.Services
             TextSearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<TextSearchParameters>(parameters, BuildTextSearchRequest);
+            var uri = ValidateAndBuildUri<TextSearchParameters>(parameters, BuildTextSearchRequest);
 
             return await CallAsync<PlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -106,7 +106,7 @@ namespace Geo.Google.Services
             DetailsParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<DetailsParameters>(parameters, BuildDetailsRequest);
+            var uri = ValidateAndBuildUri<DetailsParameters>(parameters, BuildDetailsRequest);
 
             return await CallAsync<DetailsResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -116,7 +116,7 @@ namespace Geo.Google.Services
             PlacesAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<PlacesAutocompleteParameters>(parameters, BuildPlaceAutocompleteRequest);
+            var uri = ValidateAndBuildUri<PlacesAutocompleteParameters>(parameters, BuildPlaceAutocompleteRequest);
 
             return await CallAsync<AutocompleteResponse<PlaceAutocomplete>, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -126,7 +126,7 @@ namespace Geo.Google.Services
             QueryAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<QueryAutocompleteParameters>(parameters, BuildQueryAutocompleteRequest);
+            var uri = ValidateAndBuildUri<QueryAutocompleteParameters>(parameters, BuildQueryAutocompleteRequest);
 
             return await CallAsync<AutocompleteResponse<QueryAutocomplete>, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -138,7 +138,7 @@ namespace Geo.Google.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {
@@ -298,7 +298,7 @@ namespace Geo.Google.Services
                 {
                     query.Add("locationbias", $"rectangle:{parameters.LocationBias}");
                 }
-                else
+                else if (parameters.LocationBias.GetType() == typeof(Circle))
                 {
                     query.Add("locationbias", $"circle:{parameters.LocationBias}");
                 }
@@ -319,7 +319,7 @@ namespace Geo.Google.Services
         /// <param name="parameters">A <see cref="NearbySearchParameters"/> with the nearby search parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed Google nearby search uri.</returns>
         /// <exception cref="ArgumentException">
-        /// Thrown when the 'Location' parameter is null or invalid.
+        /// Thrown when the 'Location' parameter is null.
         /// Thrown when the 'RankBy' is Distance and a 'Radius' is entered or a 'Keyword' or 'Type' is not entered.
         /// Thrown when the 'RankBy' is not Distance and the 'Radius' is not > 0.
         /// </exception>

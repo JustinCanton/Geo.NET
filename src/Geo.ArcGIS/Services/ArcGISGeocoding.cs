@@ -1,5 +1,6 @@
 ﻿// <copyright file="ArcGISGeocoding.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Services
@@ -23,7 +24,7 @@ namespace Geo.ArcGIS.Services
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A service to call the ArcGIS geocoding api.
+    /// A service to call the ArcGIS geocoding API.
     /// </summary>
     public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
     {
@@ -52,7 +53,7 @@ namespace Geo.ArcGIS.Services
             AddressCandidateParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = await ValidateAndCraftUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
+            var uri = await ValidateAndBuildUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
             return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -62,7 +63,7 @@ namespace Geo.ArcGIS.Services
             PlaceCandidateParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = await ValidateAndCraftUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
+            var uri = await ValidateAndBuildUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
             return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -72,7 +73,7 @@ namespace Geo.ArcGIS.Services
             SuggestParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = await ValidateAndCraftUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
+            var uri = await ValidateAndBuildUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
             return await CallAsync<SuggestResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -82,7 +83,7 @@ namespace Geo.ArcGIS.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = await ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
+            var uri = await ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
             return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -92,7 +93,7 @@ namespace Geo.ArcGIS.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = await ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
+            var uri = await ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
             return await CallAsync<GeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -105,7 +106,7 @@ namespace Geo.ArcGIS.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the paramter building.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal async Task<Uri> ValidateAndCraftUri<TParameters>(
+        internal async Task<Uri> ValidateAndBuildUri<TParameters>(
             TParameters parameters,
             Func<TParameters, CancellationToken, Task<Uri>> uriBuilderFunction,
             CancellationToken cancellationToken)
@@ -180,7 +181,7 @@ namespace Geo.ArcGIS.Services
                 query.Add("location", parameters.Location.ToString());
             }
 
-            if (parameters.MaximumLocations > 0)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 51)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
@@ -198,6 +199,7 @@ namespace Geo.ArcGIS.Services
         /// Builds the suggest uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="SuggestParameters"/> with the suggest parameters to build the uri with.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal Task<Uri> BuildSuggestRequest(SuggestParameters parameters, CancellationToken cancellationToken)
         {
@@ -227,7 +229,7 @@ namespace Geo.ArcGIS.Services
                 query.Add("searchExtent", parameters.SearchExtent.ToString());
             }
 
-            if (parameters.MaximumLocations > 0)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
@@ -313,9 +315,9 @@ namespace Geo.ArcGIS.Services
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
-            if (parameters.AddressAttributes is null)
+            if (parameters.AddressAttributes is null || parameters.AddressAttributes.Count == 0)
             {
-                throw new ArgumentException("The address attributes cannot be null.", nameof(parameters.AddressAttributes));
+                throw new ArgumentException("The address attributes cannot be null or empty.", nameof(parameters.AddressAttributes));
             }
 
             List<object> attributes = new List<object>();

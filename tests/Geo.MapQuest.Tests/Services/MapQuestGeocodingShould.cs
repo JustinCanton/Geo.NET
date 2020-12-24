@@ -1,5 +1,6 @@
 ﻿// <copyright file="MapQuestGeocodingShould.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapQuest.Tests.Services
@@ -16,7 +17,6 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
-    using Geo.MapQuest.Models.Responses;
     using Geo.MapQuest.Services;
     using Moq;
     using Moq.Protected;
@@ -337,11 +337,11 @@ namespace Geo.MapQuest.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("The MapQuest parameters are null. Please see the inner exception for more information.")
+                .WithMessage("The MapQuest parameters are null. See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -353,11 +353,11 @@ namespace Geo.MapQuest.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("Failed to create the MapQuest uri. Please see the inner exception for more information.")
+                .WithMessage("Failed to create the MapQuest uri. See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
                 .WithMessage("The location cannot be null. (Parameter 'Location')");
         }
@@ -390,8 +390,9 @@ namespace Geo.MapQuest.Tests.Services
             var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
-            result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].ProvidedLocation.Location.Should().Be("123 East");
+            result.Results[0].Locations[0].SideOfStreet.Should().Be(SideOfStreet.Left);
+            result.Results[0].Locations[0].Type.Should().Be(Enums.Type.Stop);
         }
 
         /// <summary>
@@ -424,6 +425,8 @@ namespace Geo.MapQuest.Tests.Services
                 Latitude = 56.78,
                 Longitude = 123.45,
             }.ToString());
+            result.Results[0].Locations[0].SideOfStreet.Should().Be(SideOfStreet.None);
+            result.Results[0].Locations[0].Type.Should().Be(Enums.Type.Stop);
         }
     }
 }

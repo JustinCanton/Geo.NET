@@ -1,5 +1,6 @@
 ﻿// <copyright file="BingGeocodingShould.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Tests.Services
@@ -139,7 +140,7 @@ namespace Geo.Bing.Tests.Services
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
-                IncludeNeighborhood = true,
+                IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
             };
@@ -161,7 +162,7 @@ namespace Geo.Bing.Tests.Services
             var parameters = new ResultParameters()
             {
                 MaximumResults = 7,
-                IncludeNeighborhood = true,
+                IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
             };
@@ -198,7 +199,7 @@ namespace Geo.Bing.Tests.Services
             {
                 Query = "1 Microsoft Way Redmond WA",
                 MaximumResults = 7,
-                IncludeNeighborhood = true,
+                IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
             };
@@ -241,13 +242,13 @@ namespace Geo.Bing.Tests.Services
                     Longitude = -73.9897,
                 },
                 IncludeAddress = true,
-                IncludeAddressNeighborhood = true,
+                IncludeAddressNeighbourhood = true,
                 IncludePopulatedPlace = true,
                 IncludePostcode = true,
                 IncludeAdministrationDivision1 = true,
                 IncludeAdministrationDivision2 = true,
                 IncludeCountryRegion = true,
-                IncludeNeighborhood = true,
+                IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
             };
@@ -290,7 +291,7 @@ namespace Geo.Bing.Tests.Services
                 AddressLine = "222 Bay Street",
                 CountryRegion = "Canada",
                 MaximumResults = 8,
-                IncludeNeighborhood = true,
+                IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
             };

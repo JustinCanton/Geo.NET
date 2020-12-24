@@ -1,5 +1,6 @@
 ﻿// <copyright file="ContextConverter.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Converters
@@ -57,8 +58,8 @@ namespace Geo.MapBox.Converters
             if (!languages.Any())
             {
                 // There are 2 cases here:
-                // Either there are no extra languages, only the default.
-                // Or there is a context group without the language tags.
+                // Either there are no extra languages, only the default,
+                // or there is a context group without the language tags.
                 var textItems = contextInfo.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase));
                 if (textItems.Count() > 1)
                 {
@@ -97,10 +98,10 @@ namespace Geo.MapBox.Converters
                     lang = language.Value;
                 }
 
-                contextText.Language = language.Value;
+                contextText.Language = lang;
                 contextInfo.TryGetValue(string.Concat(ContextFields.Text, languageEnding), out var text);
                 contextText.Text = text;
-                contextText.Default = string.IsNullOrWhiteSpace(languageEnding);
+                contextText.IsDefault = string.IsNullOrWhiteSpace(languageEnding);
 
                 context.ContextText.Add(contextText);
             }

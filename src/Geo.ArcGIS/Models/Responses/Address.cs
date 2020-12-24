@@ -1,5 +1,6 @@
 ﻿// <copyright file="Address.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.ArcGIS.Models.Responses
@@ -75,7 +76,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets or sets the neighbourhood information for the address.
         /// </summary>
         [JsonProperty("Neighborhood")]
-        public string Neighborhood { get; set; }
+        public string Neighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets the district of the address.

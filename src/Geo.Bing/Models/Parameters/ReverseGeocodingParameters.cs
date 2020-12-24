@@ -1,5 +1,6 @@
 ﻿// <copyright file="ReverseGeocodingParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Models.Parameters
@@ -22,7 +23,7 @@ namespace Geo.Bing.Models.Parameters
         /// <summary>
         /// Gets or sets a value indicating whether or not to return the neighbourhood information.
         /// </summary>
-        public bool IncludeAddressNeighborhood { get; set; }
+        public bool IncludeAddressNeighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to return the populated place information.

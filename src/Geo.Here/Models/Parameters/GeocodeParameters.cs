@@ -1,5 +1,6 @@
 ﻿// <copyright file="GeocodeParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.Models.Parameters
@@ -15,7 +16,7 @@ namespace Geo.Here.Models.Parameters
         /// 125, Berliner, berlin
         /// Beacon, Boston, Hospital
         /// Schnurrbart German Pub and Restaurant, Hong Kong
-        /// Note: Either q or qq-parameter is required on this endpoint. Both parameters can be provided in the same request.
+        /// Note: Either query or qualified query parameter is required on this endpoint. Both parameters can be provided in the same request.
         /// </summary>
         public string Query { get; set; }
 
@@ -38,7 +39,7 @@ namespace Geo.Here.Models.Parameters
         /// city=Berlin;country=Germany;street=Friedrichstr;houseNumber=20
         /// city=Berlin;country=Germany
         /// postalCode = 10969
-        /// Note: Either q or qq-parameter is required on this endpoint. Both parameters can be provided in the same request.
+        /// Note: Either query or qualified query parameter is required on this endpoint. Both parameters can be provided in the same request.
         /// </summary>
         public string QualifiedQuery { get; set; }
     }

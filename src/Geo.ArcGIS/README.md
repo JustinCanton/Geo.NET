@@ -1,6 +1,6 @@
 # ArcGIS Geocoding
 
-This allows the simple calling of ArcGIS Geocoding API's. The supported ArcGIS geocoding endpoints are:
+This allows the simple calling of ArcGIS geocoding APIs. The supported ArcGIS geocoding endpoints are:
 - [Suggest](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-suggest.htm)
 - [Address Candidate](https://developers.arcgis.com/labs/rest/search-for-an-address/)
 - [Place Candidate](https://developers.arcgis.com/labs/rest/find-places/)
@@ -20,7 +20,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddArcGISServices(options => options.UseClientKeys(your_arcgis_client_id_here, your_arcgis_client_secret_here));
+    services.AddArcGISServices(options => options.UseClientCredentials(your_arcgis_client_id_here, your_arcgis_client_secret_here));
     .
     .
     .

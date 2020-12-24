@@ -1,5 +1,6 @@
 ﻿// <copyright file="PlacesAutocompleteParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models.Parameters
@@ -25,10 +26,10 @@ namespace Geo.Google.Models.Parameters
         public Coordinate Origin { get; set; }
 
         /// <summary>
-        /// Gets or sets the types of place results to return.
+        /// Gets the types of place results to return.
         /// If no type is specified, all types will be returned.
         /// </summary>
-        public List<PlaceType> Types { get; set; }
+        public List<PlaceType> Types { get; } = new List<PlaceType>();
 
         /// <summary>
         /// Gets or sets a components filter with elements separated by a pipe (|).

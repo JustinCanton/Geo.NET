@@ -1,5 +1,6 @@
 ﻿// <copyright file="MapBoxOptionsBuilder.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.MapBox.Models
@@ -26,7 +27,7 @@ namespace Geo.MapBox.Models
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException("The MapBox API key can not be null or empty");
+                throw new ArgumentException("The MapBox API key cannot be null or empty");
             }
 
             Key = key;

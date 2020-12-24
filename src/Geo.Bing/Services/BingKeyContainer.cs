@@ -1,5 +1,6 @@
 ﻿// <copyright file="BingKeyContainer.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Bing.Services
@@ -11,7 +12,7 @@ namespace Geo.Bing.Services
     /// </summary>
     public class BingKeyContainer : IBingKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingKeyContainer"/> class.

@@ -1,11 +1,12 @@
 ﻿// <copyright file="AreaParameters.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Here.Models.Parameters
 {
     /// <summary>
-    /// Parameters used for narrowing down the geographical area in a here request.
+    /// Parameters used for narrowing down the geographical area in a HERE request.
     /// </summary>
     public class AreaParameters : BaseFilterParameters
     {
@@ -16,7 +17,7 @@ namespace Geo.Here.Models.Parameters
         /// Examples:
         /// countryCode:USA
         /// countryCode:CAN,MEX,USA.
-        /// Note: This parameter must be accumpanied by the 'At' parameter.
+        /// Note: This parameter must be accompanied by the 'At' parameter.
         /// </summary>
         public string InCountry { get; set; }
 
@@ -38,7 +39,7 @@ namespace Geo.Here.Models.Parameters
         /// In regular expression syntax, the values of route look like:
         /// [a-zA-Z0-9_-]+(;w=\d+)?
         /// "[a-zA-Z0-9._-]+" is the encoded flexible polyline.
-        /// "w=\d+" is the optional width.The width is specified in meters from the center of the path. If no width is provided, the default is 1000 meters.
+        /// "w=\d+" is the optional width. The width is specified in meters from the center of the path. If no width is provided, the default is 1000 meters.
         /// Examples:
         /// BFoz5xJ67i1B1B7PzIhaxL7Y
         /// BFoz5xJ67i1B1B7PzIhaxL7Y; w=5000
