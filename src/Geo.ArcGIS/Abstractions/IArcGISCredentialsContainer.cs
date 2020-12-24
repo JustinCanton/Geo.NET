@@ -5,6 +5,8 @@
 
 namespace Geo.ArcGIS.Abstractions
 {
+    using System;
+
     /// <summary>
     /// A container class for keeping the ArcGIS API credentials.
     /// </summary>
@@ -13,7 +15,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <summary>
         /// Gets the current ArcGIS API credentials.
         /// </summary>
-        /// <returns>A named <see cref="Tuple{string, string}"/> with the ArcGIS ClientId and ClientSecret.</returns>
+        /// <returns>A named <see cref="Tuple{T1, T1}"/> with the ArcGIS ClientId and ClientSecret.</returns>
         (string ClientId, string ClientSecret) GetCredentials();
     }
 }

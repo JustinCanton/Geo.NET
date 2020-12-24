@@ -20,7 +20,7 @@ namespace Geo.MapQuest.Models.Exceptions
     /// Thrown when the request failed due to an underlying issue such as network connectivity,
     /// DNS failure, server certificate validation or timeout.
     /// </exception>
-    /// <exception cref="TaskCanceledException">Thrown when the MapBox request is cancelled.</exception>
+    /// <exception cref="TaskCanceledException">Thrown when the MapQuest request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class MapQuestException : Exception

@@ -12,7 +12,7 @@ namespace Geo.Google.Services
     /// </summary>
     public class GoogleKeyContainer : IGoogleKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleKeyContainer"/> class.

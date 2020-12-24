@@ -12,7 +12,7 @@ namespace Geo.Here.Services
     /// </summary>
     public class HereKeyContainer : IHereKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HereKeyContainer"/> class.

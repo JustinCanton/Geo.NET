@@ -12,7 +12,7 @@ namespace Geo.MapQuest.Services
     /// </summary>
     public class MapQuestKeyContainer : IMapQuestKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestKeyContainer"/> class.

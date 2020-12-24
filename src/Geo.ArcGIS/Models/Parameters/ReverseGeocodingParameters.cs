@@ -36,9 +36,9 @@ namespace Geo.ArcGIS.Models.Parameters
         public string LanguageCode { get; set; }
 
         /// <summary>
-        /// Gets or sets a list that limits the possible match types returned by the reverseGeocode operation.
+        /// Gets a list that limits the possible match types returned by the reverseGeocode operation.
         /// </summary>
-        public List<FeatureType> FeatureTypes { get; set; }
+        public List<FeatureType> FeatureTypes { get; } = new List<FeatureType>();
 
         /// <summary>
         /// Gets or sets a value that specifies if the output geometry of PointAddress and Subaddress matches should be the rooftop point or street entrance location.

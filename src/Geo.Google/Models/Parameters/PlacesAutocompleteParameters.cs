@@ -26,10 +26,10 @@ namespace Geo.Google.Models.Parameters
         public Coordinate Origin { get; set; }
 
         /// <summary>
-        /// Gets or sets the types of place results to return.
+        /// Gets the types of place results to return.
         /// If no type is specified, all types will be returned.
         /// </summary>
-        public List<PlaceType> Types { get; set; }
+        public List<PlaceType> Types { get; } = new List<PlaceType>();
 
         /// <summary>
         /// Gets or sets a components filter with elements separated by a pipe (|).

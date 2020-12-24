@@ -14,9 +14,9 @@ namespace Geo.ArcGIS.Models.Parameters
     public class GeocodingParameters
     {
         /// <summary>
-        /// Gets or sets a list of address attributes.
+        /// Gets a list of address attributes.
         /// </summary>
-        public List<AddressAttributeParameter> AddressAttributes { get; set; }
+        public List<AddressAttributeParameter> AddressAttributes { get; } = new List<AddressAttributeParameter>();
 
         /// <summary>
         /// Gets or sets a place or address type that can be used to filter suggest results.

@@ -703,7 +703,7 @@ namespace Geo.Here.Tests.Services
                 Language = "jp",
             };
 
-            var uri = service.ValidateAndCraftUri<LookupParameters>(parameters, service.BuildLookupRequest);
+            var uri = service.ValidateAndBuildUri<LookupParameters>(parameters, service.BuildLookupRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
             query.Should().Contain("lang=jp");
@@ -718,7 +718,7 @@ namespace Geo.Here.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new HereGeocoding(httpClient, _keyContainer);
-            Action act = () => service.ValidateAndCraftUri<LookupParameters>(null, service.BuildLookupRequest);
+            Action act = () => service.ValidateAndBuildUri<LookupParameters>(null, service.BuildLookupRequest);
 
             act.Should()
                 .Throw<HereException>()
@@ -734,7 +734,7 @@ namespace Geo.Here.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new HereGeocoding(httpClient, _keyContainer);
-            Action act = () => service.ValidateAndCraftUri<LookupParameters>(new LookupParameters(), service.BuildLookupRequest);
+            Action act = () => service.ValidateAndBuildUri<LookupParameters>(new LookupParameters(), service.BuildLookupRequest);
 
             act.Should()
                 .Throw<HereException>()

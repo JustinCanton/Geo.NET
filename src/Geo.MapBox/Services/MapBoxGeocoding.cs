@@ -23,7 +23,7 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Responses;
 
     /// <summary>
-    /// A service to call the MapBox geocoding api.
+    /// A service to call the MapBox geocoding API.
     /// </summary>
     public class MapBoxGeocoding : ClientExecutor, IMapBoxGeocoding
     {
@@ -52,7 +52,7 @@ namespace Geo.MapBox.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<Response<List<string>>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -62,7 +62,7 @@ namespace Geo.MapBox.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<Response<Coordinate>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -74,7 +74,7 @@ namespace Geo.MapBox.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {

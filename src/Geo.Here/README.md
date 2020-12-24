@@ -1,6 +1,6 @@
 # HERE Geocoding
 
-This allows the simple calling of HERE Geocoding API's. The supported HERE geocoding endpoints are:
+This allows the simple calling of HERE geocoding APIs. The supported HERE geocoding endpoints are:
 - [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
 - [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
 - [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)

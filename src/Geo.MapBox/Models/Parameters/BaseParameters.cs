@@ -20,16 +20,16 @@ namespace Geo.MapBox.Models.Parameters
         public EndpointType EndpointType { get; set; } = EndpointType.Places;
 
         /// <summary>
-        /// Gets or sets the list of countries to limit the request to.
+        /// Gets the list of countries to limit the request to.
         /// Permitted values are ISO 3166 alpha 2 country codes.
         /// </summary>
-        public List<string> Countries { get; set; }
+        public List<string> Countries { get; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the language of the text supplied in responses.
+        /// Gets the language of the text supplied in responses.
         /// Options are IETF language tags comprised of a mandatory ISO 639-1 language code and, optionally, one or more IETF subtags for country or script.
         /// </summary>
-        public List<string> Languages { get; set; }
+        public List<string> Languages { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the maximum number of results to return.
@@ -43,8 +43,8 @@ namespace Geo.MapBox.Models.Parameters
         public bool Routing { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets a list used to filter results to include only a subset (one or more) of the available feature types.
+        /// Gets a list used to filter results to include only a subset (one or more) of the available feature types.
         /// </summary>
-        public List<FeatureType> Types { get; set; } = new List<FeatureType>();
+        public List<FeatureType> Types { get; } = new List<FeatureType>();
     }
 }

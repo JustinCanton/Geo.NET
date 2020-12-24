@@ -20,9 +20,9 @@ namespace Geo.ArcGIS.Models.Responses
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
-        /// Gets or sets the possible locations to match the geocoding.
+        /// Gets the possible locations to match the geocoding.
         /// </summary>
         [JsonProperty("locations")]
-        public List<LocationInformation> Locations { get; set; }
+        public List<LocationInformation> Locations { get; } = new List<LocationInformation>();
     }
 }

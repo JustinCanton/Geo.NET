@@ -108,24 +108,27 @@ namespace Geo.MapBox.Tests.Services
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
-                Countries = new List<string>()
+                Limit = 5,
+                Routing = true,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "CAN",
                     "FRA",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "en",
                     "fr",
-                },
-                Limit = 5,
-                Routing = true,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Address,
                     FeatureType.Place,
-                },
-            };
+                });
 
             service.AddBaseParameters(parameters, query);
             query.Count.Should().Be(5);
@@ -162,24 +165,27 @@ namespace Geo.MapBox.Tests.Services
                     Latitude = 64.12,
                     Longitude = 140.25,
                 },
-                Countries = new List<string>()
+                Limit = 5,
+                Routing = true,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "CAN",
                     "FRA",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "en",
                     "fr",
-                },
-                Limit = 5,
-                Routing = true,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Address,
                     FeatureType.Place,
-                },
-            };
+                });
 
             var uri = service.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -230,25 +236,28 @@ namespace Geo.MapBox.Tests.Services
                 },
                 EndpointType = EndpointType.Permanent,
                 ReverseMode = ReverseMode.Score,
-                Countries = new List<string>()
+                Limit = 3,
+                Routing = false,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "BGR",
                     "SWE",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "bg",
                     "sv",
-                },
-                Limit = 3,
-                Routing = false,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Country,
                     FeatureType.District,
                     FeatureType.Neighborhood,
-                },
-            };
+                });
 
             var uri = service.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -296,27 +305,30 @@ namespace Geo.MapBox.Tests.Services
                 },
                 EndpointType = EndpointType.Permanent,
                 ReverseMode = ReverseMode.Score,
-                Countries = new List<string>()
+                Limit = 3,
+                Routing = false,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "BGR",
                     "SWE",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "bg",
                     "sv",
-                },
-                Limit = 3,
-                Routing = false,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Country,
                     FeatureType.District,
                     FeatureType.Neighborhood,
-                },
-            };
+                });
 
-            var uri = service.ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, service.BuildReverseGeocodingRequest);
+            var uri = service.ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, service.BuildReverseGeocodingRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
             query.Should().Contain("country=BGR,SWE");
@@ -338,7 +350,7 @@ namespace Geo.MapBox.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapBoxGeocoding(httpClient, _keyContainer);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
@@ -354,7 +366,7 @@ namespace Geo.MapBox.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapBoxGeocoding(httpClient, _keyContainer);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
@@ -390,24 +402,27 @@ namespace Geo.MapBox.Tests.Services
                     Latitude = 64.12,
                     Longitude = 140.25,
                 },
-                Countries = new List<string>()
+                Limit = 5,
+                Routing = true,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "CAN",
                     "FRA",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "en",
                     "fr",
-                },
-                Limit = 5,
-                Routing = true,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Address,
                     FeatureType.Place,
-                },
-            };
+                });
 
             var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Query.Count.Should().Be(2);
@@ -438,25 +453,28 @@ namespace Geo.MapBox.Tests.Services
                 },
                 EndpointType = EndpointType.Permanent,
                 ReverseMode = ReverseMode.Score,
-                Countries = new List<string>()
+                Limit = 3,
+                Routing = false,
+            };
+
+            parameters.Countries.AddRange(new List<string>()
                 {
                     "BGR",
                     "SWE",
-                },
-                Languages = new List<string>()
+                });
+
+            parameters.Languages.AddRange(new List<string>()
                 {
                     "bg",
                     "sv",
-                },
-                Limit = 3,
-                Routing = false,
-                Types = new List<FeatureType>()
+                });
+
+            parameters.Types.AddRange(new List<FeatureType>()
                 {
                     FeatureType.Country,
                     FeatureType.District,
                     FeatureType.Neighborhood,
-                },
-            };
+                });
 
             var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             result.Query.ToString().Should().Be(new Coordinate()

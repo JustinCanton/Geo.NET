@@ -353,15 +353,16 @@ namespace Geo.Google.Tests.Services
                     Latitude = 34.12,
                     Longitude = 69.45,
                 },
-                Types = new List<PlaceType>()
+                Components = "Component1,Component2",
+                StrictBounds = true,
+            };
+
+            parameters.Types.AddRange(new List<PlaceType>()
                 {
                     PlaceType.Address,
                     PlaceType.Establishment,
                     PlaceType.Regions,
-                },
-                Components = "Component1,Component2",
-                StrictBounds = true,
-            };
+                });
 
             var uri = service.BuildPlaceAutocompleteRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -406,14 +407,15 @@ namespace Geo.Google.Tests.Services
                 PlaceId = "1a2b3c",
                 Region = "sl",
                 SessionToken = "test123",
-                Fields = new List<string>()
+                Language = "fr",
+            };
+
+            parameters.Fields.AddRange(new List<string>()
                 {
                     "field1",
                     "field2",
                     "field3",
-                },
-                Language = "fr",
-            };
+                });
 
             var uri = service.BuildDetailsRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -628,14 +630,15 @@ namespace Geo.Google.Tests.Services
                     },
                     Radius = 54,
                 },
-                Fields = new List<string>()
+                Language = "fr",
+            };
+
+            parameters.Fields.AddRange(new List<string>()
                 {
                     "field1",
                     "field2",
                     "field3",
-                },
-                Language = "fr",
-            };
+                });
 
             var uri = service.BuildFindPlaceRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);

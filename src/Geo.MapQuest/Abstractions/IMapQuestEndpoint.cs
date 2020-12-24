@@ -11,9 +11,9 @@ namespace Geo.MapQuest.Abstractions
     public interface IMapQuestEndpoint
     {
         /// <summary>
-        /// Gets whether or not to use the lisenced endpoint or not.
+        /// Gets whether or not to use the licensed endpoint or not.
         /// </summary>
-        /// <returns>A boolean flag indicating whether or not to call the lisenced endpoints or not.</returns>
+        /// <returns>A boolean flag indicating whether or not to call the licensed endpoints or not.</returns>
         bool UseLicensedEndpoint();
     }
 }

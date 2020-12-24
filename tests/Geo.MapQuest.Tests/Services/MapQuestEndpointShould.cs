@@ -16,20 +16,20 @@ namespace Geo.MapQuest.Tests.Services
     public class MapQuestEndpointShould
     {
         /// <summary>
-        /// Tests the lisenced endpoint is properly set.
+        /// Tests the licensed endpoint is properly set.
         /// </summary>
         [Test]
-        public void SetLisencedEndpoint()
+        public void SetLicensedEndpoint()
         {
             var endpoint = new MapQuestEndpoint(true);
             endpoint.UseLicensedEndpoint().Should().BeTrue();
         }
 
         /// <summary>
-        /// Tests the non-lisenced endpoint is properly set.
+        /// Tests the non-licensed endpoint is properly set.
         /// </summary>
         [Test]
-        public void SetNonLisencedEndpoint()
+        public void SetNonLicensedEndpoint()
         {
             var endpoint = new MapQuestEndpoint(false);
             endpoint.UseLicensedEndpoint().Should().BeFalse();

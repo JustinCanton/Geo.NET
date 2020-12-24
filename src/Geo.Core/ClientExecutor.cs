@@ -33,7 +33,7 @@ namespace Geo.Core
         /// <typeparam name="TResult">The return type to parse the response into.</typeparam>
         /// <typeparam name="TException">The exception type to return in case of any failure.</typeparam>
         /// <param name="uri">The <see cref="Uri"/> to call.</param>
-        /// <param name="apiName">The name of the api being called for exception logging purposes.</param>
+        /// <param name="apiName">The name of the API being called for exception logging purposes.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="TResult"/>.</returns>
         /// <exception cref="TException">Thrown when any exception occurs and wraps the original exception.</exception>

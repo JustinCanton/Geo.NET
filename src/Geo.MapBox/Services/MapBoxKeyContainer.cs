@@ -12,7 +12,7 @@ namespace Geo.MapBox.Services
     /// </summary>
     public class MapBoxKeyContainer : IMapBoxKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxKeyContainer"/> class.

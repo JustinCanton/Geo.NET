@@ -18,7 +18,7 @@ namespace Geo.MapQuest.Models
         public string Key { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether to use the lisenced data endpoints with the MapQuest API calls.
+        /// Gets a value indicating whether to use the licensed data endpoints with the MapQuest API calls.
         /// The default is false.
         /// </summary>
         public bool UseLicensedEndpoint { get; private set; } = false;

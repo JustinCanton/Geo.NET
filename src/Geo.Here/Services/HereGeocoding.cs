@@ -19,7 +19,7 @@ namespace Geo.Here.Services
     using Geo.Here.Models.Responses;
 
     /// <summary>
-    /// A service to call the HERE geocoding api.
+    /// A service to call the HERE geocoding API.
     /// </summary>
     public class HereGeocoding : ClientExecutor, IHereGeocoding
     {
@@ -50,7 +50,7 @@ namespace Geo.Here.Services
             GeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -60,7 +60,7 @@ namespace Geo.Here.Services
             ReverseGeocodeParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<ReverseGeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -70,7 +70,7 @@ namespace Geo.Here.Services
             DiscoverParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
+            var uri = ValidateAndBuildUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
 
             return await CallAsync<DiscoverResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -80,7 +80,7 @@ namespace Geo.Here.Services
             AutosuggestParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
+            var uri = ValidateAndBuildUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
 
             return await CallAsync<AutosuggestResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -90,7 +90,7 @@ namespace Geo.Here.Services
             LookupParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<LookupParameters>(parameters, BuildLookupRequest);
+            var uri = ValidateAndBuildUri<LookupParameters>(parameters, BuildLookupRequest);
 
             return await CallAsync<LookupResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -100,7 +100,7 @@ namespace Geo.Here.Services
             BrowseParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<BrowseParameters>(parameters, BuildBrowseRequest);
+            var uri = ValidateAndBuildUri<BrowseParameters>(parameters, BuildBrowseRequest);
 
             return await CallAsync<BrowseResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -112,7 +112,7 @@ namespace Geo.Here.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {
@@ -337,7 +337,7 @@ namespace Geo.Here.Services
              * in=bbox
              * in=bbox with in=countryCode
             */
-            if ((hasAt && (hasCircle || hasBoundingBox)) || (hasCircle && hasBoundingBox))
+            if ((!hasAt && !hasCircle && !hasBoundingBox) || (hasAt && (hasCircle || hasBoundingBox)) || (hasCircle && hasBoundingBox))
             {
                 throw new ArgumentException("The combination of bounding parameters is not valid.");
             }

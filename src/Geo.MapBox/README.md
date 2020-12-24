@@ -1,6 +1,6 @@
 # MapBox Geocoding
 
-This allows the simple calling of MapBox Geocoding API's. The supported MapBox geocoding endpoints are:
+This allows the simple calling of MapBox geocoding APIs. The supported MapBox geocoding endpoints are:
  - [Geocoding](https://docs.mapbox.com/api/search/#forward-geocoding)
  - [Reverse Geocoding](https://docs.mapbox.com/api/search/#reverse-geocoding)
 

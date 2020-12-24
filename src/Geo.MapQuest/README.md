@@ -1,10 +1,10 @@
 # MapQuest Geocoding
 
-This allows the simple calling of MapQuest Geocoding API's. The supported MapQuest geocoding endpoints are:
+This allows the simple calling of MapQuest geocoding APIs. The supported MapQuest geocoding endpoints are:
 - Open API
 	- [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 	- [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-- Licensed  Api
+- Licensed API
 	- [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 	- [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 

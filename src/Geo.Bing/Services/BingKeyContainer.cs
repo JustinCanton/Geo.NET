@@ -12,7 +12,7 @@ namespace Geo.Bing.Services
     /// </summary>
     public class BingKeyContainer : IBingKeyContainer
     {
-        private readonly string _key = string.Empty;
+        private readonly string _key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingKeyContainer"/> class.

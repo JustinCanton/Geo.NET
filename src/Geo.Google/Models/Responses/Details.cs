@@ -67,6 +67,6 @@ namespace Geo.Google.Models.Responses
         /// Gets an array of up to five reviews.
         /// </summary>
         [JsonProperty("reviews")]
-        public List<Review> Reviews { get; }
+        public List<Review> Reviews { get; } = new List<Review>();
     }
 }

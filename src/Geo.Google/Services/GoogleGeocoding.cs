@@ -24,7 +24,7 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Responses;
 
     /// <summary>
-    /// A service to call the Google geocoding api.
+    /// A service to call the Google geocoding API.
     /// </summary>
     public class GoogleGeocoding : ClientExecutor, IGoogleGeocoding
     {
@@ -56,7 +56,7 @@ namespace Geo.Google.Services
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
+            var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -66,7 +66,7 @@ namespace Geo.Google.Services
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+            var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
             return await CallAsync<GeocodingResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -76,7 +76,7 @@ namespace Geo.Google.Services
             FindPlacesParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<FindPlacesParameters>(parameters, BuildFindPlaceRequest);
+            var uri = ValidateAndBuildUri<FindPlacesParameters>(parameters, BuildFindPlaceRequest);
 
             return await CallAsync<FindPlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -86,7 +86,7 @@ namespace Geo.Google.Services
             NearbySearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<NearbySearchParameters>(parameters, BuildNearbySearchRequest);
+            var uri = ValidateAndBuildUri<NearbySearchParameters>(parameters, BuildNearbySearchRequest);
 
             return await CallAsync<PlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -96,7 +96,7 @@ namespace Geo.Google.Services
             TextSearchParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<TextSearchParameters>(parameters, BuildTextSearchRequest);
+            var uri = ValidateAndBuildUri<TextSearchParameters>(parameters, BuildTextSearchRequest);
 
             return await CallAsync<PlaceResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -106,7 +106,7 @@ namespace Geo.Google.Services
             DetailsParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<DetailsParameters>(parameters, BuildDetailsRequest);
+            var uri = ValidateAndBuildUri<DetailsParameters>(parameters, BuildDetailsRequest);
 
             return await CallAsync<DetailsResponse, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -116,7 +116,7 @@ namespace Geo.Google.Services
             PlacesAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<PlacesAutocompleteParameters>(parameters, BuildPlaceAutocompleteRequest);
+            var uri = ValidateAndBuildUri<PlacesAutocompleteParameters>(parameters, BuildPlaceAutocompleteRequest);
 
             return await CallAsync<AutocompleteResponse<PlaceAutocomplete>, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -126,7 +126,7 @@ namespace Geo.Google.Services
             QueryAutocompleteParameters parameters,
             CancellationToken cancellationToken = default)
         {
-            var uri = ValidateAndCraftUri<QueryAutocompleteParameters>(parameters, BuildQueryAutocompleteRequest);
+            var uri = ValidateAndBuildUri<QueryAutocompleteParameters>(parameters, BuildQueryAutocompleteRequest);
 
             return await CallAsync<AutocompleteResponse<QueryAutocomplete>, GoogleException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
         }
@@ -138,7 +138,7 @@ namespace Geo.Google.Services
         /// <param name="parameters">The parameters to validate and create a uri from.</param>
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
-        internal Uri ValidateAndCraftUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+        internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
         {
             if (parameters is null)
             {

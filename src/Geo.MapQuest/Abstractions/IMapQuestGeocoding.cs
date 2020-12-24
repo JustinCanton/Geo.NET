@@ -12,7 +12,7 @@ namespace Geo.MapQuest.Abstractions
     using Geo.MapQuest.Models.Responses;
 
     /// <summary>
-    /// An interface for calling the here geocoding methods.
+    /// An interface for calling the MapQuest geocoding methods.
     /// </summary>
     public interface IMapQuestGeocoding
     {

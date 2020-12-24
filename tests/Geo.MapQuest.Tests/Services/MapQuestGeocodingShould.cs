@@ -337,7 +337,7 @@ namespace Geo.MapQuest.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
@@ -353,7 +353,7 @@ namespace Geo.MapQuest.Tests.Services
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
             var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
-            Action act = () => service.ValidateAndCraftUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
+            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
@@ -390,8 +390,9 @@ namespace Geo.MapQuest.Tests.Services
             var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
-            result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].ProvidedLocation.Location.Should().Be("123 East");
+            result.Results[0].Locations[0].SideOfStreet.Should().Be(SideOfStreet.Left);
+            result.Results[0].Locations[0].Type.Should().Be(Enums.Type.Stop);
         }
 
         /// <summary>
@@ -424,6 +425,8 @@ namespace Geo.MapQuest.Tests.Services
                 Latitude = 56.78,
                 Longitude = 123.45,
             }.ToString());
+            result.Results[0].Locations[0].SideOfStreet.Should().Be(SideOfStreet.None);
+            result.Results[0].Locations[0].Type.Should().Be(Enums.Type.Stop);
         }
     }
 }
