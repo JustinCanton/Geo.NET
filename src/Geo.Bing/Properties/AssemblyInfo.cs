@@ -4,5 +4,7 @@
 // </copyright>
 
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Localization;
 
 [assembly: InternalsVisibleTo("Geo.Bing.Tests")]
+[assembly: ResourceLocation("Resources")]
