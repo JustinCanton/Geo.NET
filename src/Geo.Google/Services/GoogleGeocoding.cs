@@ -22,6 +22,8 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A service to call the Google geocoding API.
@@ -37,18 +39,28 @@ namespace Geo.Google.Services
         private readonly string _placeAutocompleteUri = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
         private readonly string _queryAutocompleteUri = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json";
         private readonly IGoogleKeyContainer _keyContainer;
+        private readonly IStringLocalizer<GoogleGeocoding> _localizer;
+        private readonly ILogger<GoogleGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Google Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IGoogleKeyContainer"/> used for fetching the Google key.</param>
+        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
+        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public GoogleGeocoding(
             HttpClient client,
-            IGoogleKeyContainer keyContainer)
-            : base(client)
+            IGoogleKeyContainer keyContainer,
+            IStringLocalizer<GoogleGeocoding> localizer,
+            IStringLocalizer<ClientExecutor> coreLocalizer,
+            ILogger<GoogleGeocoding> logger = null)
+            : base(client, coreLocalizer)
         {
             _keyContainer = keyContainer;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -142,7 +154,9 @@ namespace Geo.Google.Services
         {
             if (parameters is null)
             {
-                throw new GoogleException("The Google parameters are null.", new ArgumentNullException(nameof(parameters)));
+                var error = _localizer["Null Parameters"];
+                _logger?.LogError(error);
+                throw new GoogleException(error, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -151,7 +165,9 @@ namespace Geo.Google.Services
             }
             catch (ArgumentException ex)
             {
-                throw new GoogleException("Failed to create the Google uri.", ex);
+                var error = _localizer["Failed To Create Uri"];
+                _logger?.LogError(error);
+                throw new GoogleException(error, ex);
             }
         }
 
@@ -168,7 +184,9 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Address))
             {
-                throw new ArgumentException("The address cannot be null or empty.", nameof(parameters.Address));
+                var error = _localizer["Invalid Address"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Address));
             }
 
             query.Add("address", parameters.Address);
