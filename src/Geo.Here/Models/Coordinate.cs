@@ -29,5 +29,14 @@ namespace Geo.Here.Models
         {
             return $"{Latitude},{Longitude}";
         }
+
+        /// <summary>
+        /// Checks to see if the coordinate is a valid coordinate.
+        /// </summary>
+        /// <returns>A boolean indicating whether the coordinate is valid or not.</returns>
+        internal bool IsValid()
+        {
+            return Latitude != 0 || Longitude != 0;
+        }
     }
 }

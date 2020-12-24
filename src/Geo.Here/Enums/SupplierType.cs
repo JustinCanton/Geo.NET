@@ -19,13 +19,13 @@ namespace Geo.Here.Enums
         Core = 1,
 
         /// <summary>
-        /// Indicates the supplier of the information is a yelp.
+        /// Indicates the supplier of the information is yelp.
         /// </summary>
         [EnumMember(Value = "yelp")]
         Yelp,
 
         /// <summary>
-        /// Indicates the supplier of the information is a trip advisor.
+        /// Indicates the supplier of the information is trip advisor.
         /// </summary>
         [EnumMember(Value = "tripadvisor")]
         TripAdvisor,

@@ -15,8 +15,7 @@ namespace Geo.Here.Models.Parameters
         /// Examples:
         /// 125, Berliner, berlin
         /// Beacon, Boston, Hospital
-        /// Schnurrbart German Pub and Restaurant, Hong Kong
-        /// Note: Either q or qq-parameter is required on this endpoint. Both parameters can be provided in the same request.
+        /// Schnurrbart German Pub and Restaurant, Hong Kong.
         /// </summary>
         public string Query { get; set; }
     }

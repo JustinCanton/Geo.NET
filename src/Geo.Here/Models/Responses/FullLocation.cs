@@ -14,13 +14,13 @@ namespace Geo.Here.Models.Responses
     public class FullLocation : PartialLocation
     {
         /// <summary>
-        /// Gets or sets the coordinates(latitude, longitude) of a pin on a map corresponding to the searched place.
+        /// Gets or sets the coordinates (latitude, longitude) of a pin on a map corresponding to the searched place.
         /// </summary>
         [JsonProperty("position")]
         public Coordinate Position { get; set; }
 
         /// <summary>
-        /// Gets the coordinates of the place you are navigating to(for example, driving or walking).
+        /// Gets the coordinates of the place you are navigating to (for example, driving or walking).
         /// This is a point on a road or in a parking lot.
         /// </summary>
         [JsonProperty("access")]

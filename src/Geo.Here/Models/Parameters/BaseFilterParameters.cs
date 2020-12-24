@@ -8,7 +8,7 @@ namespace Geo.Here.Models.Parameters
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// The base filter parameters that are used with almost all here requests.
+    /// The base filter parameters that are used with almost all HERE requests.
     /// </summary>
     public class BaseFilterParameters : BaseParameters
     {

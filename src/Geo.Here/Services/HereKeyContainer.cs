@@ -8,7 +8,7 @@ namespace Geo.Here.Services
     using Geo.Here.Abstractions;
 
     /// <summary>
-    /// A container class for keeping the here API key.
+    /// A container class for keeping the HERE API key.
     /// </summary>
     public class HereKeyContainer : IHereKeyContainer
     {
@@ -17,7 +17,7 @@ namespace Geo.Here.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="HereKeyContainer"/> class.
         /// </summary>
-        /// <param name="key">The key to use for here requests.</param>
+        /// <param name="key">The key to use for HERE requests.</param>
         public HereKeyContainer(string key)
         {
             _key = key;

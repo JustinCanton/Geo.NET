@@ -12,7 +12,7 @@ namespace Geo.Here.Models.Exceptions
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A wrapper exception for any exceptions thrown in the here functionality. The current exceptions wrapped by this exception are listed.
+    /// A wrapper exception for any exceptions thrown in the HERE functionality. The current exceptions wrapped by this exception are listed.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown when the parameter object is null or the request uri is null.</exception>
     /// <exception cref="ArgumentException">Thrown when the required parameter for the Google request is null or invalid.</exception>
@@ -20,7 +20,7 @@ namespace Geo.Here.Models.Exceptions
     /// Thrown when the request failed due to an underlying issue such as network connectivity,
     /// DNS failure, server certificate validation or timeout.
     /// </exception>
-    /// <exception cref="TaskCanceledException">Thrown when the here request is cancelled.</exception>
+    /// <exception cref="TaskCanceledException">Thrown when the HERE request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class HereException : Exception

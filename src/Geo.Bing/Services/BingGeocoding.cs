@@ -133,7 +133,7 @@ namespace Geo.Bing.Services
                 throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point.ToString()}");
+            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             var includes = string.Empty;

@@ -101,7 +101,7 @@ namespace Geo.MapBox.Converters
                 contextText.Language = lang;
                 contextInfo.TryGetValue(string.Concat(ContextFields.Text, languageEnding), out var text);
                 contextText.Text = text;
-                contextText.Default = string.IsNullOrWhiteSpace(languageEnding);
+                contextText.IsDefault = string.IsNullOrWhiteSpace(languageEnding);
 
                 context.ContextText.Add(contextText);
             }

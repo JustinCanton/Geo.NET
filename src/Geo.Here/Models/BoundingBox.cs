@@ -41,5 +41,14 @@ namespace Geo.Here.Models
         {
             return $"{West},{South},{East},{North}";
         }
+
+        /// <summary>
+        /// Checks to see if the bounding box is a valid bounding box.
+        /// </summary>
+        /// <returns>A boolean indicating whether the bounding box is valid or not.</returns>
+        internal bool IsValid()
+        {
+            return East != 0 || North != 0 || West != 0 || South != 0;
+        }
     }
 }

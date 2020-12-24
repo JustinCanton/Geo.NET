@@ -4,9 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Justin Canton</Authors>
     <Company>Geo.NET</Company>
-    <Product>Geo.NET Here</Product>
-    <PackageTags>geocoding geo.net here</PackageTags>
-    <Description>A lightweight method for communicating with the Here geocoding APIs. This includes models and interfaces for calling Here.</Description>
+    <Product>Geo.NET HERE</Product>
+    <PackageTags>geocoding geo.net HERE</PackageTags>
+    <Description>A lightweight method for communicating with the HERE geocoding APIs. This includes models and interfaces for calling HERE.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
   </PropertyGroup>

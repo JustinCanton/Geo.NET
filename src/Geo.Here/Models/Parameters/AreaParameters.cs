@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Parameters
 {
     /// <summary>
-    /// Parameters used for narrowing down the geographical area in a here request.
+    /// Parameters used for narrowing down the geographical area in a HERE request.
     /// </summary>
     public class AreaParameters : BaseFilterParameters
     {
@@ -17,7 +17,7 @@ namespace Geo.Here.Models.Parameters
         /// Examples:
         /// countryCode:USA
         /// countryCode:CAN,MEX,USA.
-        /// Note: This parameter must be accumpanied by the 'At' parameter.
+        /// Note: This parameter must be accompanied by the 'At' parameter.
         /// </summary>
         public string InCountry { get; set; }
 

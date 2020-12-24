@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Parameters
 {
     /// <summary>
-    /// The base parameters that are used with all here requests.
+    /// The base parameters that are used with all HERE requests.
     /// </summary>
     public class BaseParameters
     {

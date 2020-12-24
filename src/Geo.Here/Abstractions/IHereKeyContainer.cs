@@ -6,14 +6,14 @@
 namespace Geo.Here.Abstractions
 {
     /// <summary>
-    /// A container class for keeping the here API key.
+    /// A container class for keeping the HERE API key.
     /// </summary>
     public interface IHereKeyContainer
     {
         /// <summary>
-        /// Gets the current here API key.
+        /// Gets the current HERE API key.
         /// </summary>
-        /// <returns>The here API key.</returns>
+        /// <returns>The HERE API key.</returns>
         string GetKey();
     }
 }

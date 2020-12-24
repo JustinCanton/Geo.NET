@@ -21,8 +21,8 @@ namespace Geo.MapBox.Models.Responses
         public string Text { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the fontext text is the default language and text returned by the API.
+        /// Gets or sets a value indicating whether the context text is the default language and text returned by the API.
         /// </summary>
-        public bool Default { get; set; }
+        public bool IsDefault { get; set; }
     }
 }
