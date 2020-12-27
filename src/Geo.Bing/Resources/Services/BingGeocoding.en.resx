@@ -157,7 +157,7 @@
     <value>The postal code is invalid and will not be used.</value>
   </data>
   <data name="Invalid Query" xml:space="preserve">
-    <value>The query cannot be null or invalid.</value>
+    <value>The query cannot be null or empty.</value>
   </data>
   <data name="Null Parameters" xml:space="preserve">
     <value>The Bing parameters are null.</value>

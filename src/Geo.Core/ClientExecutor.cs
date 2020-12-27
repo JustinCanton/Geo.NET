@@ -53,36 +53,36 @@ namespace Geo.Core
             }
             catch (ArgumentNullException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Null Uri", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Null Uri", apiName].ToString(), ex) as TException;
             }
             catch (InvalidOperationException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Invalid Uri", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Invalid Uri", apiName].ToString(), ex) as TException;
             }
             catch (HttpRequestException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed", apiName].ToString(), ex) as TException;
             }
             catch (TaskCanceledException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Cancelled", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Request Cancelled", apiName].ToString(), ex) as TException;
             }
             catch (JsonReaderException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Reader Failed To Parse", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Reader Failed To Parse", apiName].ToString(), ex) as TException;
             }
             catch (JsonSerializationException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Serializer Failed To Parse", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Serializer Failed To Parse", apiName].ToString(), ex) as TException;
             }
             catch (Exception ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed Exception", apiName], ex) as TException;
+                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed Exception", apiName].ToString(), ex) as TException;
             }
 
             if (response.Result is null || !string.IsNullOrEmpty(response.JSON))
             {
-                var ex = Activator.CreateInstance(typeof(TException), _localizer["Request Failure", apiName]) as TException;
+                var ex = Activator.CreateInstance(typeof(TException), _localizer["Request Failure", apiName].ToString()) as TException;
                 ex.Data.Add("responseBody", response.JSON);
                 throw ex;
             }
