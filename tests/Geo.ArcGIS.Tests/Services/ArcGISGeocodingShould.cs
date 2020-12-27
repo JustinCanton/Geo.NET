@@ -20,6 +20,10 @@ namespace Geo.ArcGIS.Tests.Services
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Services;
+    using Geo.Core;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -32,6 +36,8 @@ namespace Geo.ArcGIS.Tests.Services
     {
         private Mock<HttpMessageHandler> _mockHandler;
         private Mock<IArcGISTokenContainer> _mockTokenContainer;
+        private IStringLocalizer<ArcGISGeocoding> _localizer;
+        private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
         /// One time setup information.
@@ -124,6 +130,11 @@ namespace Geo.ArcGIS.Tests.Services
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[]}"),
                 });
+
+            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
+            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _localizer = new StringLocalizer<ArcGISGeocoding>(factory);
+            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
         }
 
         /// <summary>
@@ -134,7 +145,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task AddArcGISTokenSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             await service.AddArcGISToken(query, CancellationToken.None).ConfigureAwait(false);
@@ -149,7 +160,7 @@ namespace Geo.ArcGIS.Tests.Services
         public void AddStorageParameterSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new StorageParameters()
             {
@@ -179,7 +190,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task BuildAddressCandidateRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new AddressCandidateParameters()
             {
                 SingleLineAddress = "123 East",
@@ -202,7 +213,7 @@ namespace Geo.ArcGIS.Tests.Services
         public void BuildAddressCandidateRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             Action act = () => service.BuildAddressCandidateRequest(new AddressCandidateParameters(), CancellationToken.None).GetAwaiter().GetResult();
 
             act.Should()
@@ -218,7 +229,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task BuildPlaceCandidateRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new PlaceCandidateParameters()
             {
                 Category = "restaurant",
@@ -250,7 +261,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task BuildSuggestRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new SuggestParameters()
             {
                 Text = "123 East",
@@ -286,7 +297,7 @@ namespace Geo.ArcGIS.Tests.Services
         public void BuildSuggestRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             Action act = () => service.BuildSuggestRequest(new SuggestParameters(), CancellationToken.None).GetAwaiter().GetResult();
 
             act.Should()
@@ -302,7 +313,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -342,7 +353,7 @@ namespace Geo.ArcGIS.Tests.Services
         public void BuildReverseGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters(), CancellationToken.None).GetAwaiter().GetResult();
 
             act.Should()
@@ -358,7 +369,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Category = "restaurant",
@@ -408,7 +419,7 @@ namespace Geo.ArcGIS.Tests.Services
         public void BuildGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodingParameters(), CancellationToken.None).GetAwaiter().GetResult();
 
             act.Should()
@@ -424,7 +435,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters();
 
             parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
@@ -449,7 +460,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -472,7 +483,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task SuggestAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new SuggestParameters()
             {
                 Text = "123 East",
@@ -490,7 +501,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task PlaceCandidateAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new PlaceCandidateParameters()
             {
                 Category = "restaurants",
@@ -509,7 +520,7 @@ namespace Geo.ArcGIS.Tests.Services
         public async Task AddressCandidateAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object);
+            var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new AddressCandidateParameters()
             {
                 SingleLineAddress = "123 East",

@@ -5,6 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
+    using System;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -160,7 +161,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets or sets the url of the location.
         /// </summary>
         [JsonProperty("URL")]
-        public string URL { get; set; }
+        public Uri URL { get; set; }
 
         /// <summary>
         /// Gets or sets the rank of the location.

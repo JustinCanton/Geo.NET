@@ -589,7 +589,9 @@ namespace Geo.Google.Services
                 _logger?.LogDebug(_localizer["Invalid Components"]);
             }
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("strictbounds", parameters.StrictBounds.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             AddAutocompleteParameters(parameters, query);
 
@@ -680,7 +682,9 @@ namespace Geo.Google.Services
                 _logger?.LogWarning(_localizer["Invalid Maximum Price"]);
             }
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("opennow", parameters.OpenNow.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.PageToken > 0)
             {
