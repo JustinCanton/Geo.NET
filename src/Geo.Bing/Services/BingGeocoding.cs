@@ -18,6 +18,8 @@ namespace Geo.Bing.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A service to call the Bing geocoding API.
@@ -27,18 +29,28 @@ namespace Geo.Bing.Services
         private const string _apiName = "Bing";
         private readonly string _baseUri = "http://dev.virtualearth.net/REST/v1/Locations";
         private readonly IBingKeyContainer _keyContainer;
+        private readonly IStringLocalizer<BingGeocoding> _localizer;
+        private readonly ILogger<BingGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
+        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
+        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public BingGeocoding(
             HttpClient client,
-            IBingKeyContainer keyContainer)
-            : base(client)
+            IBingKeyContainer keyContainer,
+            IStringLocalizer<BingGeocoding> localizer,
+            IStringLocalizer<ClientExecutor> coreLocalizer,
+            ILogger<BingGeocoding> logger = null)
+            : base(client, coreLocalizer)
         {
             _keyContainer = keyContainer;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -80,7 +92,9 @@ namespace Geo.Bing.Services
         {
             if (parameters is null)
             {
-                throw new BingException("The Bing parameters are null.", new ArgumentNullException(nameof(parameters)));
+                var error = _localizer["Null Parameters"];
+                _logger?.LogError(error);
+                throw new BingException(error, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -89,7 +103,9 @@ namespace Geo.Bing.Services
             }
             catch (ArgumentException ex)
             {
-                throw new BingException("Failed to create the Google uri.", ex);
+                var error = _localizer["Failed To Create Uri"];
+                _logger?.LogError(error);
+                throw new BingException(error, ex);
             }
         }
 
@@ -106,7 +122,9 @@ namespace Geo.Bing.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                throw new ArgumentException("The query cannot be null or empty.", nameof(parameters.Query));
+                var error = _localizer["Invalid Query"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Query));
             }
 
             query.Add("query", parameters.Query);
@@ -130,81 +148,57 @@ namespace Geo.Bing.Services
         {
             if (parameters.Point is null)
             {
-                throw new ArgumentException("The point cannot be null.", nameof(parameters.Point));
+                var error = _localizer["Invalid Point"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Point));
             }
 
             var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
-            var includes = string.Empty;
+            var includes = new CommaDelimitedStringCollection();
             if (parameters.IncludeAddress == true)
             {
-                includes += "Address";
+                includes.Add("Address");
             }
 
             if (parameters.IncludeAddressNeighbourhood == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "Neighborhood";
+                includes.Add("Neighborhood");
             }
 
             if (parameters.IncludePopulatedPlace == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "PopulatedPlace";
+                includes.Add("PopulatedPlace");
             }
 
             if (parameters.IncludePostcode == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "Postcode1";
+                includes.Add("Postcode1");
             }
 
             if (parameters.IncludeAdministrationDivision1 == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "AdminDivision1";
+                includes.Add("AdminDivision1");
             }
 
             if (parameters.IncludeAdministrationDivision2 == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "AdminDivision2";
+                includes.Add("AdminDivision2");
             }
 
             if (parameters.IncludeCountryRegion == true)
             {
-                if (includes.Length > 0)
-                {
-                    includes += ",";
-                }
-
-                includes += "CountryRegion";
+                includes.Add("CountryRegion");
             }
 
-            if (includes.Length > 0)
+            if (includes.Count > 0)
             {
-                query.Add("includeEntityTypes", includes);
+                query.Add("includeEntityTypes", includes.ToString());
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Do Not Include Entity Types"]);
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -230,7 +224,9 @@ namespace Geo.Bing.Services
                 string.IsNullOrWhiteSpace(parameters.AddressLine) &&
                 string.IsNullOrWhiteSpace(parameters.CountryRegion))
             {
-                throw new ArgumentException("The address information cannot all be null or empty.", nameof(parameters));
+                var error = _localizer["Invalid Address Information"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters));
             }
 
             var uriBuilder = new UriBuilder(_baseUri);
@@ -240,25 +236,45 @@ namespace Geo.Bing.Services
             {
                 query.Add("adminDistrict", parameters.AdministrationDistrict);
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Administration District"]);
+            }
 
             if (!string.IsNullOrWhiteSpace(parameters.Locality))
             {
                 query.Add("locality", parameters.Locality);
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Locality"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.PostalCode))
             {
                 query.Add("postalCode", parameters.PostalCode);
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Postal Code"]);
+            }
 
             if (!string.IsNullOrWhiteSpace(parameters.AddressLine))
             {
                 query.Add("addressLine", parameters.AddressLine);
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Address Line"]);
+            }
 
             if (!string.IsNullOrWhiteSpace(parameters.CountryRegion))
             {
                 query.Add("countryRegion", parameters.CountryRegion);
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Country Region"]);
             }
 
             BuildLimitedResultQuery(parameters, ref query);
@@ -281,6 +297,10 @@ namespace Geo.Bing.Services
             {
                 query.Add("maxResults", parameters.MaximumResults.ToString(CultureInfo.InvariantCulture));
             }
+            else
+            {
+                _logger?.LogWarning(_localizer["Invalid Maximum Results"]);
+            }
 
             BuildBaseQuery(parameters, ref query);
         }
@@ -295,6 +315,10 @@ namespace Geo.Bing.Services
             if (parameters.IncludeNeighbourhood == true)
             {
                 query.Add("includeNeighborhood", "1");
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Do Not Include Neighbourhood"]);
             }
 
             var includes = new CommaDelimitedStringCollection();
@@ -311,6 +335,10 @@ namespace Geo.Bing.Services
             if (includes.Count > 0)
             {
                 query.Add("include", includes.ToString());
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Do Not Include Types"]);
             }
         }
 

@@ -83,3 +83,6 @@ StyleCopReport.xml
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
 node_modules/
+
+# Sonarqube
+.sonarqube/

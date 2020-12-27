@@ -56,7 +56,7 @@ namespace Geo.Bing.Models.Responses
         /// For example, ErrorDetails can identify parameter values that are not valid or missing.
         /// </summary>
         [JsonProperty("errorDetails")]
-        public List<string> ErrorDetails = new List<string>();
+        public List<string> ErrorDetails { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a unique identifier for the request.

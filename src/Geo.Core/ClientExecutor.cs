@@ -46,7 +46,6 @@ namespace Geo.Core
             where TException : Exception
         {
             (TResult Result, string JSON) response;
-            var test = _localizer["Null Uri", apiName];
 
             try
             {
