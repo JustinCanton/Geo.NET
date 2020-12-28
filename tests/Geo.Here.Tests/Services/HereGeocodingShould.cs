@@ -391,7 +391,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The combination of bounding parameters is not valid.");
+                .WithMessage("The combination of bounding parameters is not valid. (Parameter 'parameters')");
 
             var parameters = new AreaParameters()
             {
@@ -425,7 +425,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The combination of bounding parameters is not valid.");
+                .WithMessage("The combination of bounding parameters is not valid. (Parameter 'parameters')");
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("Both query items (Query, QualifiedQuery) cannot be null or empty.");
+                .WithMessage("Both query and qualifiedquery cannot be null or empty. (Parameter 'parameters')");
         }
 
         /// <summary>
@@ -563,7 +563,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null. (Parameter 'Query')");
+                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
         }
 
         /// <summary>
@@ -613,7 +613,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null. (Parameter 'Query')");
+                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
         }
 
         /// <summary>
