@@ -14,10 +14,10 @@ namespace Geo.Here.Models.Responses
     public class Hours
     {
         /// <summary>
-        /// Gets or sets the text information for a set of hours.
+        /// Gets the text information for a set of hours.
         /// </summary>
         [JsonProperty("text")]
-        public List<string> Text { get; set; }
+        public List<string> Text { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a value indicating whether the location is open during these hours.

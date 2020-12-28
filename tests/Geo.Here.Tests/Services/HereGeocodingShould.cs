@@ -13,10 +13,14 @@ namespace Geo.Here.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
+    using Geo.Core;
     using Geo.Here.Models;
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Services;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -29,6 +33,8 @@ namespace Geo.Here.Tests.Services
     {
         private Mock<HttpMessageHandler> _mockHandler;
         private HereKeyContainer _keyContainer;
+        private IStringLocalizer<HereGeocoding> _localizer;
+        private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
         /// One time setup information.
@@ -150,6 +156,11 @@ namespace Geo.Here.Tests.Services
                         "\"isOpen\":false,\"structured\":[{\"start\":\"T120000\",\"duration\":\"PT03H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: MO,TU,WE,TH,FR,SA\"},{\"start\":\"T180000\",\"duration\":\"PT05H00M\"," +
                         "\"recurrence\":\"FREQ: DAILY; BYDAY: TU,WE,TH,SA\"},{\"start\":\"T230000\",\"duration\":\"PT24H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: FR\"},{\"start\":\"T120000\",\"duration\":\"PT11H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: SU\"}]}]}"),
                 });
+
+            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
+            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _localizer = new StringLocalizer<HereGeocoding>(factory);
+            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
         }
 
         /// <summary>
@@ -159,7 +170,7 @@ namespace Geo.Here.Tests.Services
         public void AddHereKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             service.AddHereKey(query);
@@ -174,7 +185,7 @@ namespace Geo.Here.Tests.Services
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -193,7 +204,7 @@ namespace Geo.Here.Tests.Services
         public void AddLimitingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseFilterParameters()
             {
@@ -214,7 +225,7 @@ namespace Geo.Here.Tests.Services
         public void AddLocatingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseFilterParameters()
             {
@@ -241,7 +252,7 @@ namespace Geo.Here.Tests.Services
         public void AddBoundingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new AreaParameters()
             {
@@ -374,7 +385,7 @@ namespace Geo.Here.Tests.Services
         public void AddBoundingParametersWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             Action act = () => service.AddBoundingParameters(new AreaParameters(), query);
 
@@ -424,7 +435,7 @@ namespace Geo.Here.Tests.Services
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodeParameters()
             {
                 Query = "123 East",
@@ -457,7 +468,7 @@ namespace Geo.Here.Tests.Services
         public void BuildGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodeParameters());
 
             act.Should()
@@ -472,7 +483,7 @@ namespace Geo.Here.Tests.Services
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodeParameters()
             {
                 At = new Coordinate()
@@ -499,7 +510,7 @@ namespace Geo.Here.Tests.Services
         public void BuildReverseGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodeParameters());
 
             act.Should()
@@ -514,7 +525,7 @@ namespace Geo.Here.Tests.Services
         public void BuildDiscoverRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new DiscoverParameters()
             {
                 Query = "123 East",
@@ -547,7 +558,7 @@ namespace Geo.Here.Tests.Services
         public void BuildDiscoverRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildDiscoverRequest(new DiscoverParameters());
 
             act.Should()
@@ -562,7 +573,7 @@ namespace Geo.Here.Tests.Services
         public void BuildAutosuggestRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new AutosuggestParameters()
             {
                 Query = "123 Weast",
@@ -597,7 +608,7 @@ namespace Geo.Here.Tests.Services
         public void BuildAutosuggestRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildAutosuggestRequest(new AutosuggestParameters());
 
             act.Should()
@@ -612,7 +623,7 @@ namespace Geo.Here.Tests.Services
         public void BuildBrowseRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new BrowseParameters()
             {
                 Categories = "Resturants",
@@ -645,7 +656,7 @@ namespace Geo.Here.Tests.Services
         public void BuildBrowseRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildBrowseRequest(new BrowseParameters());
 
             act.Should()
@@ -660,7 +671,7 @@ namespace Geo.Here.Tests.Services
         public void BuildLookupRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
@@ -681,7 +692,7 @@ namespace Geo.Here.Tests.Services
         public void BuildLookupRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildLookupRequest(new LookupParameters());
 
             act.Should()
@@ -696,7 +707,7 @@ namespace Geo.Here.Tests.Services
         public void ValidateAndCraftUriSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
@@ -717,7 +728,7 @@ namespace Geo.Here.Tests.Services
         public void ValidateAndCraftUriFailsWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<LookupParameters>(null, service.BuildLookupRequest);
 
             act.Should()
@@ -733,7 +744,7 @@ namespace Geo.Here.Tests.Services
         public void ValidateAndCraftUriFailsWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<LookupParameters>(new LookupParameters(), service.BuildLookupRequest);
 
             act.Should()
@@ -751,7 +762,7 @@ namespace Geo.Here.Tests.Services
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodeParameters()
             {
                 Query = "123 East",
@@ -778,7 +789,7 @@ namespace Geo.Here.Tests.Services
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodeParameters()
             {
                 At = new Coordinate()
@@ -802,7 +813,7 @@ namespace Geo.Here.Tests.Services
         public async Task DiscoverAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new DiscoverParameters()
             {
                 Query = "123 East",
@@ -830,7 +841,7 @@ namespace Geo.Here.Tests.Services
         public async Task AutosuggestAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new AutosuggestParameters()
             {
                 Query = "123 Weast",
@@ -859,7 +870,7 @@ namespace Geo.Here.Tests.Services
         public async Task LookupAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
@@ -879,7 +890,7 @@ namespace Geo.Here.Tests.Services
         public async Task BrowseAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer);
+            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new BrowseParameters()
             {
                 Categories = "Resturants",
