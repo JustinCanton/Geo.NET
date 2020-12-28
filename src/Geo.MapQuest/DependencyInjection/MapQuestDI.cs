@@ -6,6 +6,7 @@
 namespace Geo.MapQuest.DependencyInjection
 {
     using System;
+    using Geo.Core.DependencyInjection;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Services;
@@ -24,6 +25,8 @@ namespace Geo.MapQuest.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddMapQuestServices(this IServiceCollection services, Action<MapQuestOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new MapQuestOptionsBuilder();

@@ -9,6 +9,7 @@ namespace Geo.ArcGIS.DependencyInjection
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Services;
+    using Geo.Core.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -24,6 +25,8 @@ namespace Geo.ArcGIS.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddArcGISServices(this IServiceCollection services, Action<ArcGISOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new ArcGISOptionsBuilder();
