@@ -51,6 +51,6 @@ The configuration and sample usage for each supported interface can be found wit
  - [Google](https://github.com/JustinCanton/Geo.NET/src/Geo.Google)
  - [Bing](https://github.com/JustinCanton/Geo.NET/src/Geo.Bing)
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
- - [here](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
+ - [HERE](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/src/Geo.MapQuest)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/src/Geo.MapBox)

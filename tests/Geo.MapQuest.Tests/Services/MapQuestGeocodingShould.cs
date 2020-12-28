@@ -13,11 +13,15 @@ namespace Geo.MapQuest.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
+    using Geo.Core;
     using Geo.MapQuest.Enums;
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Services;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -31,6 +35,8 @@ namespace Geo.MapQuest.Tests.Services
         private Mock<HttpMessageHandler> _mockHandler;
         private MapQuestKeyContainer _keyContainer;
         private MapQuestEndpoint _endpoint;
+        private IStringLocalizer<MapQuestGeocoding> _localizer;
+        private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
         /// One time setup information.
@@ -92,6 +98,11 @@ namespace Geo.MapQuest.Tests.Services
                         "]}" +
                         "]}"),
                 });
+
+            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
+            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _localizer = new StringLocalizer<MapQuestGeocoding>(factory);
+            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
         }
 
         /// <summary>
@@ -101,7 +112,7 @@ namespace Geo.MapQuest.Tests.Services
         public void AddMapBoxKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             service.AddMapQuestKey(query);
@@ -116,7 +127,7 @@ namespace Geo.MapQuest.Tests.Services
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -135,7 +146,7 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildLicensedGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -173,7 +184,7 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildNonLicensedGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false));
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false), _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -210,12 +221,12 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null or empty. (Parameter 'Location')");
+                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
         }
 
         /// <summary>
@@ -225,7 +236,7 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildLicensedReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -257,7 +268,7 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildNonLicensedReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false));
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false), _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -289,12 +300,12 @@ namespace Geo.MapQuest.Tests.Services
         public void BuildReverseGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null. (Parameter 'Location')");
+                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
         }
 
         /// <summary>
@@ -304,7 +315,7 @@ namespace Geo.MapQuest.Tests.Services
         public void ValidateAndCraftUriSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -336,7 +347,7 @@ namespace Geo.MapQuest.Tests.Services
         public void ValidateAndCraftUriFailsWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
 
             act.Should()
@@ -352,14 +363,14 @@ namespace Geo.MapQuest.Tests.Services
         public void ValidateAndCraftUriFailsWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
                 .WithMessage("Failed to create the MapQuest uri. See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
-                .WithMessage("The location cannot be null. (Parameter 'Location')");
+                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
         }
 
         /// <summary>
@@ -370,7 +381,7 @@ namespace Geo.MapQuest.Tests.Services
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -403,7 +414,7 @@ namespace Geo.MapQuest.Tests.Services
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint);
+            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()

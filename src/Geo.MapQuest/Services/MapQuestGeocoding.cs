@@ -18,6 +18,8 @@ namespace Geo.MapQuest.Services
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A service to call the MapQuest geocoding API.
@@ -31,6 +33,8 @@ namespace Geo.MapQuest.Services
         private readonly string _reverseGeocodeUri = "http://www.mapquestapi.com/geocoding/v1/reverse";
         private readonly IMapQuestKeyContainer _keyContainer;
         private readonly IMapQuestEndpoint _endpoint;
+        private readonly IStringLocalizer<MapQuestGeocoding> _localizer;
+        private readonly ILogger<MapQuestGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestGeocoding"/> class.
@@ -38,14 +42,22 @@ namespace Geo.MapQuest.Services
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
         /// <param name="endpoint">A <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
+        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
+        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public MapQuestGeocoding(
             HttpClient client,
             IMapQuestKeyContainer keyContainer,
-            IMapQuestEndpoint endpoint)
-            : base(client)
+            IMapQuestEndpoint endpoint,
+            IStringLocalizer<MapQuestGeocoding> localizer,
+            IStringLocalizer<ClientExecutor> coreLocalizer,
+            ILogger<MapQuestGeocoding> logger = null)
+            : base(client, coreLocalizer)
         {
             _keyContainer = keyContainer;
             _endpoint = endpoint;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -79,7 +91,9 @@ namespace Geo.MapQuest.Services
         {
             if (parameters is null)
             {
-                throw new MapQuestException("The MapQuest parameters are null.", new ArgumentNullException(nameof(parameters)));
+                var error = _localizer["Null Parameters"];
+                _logger?.LogError(error);
+                throw new MapQuestException(error, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -88,7 +102,9 @@ namespace Geo.MapQuest.Services
             }
             catch (ArgumentException ex)
             {
-                throw new MapQuestException("Failed to create the MapQuest uri.", ex);
+                var error = _localizer["Failed To Create Uri"];
+                _logger?.LogError(error);
+                throw new MapQuestException(error, ex);
             }
         }
 
@@ -105,7 +121,9 @@ namespace Geo.MapQuest.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
-                throw new ArgumentException("The location cannot be null or empty.", nameof(parameters.Location));
+                var error = _localizer["Invalid Location"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Location));
             }
 
             query.Add("location", parameters.Location);
@@ -116,12 +134,22 @@ namespace Geo.MapQuest.Services
             {
                 query.Add("boundingBox", parameters.BoundingBox.ToString());
             }
+            else
+            {
+                _logger?.LogWarning(_localizer["Invalid Bounding Box"]);
+            }
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("ignoreLatLngInput", parameters.IgnoreLatLngInput.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.MaxResults > 0)
             {
                 query.Add("maxResults", parameters.MaxResults.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _logger?.LogWarning(_localizer["Invalid Maximum Results"]);
             }
 
             if (parameters.IntlMode == InternationalMode.FiveBox)
@@ -135,6 +163,10 @@ namespace Geo.MapQuest.Services
             else if (parameters.IntlMode == InternationalMode.Auto)
             {
                 query.Add("intlMode", "AUTO");
+            }
+            else
+            {
+                _logger?.LogWarning(_localizer["Invalid Intl Mode"]);
             }
 
             AddBaseParameters(parameters, query);
@@ -159,14 +191,20 @@ namespace Geo.MapQuest.Services
 
             if (parameters.Location is null)
             {
-                throw new ArgumentException("The location cannot be null.", nameof(parameters.Location));
+                var error = _localizer["Invalid Location"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Location));
             }
 
             query.Add("location", parameters.Location.ToString());
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("includeNearestIntersection", parameters.IncludeNearestIntersection.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("includeRoadMetadata", parameters.IncludeRoadMetadata.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             AddBaseParameters(parameters, query);
 
@@ -184,7 +222,9 @@ namespace Geo.MapQuest.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
         {
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>
