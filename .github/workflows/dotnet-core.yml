@@ -27,8 +27,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
-    - name: Listing all files
-      run: ls -R
     - name: Test
       run: dotnet test --no-restore --configuration Release
     - name: Install GitVersion
@@ -47,7 +45,7 @@ jobs:
         echo "SemVer: $GITVERSION_SEMVER"
     - name: Package
       if: ${{ contains(github.event_name, 'push') }}
-      run: dotnet pack --no-build --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
+      run: dotnet pack --no-build --configuration Release --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
     - name: Push
       if: ${{ contains(github.event_name, 'push') }}
       run: |
