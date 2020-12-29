@@ -49,7 +49,7 @@ jobs:
       if: ${{ contains(github.event_name, 'push') }}
       run: dotnet pack --no-build --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
     - name: Push
-      if: ${{ contains(github.event_name, 'stop-push') }}
+      if: ${{ contains(github.event_name, 'push') }}
       run: |
         cd Packages
         dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY

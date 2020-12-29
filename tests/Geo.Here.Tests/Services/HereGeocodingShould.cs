@@ -391,7 +391,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The combination of bounding parameters is not valid. (Parameter 'parameters')");
+                .WithMessage("*(Parameter 'parameters')");
 
             var parameters = new AreaParameters()
             {
@@ -425,7 +425,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The combination of bounding parameters is not valid. (Parameter 'parameters')");
+                .WithMessage("*(Parameter 'parameters')");
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("Both query and qualifiedquery cannot be null or empty. (Parameter 'parameters')");
+                .WithMessage("*(Parameter 'parameters')");
         }
 
         /// <summary>
@@ -515,7 +515,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The at coordinates cannot be null. (Parameter 'At')");
+                .WithMessage("*(Parameter 'At')");
         }
 
         /// <summary>
@@ -563,7 +563,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -613,7 +613,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -661,7 +661,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The at coordinates cannot be null. (Parameter 'At')");
+                .WithMessage("*(Parameter 'At')");
         }
 
         /// <summary>
@@ -697,7 +697,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The id cannot be null. (Parameter 'Id')");
+                .WithMessage("*(Parameter 'Id')");
         }
 
         /// <summary>
@@ -733,7 +733,7 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("The here parameters are null. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -749,9 +749,9 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<HereException>()
-                .WithMessage("Failed to create the here uri. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
-                .WithMessage("The id cannot be null. (Parameter 'Id')");
+                .WithMessage("*(Parameter 'Id')");
         }
 
         /// <summary>

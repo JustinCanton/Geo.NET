@@ -227,7 +227,7 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<MapBoxException>()
-                .WithMessage("The MapBox parameters are null. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -381,9 +381,9 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<MapBoxException>()
-                .WithMessage("Failed to create the MapBox uri. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>

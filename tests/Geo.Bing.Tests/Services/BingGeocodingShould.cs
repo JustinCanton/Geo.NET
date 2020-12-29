@@ -196,7 +196,7 @@ namespace Geo.Bing.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Geo.Bing.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The point cannot be null. (Parameter 'Point')");
+                .WithMessage("*(Parameter 'Point')");
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Geo.Bing.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The address information cannot all be null or empty. (Parameter 'parameters')");
+                .WithMessage("*(Parameter 'parameters')");
         }
 
         /// <summary>

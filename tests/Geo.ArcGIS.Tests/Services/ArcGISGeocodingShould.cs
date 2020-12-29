@@ -218,7 +218,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The single line address cannot be null or empty. (Parameter 'SingleLineAddress')");
+                .WithMessage("*(Parameter 'SingleLineAddress')");
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The text cannot be null or empty. (Parameter 'Text')");
+                .WithMessage("*(Parameter 'Text')");
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
@@ -424,7 +424,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The address attributes cannot be null or empty. (Parameter 'AddressAttributes')");
+                .WithMessage("*(Parameter 'AddressAttributes')");
         }
 
         /// <summary>

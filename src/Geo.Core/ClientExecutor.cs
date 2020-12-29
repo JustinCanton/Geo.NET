@@ -6,7 +6,6 @@
 namespace Geo.Core
 {
     using System;
-    using System.Diagnostics;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -47,7 +46,6 @@ namespace Geo.Core
             where TException : Exception
         {
             (TResult Result, string JSON) response;
-            Trace.WriteLine(_localizer.GetAllStrings());
 
             try
             {

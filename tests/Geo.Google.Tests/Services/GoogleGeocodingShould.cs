@@ -336,7 +336,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or empty. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or empty. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The place id cannot be null or invalid. (Parameter 'PlaceId')");
+                .WithMessage("*(Parameter 'PlaceId')");
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or invalid. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The radius must not be greater than 0 on a rank by distance request. (Parameter 'Radius')");
+                .WithMessage("*(Parameter 'Radius')");
         }
 
         /// <summary>
@@ -591,7 +591,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The keyword or type must be specified when ranking by distance. (Parameter 'RankBy')");
+                .WithMessage("*(Parameter 'RankBy')");
         }
 
         /// <summary>
@@ -617,7 +617,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The radius must be greater than 0. (Parameter 'Radius')");
+                .WithMessage("*(Parameter 'Radius')");
         }
 
         /// <summary>
@@ -673,7 +673,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or empty. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -688,7 +688,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The address cannot be null or empty. (Parameter 'Address')");
+                .WithMessage("*(Parameter 'Address')");
         }
 
         /// <summary>
@@ -742,7 +742,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>

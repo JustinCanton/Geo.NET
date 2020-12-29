@@ -226,7 +226,7 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("The MapQuest parameters are null. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -368,9 +368,9 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<MapQuestException>()
-                .WithMessage("Failed to create the MapQuest uri. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
-                .WithMessage("The location cannot be null or invalid. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
