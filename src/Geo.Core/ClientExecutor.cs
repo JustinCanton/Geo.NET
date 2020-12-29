@@ -46,6 +46,7 @@ namespace Geo.Core
             where TException : Exception
         {
             (TResult Result, string JSON) response;
+            Console.WriteLine(_localizer.GetAllStrings());
 
             try
             {
