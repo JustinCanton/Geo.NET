@@ -10,7 +10,9 @@ namespace Geo.MapQuest.Models.Responses
     /// <summary>
     /// The options sent in with the request.
     /// </summary>
+#pragma warning disable CA1724 // The type name Options conflicts
     public class Options
+#pragma warning restore CA1724 // The type name Options conflicts
     {
         /// <summary>
         /// Gets or sets the max number of locations to return from the geocode.

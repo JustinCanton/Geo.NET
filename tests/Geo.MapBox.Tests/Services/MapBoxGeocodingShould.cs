@@ -14,11 +14,15 @@ namespace Geo.MapBox.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
+    using Geo.Core;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Services;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -31,6 +35,8 @@ namespace Geo.MapBox.Tests.Services
     {
         private Mock<HttpMessageHandler> _mockHandler;
         private MapBoxKeyContainer _keyContainer;
+        private IStringLocalizer<MapBoxGeocoding> _localizer;
+        private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
         /// One time setup information.
@@ -80,6 +86,11 @@ namespace Geo.MapBox.Tests.Services
                         "{\"id\":\"region.19496380243439240\",\"wikidata\":\"Q36074\",\"short_code\":\"AU - QLD\",\"text\":\"Queensland\"},{\"id\":\"country.9968792518346070\",\"wikidata\":\"Q408\",\"short_code\":\"au\",\"text\":\"Australia\"}]}]," +
                         "\"attribution\":\"NOTICE: © 2020 Mapbox and its suppliers.All rights reserved.Use of this data is subject to the Mapbox Terms of Service(https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained. POI(s) provided by Foursquare.\"}"),
                 });
+
+            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
+            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _localizer = new StringLocalizer<MapBoxGeocoding>(factory);
+            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
         }
 
         /// <summary>
@@ -89,7 +100,7 @@ namespace Geo.MapBox.Tests.Services
         public void AddMapBoxKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             service.AddMapBoxKey(query);
@@ -104,7 +115,7 @@ namespace Geo.MapBox.Tests.Services
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -146,7 +157,7 @@ namespace Geo.MapBox.Tests.Services
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Query = "123 East",
@@ -211,12 +222,12 @@ namespace Geo.MapBox.Tests.Services
         public void BuildGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or empty. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -226,7 +237,7 @@ namespace Geo.MapBox.Tests.Services
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -280,12 +291,12 @@ namespace Geo.MapBox.Tests.Services
         public void BuildReverseGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>
@@ -295,7 +306,7 @@ namespace Geo.MapBox.Tests.Services
         public void ValidateAndCraftUriSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -349,12 +360,12 @@ namespace Geo.MapBox.Tests.Services
         public void ValidateAndCraftUriFailsWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
-                .WithMessage("The MapBox parameters are null. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -365,14 +376,14 @@ namespace Geo.MapBox.Tests.Services
         public void ValidateAndCraftUriFailsWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
-                .WithMessage("Failed to create the MapBox uri. See the inner exception for more information.")
+                .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>
@@ -383,7 +394,7 @@ namespace Geo.MapBox.Tests.Services
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Query = "123 East",
@@ -443,7 +454,7 @@ namespace Geo.MapBox.Tests.Services
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer);
+            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()

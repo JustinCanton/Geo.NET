@@ -9,6 +9,7 @@ namespace Geo.Bing.DependencyInjection
     using Geo.Bing.Abstractions;
     using Geo.Bing.Models;
     using Geo.Bing.Services;
+    using Geo.Core.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -24,6 +25,8 @@ namespace Geo.Bing.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddBingServices(this IServiceCollection services, Action<BingOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new BingOptionsBuilder();

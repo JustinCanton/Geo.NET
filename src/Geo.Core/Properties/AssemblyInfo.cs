@@ -4,5 +4,7 @@
 // </copyright>
 
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Localization;
 
 [assembly: InternalsVisibleTo("Geo.Core.Tests")]
+[assembly: ResourceLocation("Resources")]

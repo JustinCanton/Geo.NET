@@ -15,11 +15,15 @@ namespace Geo.Google.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
+    using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Google.Enums;
     using Geo.Google.Models;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Services;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -32,6 +36,8 @@ namespace Geo.Google.Tests.Services
     {
         private Mock<HttpMessageHandler> _mockHandler;
         private GoogleKeyContainer _keyContainer;
+        private IStringLocalizer<GoogleGeocoding> _localizer;
+        private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
         /// One time setup information.
@@ -91,6 +97,11 @@ namespace Geo.Google.Tests.Services
                     "'bounds':null},'plusCode':{'globalCode':'87G7PXRW+HJ','compoundCode':'PXRW+HJ New York, NY, USA'},'placeId':'ChIJj9Hwdun8ZUARbS4pqpAS_Qk','partialMatch':false,'postcodeLocalities':[]}]," +
                     "'status':'OK'}"),
                 });
+
+            var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
+            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _localizer = new StringLocalizer<GoogleGeocoding>(factory);
+            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
         }
 
         /// <summary>
@@ -100,7 +111,7 @@ namespace Geo.Google.Tests.Services
         public void AddGoogleKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             service.AddGoogleKey(query);
@@ -115,7 +126,7 @@ namespace Geo.Google.Tests.Services
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -134,7 +145,7 @@ namespace Geo.Google.Tests.Services
         public void AddCoordinateParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new CoordinateParameters()
             {
@@ -161,7 +172,7 @@ namespace Geo.Google.Tests.Services
         public void AddBaseSearchParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -198,7 +209,7 @@ namespace Geo.Google.Tests.Services
         public void AddAutocompleteParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new QueryAutocompleteParameters()
             {
@@ -229,7 +240,7 @@ namespace Geo.Google.Tests.Services
         public void AddBaseSearchParametersWithRestrictions1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -259,7 +270,7 @@ namespace Geo.Google.Tests.Services
         public void AddBaseSearchParametersWithRestrictions2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -289,7 +300,7 @@ namespace Geo.Google.Tests.Services
         public void BuildQueryAutocompleteRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new QueryAutocompleteParameters()
             {
                 Offset = 64,
@@ -320,12 +331,12 @@ namespace Geo.Google.Tests.Services
         public void BuildQueryAutocompleteRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildQueryAutocompleteRequest(new QueryAutocompleteParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or invalid. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -335,7 +346,7 @@ namespace Geo.Google.Tests.Services
         public void BuildPlaceAutocompleteRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new PlacesAutocompleteParameters()
             {
                 Offset = 64,
@@ -386,12 +397,12 @@ namespace Geo.Google.Tests.Services
         public void BuildPlaceAutocompleteRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildPlaceAutocompleteRequest(new PlacesAutocompleteParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or invalid. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -401,7 +412,7 @@ namespace Geo.Google.Tests.Services
         public void BuildDetailsRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new DetailsParameters()
             {
                 PlaceId = "1a2b3c",
@@ -434,12 +445,12 @@ namespace Geo.Google.Tests.Services
         public void BuildDetailsRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildDetailsRequest(new DetailsParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The place id cannot be null or invalid. (Parameter 'PlaceId')");
+                .WithMessage("*(Parameter 'PlaceId')");
         }
 
         /// <summary>
@@ -449,7 +460,7 @@ namespace Geo.Google.Tests.Services
         public void BuildTextSearchRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new TextSearchParameters()
             {
                 Query = "456 West",
@@ -477,12 +488,12 @@ namespace Geo.Google.Tests.Services
         public void BuildTextSearchRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildTextSearchRequest(new TextSearchParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The query cannot be null or invalid. (Parameter 'Query')");
+                .WithMessage("*(Parameter 'Query')");
         }
 
         /// <summary>
@@ -492,7 +503,7 @@ namespace Geo.Google.Tests.Services
         public void BuildNearbySearchRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new NearbySearchParameters()
             {
                 RankBy = RankType.Prominence,
@@ -523,12 +534,12 @@ namespace Geo.Google.Tests.Services
         public void BuildNearbySearchRequestWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildNearbySearchRequest(new NearbySearchParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The location cannot be null. (Parameter 'Location')");
+                .WithMessage("*(Parameter 'Location')");
         }
 
         /// <summary>
@@ -538,7 +549,7 @@ namespace Geo.Google.Tests.Services
         public void BuildNearbySearchRequestWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -554,7 +565,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The radius must not be greater than 0 on a rank by distance request. (Parameter 'Radius')");
+                .WithMessage("*(Parameter 'Radius')");
         }
 
         /// <summary>
@@ -564,7 +575,7 @@ namespace Geo.Google.Tests.Services
         public void BuildNearbySearchRequestWithException3()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -580,7 +591,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The keyword or type must be specified when ranking by distance. (Parameter 'RankBy')");
+                .WithMessage("*(Parameter 'RankBy')");
         }
 
         /// <summary>
@@ -590,7 +601,7 @@ namespace Geo.Google.Tests.Services
         public void BuildNearbySearchRequestWithException4()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -606,7 +617,7 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The radius must be greater than 0. (Parameter 'Radius')");
+                .WithMessage("*(Parameter 'Radius')");
         }
 
         /// <summary>
@@ -616,7 +627,7 @@ namespace Geo.Google.Tests.Services
         public void BuildFindPlaceRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new FindPlacesParameters()
             {
                 Input = "97 Test",
@@ -657,12 +668,12 @@ namespace Geo.Google.Tests.Services
         public void BuildFindPlaceRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildFindPlaceRequest(new FindPlacesParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The input cannot be null or empty. (Parameter 'Input')");
+                .WithMessage("*(Parameter 'Input')");
         }
 
         /// <summary>
@@ -672,12 +683,12 @@ namespace Geo.Google.Tests.Services
         public void BuildGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The address cannot be null or empty. (Parameter 'Address')");
+                .WithMessage("*(Parameter 'Address')");
         }
 
         /// <summary>
@@ -687,7 +698,7 @@ namespace Geo.Google.Tests.Services
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Address = "123 East",
@@ -726,12 +737,12 @@ namespace Geo.Google.Tests.Services
         public void BuildReverseGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
-                .WithMessage("The coordinates cannot be null. (Parameter 'Coordinate')");
+                .WithMessage("*(Parameter 'Coordinate')");
         }
 
         /// <summary>
@@ -741,7 +752,7 @@ namespace Geo.Google.Tests.Services
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -780,7 +791,7 @@ namespace Geo.Google.Tests.Services
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Address = "1600 Amphitheatre Pkwy, Mountain View",
@@ -799,7 +810,7 @@ namespace Geo.Google.Tests.Services
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()

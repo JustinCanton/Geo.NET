@@ -17,7 +17,7 @@ namespace Geo.Google.Models.Parameters
 
         /// <summary>
         /// Gets or sets the distance (in meters) within which to return place results.
-        /// The maximum allowed radius is 50 000 meters.
+        /// The maximum allowed radius is 50,000 meters.
         /// </summary>
         public uint Radius { get; set; } = 0;
     }

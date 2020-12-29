@@ -6,6 +6,7 @@
 namespace Geo.Google.DependencyInjection
 {
     using System;
+    using Geo.Core.DependencyInjection;
     using Geo.Google.Abstractions;
     using Geo.Google.Models;
     using Geo.Google.Services;
@@ -24,6 +25,8 @@ namespace Geo.Google.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddGoogleServices(this IServiceCollection services, Action<GoogleOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new GoogleOptionsBuilder();

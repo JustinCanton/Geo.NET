@@ -21,6 +21,8 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
+    using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A service to call the MapBox geocoding API.
@@ -33,18 +35,28 @@ namespace Geo.MapBox.Services
         private readonly string _placesEndpoint = "mapbox.places";
         private readonly string _permanentEndpoint = "mapbox.places-permanent";
         private readonly IMapBoxKeyContainer _keyContainer;
+        private readonly IStringLocalizer<MapBoxGeocoding> _localizer;
+        private readonly ILogger<MapBoxGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IMapBoxKeyContainer"/> used for fetching the here key.</param>
+        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
+        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,
-            IMapBoxKeyContainer keyContainer)
-            : base(client)
+            IMapBoxKeyContainer keyContainer,
+            IStringLocalizer<MapBoxGeocoding> localizer,
+            IStringLocalizer<ClientExecutor> coreLocalizer,
+            ILogger<MapBoxGeocoding> logger = null)
+            : base(client, coreLocalizer)
         {
             _keyContainer = keyContainer;
+            _localizer = localizer;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -78,7 +90,9 @@ namespace Geo.MapBox.Services
         {
             if (parameters is null)
             {
-                throw new MapBoxException("The MapBox parameters are null.", new ArgumentNullException(nameof(parameters)));
+                var error = _localizer["Null Parameters"];
+                _logger?.LogError(error);
+                throw new MapBoxException(error, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -87,7 +101,9 @@ namespace Geo.MapBox.Services
             }
             catch (ArgumentException ex)
             {
-                throw new MapBoxException("Failed to create the MapBox uri.", ex);
+                var error = _localizer["Failed To Create Uri"];
+                _logger?.LogError(error);
+                throw new MapBoxException(error, ex);
             }
         }
 
@@ -101,24 +117,38 @@ namespace Geo.MapBox.Services
         {
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                throw new ArgumentException("The query cannot be null or empty.", nameof(parameters.Query));
+                var error = _localizer["Invalid Query"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(_geocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Query));
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, _geocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Query));
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
-            query.Add("autocomplete", parameters.ReturnAutocomplete.ToString().ToLowerInvariant());
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query.Add("autocomplete", parameters.ReturnAutocomplete.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.BoundingBox != null)
             {
                 query.Add("bbox", parameters.BoundingBox.ToString());
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Bounding Box"]);
+            }
 
-            query.Add("fuzzyMatch", parameters.FuzzyMatch.ToString().ToLowerInvariant());
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query.Add("fuzzyMatch", parameters.FuzzyMatch.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.Proximity != null)
             {
                 query.Add("proximity", parameters.Proximity.ToString());
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Proximity"]);
             }
 
             AddBaseParameters(parameters, query);
@@ -140,13 +170,17 @@ namespace Geo.MapBox.Services
         {
             if (parameters.Coordinate is null)
             {
-                throw new ArgumentException("The coordinates cannot be null.", nameof(parameters.Coordinate));
+                var error = _localizer["Invalid Coordinate"];
+                _logger?.LogError(error);
+                throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(_reverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Coordinate));
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, _reverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Coordinate));
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("reverseMode", parameters.ReverseMode.ToString().ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             AddBaseParameters(parameters, query);
 
@@ -168,22 +202,42 @@ namespace Geo.MapBox.Services
             {
                 query.Add("country", string.Join(",", parameters.Countries));
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Countries"]);
+            }
 
             if (parameters.Languages != null && parameters.Languages.Count > 0)
             {
                 query.Add("language", string.Join(",", parameters.Languages));
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Languages"]);
             }
 
             if (parameters.Limit > 0 && parameters.Limit < 6)
             {
                 query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
             }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Languages"]);
+            }
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("routing", parameters.Routing.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.Types != null && parameters.Types.Count > 0)
             {
+#pragma warning disable CA1308 // Normalize strings to uppercase
                 query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToString().ToLowerInvariant())));
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+            else
+            {
+                _logger?.LogDebug(_localizer["Invalid Types"]);
             }
         }
 

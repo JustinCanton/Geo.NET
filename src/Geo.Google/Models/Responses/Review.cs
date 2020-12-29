@@ -47,6 +47,7 @@ namespace Geo.Google.Models.Responses
 
         /// <summary>
         /// Gets or sets the time that the review was submitted, relative to the current time.
+        /// </summary>
         [JsonProperty("relative_time_description")]
         public string RelativeTimeDescription { get; set; }
 
@@ -56,6 +57,7 @@ namespace Geo.Google.Models.Responses
         /// Therefore, this field may by empty.
         /// Note that this field may include simple HTML markup.
         /// For example, the entity reference &amp; may represent an ampersand character.
+        /// </summary>
         [JsonProperty("text")]
         public string Text { get; set; }
 

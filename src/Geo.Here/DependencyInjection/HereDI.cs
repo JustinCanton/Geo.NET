@@ -6,6 +6,7 @@
 namespace Geo.Here.DependencyInjection
 {
     using System;
+    using Geo.Core.DependencyInjection;
     using Geo.Here.Abstractions;
     using Geo.Here.Models;
     using Geo.Here.Services;
@@ -24,6 +25,8 @@ namespace Geo.Here.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddHereServices(this IServiceCollection services, Action<HereOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new HereOptionsBuilder();

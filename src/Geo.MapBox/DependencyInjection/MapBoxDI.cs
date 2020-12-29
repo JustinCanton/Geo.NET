@@ -6,6 +6,7 @@
 namespace Geo.MapBox.DependencyInjection
 {
     using System;
+    using Geo.Core.DependencyInjection;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Models;
     using Geo.MapBox.Services;
@@ -24,6 +25,8 @@ namespace Geo.MapBox.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddMapBoxServices(this IServiceCollection services, Action<MapBoxOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new MapBoxOptionsBuilder();

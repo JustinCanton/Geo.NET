@@ -19,7 +19,7 @@ The support for this project includes:
 	 - [Place Candidate](https://developers.arcgis.com/labs/rest/find-places/)
 	 - [Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-geocode-addresses.htm)
 	 - [Reverse Geocoding](https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm)
- - here
+ - HERE
 	 - [Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html)
 	 - [Reverse Geocoding](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-reverse-geocode-brief.html)
 	 - [Discover](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-discover-brief.html)
@@ -51,6 +51,6 @@ The configuration and sample usage for each supported interface can be found wit
  - [Google](https://github.com/JustinCanton/Geo.NET/src/Geo.Google)
  - [Bing](https://github.com/JustinCanton/Geo.NET/src/Geo.Bing)
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
- - [here](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
+ - [HERE](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/src/Geo.MapQuest)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/src/Geo.MapBox)
