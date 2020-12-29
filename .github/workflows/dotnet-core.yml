@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: '3.1.x'
     - name: Listing all files
-      run: tree .
+      run: ls -R
     - name: Install dependencies
       run: dotnet restore
     - name: Build
