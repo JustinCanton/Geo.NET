@@ -26,9 +26,9 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-restore --verbosity normal --configuration Release
+      run: dotnet test --no-restore --configuration Release
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       if: ${{ contains(github.event_name, 'push') }}
@@ -45,7 +45,7 @@ jobs:
         echo "SemVer: $GITVERSION_SEMVER"
     - name: Package
       if: ${{ contains(github.event_name, 'push') }}
-      run: dotnet pack --no-restore --no-build --verbosity normal --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
+      run: dotnet pack --no-build --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
     - name: Push
       if: ${{ contains(github.event_name, 'stop-push') }}
       run: |
