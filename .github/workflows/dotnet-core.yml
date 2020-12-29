@@ -27,6 +27,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
+    - name: Listing all files
+      run: ls -R
     - name: Test
       run: dotnet test --no-restore --configuration Release
     - name: Install GitVersion
