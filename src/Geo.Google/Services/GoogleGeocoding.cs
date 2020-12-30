@@ -338,21 +338,20 @@ namespace Geo.Google.Services
 
             if (parameters.LocationBias != null)
             {
-                if (parameters.LocationBias.GetType() == typeof(Coordinate))
+                switch (parameters.LocationBias)
                 {
-                    query.Add("locationbias", $"point:{parameters.LocationBias}");
-                }
-                else if (parameters.LocationBias.GetType() == typeof(Boundaries))
-                {
-                    query.Add("locationbias", $"rectangle:{parameters.LocationBias}");
-                }
-                else if (parameters.LocationBias.GetType() == typeof(Circle))
-                {
-                    query.Add("locationbias", $"circle:{parameters.LocationBias}");
-                }
-                else
-                {
-                    _logger?.LogWarning(_localizer["Invalid Location Bias Type"]);
+                    case Coordinate coordinate:
+                        query.Add("locationbias", $"point:{coordinate}");
+                        break;
+                    case Circle circle:
+                        query.Add("locationbias", $"circle:{circle}");
+                        break;
+                    case Boundaries boundary:
+                        query.Add("locationbias", $"rectangle:{boundary}");
+                        break;
+                    default:
+                        _logger?.LogWarning(_localizer["Invalid Location Bias Type"]);
+                        break;
                 }
             }
             else

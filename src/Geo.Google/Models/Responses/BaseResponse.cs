@@ -8,7 +8,7 @@ namespace Geo.Google.Models.Responses
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The base resopnse items returned from all requests.
+    /// The base response items returned from all requests.
     /// </summary>
     public class BaseResponse
     {
