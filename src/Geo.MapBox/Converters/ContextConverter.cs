@@ -13,7 +13,7 @@ namespace Geo.MapBox.Converters
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// A converter for a <see cref="Dictionary{string, string}"/> to a <see cref="Context"/>.
+    /// A converter for a <see cref="Dictionary{TKey, TValue}"/> to a <see cref="Context"/>.
     /// </summary>
     public class ContextConverter : JsonConverter
     {

@@ -23,7 +23,7 @@ namespace Geo.MapBox.Abstractions
         /// </summary>
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="Response{List{string}}"/> with the response from MapBox.</returns>
+        /// <returns>A <see cref="Response{T}"/> with a <see cref="List{T}"/> of <see cref="string"/> with the response from MapBox.</returns>
         /// <exception cref="MapBoxException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<List<string>>> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
 
