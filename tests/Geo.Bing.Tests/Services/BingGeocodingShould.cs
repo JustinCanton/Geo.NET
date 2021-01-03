@@ -7,6 +7,7 @@ namespace Geo.Bing.Tests.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -300,7 +301,7 @@ namespace Geo.Bing.Tests.Services
                 Locality = "Toronto",
                 PostalCode = "M5J",
                 AddressLine = "222 Bay Street",
-                CountryRegion = "Canada",
+                CountryRegion = new RegionInfo("en-CA"),
                 MaximumResults = 8,
                 IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
@@ -313,7 +314,7 @@ namespace Geo.Bing.Tests.Services
             query.Should().Contain("locality=Toronto");
             query.Should().Contain("postalCode=M5J");
             query.Should().Contain("addressLine=222 Bay Street");
-            query.Should().Contain("countryRegion=Canada");
+            query.Should().Contain("countryRegion=CA");
             query.Should().Contain("maxResults=8");
             query.Should().Contain("includeNeighborhood=1");
             query.Should().Contain("include=queryParse,ciso2");
@@ -374,7 +375,7 @@ namespace Geo.Bing.Tests.Services
                 Locality = "Toronto",
                 PostalCode = "M5J",
                 AddressLine = "222 Bay Street",
-                CountryRegion = "Canada",
+                CountryRegion = new RegionInfo("en-CA"),
             };
 
             var response = await service.AddressGeocodingAsync(parameters).ConfigureAwait(false);

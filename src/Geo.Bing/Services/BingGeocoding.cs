@@ -222,7 +222,7 @@ namespace Geo.Bing.Services
                 string.IsNullOrWhiteSpace(parameters.Locality) &&
                 string.IsNullOrWhiteSpace(parameters.PostalCode) &&
                 string.IsNullOrWhiteSpace(parameters.AddressLine) &&
-                string.IsNullOrWhiteSpace(parameters.CountryRegion))
+                parameters.CountryRegion == null)
             {
                 var error = _localizer["Invalid Address Information"];
                 _logger?.LogError(error);
@@ -268,9 +268,9 @@ namespace Geo.Bing.Services
                 _logger?.LogDebug(_localizer["Invalid Address Line"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.CountryRegion))
+            if (parameters.CountryRegion != null)
             {
-                query.Add("countryRegion", parameters.CountryRegion);
+                query.Add("countryRegion", parameters.CountryRegion.TwoLetterISORegionName.ToUpperInvariant());
             }
             else
             {
