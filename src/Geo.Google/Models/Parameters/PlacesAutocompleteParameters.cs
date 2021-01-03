@@ -32,11 +32,9 @@ namespace Geo.Google.Models.Parameters
         public List<PlaceType> Types { get; } = new List<PlaceType>();
 
         /// <summary>
-        /// Gets or sets a components filter with elements separated by a pipe (|).
-        /// The components filter is also accepted as an optional parameter if an address is provided.
-        /// Each element in the components filter consists of a component:value pair, and fully restricts the results from the geocoder.
+        /// Gets or sets a components filter, and fully restricts the results from the geocoder.
         /// </summary>
-        public string Components { get; set; }
+        public Component Components { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to Return only those places that are strictly within the region defined by location and radius.
