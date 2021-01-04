@@ -6,6 +6,7 @@
 namespace Geo.ArcGIS.Models.Parameters
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models.Responses;
 
@@ -33,7 +34,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// See the table of supported countries for valid language code values in each country
         /// (https://developers.arcgis.com/rest/geocode/api-reference/geocode-coverage.htm#GUID-D61FB53E-32DF-4E0E-A1CC-473BA38A23C0).
         /// </summary>
-        public string LanguageCode { get; set; }
+        public CultureInfo LanguageCode { get; set; }
 
         /// <summary>
         /// Gets a list that limits the possible match types returned by the reverseGeocode operation.

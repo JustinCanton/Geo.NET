@@ -6,6 +6,7 @@
 namespace Geo.ArcGIS.Models.Parameters
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using Geo.ArcGIS.Enums;
 
     /// <summary>
@@ -25,10 +26,11 @@ namespace Geo.ArcGIS.Models.Parameters
         public string Category { get; set; }
 
         /// <summary>
-        /// Gets or sets a value representing the country. When a value is passed for this parameter,
+        /// Gets a value representing the country. When a value is passed for this parameter,
         /// all of the addresses in the input table are sent to the specified country to be geocoded.
+        /// You can specify multiple country codes to limit results to more than one country.
         /// </summary>
-        public string SourceCountry { get; set; }
+        public List<RegionInfo> SourceCountry { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets or sets a set of bounding box coordinates that limit the search area for suggestions to a specific region.
@@ -57,7 +59,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// See the table of supported countries for valid language code values in each country
         /// (https://developers.arcgis.com/rest/geocode/api-reference/geocode-coverage.htm#GUID-D61FB53E-32DF-4E0E-A1CC-473BA38A23C0).
         /// </summary>
-        public string LanguageCode { get; set; }
+        public CultureInfo LanguageCode { get; set; }
 
         /// <summary>
         /// Gets or sets a value that specifies if the output geometry of PointAddress and Subaddress matches should be the rooftop point or street entrance location.

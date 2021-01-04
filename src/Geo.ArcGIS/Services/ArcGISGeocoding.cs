@@ -314,9 +314,9 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.LanguageCode))
+            if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode);
+                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
@@ -414,9 +414,15 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Category"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.SourceCountry))
+            if (parameters.SourceCountry.Count != 0)
             {
-                query.Add("sourceCountry", parameters.SourceCountry);
+                var countries = new CommaDelimitedStringCollection();
+                foreach (var country in parameters.SourceCountry)
+                {
+                    countries.Add(country.ThreeLetterISORegionName);
+                }
+
+                query.Add("sourceCountry", countries.ToString());
             }
             else
             {
@@ -441,9 +447,9 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Search Extent"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.LanguageCode))
+            if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode);
+                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
