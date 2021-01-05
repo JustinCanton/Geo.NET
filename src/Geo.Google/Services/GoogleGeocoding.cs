@@ -6,6 +6,7 @@
 namespace Geo.Google.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
@@ -193,7 +194,7 @@ namespace Geo.Google.Services
 
             if (parameters.Components != null)
             {
-                query.Add("components", parameters.Components);
+                query.Add("components", parameters.Components.ToString());
             }
             else
             {
@@ -213,7 +214,7 @@ namespace Geo.Google.Services
 
             if (parameters.Region != null)
             {
-                query.Add("region", parameters.Region);
+                query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
@@ -460,9 +461,9 @@ namespace Geo.Google.Services
 
             query.Add("query", parameters.Query);
 
-            if (!string.IsNullOrWhiteSpace(parameters.Region))
+            if (parameters.Region != null)
             {
-                query.Add("region", parameters.Region);
+                query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
@@ -498,9 +499,9 @@ namespace Geo.Google.Services
 
             query.Add("place_id", parameters.PlaceId);
 
-            if (!string.IsNullOrWhiteSpace(parameters.Region))
+            if (parameters.Region != null)
             {
-                query.Add("region", parameters.Region);
+                query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
@@ -579,9 +580,9 @@ namespace Geo.Google.Services
                 _logger?.LogDebug(_localizer["Invalid Types"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.Components))
+            if (parameters.Components != null)
             {
-                query.Add("components", parameters.Components);
+                query.Add("components", parameters.Components.ToString());
             }
             else
             {
@@ -743,7 +744,7 @@ namespace Geo.Google.Services
         {
             if (parameters.Language != null)
             {
-                query.Add("language", parameters.Language);
+                query.Add("language", parameters.Language.Name);
             }
             else
             {
@@ -758,6 +759,25 @@ namespace Geo.Google.Services
         internal void AddGoogleKey(NameValueCollection query)
         {
             query.Add("key", _keyContainer.GetKey());
+        }
+
+        /// <summary>
+        /// Gets the ccTLD representation of a <see cref="RegionInfo"/> object.
+        /// </summary>
+        /// <param name="regionInfo">A <see cref="RegionInfo"/> with the region information to convert.</param>
+        /// <returns>A <see cref="string"/> with the ccTLD.</returns>
+        internal string RegionInfoToCCTLD(RegionInfo regionInfo)
+        {
+            if (regionInfo.GeoId == new RegionInfo("GB").GeoId)
+            {
+                return "uk";
+            }
+            else
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                return regionInfo.TwoLetterISORegionName.ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
         }
     }
 }

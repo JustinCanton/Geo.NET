@@ -7,7 +7,9 @@ namespace Geo.Here.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Configuration;
     using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -181,9 +183,9 @@ namespace Geo.Here.Services
                 _logger?.LogDebug(_localizer["Invalid Qualified Query"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.InCountry))
+            if (parameters.InCountry.Count > 0)
             {
-                query.Add("in", parameters.InCountry);
+                query.Add("in", string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {
@@ -489,9 +491,9 @@ namespace Geo.Here.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
         {
-            if (!string.IsNullOrWhiteSpace(parameters.Language))
+            if (parameters.Language != null)
             {
-                query.Add("lang", parameters.Language);
+                query.Add("lang", parameters.Language.Name);
             }
             else
             {

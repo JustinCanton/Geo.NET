@@ -7,6 +7,7 @@ namespace Geo.Here.Tests.Services
 {
     using System;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -189,7 +190,7 @@ namespace Geo.Here.Tests.Services
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
-                Language = "es",
+                Language = new CultureInfo("es"),
             };
 
             service.AddBaseParameters(parameters, query);
@@ -209,13 +210,13 @@ namespace Geo.Here.Tests.Services
             var parameters = new BaseFilterParameters()
             {
                 Limit = 17,
-                Language = "de",
+                Language = new CultureInfo("da"),
             };
 
             service.AddLimitingParameters(parameters, query);
             query.Count.Should().Be(2);
             query["limit"].Should().Be("17");
-            query["lang"].Should().Be("de");
+            query["lang"].Should().Be("da");
         }
 
         /// <summary>
@@ -235,14 +236,14 @@ namespace Geo.Here.Tests.Services
                     Longitude = 123.456,
                 },
                 Limit = 91,
-                Language = "fr",
+                Language = new CultureInfo("fr-FR"),
             };
 
             service.AddLocatingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["at"].Should().Be("56.789,123.456");
             query["limit"].Should().Be("91");
-            query["lang"].Should().Be("fr");
+            query["lang"].Should().Be("fr-FR");
         }
 
         /// <summary>
@@ -262,7 +263,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = 123.456,
                 },
                 Limit = 91,
-                Language = "fr",
+                Language = new CultureInfo("fr"),
             };
 
             service.AddBoundingParameters(parameters, query);
@@ -281,7 +282,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = 123.456,
                 },
                 Limit = 91,
-                Language = "nl",
+                Language = new CultureInfo("nl"),
             };
 
             service.AddBoundingParameters(parameters, query);
@@ -304,14 +305,14 @@ namespace Geo.Here.Tests.Services
                     Radius = 50000,
                 },
                 Limit = 83,
-                Language = "ga",
+                Language = new CultureInfo("gl"),
             };
 
             service.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("circle:78.9,45.32;r=50000");
             query["limit"].Should().Be("83");
-            query["lang"].Should().Be("ga");
+            query["lang"].Should().Be("gl");
 
             query.Clear();
             parameters = new AreaParameters()
@@ -327,7 +328,7 @@ namespace Geo.Here.Tests.Services
                     Radius = 6000,
                 },
                 Limit = 48,
-                Language = "da",
+                Language = new CultureInfo("da"),
             };
 
             service.AddBoundingParameters(parameters, query);
@@ -347,14 +348,14 @@ namespace Geo.Here.Tests.Services
                     East = 1.5,
                 },
                 Limit = 65,
-                Language = "cs",
+                Language = new CultureInfo("ca"),
             };
 
             service.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("bbox:-1.5,87.99,1.5,89.99");
             query["limit"].Should().Be("65");
-            query["lang"].Should().Be("cs");
+            query["lang"].Should().Be("ca");
 
             query.Clear();
             parameters = new AreaParameters()
@@ -368,7 +369,7 @@ namespace Geo.Here.Tests.Services
                     East = -39.5,
                 },
                 Limit = 33,
-                Language = "pl",
+                Language = new CultureInfo("pl"),
             };
 
             service.AddBoundingParameters(parameters, query);
@@ -418,7 +419,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = 123.456,
                 },
                 Limit = 33,
-                Language = "pl",
+                Language = new CultureInfo("pl"),
             };
 
             act = () => service.AddBoundingParameters(new AreaParameters(), query);
@@ -440,24 +441,27 @@ namespace Geo.Here.Tests.Services
             {
                 Query = "123 East",
                 QualifiedQuery = "123 West",
-                InCountry = "DEN",
                 At = new Coordinate()
                 {
                     Latitude = 56.789,
                     Longitude = 123.456,
                 },
                 Limit = 91,
-                Language = "dl",
+                Language = new CultureInfo("da"),
             };
+
+            parameters.InCountry.Add(new RegionInfo("DK"));
+            parameters.InCountry.Add(new RegionInfo("JP"));
+            parameters.InCountry.Add(new RegionInfo("RS"));
 
             var uri = service.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("qq=123 West");
-            query.Should().Contain("in=DEN");
+            query.Should().Contain("in=DNK,JPN,SRB");
             query.Should().Contain("at=56.789,123.456");
             query.Should().Contain("limit=91");
-            query.Should().Contain("lang=dl");
+            query.Should().Contain("lang=da");
             query.Should().Contain("apiKey=abc123");
         }
 
@@ -492,7 +496,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = -12.456,
                 },
                 Limit = 1,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var uri = service.BuildReverseGeocodingRequest(parameters);
@@ -538,7 +542,7 @@ namespace Geo.Here.Tests.Services
                     East = -39.5,
                 },
                 Limit = 33,
-                Language = "pl",
+                Language = new CultureInfo("pl"),
             };
 
             var uri = service.BuildDiscoverRequest(parameters);
@@ -587,7 +591,7 @@ namespace Geo.Here.Tests.Services
                     East = -39.1,
                 },
                 Limit = 44,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var uri = service.BuildAutosuggestRequest(parameters);
@@ -635,7 +639,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = 45.2,
                 },
                 Limit = 44,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var uri = service.BuildBrowseRequest(parameters);
@@ -675,13 +679,13 @@ namespace Geo.Here.Tests.Services
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
-                Language = "jp",
+                Language = new CultureInfo("ja"),
             };
 
             var uri = service.BuildLookupRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
-            query.Should().Contain("lang=jp");
+            query.Should().Contain("lang=ja");
             query.Should().Contain("apiKey=abc123");
         }
 
@@ -711,13 +715,13 @@ namespace Geo.Here.Tests.Services
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
-                Language = "jp",
+                Language = new CultureInfo("ja"),
             };
 
             var uri = service.ValidateAndBuildUri<LookupParameters>(parameters, service.BuildLookupRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
-            query.Should().Contain("lang=jp");
+            query.Should().Contain("lang=ja");
             query.Should().Contain("apiKey=abc123");
         }
 
@@ -767,15 +771,16 @@ namespace Geo.Here.Tests.Services
             {
                 Query = "123 East",
                 QualifiedQuery = "123 West",
-                InCountry = "DEN",
                 At = new Coordinate()
                 {
                     Latitude = 56.789,
                     Longitude = 123.456,
                 },
                 Limit = 91,
-                Language = "dl",
+                Language = new CultureInfo("da"),
             };
+
+            parameters.InCountry.Add(new RegionInfo("DK"));
 
             var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(1);
@@ -798,7 +803,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = -12.456,
                 },
                 Limit = 1,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
@@ -826,7 +831,7 @@ namespace Geo.Here.Tests.Services
                     East = -39.5,
                 },
                 Limit = 33,
-                Language = "pl",
+                Language = new CultureInfo("pl"),
             };
 
             var result = await service.DiscoverAsync(parameters).ConfigureAwait(false);
@@ -855,7 +860,7 @@ namespace Geo.Here.Tests.Services
                     East = -39.1,
                 },
                 Limit = 44,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var result = await service.AutosuggestAsync(parameters).ConfigureAwait(false);
@@ -874,7 +879,7 @@ namespace Geo.Here.Tests.Services
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
-                Language = "jp",
+                Language = new CultureInfo("ja"),
             };
 
             var result = await service.LookupAsync(parameters).ConfigureAwait(false);
@@ -902,7 +907,7 @@ namespace Geo.Here.Tests.Services
                     Longitude = 45.2,
                 },
                 Limit = 44,
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var result = await service.BrowseAsync(parameters).ConfigureAwait(false);

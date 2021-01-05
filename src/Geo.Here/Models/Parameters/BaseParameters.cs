@@ -5,6 +5,8 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// The base parameters that are used with all HERE requests.
     /// </summary>
@@ -13,6 +15,6 @@ namespace Geo.Here.Models.Parameters
         /// <summary>
         /// Gets or sets the language to be used for result rendering from a list of BCP47 compliant Language Codes.
         /// </summary>
-        public string Language { get; set; }
+        public CultureInfo Language { get; set; }
     }
 }

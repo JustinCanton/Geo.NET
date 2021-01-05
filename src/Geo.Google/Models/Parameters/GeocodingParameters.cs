@@ -6,6 +6,7 @@
 namespace Geo.Google.Models.Parameters
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
 
     /// <summary>
     /// The parameters for the gecoding Google API.
@@ -19,11 +20,9 @@ namespace Geo.Google.Models.Parameters
         public string Address { get; set; }
 
         /// <summary>
-        /// Gets or sets a components filter with elements separated by a pipe (|).
-        /// The components filter is also accepted as an optional parameter if an address is provided.
-        /// Each element in the components filter consists of a component:value pair, and fully restricts the results from the geocoder.
+        /// Gets or sets a components filter, and fully restricts the results from the geocoder.
         /// </summary>
-        public string Components { get; set; }
+        public Component Components { get; set; }
 
         /// <summary>
         /// Gets or sets the bounding box of the viewport within which to bias geocode results more prominently.
@@ -32,9 +31,9 @@ namespace Geo.Google.Models.Parameters
         public Boundaries Bounds { get; set; }
 
         /// <summary>
-        /// Gets or sets the region code, specified as a ccTLD ("top-level domain") two-character value.
+        /// Gets or sets the region code to use for restrictions.
         /// This parameter will only influence, not fully restrict, results from the geocoder.
         /// </summary>
-        public string Region { get; set; }
+        public RegionInfo Region { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Geo.ArcGIS.Tests.Services
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -322,7 +323,7 @@ namespace Geo.ArcGIS.Tests.Services
                     Longitude = 123.456,
                 },
                 OutSpatialReference = 12345,
-                LanguageCode = "en",
+                LanguageCode = new CultureInfo("en-CA"),
                 ForStorage = false,
             };
 
@@ -373,7 +374,6 @@ namespace Geo.ArcGIS.Tests.Services
             var parameters = new GeocodingParameters()
             {
                 Category = "restaurant",
-                SourceCountry = "Canada",
                 SearchExtent = new BoundingBox()
                 {
                     EastLongitude = 123.456,
@@ -382,8 +382,11 @@ namespace Geo.ArcGIS.Tests.Services
                     SouthLatitude = 65.432,
                 },
                 OutSpatialReference = 12345,
-                LanguageCode = "en",
+                LanguageCode = new CultureInfo("ES"),
             };
+
+            parameters.SourceCountry.Add(new RegionInfo("FR"));
+            parameters.SourceCountry.Add(new RegionInfo("DE"));
 
             parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
                 {
@@ -403,10 +406,10 @@ namespace Geo.ArcGIS.Tests.Services
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("addresses={\"records\":[{\"attributes\":{\"ObjectId\":1,\"SingleLine\":\"123 East\",\"Address\":\"Same As Above\",\"Neighbourhood\":\"East Hood\",\"City\":\"East City\",\"Subregion\":\"East Subregion\",\"Region\":\"East Region\"}}]}");
             query.Should().Contain("category=restaurant");
-            query.Should().Contain("sourceCountry=Canada");
+            query.Should().Contain("sourceCountry=FRA,DEU");
             query.Should().Contain("matchOutOfRange=true");
             query.Should().Contain("outSR=12345");
-            query.Should().Contain("langCode=en");
+            query.Should().Contain("langCode=es");
             query.Should().Contain("locationType=rooftop");
             query.Should().Contain("preferredLabelValues=postalCity");
             query.Should().Contain("token=token123");

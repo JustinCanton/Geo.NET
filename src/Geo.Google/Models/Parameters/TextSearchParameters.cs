@@ -5,6 +5,8 @@
 
 namespace Geo.Google.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// Parameters used for the text search request.
     /// </summary>
@@ -17,12 +19,11 @@ namespace Geo.Google.Models.Parameters
         public string Query { get; set; }
 
         /// <summary>
-        /// Gets or sets the region code, specified as a ccTLD (country code top-level domain) two-character value.
-        /// Most ccTLD codes are identical to ISO 3166-1 codes, with some exceptions.
+        /// Gets or sets the region code to use for restrictions.
         /// This parameter will only influence, not fully restrict, search results.
         /// If more relevant results exist outside of the specified region, they may be included.
         /// When this parameter is used, the country name is omitted from the resulting formatted_address for results in the specified region.
         /// </summary>
-        public string Region { get; set; }
+        public RegionInfo Region { get; set; }
     }
 }

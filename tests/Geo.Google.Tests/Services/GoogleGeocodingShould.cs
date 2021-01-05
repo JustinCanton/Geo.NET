@@ -8,6 +8,7 @@ namespace Geo.Google.Tests.Services
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -130,7 +131,7 @@ namespace Geo.Google.Tests.Services
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
-                Language = "da",
+                Language = new CultureInfo("da"),
             };
 
             service.AddBaseParameters(parameters, query);
@@ -155,7 +156,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 34.56,
                 },
                 Radius = 10000,
-                Language = "da",
+                Language = new CultureInfo("da"),
             };
 
             service.AddCoordinateParameters(parameters, query);
@@ -187,7 +188,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 34.54,
                 },
                 Radius = 10001,
-                Language = "es",
+                Language = new CultureInfo("pt-BR"),
             };
 
             service.AddBaseSearchParameters(parameters, query);
@@ -199,7 +200,7 @@ namespace Geo.Google.Tests.Services
             query["type"].Should().Be("Restaurant");
             query["location"].Should().Be("76.14,34.54");
             query["radius"].Should().Be("10001");
-            query["language"].Should().Be("es");
+            query["language"].Should().Be("pt-BR");
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 3.54,
                 },
                 Radius = 25000,
-                Language = "fr",
+                Language = new CultureInfo("fr"),
             };
 
             service.AddAutocompleteParameters(parameters, query);
@@ -253,7 +254,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 34.54,
                 },
                 Radius = 60000,
-                Language = "es",
+                Language = new CultureInfo("es"),
             };
 
             service.AddBaseSearchParameters(parameters, query);
@@ -283,7 +284,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 34.54,
                 },
                 Radius = 0,
-                Language = "es",
+                Language = new CultureInfo("es"),
             };
 
             service.AddBaseSearchParameters(parameters, query);
@@ -311,7 +312,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = 3.54,
                 },
                 Radius = 25000,
-                Language = "fr",
+                Language = new CultureInfo("fr"),
             };
 
             var uri = service.BuildQueryAutocompleteRequest(parameters);
@@ -357,14 +358,18 @@ namespace Geo.Google.Tests.Services
                     Longitude = 3.54,
                 },
                 Radius = 25000,
-                Language = "fr",
+                Language = new CultureInfo("fr"),
                 SessionToken = "test123",
                 Origin = new Coordinate()
                 {
                     Latitude = 34.12,
                     Longitude = 69.45,
                 },
-                Components = "Component1,Component2",
+                Components = new Component()
+                {
+                    Locality = "tests",
+                    PostalCode = "12345",
+                },
                 StrictBounds = true,
             };
 
@@ -385,7 +390,7 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("sessiontoken=test123");
             query.Should().Contain("origin=34.12,69.45");
             query.Should().Contain("types=address,establishment,regions");
-            query.Should().Contain("components=Component1,Component2");
+            query.Should().Contain("components=postal_code:12345|locality:tests");
             query.Should().Contain("strictbounds=true");
             query.Should().Contain("key=abc123");
         }
@@ -416,9 +421,9 @@ namespace Geo.Google.Tests.Services
             var parameters = new DetailsParameters()
             {
                 PlaceId = "1a2b3c",
-                Region = "sl",
+                Region = new RegionInfo("ES"),
                 SessionToken = "test123",
-                Language = "fr",
+                Language = new CultureInfo("fr"),
             };
 
             parameters.Fields.AddRange(new List<string>()
@@ -431,7 +436,7 @@ namespace Geo.Google.Tests.Services
             var uri = service.BuildDetailsRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("place_id=1a2b3c");
-            query.Should().Contain("region=sl");
+            query.Should().Contain("region=es");
             query.Should().Contain("sessiontoken=test123");
             query.Should().Contain("fields=field1,field2,field3");
             query.Should().Contain("language=fr");
@@ -464,16 +469,17 @@ namespace Geo.Google.Tests.Services
             var parameters = new TextSearchParameters()
             {
                 Query = "456 West",
-                Region = "Spain",
+                Region = new RegionInfo("ES"),
                 MinimumPrice = 1,
                 MaximumPrice = 3,
                 OpenNow = true,
-                Language = "es",
+                Language = new CultureInfo("es"),
             };
 
             var uri = service.BuildTextSearchRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("query=456 West");
+            query.Should().Contain("region=es");
             query.Should().Contain("minprice=1");
             query.Should().Contain("maxprice=3");
             query.Should().Contain("opennow=true");
@@ -514,7 +520,7 @@ namespace Geo.Google.Tests.Services
                     Longitude = -21.04,
                 },
                 Radius = 2,
-                Language = "es",
+                Language = new CultureInfo("es"),
             };
 
             var uri = service.BuildNearbySearchRequest(parameters);
@@ -641,7 +647,7 @@ namespace Geo.Google.Tests.Services
                     },
                     Radius = 54,
                 },
-                Language = "fr",
+                Language = new CultureInfo("fr"),
             };
 
             parameters.Fields.AddRange(new List<string>()
@@ -702,7 +708,12 @@ namespace Geo.Google.Tests.Services
             var parameters = new GeocodingParameters()
             {
                 Address = "123 East",
-                Components = "test",
+                Components = new Component()
+                {
+                    Route = "cctld",
+                    Country = new RegionInfo("CA"),
+                    AdministrativeArea = "detroit",
+                },
                 Bounds = new Boundaries()
                 {
                     Northeast = new Coordinate()
@@ -716,14 +727,14 @@ namespace Geo.Google.Tests.Services
                         Longitude = 87.654,
                     },
                 },
-                Region = "us",
-                Language = "en",
+                Region = new RegionInfo("US"),
+                Language = new CultureInfo("en"),
             };
 
             var uri = service.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("address=123 East");
-            query.Should().Contain("components=test");
+            query.Should().Contain("components=country:ca|route:cctld|administrative_area:detroit");
             query.Should().Contain("bounds=43.219,87.654|80.012,123.456");
             query.Should().Contain("region=us");
             query.Should().Contain("language=en");
@@ -771,7 +782,7 @@ namespace Geo.Google.Tests.Services
                     LocationType.Approximate,
                     LocationType.Rooftop,
                 },
-                Language = "en",
+                Language = new CultureInfo("en"),
             };
 
             var uri = service.BuildReverseGeocodingRequest(parameters);
@@ -823,6 +834,21 @@ namespace Geo.Google.Tests.Services
             var response = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(1);
+        }
+
+        /// <summary>
+        /// Tests the region info to ccTLD works properly.
+        /// </summary>
+        [Test]
+        public void RegionInfoToCCTLDSuccessfully()
+        {
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+
+            service.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
+            service.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
+            service.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
+            service.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
         }
     }
 }

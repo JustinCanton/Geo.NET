@@ -198,18 +198,19 @@ namespace Geo.MapBox.Services
         /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
         internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
         {
-            if (parameters.Countries != null && parameters.Countries.Count > 0)
+            if (parameters.Countries.Count > 0)
             {
-                query.Add("country", string.Join(",", parameters.Countries));
+
+                query.Add("country", string.Join(",", parameters.Countries.Select(x => x.TwoLetterISORegionName)));
             }
             else
             {
                 _logger?.LogDebug(_localizer["Invalid Countries"]);
             }
 
-            if (parameters.Languages != null && parameters.Languages.Count > 0)
+            if (parameters.Languages.Count > 0)
             {
-                query.Add("language", string.Join(",", parameters.Languages));
+                query.Add("language", string.Join(",", parameters.Languages.Select(x => x.Name)));
             }
             else
             {

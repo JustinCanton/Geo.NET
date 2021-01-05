@@ -5,6 +5,8 @@
 
 namespace Geo.Bing.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// Parameters for the Bing address geocoding query.
     /// </summary>
@@ -36,8 +38,8 @@ namespace Geo.Bing.Models.Parameters
         public string AddressLine { get; set; }
 
         /// <summary>
-        /// Gets or sets the ISO country code for the country.
+        /// Gets or sets the region information for the country being looked for.
         /// </summary>
-        public string CountryRegion { get; set; }
+        public RegionInfo CountryRegion { get; set; }
     }
 }

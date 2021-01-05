@@ -10,6 +10,7 @@ namespace Geo.ArcGIS.Services
     using System.Collections.Specialized;
     using System.Configuration;
     using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -314,9 +315,9 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.LanguageCode))
+            if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode);
+                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
@@ -414,9 +415,9 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Category"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.SourceCountry))
+            if (parameters.SourceCountry.Count != 0)
             {
-                query.Add("sourceCountry", parameters.SourceCountry);
+                query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {
@@ -441,9 +442,9 @@ namespace Geo.ArcGIS.Services
                 _logger?.LogDebug(_localizer["Invalid Search Extent"]);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.LanguageCode))
+            if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode);
+                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
