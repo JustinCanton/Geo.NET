@@ -6,6 +6,7 @@
 namespace Geo.MapBox.Models.Parameters
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using Geo.MapBox.Enums;
 
     /// <summary>
@@ -21,15 +22,13 @@ namespace Geo.MapBox.Models.Parameters
 
         /// <summary>
         /// Gets the list of countries to limit the request to.
-        /// Permitted values are ISO 3166 alpha 2 country codes.
         /// </summary>
-        public List<string> Countries { get; } = new List<string>();
+        public List<RegionInfo> Countries { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets the language of the text supplied in responses.
-        /// Options are IETF language tags comprised of a mandatory ISO 639-1 language code and, optionally, one or more IETF subtags for country or script.
         /// </summary>
-        public List<string> Languages { get; } = new List<string>();
+        public List<CultureInfo> Languages { get; } = new List<CultureInfo>();
 
         /// <summary>
         /// Gets or sets the maximum number of results to return.

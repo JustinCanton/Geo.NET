@@ -8,6 +8,7 @@ namespace Geo.MapBox.Tests.Services
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -123,16 +124,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = true,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "CAN",
-                    "FRA",
+                    new RegionInfo("CA"),
+                    new RegionInfo("FR"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "en",
-                    "fr",
+                    new CultureInfo("en"),
+                    new CultureInfo("fr-FR"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
@@ -143,8 +144,8 @@ namespace Geo.MapBox.Tests.Services
 
             service.AddBaseParameters(parameters, query);
             query.Count.Should().Be(5);
-            query["country"].Should().Be("CAN,FRA");
-            query["language"].Should().Be("en,fr");
+            query["country"].Should().Be("CA,FR");
+            query["language"].Should().Be("en,fr-FR");
             query["limit"].Should().Be("5");
             query["routing"].Should().Be("true");
             query["types"].Should().Be("address,place");
@@ -180,16 +181,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = true,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "CAN",
-                    "FRA",
+                    new RegionInfo("CA"),
+                    new RegionInfo("FR"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "en",
-                    "fr",
+                    new CultureInfo("en-CA"),
+                    new CultureInfo("fr"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
@@ -204,8 +205,8 @@ namespace Geo.MapBox.Tests.Services
             query.Should().Contain("bbox=123.45,45.67,165.43,87.65");
             query.Should().Contain("fuzzyMatch=false");
             query.Should().Contain("proximity=140.25,64.12");
-            query.Should().Contain("country=CAN,FRA");
-            query.Should().Contain("language=en,fr");
+            query.Should().Contain("CA,FR");
+            query.Should().Contain("en-CA,fr");
             query.Should().Contain("limit=5");
             query.Should().Contain("routing=true");
             query.Should().Contain("types=address,place");
@@ -251,16 +252,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = false,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "BGR",
-                    "SWE",
+                    new RegionInfo("BG"),
+                    new RegionInfo("SE"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "bg",
-                    "sv",
+                    new CultureInfo("bg"),
+                    new CultureInfo("sv"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
@@ -273,7 +274,7 @@ namespace Geo.MapBox.Tests.Services
             var uri = service.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
-            query.Should().Contain("country=BGR,SWE");
+            query.Should().Contain("country=BG,SE");
             query.Should().Contain("language=bg,sv");
             query.Should().Contain("limit=3");
             query.Should().Contain("routing=false");
@@ -320,16 +321,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = false,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "BGR",
-                    "SWE",
+                    new RegionInfo("BG"),
+                    new RegionInfo("SE"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "bg",
-                    "sv",
+                    new CultureInfo("bg"),
+                    new CultureInfo("sv-FI"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
@@ -342,8 +343,8 @@ namespace Geo.MapBox.Tests.Services
             var uri = service.ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, service.BuildReverseGeocodingRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
-            query.Should().Contain("country=BGR,SWE");
-            query.Should().Contain("language=bg,sv");
+            query.Should().Contain("country=BG,SE");
+            query.Should().Contain("language=bg,sv-FI");
             query.Should().Contain("limit=3");
             query.Should().Contain("routing=false");
             query.Should().Contain("types=country,district,neighborhood");
@@ -417,16 +418,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = true,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "CAN",
-                    "FRA",
+                    new RegionInfo("CA"),
+                    new RegionInfo("FR"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "en",
-                    "fr",
+                    new CultureInfo("en"),
+                    new CultureInfo("fr"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
@@ -468,16 +469,16 @@ namespace Geo.MapBox.Tests.Services
                 Routing = false,
             };
 
-            parameters.Countries.AddRange(new List<string>()
+            parameters.Countries.AddRange(new List<RegionInfo>()
                 {
-                    "BGR",
-                    "SWE",
+                    new RegionInfo("BG"),
+                    new RegionInfo("SE"),
                 });
 
-            parameters.Languages.AddRange(new List<string>()
+            parameters.Languages.AddRange(new List<CultureInfo>()
                 {
-                    "bg",
-                    "sv",
+                    new CultureInfo("bg"),
+                    new CultureInfo("sv"),
                 });
 
             parameters.Types.AddRange(new List<FeatureType>()
