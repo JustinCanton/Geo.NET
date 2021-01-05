@@ -10,6 +10,7 @@ namespace Geo.ArcGIS.Services
     using System.Collections.Specialized;
     using System.Configuration;
     using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -416,13 +417,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.SourceCountry.Count != 0)
             {
-                var countries = new CommaDelimitedStringCollection();
-                foreach (var country in parameters.SourceCountry)
-                {
-                    countries.Add(country.ThreeLetterISORegionName);
-                }
-
-                query.Add("sourceCountry", countries.ToString());
+                query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {

@@ -9,6 +9,7 @@ namespace Geo.Here.Services
     using System.Collections.Specialized;
     using System.Configuration;
     using System.Globalization;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -184,13 +185,7 @@ namespace Geo.Here.Services
 
             if (parameters.InCountry.Count > 0)
             {
-                var countries = new CommaDelimitedStringCollection();
-                foreach (var country in parameters.InCountry)
-                {
-                    countries.Add(country.ThreeLetterISORegionName);
-                }
-
-                query.Add("in", countries.ToString());
+                query.Add("in", string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {
