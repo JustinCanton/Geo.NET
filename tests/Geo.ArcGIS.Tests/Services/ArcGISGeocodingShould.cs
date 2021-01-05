@@ -385,8 +385,8 @@ namespace Geo.ArcGIS.Tests.Services
                 LanguageCode = new CultureInfo("ES"),
             };
 
-            parameters.SourceCountry.Add(new RegionInfo("fr"));
-            parameters.SourceCountry.Add(new RegionInfo("de"));
+            parameters.SourceCountry.Add(new RegionInfo("FR"));
+            parameters.SourceCountry.Add(new RegionInfo("DE"));
 
             parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
                 {
