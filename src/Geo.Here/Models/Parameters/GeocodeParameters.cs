@@ -5,6 +5,9 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
@@ -21,14 +24,10 @@ namespace Geo.Here.Models.Parameters
         public string Query { get; set; }
 
         /// <summary>
-        /// Gets or sets the search within a geographic area. This is a hard filter. Results will be returned if they are located within the specified area.
-        /// A geographic area can be a country (or multiple countries), provided as comma-separated ISO 3166-1 alpha-3 country codes.
-        /// Format: countryCode:{countryCode}[,{countryCode}]*
-        /// Examples:
-        /// countryCode:USA
-        /// countryCode:CAN,MEX,USA.
+        /// Gets the search within a geographic area. This is a hard filter. Results will be returned if they are located within the specified area.
+        /// A geographic area can be a country (or multiple countries).
         /// </summary>
-        public string InCountry { get; set; }
+        public List<RegionInfo> InCountry { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets or sets a qualified query. A qualified query is similar to a free-text query, but in a structured manner.
