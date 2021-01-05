@@ -10,6 +10,6 @@ namespace Geo.MapBox.Tests.Models
 
     public class ContextObject
     {
-        public List<Context> Contexts { get; set; } = new List<Context>();
+        public List<Context> Contexts { get; } = new List<Context>();
     }
 }

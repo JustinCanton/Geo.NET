@@ -200,7 +200,6 @@ namespace Geo.MapBox.Services
         {
             if (parameters.Countries.Count > 0)
             {
-
                 query.Add("country", string.Join(",", parameters.Countries.Select(x => x.TwoLetterISORegionName)));
             }
             else
