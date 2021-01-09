@@ -31,7 +31,7 @@ namespace Geo.Bing.Tests.Services
     [TestFixture]
     public class BingGeocodingShould
     {
-        private HttpClient _httpClient;
+        private Mock<HttpMessageHandler> _mockHandler;
         private BingKeyContainer _keyContainer;
         private IStringLocalizer<BingGeocoding> _localizer;
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
@@ -44,9 +44,9 @@ namespace Geo.Bing.Tests.Services
         {
             _keyContainer = new BingKeyContainer("123abc");
 
-            var handlerMock = new Mock<HttpMessageHandler>();
+            _mockHandler = new Mock<HttpMessageHandler>();
 
-            handlerMock
+            _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -69,7 +69,7 @@ namespace Geo.Bing.Tests.Services
                     "'statusCode':200,'statusDescription':'OK','traceId':'03a0308fc21d4984873f095704aaa59e|CH000010A2|0.0.0.1|Ref A: AA58A734408F404DA92D6F4BC96F8B40 Ref B: CH1EDGE0809 Ref C: 2020-07-24T00:29:16Z'}"),
                 });
 
-            handlerMock
+            _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -91,7 +91,7 @@ namespace Geo.Bing.Tests.Services
                     "'statusCode':200,'statusDescription':'OK','traceId':'e511dfd0857b41f1aee1bc60510c92dd|CH000010AD|0.0.0.1|CH01EAP00000CE7'}"),
                 });
 
-            handlerMock
+            _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -120,8 +120,6 @@ namespace Geo.Bing.Tests.Services
                     "'statusCode':200,'statusDescription':'OK','traceId':'6ae6e5559034467397975a98e8058202|CH0000108C|0.0.0.1|Ref A: AADC32DAE8A14CA3BF8B7C11893FE2DC Ref B: CH1EDGE1106 Ref C: 2020-07-30T02:28:48Z'}"),
                 });
 
-            _httpClient = new HttpClient(handlerMock.Object);
-
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<BingGeocoding>(factory);
@@ -134,7 +132,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void AddBingKeySuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
 
             service.AddBingKey(query);
@@ -148,7 +147,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildBaseQuerySuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -169,7 +169,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildLimitedResultQuerySuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var query = new NameValueCollection();
             var parameters = new ResultParameters()
             {
@@ -192,7 +193,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildGeocodingRequestWithException()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
@@ -206,7 +208,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildGeocodingRequestSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Query = "1 Microsoft Way Redmond WA",
@@ -231,7 +234,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildReverseGeocodingRequestWithException()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters() { Point = null });
 
             act.Should()
@@ -245,7 +249,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Point = new Coordinate()
@@ -280,7 +285,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildAddressGeocodingRequestWithException()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             Action act = () => service.BuildAddressGeocodingRequest(new AddressGeocodingParameters());
 
             act.Should()
@@ -294,7 +300,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public void BuildAddressGeocodingRequestSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new AddressGeocodingParameters()
             {
                 AdministrationDistrict = "Ontario",
@@ -328,7 +335,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public async Task GeocodingAsyncSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters()
             {
                 Query = "1 Microsoft Way Redmond WA",
@@ -346,7 +354,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new ReverseGeocodingParameters()
             {
                 Point = new Coordinate()
@@ -368,7 +377,8 @@ namespace Geo.Bing.Tests.Services
         [Test]
         public async Task AddressGeocodingAsyncSuccessfully()
         {
-            var service = new BingGeocoding(_httpClient, _keyContainer, _localizer, _coreLocalizer);
+            using var httpClient = new HttpClient(_mockHandler.Object);
+            var service = new BingGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
             var parameters = new AddressGeocodingParameters()
             {
                 AdministrationDistrict = "Ontario",

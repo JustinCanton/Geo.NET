@@ -257,7 +257,7 @@ namespace Geo.Google.Services
                 {
                     if (resultTypesBuilder.Length > 0)
                     {
-                        resultTypesBuilder.Append("|");
+                        resultTypesBuilder.Append('|');
                     }
 
                     resultTypesBuilder.Append(resultType.ToEnumString<ResultType>());
@@ -277,7 +277,7 @@ namespace Geo.Google.Services
                 {
                     if (locationTypesBuilder.Length > 0)
                     {
-                        locationTypesBuilder.Append("|");
+                        locationTypesBuilder.Append('|');
                     }
 
                     locationTypesBuilder.Append(locationType.ToEnumString<LocationType>());

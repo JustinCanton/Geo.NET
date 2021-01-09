@@ -18,9 +18,14 @@ namespace Geo.MapQuest.Converters
         where T : Enum
     {
         /// <inheritdoc />
-        public override bool CanConvert(Type type)
+        public override bool CanConvert(Type objectType)
         {
-            return base.CanConvert(typeof(T));
+            if (objectType == null)
+            {
+                throw new ArgumentNullException(nameof(objectType));
+            }
+
+            return base.CanConvert(objectType);
         }
 
         /// <inheritdoc />
