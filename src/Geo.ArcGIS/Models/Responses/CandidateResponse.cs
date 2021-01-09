@@ -24,6 +24,6 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets an array of possible matches for the place and location passed in.
         /// </summary>
         [JsonProperty("candidates")]
-        public List<Candidate> Candidates { get; } = new List<Candidate>();
+        public IList<Candidate> Candidates { get; } = new List<Candidate>();
     }
 }

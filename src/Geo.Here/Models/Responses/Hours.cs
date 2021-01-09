@@ -17,7 +17,7 @@ namespace Geo.Here.Models.Responses
         /// Gets the text information for a set of hours.
         /// </summary>
         [JsonProperty("text")]
-        public List<string> Text { get; } = new List<string>();
+        public IList<string> Text { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a value indicating whether the location is open during these hours.
@@ -29,6 +29,6 @@ namespace Geo.Here.Models.Responses
         /// Gets the time periods for these hours.
         /// </summary>
         [JsonProperty("structured")]
-        public List<TimePeriod> Structured { get; } = new List<TimePeriod>();
+        public IList<TimePeriod> Structured { get; } = new List<TimePeriod>();
     }
 }

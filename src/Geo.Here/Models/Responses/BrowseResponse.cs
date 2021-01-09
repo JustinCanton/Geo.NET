@@ -17,6 +17,6 @@ namespace Geo.Here.Models.Responses
         /// Gets the list of locations that match the browse request.
         /// </summary>
         [JsonProperty("items")]
-        public List<BrowseLocation> Items { get; } = new List<BrowseLocation>();
+        public IList<BrowseLocation> Items { get; } = new List<BrowseLocation>();
     }
 }

@@ -31,6 +31,6 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets the results from the request.
         /// </summary>
         [JsonProperty("results")]
-        public List<T> Results { get; } = new List<T>();
+        public IList<T> Results { get; } = new List<T>();
     }
 }

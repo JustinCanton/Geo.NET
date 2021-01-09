@@ -25,13 +25,13 @@ namespace Geo.Google.Models.Responses
         /// Gets an array containing the separate components applicable to this address.
         /// </summary>
         [JsonProperty("address_components")]
-        public List<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
+        public IList<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
 
         /// <summary>
         /// Gets an array indicates the type of the returned result.
         /// </summary>
         [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public List<AddressType> Types { get; } = new List<AddressType>();
+        public IList<AddressType> Types { get; } = new List<AddressType>();
 
         /// <summary>
         /// Gets or sets the geometry information for the location.
@@ -58,6 +58,6 @@ namespace Geo.Google.Models.Responses
         /// This is only populated when the result is a postal code that contains multiple localities.
         /// </summary>
         [JsonProperty("postcode_localities")]
-        public List<string> PostcodeLocalities { get; } = new List<string>();
+        public IList<string> PostcodeLocalities { get; } = new List<string>();
     }
 }

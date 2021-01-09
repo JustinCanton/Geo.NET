@@ -17,6 +17,6 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets a list of suggestions based on a text input.
         /// </summary>
         [JsonProperty("suggestions")]
-        public List<Suggestion> Suggestions { get; } = new List<Suggestion>();
+        public IList<Suggestion> Suggestions { get; } = new List<Suggestion>();
     }
 }

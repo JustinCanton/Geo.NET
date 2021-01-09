@@ -96,13 +96,13 @@ namespace Geo.Bing.Models.Responses
         /// For example, if a match for the requested address cannot be found, then a match code of UpHierarchy with a RoadBlock entity type may be returned.
         /// </summary>
         [JsonProperty("matchCodes")]
-        public List<string> MatchCodes { get; } = new List<string>();
+        public IList<string> MatchCodes { get; } = new List<string>();
 
         /// <summary>
         /// Gets a collection of geocoded points that differ in how they were calculated and their suggested use.
         /// </summary>
         [JsonProperty("geocodePoints")]
-        public List<Point> GeocodePoints { get; } = new List<Point>();
+        public IList<Point> GeocodePoints { get; } = new List<Point>();
 
         /// <summary>
         /// Gets a collection of parsed values that shows how a location query string was parsed into one or more of the following address values.
@@ -115,6 +115,6 @@ namespace Geo.Bing.Models.Responses
         /// Landmark.
         /// </summary>
         [JsonProperty("queryParseValues")]
-        public List<QueryParseValue> QueryParseValues { get; } = new List<QueryParseValue>();
+        public IList<QueryParseValue> QueryParseValues { get; } = new List<QueryParseValue>();
     }
 }

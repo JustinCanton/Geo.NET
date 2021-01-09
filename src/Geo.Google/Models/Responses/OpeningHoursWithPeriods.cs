@@ -17,6 +17,6 @@ namespace Geo.Google.Models.Responses
         /// Gets an array of opening periods covering seven days, starting from Sunday, in chronological order.
         /// </summary>
         [JsonProperty("periods")]
-        public List<Period> Periods { get; } = new List<Period>();
+        public IList<Period> Periods { get; } = new List<Period>();
     }
 }

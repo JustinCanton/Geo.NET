@@ -29,25 +29,25 @@ namespace Geo.Here.Models.Responses
         /// Gets the list of chains assigned to this place.
         /// </summary>
         [JsonProperty("chains")]
-        public List<Chain> Chains { get; } = new List<Chain>();
+        public IList<Chain> Chains { get; } = new List<Chain>();
 
         /// <summary>
         /// Gets the list of supplier references available for this place.
         /// </summary>
         [JsonProperty("references")]
-        public List<Reference> References { get; } = new List<Reference>();
+        public IList<Reference> References { get; } = new List<Reference>();
 
         /// <summary>
         /// Gets the list of contact information like phone, email, WWW.
         /// </summary>
         [JsonProperty("contacts")]
-        public List<Contact> Contacts { get; } = new List<Contact>();
+        public IList<Contact> Contacts { get; } = new List<Contact>();
 
         /// <summary>
         /// Gets a list of hours during which the place is open for business..
         /// </summary>
         [JsonProperty("openingHours")]
-        public List<Hours> OpeningHours { get; } = new List<Hours>();
+        public IList<Hours> OpeningHours { get; } = new List<Hours>();
 
         /// <summary>
         /// Gets or sets an item describing how the parts of the response element matched the input query.

@@ -373,12 +373,9 @@ namespace Geo.Google.Tests.Services
                 StrictBounds = true,
             };
 
-            parameters.Types.AddRange(new List<PlaceType>()
-                {
-                    PlaceType.Address,
-                    PlaceType.Establishment,
-                    PlaceType.Regions,
-                });
+            parameters.Types.Add(PlaceType.Address);
+            parameters.Types.Add(PlaceType.Establishment);
+            parameters.Types.Add(PlaceType.Regions);
 
             var uri = service.BuildPlaceAutocompleteRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -426,12 +423,9 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            parameters.Fields.AddRange(new List<string>()
-                {
-                    "field1",
-                    "field2",
-                    "field3",
-                });
+            parameters.Fields.Add("field1");
+            parameters.Fields.Add("field2");
+            parameters.Fields.Add("field3");
 
             var uri = service.BuildDetailsRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -650,12 +644,9 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            parameters.Fields.AddRange(new List<string>()
-                {
-                    "field1",
-                    "field2",
-                    "field3",
-                });
+            parameters.Fields.Add("field1");
+            parameters.Fields.Add("field2");
+            parameters.Fields.Add("field3");
 
             var uri = service.BuildFindPlaceRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);

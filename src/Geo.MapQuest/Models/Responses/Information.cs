@@ -29,6 +29,6 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets the extra messages for the request.
         /// </summary>
         [JsonProperty("messages")]
-        public List<string> Messages { get; } = new List<string>();
+        public IList<string> Messages { get; } = new List<string>();
     }
 }

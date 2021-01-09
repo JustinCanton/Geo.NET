@@ -17,6 +17,6 @@ namespace Geo.Here.Models.Responses
         /// Gets ranges of indexes that matched in the title attribute.
         /// </summary>
         [JsonProperty("titles")]
-        public List<IndexMatch> Titles { get; } = new List<IndexMatch>();
+        public IList<IndexMatch> Titles { get; } = new List<IndexMatch>();
     }
 }

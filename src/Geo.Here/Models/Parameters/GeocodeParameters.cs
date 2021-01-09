@@ -27,7 +27,7 @@ namespace Geo.Here.Models.Parameters
         /// Gets the search within a geographic area. This is a hard filter. Results will be returned if they are located within the specified area.
         /// A geographic area can be a country (or multiple countries).
         /// </summary>
-        public List<RegionInfo> InCountry { get; } = new List<RegionInfo>();
+        public IList<RegionInfo> InCountry { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets or sets a qualified query. A qualified query is similar to a free-text query, but in a structured manner.

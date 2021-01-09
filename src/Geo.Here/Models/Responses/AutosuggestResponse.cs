@@ -18,12 +18,12 @@ namespace Geo.Here.Models.Responses
         /// Gets the list of locations that match the discover request.
         /// </summary>
         [JsonProperty("items", ItemConverterType = typeof(AutosuggestJsonConverter))]
-        public List<BaseLocation> Items { get; } = new List<BaseLocation>();
+        public IList<BaseLocation> Items { get; } = new List<BaseLocation>();
 
         /// <summary>
         /// Gets the suggestions for refining individual query terms.
         /// </summary>
         [JsonProperty("queryTerms")]
-        public List<QueryTerm> QueryTerms { get; } = new List<QueryTerm>();
+        public IList<QueryTerm> QueryTerms { get; } = new List<QueryTerm>();
     }
 }

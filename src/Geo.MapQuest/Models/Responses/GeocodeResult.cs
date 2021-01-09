@@ -23,6 +23,6 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets the locations that match the geocode request.
         /// </summary>
         [JsonProperty("locations")]
-        public List<GeocodeLocation> Locations { get; } = new List<GeocodeLocation>();
+        public IList<GeocodeLocation> Locations { get; } = new List<GeocodeLocation>();
     }
 }

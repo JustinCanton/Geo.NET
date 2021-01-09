@@ -23,6 +23,6 @@ namespace Geo.Google.Models.Responses
         /// Gets the weekday text.
         /// </summary>
         [JsonProperty("weekday_text")]
-        public List<string> WeekdayText { get; } = new List<string>();
+        public IList<string> WeekdayText { get; } = new List<string>();
     }
 }
