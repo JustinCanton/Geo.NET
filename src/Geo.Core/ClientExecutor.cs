@@ -15,7 +15,7 @@ namespace Geo.Core
     /// <summary>
     /// A base class used for calls to APIs.
     /// </summary>
-    public abstract class ClientExecutor
+    public class ClientExecutor
     {
         private readonly HttpClient _client;
         private readonly IStringLocalizer<ClientExecutor> _localizer;

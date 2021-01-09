@@ -5,15 +5,12 @@
 
 namespace Geo.Google.Abstractions
 {
+    using Geo.Core.Abstractions;
+
     /// <summary>
     /// A container class for keeping the Google API key.
     /// </summary>
-    public interface IGoogleKeyContainer
+    public interface IGoogleKeyContainer : IKeyContainer
     {
-        /// <summary>
-        /// Gets the current Google API key.
-        /// </summary>
-        /// <returns>The Google API key.</returns>
-        string GetKey();
     }
 }

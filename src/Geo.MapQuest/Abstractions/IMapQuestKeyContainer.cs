@@ -5,15 +5,12 @@
 
 namespace Geo.MapQuest.Abstractions
 {
+    using Geo.Core.Abstractions;
+
     /// <summary>
     /// A container class for keeping the MapQuest API key.
     /// </summary>
-    public interface IMapQuestKeyContainer
+    public interface IMapQuestKeyContainer : IKeyContainer
     {
-        /// <summary>
-        /// Gets the current MapQuest API key.
-        /// </summary>
-        /// <returns>The MapQuest API key.</returns>
-        string GetKey();
     }
 }

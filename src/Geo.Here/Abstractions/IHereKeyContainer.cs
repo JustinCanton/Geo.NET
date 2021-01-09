@@ -5,15 +5,12 @@
 
 namespace Geo.Here.Abstractions
 {
+    using Geo.Core.Abstractions;
+
     /// <summary>
     /// A container class for keeping the HERE API key.
     /// </summary>
-    public interface IHereKeyContainer
+    public interface IHereKeyContainer : IKeyContainer
     {
-        /// <summary>
-        /// Gets the current HERE API key.
-        /// </summary>
-        /// <returns>The HERE API key.</returns>
-        string GetKey();
     }
 }
