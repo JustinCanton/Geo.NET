@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Geo .NET Rules" Description="These rules are set for better organization of code" ToolsVersion="15.0">
 	<Rules AnalyzerId="System.Diagnostics.CodeAnalysis" RuleNamespace="System.Diagnostics.CodeAnalysis">
+		<Rule Id="CA1805" Action="None"/>
 		<Rule Id="CA2208" Action="None"/>
 	</Rules>
 	<Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
