@@ -31,6 +31,6 @@ namespace Geo.Google.Models.Responses
         /// Gets an array indicating the type of the address component.
         /// </summary>
         [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public List<AddressType> Types { get; } = new List<AddressType>();
+        public IList<AddressType> Types { get; } = new List<AddressType>();
     }
 }

@@ -23,6 +23,6 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets the locations that match the reverse geocode request.
         /// </summary>
         [JsonProperty("locations")]
-        public List<ReverseGeocodeLocation> Locations { get; } = new List<ReverseGeocodeLocation>();
+        public IList<ReverseGeocodeLocation> Locations { get; } = new List<ReverseGeocodeLocation>();
     }
 }

@@ -327,13 +327,10 @@ namespace Geo.ArcGIS.Tests.Services
                 ForStorage = false,
             };
 
-            parameters.FeatureTypes.AddRange(new List<FeatureType>()
-                {
-                    FeatureType.DistanceMarker,
-                    FeatureType.POI,
-                    FeatureType.Postal,
-                    FeatureType.StreetName,
-                });
+            parameters.FeatureTypes.Add(FeatureType.DistanceMarker);
+            parameters.FeatureTypes.Add(FeatureType.POI);
+            parameters.FeatureTypes.Add(FeatureType.Postal);
+            parameters.FeatureTypes.Add(FeatureType.StreetName);
 
             var uri = await service.BuildReverseGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -388,18 +385,16 @@ namespace Geo.ArcGIS.Tests.Services
             parameters.SourceCountry.Add(new RegionInfo("FR"));
             parameters.SourceCountry.Add(new RegionInfo("DE"));
 
-            parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
+            parameters.AddressAttributes.Add(
+                new AddressAttributeParameter()
                 {
-                    new AddressAttributeParameter()
-                    {
-                        ObjectId = 1,
-                        SingleLine = "123 East",
-                        Address = "Same As Above",
-                        Neighbourhood = "East Hood",
-                        City = "East City",
-                        Subregion = "East Subregion",
-                        Region = "East Region",
-                    },
+                    ObjectId = 1,
+                    SingleLine = "123 East",
+                    Address = "Same As Above",
+                    Neighbourhood = "East Hood",
+                    City = "East City",
+                    Subregion = "East Subregion",
+                    Region = "East Region",
                 });
 
             var uri = await service.BuildGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
@@ -441,13 +436,11 @@ namespace Geo.ArcGIS.Tests.Services
             var service = new ArcGISGeocoding(httpClient, _mockTokenContainer.Object, _localizer, _coreLocalizer);
             var parameters = new GeocodingParameters();
 
-            parameters.AddressAttributes.AddRange(new List<AddressAttributeParameter>()
+            parameters.AddressAttributes.Add(
+                new AddressAttributeParameter()
                 {
-                    new AddressAttributeParameter()
-                    {
-                        ObjectId = 1,
-                        SingleLine = "123 East",
-                    },
+                    ObjectId = 1,
+                    SingleLine = "123 East",
                 });
 
             var response = await service.GeocodingAsync(parameters).ConfigureAwait(false);

@@ -16,14 +16,14 @@ namespace Geo.Here.Converters
     public class AutosuggestJsonConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override bool CanConvert(Type type)
+        public override bool CanConvert(Type objectType)
         {
-            if (type == null)
+            if (objectType == null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(objectType));
             }
 
-            return typeof(BaseLocation).IsAssignableFrom(type);
+            return typeof(BaseLocation).IsAssignableFrom(objectType);
         }
 
         /// <inheritdoc/>

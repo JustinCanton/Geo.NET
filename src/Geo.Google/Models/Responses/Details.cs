@@ -18,7 +18,7 @@ namespace Geo.Google.Models.Responses
         /// Gets an array containing the separate components applicable to this address.
         /// </summary>
         [JsonProperty("address_components")]
-        public List<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
+        public IList<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
 
         /// <summary>
         /// Gets or sets a representation of the place's address in the adr microformat (http://microformats.org/wiki/adr).
@@ -67,6 +67,6 @@ namespace Geo.Google.Models.Responses
         /// Gets an array of up to five reviews.
         /// </summary>
         [JsonProperty("reviews")]
-        public List<Review> Reviews { get; } = new List<Review>();
+        public IList<Review> Reviews { get; } = new List<Review>();
     }
 }

@@ -48,7 +48,7 @@ namespace Geo.Here.Models
         /// <returns>A boolean indicating whether the bounding box is valid or not.</returns>
         internal bool IsValid()
         {
-            return East != 0 || North != 0 || West != 0 || South != 0;
+            return (East != 0 || North != 0 || West != 0 || South != 0) && (North >= South) && (East >= West);
         }
     }
 }

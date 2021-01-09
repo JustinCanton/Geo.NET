@@ -5,15 +5,12 @@
 
 namespace Geo.Bing.Abstractions
 {
+    using Geo.Core.Abstractions;
+
     /// <summary>
     /// A container class for keeping the Bing API key.
     /// </summary>
-    public interface IBingKeyContainer
+    public interface IBingKeyContainer : IKeyContainer
     {
-        /// <summary>
-        /// Gets the current Bing API key.
-        /// </summary>
-        /// <returns>The Bing API key.</returns>
-        string GetKey();
     }
 }

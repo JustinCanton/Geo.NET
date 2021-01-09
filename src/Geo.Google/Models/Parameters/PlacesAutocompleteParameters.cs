@@ -29,7 +29,7 @@ namespace Geo.Google.Models.Parameters
         /// Gets the types of place results to return.
         /// If no type is specified, all types will be returned.
         /// </summary>
-        public List<PlaceType> Types { get; } = new List<PlaceType>();
+        public IList<PlaceType> Types { get; } = new List<PlaceType>();
 
         /// <summary>
         /// Gets or sets a components filter, and fully restricts the results from the geocoder.

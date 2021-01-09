@@ -17,14 +17,14 @@ namespace Geo.Bing.Converters
     public class CoordinateConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override bool CanConvert(Type type)
+        public override bool CanConvert(Type objectType)
         {
-            if (type == null)
+            if (objectType == null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(objectType));
             }
 
-            return type == typeof(double[]);
+            return objectType == typeof(double[]);
         }
 
         /// <inheritdoc />

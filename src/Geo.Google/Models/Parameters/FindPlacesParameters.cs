@@ -28,7 +28,7 @@ namespace Geo.Google.Models.Parameters
         /// <summary>
         /// Gets the list of fields to return from the request.
         /// </summary>
-        public List<string> Fields { get; } = new List<string>();
+        public IList<string> Fields { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets information that will prefer results in a specified area.

@@ -36,6 +36,6 @@ namespace Geo.MapBox.Models.Responses
         /// <summary>
         /// Gets the text items of the context.
         /// </summary>
-        public List<ContextText> ContextText { get; } = new List<ContextText>();
+        public IList<ContextText> ContextText { get; } = new List<ContextText>();
     }
 }

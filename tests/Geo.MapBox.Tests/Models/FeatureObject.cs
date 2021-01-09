@@ -10,6 +10,6 @@ namespace Geo.MapBox.Tests.Models
 
     public class FeatureObject
     {
-        public List<Feature> Features { get; } = new List<Feature>();
+        public IList<Feature> Features { get; } = new List<Feature>();
     }
 }

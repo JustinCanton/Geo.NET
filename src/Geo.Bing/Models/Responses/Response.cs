@@ -56,7 +56,7 @@ namespace Geo.Bing.Models.Responses
         /// For example, ErrorDetails can identify parameter values that are not valid or missing.
         /// </summary>
         [JsonProperty("errorDetails")]
-        public List<string> ErrorDetails { get; } = new List<string>();
+        public IList<string> ErrorDetails { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a unique identifier for the request.
@@ -69,6 +69,6 @@ namespace Geo.Bing.Models.Responses
         /// A ResourceSet is a container of Resources returned by the request. For more information, see the ResourceSet section below.
         /// </summary>
         [JsonProperty("resourceSets")]
-        public List<ResourceSet> ResourceSets { get; } = new List<ResourceSet>();
+        public IList<ResourceSet> ResourceSets { get; } = new List<ResourceSet>();
     }
 }

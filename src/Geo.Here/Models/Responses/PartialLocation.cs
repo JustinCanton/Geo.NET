@@ -48,12 +48,12 @@ namespace Geo.Here.Models.Responses
         /// Gets the list of categories assigned to this place.
         /// </summary>
         [JsonProperty("categories")]
-        public List<Category> Categories { get; } = new List<Category>();
+        public IList<Category> Categories { get; } = new List<Category>();
 
         /// <summary>
         /// Gets the list of food types assigned to this place.
         /// </summary>
         [JsonProperty("foodTypes")]
-        public List<Category> FoodTypes { get; } = new List<Category>();
+        public IList<Category> FoodTypes { get; } = new List<Category>();
     }
 }

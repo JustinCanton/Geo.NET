@@ -23,6 +23,6 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets the possible locations to match the geocoding.
         /// </summary>
         [JsonProperty("locations")]
-        public List<LocationInformation> Locations { get; } = new List<LocationInformation>();
+        public IList<LocationInformation> Locations { get; } = new List<LocationInformation>();
     }
 }

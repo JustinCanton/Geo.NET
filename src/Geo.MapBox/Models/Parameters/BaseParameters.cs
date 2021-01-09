@@ -23,12 +23,12 @@ namespace Geo.MapBox.Models.Parameters
         /// <summary>
         /// Gets the list of countries to limit the request to.
         /// </summary>
-        public List<RegionInfo> Countries { get; } = new List<RegionInfo>();
+        public IList<RegionInfo> Countries { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets the language of the text supplied in responses.
         /// </summary>
-        public List<CultureInfo> Languages { get; } = new List<CultureInfo>();
+        public IList<CultureInfo> Languages { get; } = new List<CultureInfo>();
 
         /// <summary>
         /// Gets or sets the maximum number of results to return.
@@ -44,6 +44,6 @@ namespace Geo.MapBox.Models.Parameters
         /// <summary>
         /// Gets a list used to filter results to include only a subset (one or more) of the available feature types.
         /// </summary>
-        public List<FeatureType> Types { get; } = new List<FeatureType>();
+        public IList<FeatureType> Types { get; } = new List<FeatureType>();
     }
 }

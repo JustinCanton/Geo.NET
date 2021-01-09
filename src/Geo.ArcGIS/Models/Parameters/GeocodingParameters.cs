@@ -17,7 +17,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// <summary>
         /// Gets a list of address attributes.
         /// </summary>
-        public List<AddressAttributeParameter> AddressAttributes { get; } = new List<AddressAttributeParameter>();
+        public IList<AddressAttributeParameter> AddressAttributes { get; } = new List<AddressAttributeParameter>();
 
         /// <summary>
         /// Gets or sets a place or address type that can be used to filter suggest results.
@@ -30,7 +30,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// all of the addresses in the input table are sent to the specified country to be geocoded.
         /// You can specify multiple country codes to limit results to more than one country.
         /// </summary>
-        public List<RegionInfo> SourceCountry { get; } = new List<RegionInfo>();
+        public IList<RegionInfo> SourceCountry { get; } = new List<RegionInfo>();
 
         /// <summary>
         /// Gets or sets a set of bounding box coordinates that limit the search area for suggestions to a specific region.

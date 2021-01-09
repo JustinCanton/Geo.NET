@@ -48,7 +48,7 @@ namespace Geo.Bing.Models.Responses
         /// Route.
         /// </summary>
         [JsonProperty("usageTypes")]
-        public List<string> UsageTypes { get; } = new List<string>();
+        public IList<string> UsageTypes { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the geographic area that contains the location.

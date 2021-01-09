@@ -17,7 +17,7 @@ namespace Geo.Google.Models.Responses
         /// Gets a list of html attributions about this listing which must be displayed to the user.
         /// </summary>
         [JsonProperty("html_attributions")]
-        public List<string> HtmlAttributes { get; } = new List<string>();
+        public IList<string> HtmlAttributes { get; } = new List<string>();
 
         /// <summary>
         /// Gets a list of the results for the Google request.

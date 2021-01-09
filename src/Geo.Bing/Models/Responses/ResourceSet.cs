@@ -23,6 +23,6 @@ namespace Geo.Bing.Models.Responses
         /// Gets a collection of one or more resources. The resources that are returned depend on the request.
         /// </summary>
         [JsonProperty("resources")]
-        public List<Location> Resources { get; } = new List<Location>();
+        public IList<Location> Resources { get; } = new List<Location>();
     }
 }

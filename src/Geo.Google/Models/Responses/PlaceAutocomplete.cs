@@ -27,12 +27,12 @@ namespace Geo.Google.Models.Responses
         /// Gets an array indicates the type of the returned result.
         /// </summary>
         [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public List<AddressType> Types { get; } = new List<AddressType>();
+        public IList<AddressType> Types { get; } = new List<AddressType>();
 
         /// <summary>
         /// Gets pre-formatted text that can be shown in your autocomplete results.
         /// </summary>
         [JsonProperty("matched_substrings")]
-        public List<StructureFormatting> StructuredFormatting { get; } = new List<StructureFormatting>();
+        public IList<StructureFormatting> StructuredFormatting { get; } = new List<StructureFormatting>();
     }
 }

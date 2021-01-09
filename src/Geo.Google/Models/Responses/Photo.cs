@@ -35,6 +35,6 @@ namespace Geo.Google.Models.Responses
         /// Gets a list that contains any required attributions. This field will always be present, but may be empty.
         /// </summary>
         [JsonProperty("html_attributions")]
-        public List<string> HtmlAttributes { get; } = new List<string>();
+        public IList<string> HtmlAttributes { get; } = new List<string>();
     }
 }

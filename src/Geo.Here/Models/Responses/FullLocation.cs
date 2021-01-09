@@ -24,7 +24,7 @@ namespace Geo.Here.Models.Responses
         /// This is a point on a road or in a parking lot.
         /// </summary>
         [JsonProperty("access")]
-        public List<Coordinate> Access { get; } = new List<Coordinate>();
+        public IList<Coordinate> Access { get; } = new List<Coordinate>();
 
         /// <summary>
         /// Gets or sets the geo coordinates of the map bounding box containing the results.

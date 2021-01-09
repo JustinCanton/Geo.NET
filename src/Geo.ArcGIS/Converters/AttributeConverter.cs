@@ -16,14 +16,14 @@ namespace Geo.ArcGIS.Converters
     public class AttributeConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override bool CanConvert(Type type)
+        public override bool CanConvert(Type objectType)
         {
-            if (type == null)
+            if (objectType == null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(objectType));
             }
 
-            return typeof(Models.Responses.Attribute).IsAssignableFrom(type);
+            return typeof(Models.Responses.Attribute).IsAssignableFrom(objectType);
         }
 
         /// <inheritdoc />

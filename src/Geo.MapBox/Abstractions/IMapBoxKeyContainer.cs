@@ -5,15 +5,12 @@
 
 namespace Geo.MapBox.Abstractions
 {
+    using Geo.Core.Abstractions;
+
     /// <summary>
     /// A container class for keeping the MapBox API key.
     /// </summary>
-    public interface IMapBoxKeyContainer
+    public interface IMapBoxKeyContainer : IKeyContainer
     {
-        /// <summary>
-        /// Gets the current MapBox API key.
-        /// </summary>
-        /// <returns>The MapBox API key.</returns>
-        string GetKey();
     }
 }
