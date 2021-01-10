@@ -1,5 +1,6 @@
 ﻿// <copyright file="Coordinate.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Models
@@ -9,7 +10,7 @@ namespace Geo.Google.Models
     /// <summary>
     /// A latitude/longitude pair forming a coordinate.
     /// </summary>
-    public class Coordinate
+    public class Coordinate : BaseBounding
     {
         /// <summary>
         /// Gets or sets the latitude of a location.

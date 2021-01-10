@@ -1,10 +1,12 @@
 ﻿// <copyright file="GoogleDI.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.DependencyInjection
 {
     using System;
+    using Geo.Core.DependencyInjection;
     using Geo.Google.Abstractions;
     using Geo.Google.Models;
     using Geo.Google.Services;
@@ -23,12 +25,18 @@ namespace Geo.Google.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddGoogleServices(this IServiceCollection services, Action<GoogleOptionsBuilder> optionsBuilder)
         {
+            services.AddCoreServices();
+
             if (optionsBuilder != null)
             {
                 var options = new GoogleOptionsBuilder();
                 optionsBuilder(options);
 
-                GoogleKeyContainer.SetKey(options.Key);
+                services.AddSingleton<IGoogleKeyContainer>(new GoogleKeyContainer(options.Key));
+            }
+            else
+            {
+                services.AddSingleton<IGoogleKeyContainer>(new GoogleKeyContainer(string.Empty));
             }
 
             services.AddHttpClient<IGoogleGeocoding, GoogleGeocoding>();

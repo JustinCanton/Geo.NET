@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <Authors>Justin Canton</Authors>
+    <Company>Geo.NET</Company>
+    <Product>Geo.NET MapBox</Product>
+    <PackageTags>geocoding geo.net mapbox</PackageTags>
+    <Description>A lightweight method for communicating with the MapBox geocoding APIs. This includes models and interfaces for calling MapBox.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(TargetFramework)\Geo.MapBox.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Geo.Core\Geo.Core.csproj" />
+  </ItemGroup>
+
+</Project>

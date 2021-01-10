@@ -1,31 +1,30 @@
 <Project>
 
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Geo.NET.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
-    <PackageReference Include="StyleCop.CSharp.Async.Rules" Version="1.0.32">
+	  </PackageReference>
+    <PackageReference Include="StyleCop.CSharp.Async.Rules" Version="6.1.41">
       <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="2.9.6">
-      <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
+	  </PackageReference>
     <PackageReference Include="Text.Analyzers" Version="2.6.4">
       <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
-    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="2.9.6">
-      <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
-      <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
+	  </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Analyzers" Version="2.2.0">
       <PrivateAssets>All</PrivateAssets>
-	</PackageReference>
+	  </PackageReference>
   </ItemGroup>
+  
+  <PropertyGroup>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿// <copyright file="AddressType.cs" company="Geo.NET">
-// Copyright (c) Geo.NET. All rights reserved.
+// Copyright (c) Geo.NET.
+// Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
 namespace Geo.Google.Enums
@@ -133,10 +134,10 @@ namespace Geo.Google.Enums
         Sublocality5,
 
         /// <summary>
-        /// Indicates a named neighborhood.
+        /// Indicates a named neighbourhood.
         /// </summary>
         [EnumMember(Value = "neighborhood")]
-        Neighborhood,
+        Neighbourhood,
 
         /// <summary>
         /// Indicates a named location, usually a building or collection of buildings with a common name.
@@ -247,5 +248,35 @@ namespace Geo.Google.Enums
         /// </summary>
         [EnumMember(Value = "transit_station")]
         TransitStation,
+
+        /// <summary>
+        /// Indicates the location of a public store.
+        /// </summary>
+        [EnumMember(Value = "store")]
+        Store,
+
+        /// <summary>
+        /// Indicates the postal code suffix.
+        /// </summary>
+        [EnumMember(Value = "postal_code_suffix")]
+        PostalCodeSuffix,
+
+        /// <summary>
+        /// Indicates the location has an atm.
+        /// </summary>
+        [EnumMember(Value = "atm")]
+        Atm,
+
+        /// <summary>
+        /// Indicates the location has a bank.
+        /// </summary>
+        [EnumMember(Value = "bank")]
+        Bank,
+
+        /// <summary>
+        /// Indicates the location is a financial institution.
+        /// </summary>
+        [EnumMember(Value = "finance")]
+        Finance,
     }
 }
