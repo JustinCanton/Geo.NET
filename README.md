@@ -48,9 +48,9 @@ Some of the best ways to contribute are to try things out, file issues, join in 
 ## Configuration and Sample Usage
 The configuration and sample usage for each supported interface can be found within each project.
 
- - [ArcGIS](https://github.com/JustinCanton/Geo.NET/src/Geo.ArcGIS)
- - [Bing](https://github.com/JustinCanton/Geo.NET/src/Geo.Bing)
- - [Google](https://github.com/JustinCanton/Geo.NET/src/Geo.Google)
- - [HERE](https://github.com/JustinCanton/Geo.NET/src/Geo.Here)
- - [MapBox](https://github.com/JustinCanton/Geo.NET/src/Geo.MapBox)
- - [MapQuest](https://github.com/JustinCanton/Geo.NET/src/Geo.MapQuest)
+ - [ArcGIS](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.ArcGIS)
+ - [Bing](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Bing)
+ - [Google](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Google)
+ - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
+ - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)
+ - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
