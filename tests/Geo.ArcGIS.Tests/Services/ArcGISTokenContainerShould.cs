@@ -19,8 +19,8 @@ namespace Geo.ArcGIS.Tests.Services
     /// </summary>
     public class ArcGISTokenContainerShould
     {
-        private Mock<IArcGISTokenRetrevial> _mockTokenRetrevial;
-        private CancellationToken _quickExpireToken;
+        private readonly Mock<IArcGISTokenRetrevial> _mockTokenRetrevial;
+        private readonly CancellationToken _quickExpireToken;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISTokenContainerShould"/> class.

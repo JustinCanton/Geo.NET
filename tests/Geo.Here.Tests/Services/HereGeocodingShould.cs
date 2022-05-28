@@ -6,6 +6,7 @@
 namespace Geo.Here.Tests.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
@@ -29,12 +30,14 @@ namespace Geo.Here.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="HereGeocoding"/> class.
     /// </summary>
-    public class HereGeocodingShould
+    public class HereGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private HereKeyContainer _keyContainer;
-        private IStringLocalizer<HereGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly HereKeyContainer _keyContainer;
+        private readonly IStringLocalizer<HereGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HereGeocodingShould"/> class.
@@ -45,22 +48,35 @@ namespace Geo.Here.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
+                        "{\"items\":" +
+                        "[{\"title\":\"123 East Hill, London, SW18 2QB, England\",\"id\":\"here: af:streetsection: Op7KzT7e2gH8G99rgRWJUB:EAIaAzEyMyhk\",\"resultType\":\"houseNumber\",\"houseNumberType\":\"interpolated\"," +
+                        "\"address\":{\"label\":\"123 East Hill, London, SW18 2QB, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
+                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2QB\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.45697,\"lng\":-0.18835},\"access\":[{\"lat\":51.4571,\"lng\":-0.18842}]," +
+                        "\"mapView\":{\"west\":-0.18979,\"south\":51.45607,\"east\":-0.18691,\"north\":51.45787},\"scoring\":{\"queryScore\":0.99,\"fieldScore\":{\"streets\":[0.9],\"houseNumber\":1.0}}}]}"),
+            });
+
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/geocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"items\":" +
-                        "[{\"title\":\"123 East Hill, London, SW18 2QB, England\",\"id\":\"here: af:streetsection: Op7KzT7e2gH8G99rgRWJUB:EAIaAzEyMyhk\",\"resultType\":\"houseNumber\",\"houseNumberType\":\"interpolated\"," +
-                        "\"address\":{\"label\":\"123 East Hill, London, SW18 2QB, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
-                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2QB\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.45697,\"lng\":-0.18835},\"access\":[{\"lat\":51.4571,\"lng\":-0.18842}]," +
-                        "\"mapView\":{\"west\":-0.18979,\"south\":51.45607,\"east\":-0.18691,\"north\":51.45787},\"scoring\":{\"queryScore\":0.99,\"fieldScore\":{\"streets\":[0.9],\"houseNumber\":1.0}}}]}"),
-                });
+                        "[{\"title\":\"Royal Oak\",\"id\":\"here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f\",\"resultType\":\"place\"," +
+                        "\"address\":{\"label\":\"Royal Oak, 135 East Hill, London, SW18 2, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
+                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2\",\"houseNumber\":\"135\"},\"position\":{\"lat\":51.45696,\"lng\":-0.18844},\"access\":[{\"lat\":51.45709,\"lng\":-0.18847}]," +
+                        "\"distance\":6,\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true},{\"id\":\"100 - 1000 - 0000\",\"name\":\"Restaurant\"}]}]}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -68,16 +84,18 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/revgeocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"items\":" +
-                        "[{\"title\":\"Royal Oak\",\"id\":\"here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f\",\"resultType\":\"place\"," +
-                        "\"address\":{\"label\":\"Royal Oak, 135 East Hill, London, SW18 2, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\"," +
-                        "\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2\",\"houseNumber\":\"135\"},\"position\":{\"lat\":51.45696,\"lng\":-0.18844},\"access\":[{\"lat\":51.45709,\"lng\":-0.18847}]," +
-                        "\"distance\":6,\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true},{\"id\":\"100 - 1000 - 0000\",\"name\":\"Restaurant\"}]}]}"),
-                });
+                        "[{\"title\":\"123 East India Dock Road, London, E14 0, England\",\"id\":\"here: af:streetsection: ku2Yqc - Y2Nto7kjX9fjdPC:CggIBCD9_YPsAhABGgMxMjMoZA\",\"resultType\":\"houseNumber\"," +
+                        "\"houseNumberType\":\"PA\",\"address\":{\"label\":\"123 East India Dock Road, London, E14 0, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\"," +
+                        "\"county\":\"London\",\"city\":\"London\",\"district\":\"Poplar\",\"street\":\"East India Dock Road\",\"postalCode\":\"E14 0\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.51144," +
+                        "\"lng\":-0.01137},\"access\":[{\"lat\":51.51129,\"lng\":-0.01135}],\"distance\":3452941,\"mapView\":{\"west\":-0.02104,\"south\":51.51082,\"east\":0.00436,\"north\":51.51477}}]}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -85,27 +103,12 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/discover")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
-                        "{\"items\":" +
-                        "[{\"title\":\"123 East India Dock Road, London, E14 0, England\",\"id\":\"here: af:streetsection: ku2Yqc - Y2Nto7kjX9fjdPC:CggIBCD9_YPsAhABGgMxMjMoZA\",\"resultType\":\"houseNumber\"," +
-                        "\"houseNumberType\":\"PA\",\"address\":{\"label\":\"123 East India Dock Road, London, E14 0, England\",\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\"," +
-                        "\"county\":\"London\",\"city\":\"London\",\"district\":\"Poplar\",\"street\":\"East India Dock Road\",\"postalCode\":\"E14 0\",\"houseNumber\":\"123\"},\"position\":{\"lat\":51.51144," +
-                        "\"lng\":-0.01137},\"access\":[{\"lat\":51.51129,\"lng\":-0.01135}],\"distance\":3452941,\"mapView\":{\"west\":-0.02104,\"south\":51.51082,\"east\":0.00436,\"north\":51.51477}}]}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
 
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/autosuggest")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"items\":" +
                         "[{\"title\":\"123 East Coast Rd, Singapore 428808, Singapore\",\"id\":\"here: af:streetsection: e0X59kKoq7enolh0iTsyvB:CggIBCDU9MSlARABGgMxMjMoZA\",\"resultType\":\"houseNumber\"," +
                         "\"houseNumberType\":\"PA\",\"address\":{\"label\":\"123 East Coast Rd, Singapore 428808, Singapore\"},\"position\":{\"lat\":1.306,\"lng\":103.90468},\"access\":[{\"lat\":1.30587,\"lng\":103.90473}]," +
@@ -114,18 +117,20 @@ namespace Geo.Here.Tests.Services
                         "\"resultType\":\"houseNumber\",\"houseNumberType\":\"interpolated\",\"address\":{\"label\":\"123 East Hill, London, SW18 2QB, England\"},\"position\":{\"lat\":51.45697,\"lng\":-0.18835}," +
                         "\"access\":[{\"lat\":51.4571,\"lng\":-0.18842}],\"distance\":3466446,\"mapView\":{\"west\":-0.18966,\"south\":51.45683,\"east\":-0.17991,\"north\":51.45962}," +
                         "\"highlights\":{\"title\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}],\"address\":{\"label\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}]}}}],\"queryTerms\":[]}"),
-                });
+            });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/browse")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/autosuggest")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"items\":" +
                         "[{\"title\":\"Саида Әсем\",\"id\":\"here: pds:place: 398jx7ps - 9d1139f0b66a0fc43cdb4f0aacf1c8ee\",\"resultType\":\"place\",\"address\":{\"label\":\"Саида Әсем, Жаңақала ауданы, Қазақстан\"," +
                         "\"countryCode\":\"KAZ\",\"countryName\":\"Қазақстан\",\"county\":\"Батыс Қазақстан облысы\",\"city\":\"Жаңақала ауданы\",\"district\":\"Қызылоба\"},\"position\":{\"lat\":49.6511,\"lng\":50.64354}," +
@@ -135,18 +140,20 @@ namespace Geo.Here.Tests.Services
                         "\"address\":{\"label\":\"Кафе, Ақжайық ауданы, Қазақстан\",\"countryCode\":\"KAZ\",\"countryName\":\"Қазақстан\",\"county\":\"Батыс Қазақстан облысы\",\"city\":\"Ақжайық ауданы\"}," +
                         "\"position\":{\"lat\":50.21434,\"lng\":51.12206},\"access\":[{\"lat\":50.21433,\"lng\":51.12205}],\"distance\":83493,\"categories\":[{\"id\":\"100 - 1000 - 0000\",\"name\":\"Мейрамхана\",\"primary\":true}]," +
                         "\"references\":[{\"supplier\":{\"id\":\"core\"},\"id\":\"1175964311\"}],\"foodTypes\":[{\"id\":\"800 - 064\",\"name\":\"Халықаралық\",\"primary\":true}]}]}"),
-                });
+            });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/lookup")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/browse")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"title\":\"Royal Oak\",\"id\":\"here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f\",\"resultType\":\"place\",\"address\":{\"label\":\"Royal Oak, 135 East Hill, London, SW18 2, England\"," +
                         "\"countryCode\":\"GBR\",\"countryName\":\"England\",\"countyCode\":\"LDN\",\"county\":\"London\",\"city\":\"London\",\"district\":\"Wandsworth\",\"street\":\"East Hill\",\"postalCode\":\"SW18 2\"," +
                         "\"houseNumber\":\"135\"},\"position\":{\"lat\":51.45696,\"lng\":-0.18844},\"access\":[{\"lat\":51.45709,\"lng\":-0.18847}],\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true}," +
@@ -154,12 +161,27 @@ namespace Geo.Here.Tests.Services
                         "\"contacts\":[{\"phone\":[{\"value\":\" + 442088744892\"}]}],\"openingHours\":[{\"text\":[\"Mon: 12:00 - 15:00\",\"Tue - Thu, Sat: 12:00 - 15:00, 18:00 - 23:00\",\"Fri: 12:00 - 15:00, 23:00 - 23:00\",\"Sun: 12:00 - 23:00\"]," +
                         "\"isOpen\":false,\"structured\":[{\"start\":\"T120000\",\"duration\":\"PT03H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: MO,TU,WE,TH,FR,SA\"},{\"start\":\"T180000\",\"duration\":\"PT05H00M\"," +
                         "\"recurrence\":\"FREQ: DAILY; BYDAY: TU,WE,TH,SA\"},{\"start\":\"T230000\",\"duration\":\"PT24H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: FR\"},{\"start\":\"T120000\",\"duration\":\"PT11H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: SU\"}]}]}"),
-                });
+            });
+
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/lookup")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<HereGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -910,6 +932,28 @@ namespace Geo.Here.Tests.Services
 
             var result = await service.BrowseAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(2);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

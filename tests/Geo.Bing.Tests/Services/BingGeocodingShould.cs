@@ -6,6 +6,7 @@
 namespace Geo.Bing.Tests.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
@@ -28,12 +29,14 @@ namespace Geo.Bing.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="BingGeocoding"/> class.
     /// </summary>
-    public class BingGeocodingShould
+    public class BingGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private BingKeyContainer _keyContainer;
-        private IStringLocalizer<BingGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly BingKeyContainer _keyContainer;
+        private readonly IStringLocalizer<BingGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingGeocodingShould"/> class.
@@ -44,16 +47,10 @@ namespace Geo.Bing.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations?query")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
                     "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used," +
                     "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
                     "'resourceSets':[{'estimatedTotal':1,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
@@ -65,18 +62,20 @@ namespace Geo.Bing.Tests.Services
                     "'coordinates':[47.644459999999,-122.130462999999],'calculationMethod':'Rooftop','usageTypes':['Route']}],'matchCodes':['Good']," +
                     "'queryParseValues':[{'property':'AddressLine','value':'1 microsoft way'},{'property':'Locality','value':'redmond'},{'property':'AdminDistrict','value':'wa'}]}]}]," +
                     "'statusCode':200,'statusDescription':'OK','traceId':'03a0308fc21d4984873f095704aaa59e|CH000010A2|0.0.0.1|Ref A: AA58A734408F404DA92D6F4BC96F8B40 Ref B: CH1EDGE0809 Ref C: 2020-07-24T00:29:16Z'}"),
-                });
+            });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations/")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations?query")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
                     "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
                     "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
                     "'resourceSets':[{'estimatedTotal':1,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
@@ -87,18 +86,20 @@ namespace Geo.Bing.Tests.Services
                     "'locality':'Garment District','postalCode':'10036'},'confidence':'High','entityType':'Address'," +
                     "'geocodePoints':[{'type':'Point','coordinates':[40.75664,-73.989589],'calculationMethod':'Parcel','usageTypes':['Display']}],'matchCodes':['Good']}]}]," +
                     "'statusCode':200,'statusDescription':'OK','traceId':'e511dfd0857b41f1aee1bc60510c92dd|CH000010AD|0.0.0.1|CH01EAP00000CE7'}"),
-                });
+            });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations?adminDistrict")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations/")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
                     "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
                     "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
                     "'resourceSets':[{'estimatedTotal':2,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
@@ -116,12 +117,27 @@ namespace Geo.Bing.Tests.Services
                     "'geocodePoints':[{'type':'Point','coordinates':[43.647830068965654,-79.379967202059277],'calculationMethod':'InterpolationOffset','usageTypes':['Display']}," +
                     "{'type':'Point','coordinates':[43.647843999251016,-79.379908116806476],'calculationMethod':'Interpolation','usageTypes':['Route']}],'matchCodes':['Ambiguous']}]}]," +
                     "'statusCode':200,'statusDescription':'OK','traceId':'6ae6e5559034467397975a98e8058202|CH0000108C|0.0.0.1|Ref A: AADC32DAE8A14CA3BF8B7C11893FE2DC Ref B: CH1EDGE1106 Ref C: 2020-07-30T02:28:48Z'}"),
-                });
+            });
+
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("REST/v1/Locations?adminDistrict")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<BingGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -390,6 +406,28 @@ namespace Geo.Bing.Tests.Services
             response.StatusCode.Should().Be(200);
             response.ResourceSets.Count.Should().Be(1);
             response.ResourceSets[0].EstimatedTotal.Should().Be(2);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

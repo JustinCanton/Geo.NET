@@ -6,6 +6,7 @@
 namespace Geo.MapQuest.Tests.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Net;
     using System.Net.Http;
@@ -29,13 +30,15 @@ namespace Geo.MapQuest.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="MapQuestGeocoding"/> class.
     /// </summary>
-    public class MapQuestGeocodingShould
+    public class MapQuestGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private MapQuestKeyContainer _keyContainer;
-        private MapQuestEndpoint _endpoint;
-        private IStringLocalizer<MapQuestGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly MapQuestKeyContainer _keyContainer;
+        private readonly MapQuestEndpoint _endpoint;
+        private readonly IStringLocalizer<MapQuestGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestGeocodingShould"/> class.
@@ -47,17 +50,10 @@ namespace Geo.MapQuest.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
-            // For reverse geocoding, use the places endpoint type
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/address")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"info\":{\"statuscode\":0,\"copyright\":{\"text\":\"\u00A9 2020 MapQuest, Inc.\",\"imageUrl\":\"http://api.mqcdn.com/res/mqlogo.gif\",\"imageAltText\":\"\u00A9 2020 MapQuest, Inc.\"},\"messages\":[]}," +
                         "\"options\":{\"maxResults\":5,\"thumbMaps\":true,\"ignoreLatLngInput\":false}," +
                         "\"results\":[" +
@@ -70,19 +66,21 @@ namespace Geo.MapQuest.Tests.Services
                         "\"mapUrl\":\"http://www.mapquestapi.com/staticmap/v5/map?key=1tdjnAYrIM60mtjMgyxJ4Gp7c5zCqD1x&type=map&size=225,160&locations=43.591268,-89.791489|marker-sm-50318A-1&scalebar=true&zoom=15&rand=-1701703799\"}" +
                         "]}" +
                         "]}"),
-                });
+            });
 
-            // For reverse geocoding, use the permanent endpoint type
+            // For reverse geocoding, use the places endpoint type
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/reverse")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/address")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"info\":{\"statuscode\":0,\"copyright\":{\"text\":\"\u00A9 2020 MapQuest, Inc.\",\"imageUrl\":\"http://api.mqcdn.com/res/mqlogo.gif\",\"imageAltText\":\"\u00A9 2020 MapQuest, Inc.\"},\"messages\":[]}," +
                         "\"options\":{\"maxResults\":1,\"thumbMaps\":true,\"ignoreLatLngInput\":false}," +
                         "\"results\":[" +
@@ -95,12 +93,28 @@ namespace Geo.MapQuest.Tests.Services
                         "\"mapUrl\":\"http://www.mapquestapi.com/staticmap/v5/map?key=1tdjnAYrIM60mtjMgyxJ4Gp7c5zCqD1x&type=map&size=225,160&locations=56.78,123.45|marker-sm-50318A-1&scalebar=true&zoom=5&rand=1696523291\"}" +
                         "]}" +
                         "]}"),
-                });
+            });
+
+            // For reverse geocoding, use the permanent endpoint type
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/reverse")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<MapQuestGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -436,6 +450,28 @@ namespace Geo.MapQuest.Tests.Services
             }.ToString());
             result.Results[0].Locations[0].SideOfStreet.Should().Be(SideOfStreet.None);
             result.Results[0].Locations[0].Type.Should().Be(Enums.Type.Stop);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

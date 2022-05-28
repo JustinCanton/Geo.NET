@@ -31,12 +31,14 @@ namespace Geo.MapBox.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="MapBoxGeocoding"/> class.
     /// </summary>
-    public class MapBoxGeocodingShould
+    public class MapBoxGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private MapBoxKeyContainer _keyContainer;
-        private IStringLocalizer<MapBoxGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly MapBoxKeyContainer _keyContainer;
+        private readonly IStringLocalizer<MapBoxGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxGeocodingShould"/> class.
@@ -47,17 +49,10 @@ namespace Geo.MapBox.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
-            // For reverse geocoding, use the places endpoint type
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("mapbox.places")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"type\":\"FeatureCollection\",\"query\":[\"123\",\"east\"],\"features\":[{\"id\":\"address.4562086697174018\",\"type\":\"Feature\",\"place_type\":[\"address\"],\"relevance\":1," +
                         "\"properties\":{\"accuracy\":\"point\"},\"text\":\"Easthill Drive\",\"place_name\":\"123 Easthill Drive, Robina Queensland 4226, Australia\",\"center\":[153.379627,-28.081626]," +
                         "\"geometry\":{\"type\":\"Point\",\"coordinates\":[153.379627,-28.081626]},\"address\":\"123\"," +
@@ -65,7 +60,28 @@ namespace Geo.MapBox.Tests.Services
                         "{\"id\":\"place.12294497843533720\",\"wikidata\":\"Q140075\",\"text\":\"Gold Coast\"},{\"id\":\"region.19496380243439240\",\"wikidata\":\"Q36074\",\"short_code\":\"AU - QLD\",\"text\":\"Queensland\"}," +
                         "{\"id\":\"country.9968792518346070\",\"wikidata\":\"Q408\",\"short_code\":\"au\",\"text\":\"Australia\"}]}]," +
                         "\"attribution\":\"NOTICE: © 2020 Mapbox and its suppliers.All rights reserved.Use of this data is subject to the Mapbox Terms of Service(https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained. POI(s) provided by Foursquare.\"}"),
-                });
+            });
+
+            // For reverse geocoding, use the places endpoint type
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("mapbox.places")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
+                        "{\"type\":\"FeatureCollection\",\"query\":[153.379627,-28.081626],\"features\":[{\"id\":\"address.4562086697174018\",\"type\":\"Feature\",\"place_type\":[\"address\"],\"relevance\":1," +
+                        "\"properties\":{\"accuracy\":\"point\"},\"text\":\"Easthill Drive\",\"place_name\":\"123 Easthill Drive, Robina Queensland 4226, Australia\",\"center\":[153.379627,-28.0816261]," +
+                        "\"geometry\":{\"type\":\"Point\",\"coordinates\":[153.379627,-28.0816261]},\"address\":\"123\",\"context\":[{\"id\":\"postcode.7266040401534490\",\"text\":\"4226\"}," +
+                        "{\"id\":\"locality.3059244982453840\",\"wikidata\":\"Q7352919\",\"text\":\"Robina\"},{\"id\":\"place.12294497843533720\",\"wikidata\":\"Q140075\",\"text\":\"Gold Coast\"}," +
+                        "{\"id\":\"region.19496380243439240\",\"wikidata\":\"Q36074\",\"short_code\":\"AU - QLD\",\"text\":\"Queensland\"},{\"id\":\"country.9968792518346070\",\"wikidata\":\"Q408\",\"short_code\":\"au\",\"text\":\"Australia\"}]}]," +
+                        "\"attribution\":\"NOTICE: © 2020 Mapbox and its suppliers.All rights reserved.Use of this data is subject to the Mapbox Terms of Service(https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained. POI(s) provided by Foursquare.\"}"),
+            });
 
             // For reverse geocoding, use the permanent endpoint type
             _mockHandler
@@ -74,22 +90,19 @@ namespace Geo.MapBox.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("mapbox.places-permanent")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
-                        "{\"type\":\"FeatureCollection\",\"query\":[153.379627,-28.081626],\"features\":[{\"id\":\"address.4562086697174018\",\"type\":\"Feature\",\"place_type\":[\"address\"],\"relevance\":1," +
-                        "\"properties\":{\"accuracy\":\"point\"},\"text\":\"Easthill Drive\",\"place_name\":\"123 Easthill Drive, Robina Queensland 4226, Australia\",\"center\":[153.379627,-28.0816261]," +
-                        "\"geometry\":{\"type\":\"Point\",\"coordinates\":[153.379627,-28.0816261]},\"address\":\"123\",\"context\":[{\"id\":\"postcode.7266040401534490\",\"text\":\"4226\"}," +
-                        "{\"id\":\"locality.3059244982453840\",\"wikidata\":\"Q7352919\",\"text\":\"Robina\"},{\"id\":\"place.12294497843533720\",\"wikidata\":\"Q140075\",\"text\":\"Gold Coast\"}," +
-                        "{\"id\":\"region.19496380243439240\",\"wikidata\":\"Q36074\",\"short_code\":\"AU - QLD\",\"text\":\"Queensland\"},{\"id\":\"country.9968792518346070\",\"wikidata\":\"Q408\",\"short_code\":\"au\",\"text\":\"Australia\"}]}]," +
-                        "\"attribution\":\"NOTICE: © 2020 Mapbox and its suppliers.All rights reserved.Use of this data is subject to the Mapbox Terms of Service(https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained. POI(s) provided by Foursquare.\"}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<MapBoxGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -440,6 +453,28 @@ namespace Geo.MapBox.Tests.Services
             }.ToString());
             result.Features.Count.Should().Be(1);
             result.Features[0].Id.Should().Be("address.4562086697174018");
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

@@ -32,12 +32,14 @@ namespace Geo.Google.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="GoogleGeocoding"/> class.
     /// </summary>
-    public class GoogleGeocodingShould
+    public class GoogleGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private GoogleKeyContainer _keyContainer;
-        private IStringLocalizer<GoogleGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly GoogleKeyContainer _keyContainer;
+        private readonly IStringLocalizer<GoogleGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleGeocodingShould"/> class.
@@ -48,16 +50,10 @@ namespace Geo.Google.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?address")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'results':[" +
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'results':[" +
                     "{'address_components':[{'long_name':'1600','short_name':'1600','types':['street_number']}," +
                     "{'long_name':'Amphitheatre Parkway','short_name':'Amphitheatre Pkwy','types':['route']},{'long_name':'Mountain View','short_name':'Mountain View','types':['locality','political']}," +
                     "{'long_name':'Santa Clara County','short_name':'Santa Clara County','types':['administrative_area_level_2','political']}," +
@@ -75,18 +71,20 @@ namespace Geo.Google.Tests.Services
                     "'viewport':{'northeast':{'lat':37.4135291802915,'lng':-122.0891609197085},'southwest':{'lat':37.41083121970851,'lng':-122.0918588802915}}}," +
                     "'place_id':'ChIJVYBZP-Oxj4ARls-qJ_G3tgM','plus_code':{'compound_code':'CW65+VQ Mountain View, CA, USA','global_code':'849VCW65+VQ'},'types':['street_address']}]," +
                     "'status':'OK'}"),
-                });
+            });
 
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?latlng")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?address")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'results':[" +
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'results':[" +
                     "{'formattedAddress':'111 8th Ave, New York, NY 10011, USA','addressComponents':[{'longName':'111','shortName':'111','types':[34]}," +
                     "{'longName':'8th Avenue','shortName':'8th Ave','types':[2]},{'longName':'Manhattan','shortName':'Manhattan','types':[4,13,14]}," +
                     "{'longName':'New York','shortName':'New York','types':[12,4]},{'longName':'New York County','shortName':'New York County','types':[7,4]}," +
@@ -95,12 +93,27 @@ namespace Geo.Google.Tests.Services
                     "'locationType':1,'viewport':{'northeast':{'latitude':40.7428177802915,'longitude':-74.0020383197085},'southwest':{'latitude':40.7401198197085,'longitude':-74.00473628029151}}," +
                     "'bounds':null},'plusCode':{'globalCode':'87G7PXRW+HJ','compoundCode':'PXRW+HJ New York, NY, USA'},'placeId':'ChIJj9Hwdun8ZUARbS4pqpAS_Qk','partialMatch':false,'postcodeLocalities':[]}]," +
                     "'status':'OK'}"),
-                });
+            });
+
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?latlng")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<GoogleGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -838,6 +851,28 @@ namespace Geo.Google.Tests.Services
             service.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
             service.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
             service.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

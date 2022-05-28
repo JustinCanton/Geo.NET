@@ -6,6 +6,7 @@
 namespace Geo.Core.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -24,11 +25,13 @@ namespace Geo.Core.Tests
     /// <summary>
     /// Unit tests for the <see cref="ClientExecutor"/> class.
     /// </summary>
-    public class ClientExecutorShould
+    public class ClientExecutorShould : IDisposable
     {
         private const string _apiName = "Test";
-        private Mock<HttpMessageHandler> _mockHandler;
-        private IStringLocalizer<ClientExecutor> _localizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly IStringLocalizer<ClientExecutor> _localizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientExecutorShould"/> class.
@@ -69,17 +72,19 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new TaskCanceledException());
 
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("<html></html>"),
+            });
+
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/JsonReaderException")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("<html></html>"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
 
             _mockHandler
                 .Protected()
@@ -89,17 +94,25 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new JsonSerializationException());
 
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.Forbidden,
+                Content = new StringContent("{'Message':'Access denied'}"),
+            });
+
             _mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/Failure")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.Forbidden,
-                    Content = new StringContent("{'Message':'Access denied'}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'TestField':1}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -107,15 +120,18 @@ namespace Geo.Core.Tests
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/Success")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'TestField':1}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -215,8 +231,8 @@ namespace Geo.Core.Tests
             using var httpClient = new HttpClient(_mockHandler.Object);
             var executor = new TestClientExecutor(httpClient, _localizer);
             var result = await executor.CallAsync<TestClass>(new Uri("http://test.com/Failure")).ConfigureAwait(false);
-            result.Item1.Should().BeNull();
-            result.Item2.Should().Be("{'Message':'Access denied'}");
+            result.Result.Should().BeNull();
+            result.JSON.Should().Be("{'Message':'Access denied'}");
         }
 
         /// <summary>
@@ -229,7 +245,7 @@ namespace Geo.Core.Tests
             using var httpClient = new HttpClient(_mockHandler.Object);
             var executor = new TestClientExecutor(httpClient, _localizer);
             var result = await executor.CallAsync<TestClass>(new Uri("http://test.com/Success")).ConfigureAwait(false);
-            result.Item1.TestField.Should().Be(1);
+            result.Result.TestField.Should().Be(1);
         }
 
         /// <summary>
@@ -348,6 +364,28 @@ namespace Geo.Core.Tests
             var executor = new TestClientExecutor(httpClient, _localizer);
             var result = await executor.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), _apiName).ConfigureAwait(false);
             result.TestField.Should().Be(1);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

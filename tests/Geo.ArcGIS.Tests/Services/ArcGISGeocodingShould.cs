@@ -6,6 +6,7 @@
 namespace Geo.ArcGIS.Tests.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
@@ -31,12 +32,14 @@ namespace Geo.ArcGIS.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="ArcGISGeocoding"/> class.
     /// </summary>
-    public class ArcGISGeocodingShould
+    public class ArcGISGeocodingShould : IDisposable
     {
-        private Mock<HttpMessageHandler> _mockHandler;
-        private Mock<IArcGISTokenContainer> _mockTokenContainer;
-        private IStringLocalizer<ArcGISGeocoding> _localizer;
-        private IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly Mock<IArcGISTokenContainer> _mockTokenContainer;
+        private readonly IStringLocalizer<ArcGISGeocoding> _localizer;
+        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISGeocodingShould"/> class.
@@ -50,16 +53,10 @@ namespace Geo.ArcGIS.Tests.Services
 
             _mockHandler = new Mock<HttpMessageHandler>();
 
-            _mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/geocodeAddresses")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
                         "{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"locations\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
                         "\"score\":100,\"attributes\":{\"ResultID\":0,\"Loc_name\":\"World\",\"Status\":\"M\",\"Score\":100,\"Match_addr\":\"123 East\",\"LongLabel\":\"123 East, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
                         "\"ShortLabel\":\"123 East\",\"Addr_type\":\"POI\",\"Type\":\"American Food\",\"PlaceName\":\"123 East\",\"Place_addr\":\"3046 Dolphin Dr, Elizabethtown, Kentucky, 42701\",\"Phone\":\"(270) 982 - 5311\"," +
@@ -68,7 +65,26 @@ namespace Geo.ArcGIS.Tests.Services
                         "\"Block\":\"\",\"Sector\":\"\",\"Nbrhd\":\"\",\"District\":\"\",\"City\":\"Elizabethtown\",\"MetroArea\":\"\",\"Subregion\":\"Hardin County\",\"Region\":\"Kentucky\",\"RegionAbbr\":\"KY\"," +
                         "\"Territory\":\"\",\"Zone\":\"\",\"Postal\":\"42701\",\"PostalExt\":\"\",\"Country\":\"USA\",\"LangCode\":\"ENG\",\"Distance\":0,\"X\":-85.837509973310887,\"Y\":37.710570043857146," +
                         "\"DisplayX\":-85.837039999999945,\"DisplayY\":37.710620000000063,\"Xmin\":-85.84203999999994,\"Xmax\":-85.832039999999949,\"Ymin\":37.70562000000006,\"Ymax\":37.715620000000065,\"ExInfo\":\"\"}}]}"),
-                });
+            });
+
+            _mockHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/geocodeAddresses")),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(
+                        "{ \"address\":{ \"Match_addr\":\"Cali's California Style Burritos\", \"LongLabel\":\"Cali's California Style Burritos, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
+                        "\"ShortLabel\":\"Cali's California Style Burritos\", \"Addr_type\":\"POI\", \"Type\":\"Mexican Food\", \"PlaceName\":\"Cali's California Style Burritos\"," +
+                        "\"AddNum\":\"3046\", \"Address\":\"3046 Dolphin Dr\", \"Block\":\"\", \"Sector\":\"\", \"Neighborhood\":\"\", \"District\":\"\", \"City\":\"Elizabethtown\", \"MetroArea\":\"\"," +
+                        "\"Subregion\":\"Hardin County\", \"Region\":\"Kentucky\", \"Territory\":\"\", \"Postal\":\"42701\", \"PostalExt\":\"\", \"CountryCode\":\"USA\" }," +
+                        "\"location\":{ \"x\":-85.837039999999945,\"y\":37.710620000000063,\"spatialReference\":{ \"wkid\":4326,\"latestWkid\":4326} }}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -76,16 +92,18 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/reverseGeocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(
-                        "{ \"address\":{ \"Match_addr\":\"Cali's California Style Burritos\", \"LongLabel\":\"Cali's California Style Burritos, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
-                        "\"ShortLabel\":\"Cali's California Style Burritos\", \"Addr_type\":\"POI\", \"Type\":\"Mexican Food\", \"PlaceName\":\"Cali's California Style Burritos\"," +
-                        "\"AddNum\":\"3046\", \"Address\":\"3046 Dolphin Dr\", \"Block\":\"\", \"Sector\":\"\", \"Neighborhood\":\"\", \"District\":\"\", \"City\":\"Elizabethtown\", \"MetroArea\":\"\"," +
-                        "\"Subregion\":\"Hardin County\", \"Region\":\"Kentucky\", \"Territory\":\"\", \"Postal\":\"42701\", \"PostalExt\":\"\", \"CountryCode\":\"USA\" }," +
-                        "\"location\":{ \"x\":-85.837039999999945,\"y\":37.710620000000063,\"spatialReference\":{ \"wkid\":4326,\"latestWkid\":4326} }}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{\"suggestions\":[" +
+                        "{ \"text\":\"123 East, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\", \"magicKey\":\"dHA9MCNsb2M9OTk2MzI1I2xuZz0zMyNwbD0yOTIyODAjbGJzPTE0OjU2ODczNg==\", \"isCollection\":false }," +
+                        "{ \"text\":\"123 East Rd, Martinsburg, WV, 25404, USA\", \"magicKey\":\"dHA9MCNsb2M9NDkwODAjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMzQ3\", \"isCollection\":false }," +
+                        "{ \"text\":\"123 East Ave NE, Coeburn, VA, 24230, USA\", \"magicKey\":\"dHA9MCNsb2M9MTQ0OTYzI2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4Nw==\", \"isCollection\":false }," +
+                        "{ \"text\":\"123 East Ave, Hampton, VA, 23661, USA\", \"magicKey\":\"dHA9MCNsb2M9MjUwMjE3I2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4NQ==\", \"isCollection\":false }," +
+                        "{ \"text\":\"123 East Ave, Middlebourne, WV, 26149, USA\", \"magicKey\":\"dHA9MCNsb2M9NTM3NDQjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMTg1\", \"isCollection\":false }]}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -93,16 +111,14 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/suggest")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"suggestions\":[" +
-                        "{ \"text\":\"123 East, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\", \"magicKey\":\"dHA9MCNsb2M9OTk2MzI1I2xuZz0zMyNwbD0yOTIyODAjbGJzPTE0OjU2ODczNg==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Rd, Martinsburg, WV, 25404, USA\", \"magicKey\":\"dHA9MCNsb2M9NDkwODAjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMzQ3\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave NE, Coeburn, VA, 24230, USA\", \"magicKey\":\"dHA9MCNsb2M9MTQ0OTYzI2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4Nw==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave, Hampton, VA, 23661, USA\", \"magicKey\":\"dHA9MCNsb2M9MjUwMjE3I2xuZz0zMyNobj0xMjMjbGJzPTEwOTo0NTE3MTE4NQ==\", \"isCollection\":false }," +
-                        "{ \"text\":\"123 East Ave, Middlebourne, WV, 26149, USA\", \"magicKey\":\"dHA9MCNsb2M9NTM3NDQjbG5nPTMzI2huPTEyMyNsYnM9MTA5OjQ1MTcxMTg1\", \"isCollection\":false }]}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
+                        "\"score\":100,\"attributes\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"},\"extent\":{\"xmin\":-85.84203999999994,\"ymin\":37.70562000000006,\"xmax\":-85.832039999999949,\"ymax\":37.715620000000065}}]}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -110,12 +126,13 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("singleLine")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
-                        "\"score\":100,\"attributes\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"},\"extent\":{\"xmin\":-85.84203999999994,\"ymin\":37.70562000000006,\"xmax\":-85.832039999999949,\"ymax\":37.715620000000065}}]}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[]}"),
+            });
 
             _mockHandler
                 .Protected()
@@ -123,16 +140,19 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("category")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[]}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _localizer = new StringLocalizer<ArcGISGeocoding>(factory);
             _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -522,6 +542,28 @@ namespace Geo.ArcGIS.Tests.Services
             var response = await service.AddressCandidateAsync(parameters).ConfigureAwait(false);
             response.Candidates.Count.Should().Be(1);
             response.SpatialReference.WellKnownID.Should().Be(4326);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

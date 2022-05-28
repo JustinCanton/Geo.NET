@@ -20,8 +20,8 @@ namespace Geo.ArcGIS.Tests.Services
     /// </summary>
     public class ArcGISTokenRetrevialShould
     {
-        private Mock<HttpMessageHandler> _handlerMock;
-        private ArcGISCredentialsContainer _keyContainer;
+        private readonly Mock<HttpMessageHandler> _handlerMock;
+        private readonly ArcGISCredentialsContainer _keyContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISTokenRetrevialShould"/> class.
