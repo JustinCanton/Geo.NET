@@ -1,4 +1,4 @@
-﻿// <copyright file="ArcGISDI.cs" company="Geo.NET">
+﻿// <copyright file="ServiceCollectionExtensions.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -13,14 +13,14 @@ namespace Geo.ArcGIS.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the ArcGIS APIs.
+    /// Extension methods for the <see cref="IServiceCollection"/> class.
     /// </summary>
-    public static class ArcGISDI
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the ArcGIS services to the service collection.
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the Google services to.</param>
+        /// <param name="services">A <see cref="IServiceCollection"/> to add the ArcGIS services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{ArcGISOptionsBuilder}"/> with the options to add to the ArcGIS configuration.</param>
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddArcGISServices(this IServiceCollection services, Action<ArcGISOptionsBuilder> optionsBuilder)

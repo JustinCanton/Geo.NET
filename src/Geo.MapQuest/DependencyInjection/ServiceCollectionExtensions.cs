@@ -1,4 +1,4 @@
-﻿// <copyright file="MapQuestDI.cs" company="Geo.NET">
+﻿// <copyright file="ServiceCollectionExtensions.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -13,9 +13,9 @@ namespace Geo.MapQuest.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the MapQuest APIs.
+    /// Extension methods for the <see cref="IServiceCollection"/> class.
     /// </summary>
-    public static class MapQuestDI
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the MapQuest services to the service collection.

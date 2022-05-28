@@ -1,4 +1,4 @@
-﻿// <copyright file="MapBoxDI.cs" company="Geo.NET">
+﻿// <copyright file="ServiceCollectionExtensions.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -13,9 +13,9 @@ namespace Geo.MapBox.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the MapBox APIs.
+    /// Extension methods for the <see cref="IServiceCollection"/> class.
     /// </summary>
-    public static class MapBoxDI
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the MapBox services to the service collection.

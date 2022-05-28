@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleDI.cs" company="Geo.NET">
+﻿// <copyright file="ServiceCollectionExtensions.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -13,9 +13,9 @@ namespace Geo.Google.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the Google APIs.
+    /// Extension methods for the <see cref="IServiceCollection"/> class.
     /// </summary>
-    public static class GoogleDI
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the Google services to the service collection.
