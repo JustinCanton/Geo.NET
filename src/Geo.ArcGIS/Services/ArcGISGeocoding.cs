@@ -128,7 +128,7 @@ namespace Geo.ArcGIS.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArcGISException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -139,7 +139,7 @@ namespace Geo.ArcGIS.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArcGISException(error, ex);
             }
         }
@@ -155,7 +155,7 @@ namespace Geo.ArcGIS.Services
             if (string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
             {
                 var error = _localizer["Invalid Single Address Line"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.SingleLineAddress));
             }
 
@@ -194,7 +194,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.Location != null)
@@ -203,16 +203,16 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Location"]);
+                _logger.ArcGISDebug(_localizer["Invalid Location"]);
             }
 
-            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 51)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations <= 50)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Maximum Locations"]);
+                _logger.ArcGISWarning(_localizer["Invalid Maximum Locations"]);
             }
 
             AddStorageParameter(parameters, query);
@@ -239,7 +239,7 @@ namespace Geo.ArcGIS.Services
             if (string.IsNullOrWhiteSpace(parameters.Text))
             {
                 var error = _localizer["Invalid Text"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.Text));
             }
 
@@ -251,7 +251,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Location"]);
+                _logger.ArcGISDebug(_localizer["Invalid Location"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
@@ -260,7 +260,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.SearchExtent != null)
@@ -269,7 +269,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Search Extent"]);
+                _logger.ArcGISDebug(_localizer["Invalid Search Extent"]);
             }
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
@@ -278,7 +278,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Maximum Locations"]);
+                _logger.ArcGISWarning(_localizer["Invalid Maximum Locations"]);
             }
 
             uriBuilder.Query = query.ToString();
@@ -301,7 +301,7 @@ namespace Geo.ArcGIS.Services
             if (parameters.Location is null)
             {
                 var error = _localizer["Invalid Location Error"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
@@ -313,7 +313,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Out Spatial Reference"]);
+                _logger.ArcGISDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
             if (parameters.LanguageCode != null)
@@ -322,7 +322,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Language Code"]);
+                _logger.ArcGISDebug(_localizer["Invalid Language Code"]);
             }
 
             if (parameters.FeatureTypes != null)
@@ -337,7 +337,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Feature Types"]);
+                _logger.ArcGISDebug(_localizer["Invalid Feature Types"]);
             }
 
             if (parameters.LocationType >= 0)
@@ -346,7 +346,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Location Type"]);
+                _logger.ArcGISWarning(_localizer["Invalid Location Type"]);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -355,7 +355,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Preferred Label Value"]);
+                _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
             AddStorageParameter(parameters, query);
@@ -382,7 +382,7 @@ namespace Geo.ArcGIS.Services
             if (parameters.AddressAttributes is null || parameters.AddressAttributes.Count == 0)
             {
                 var error = _localizer["Invalid Address Attributes"];
-                _logger.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.AddressAttributes));
             }
 
@@ -413,7 +413,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.SourceCountry.Count != 0)
@@ -422,7 +422,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Source Country"]);
+                _logger.ArcGISDebug(_localizer["Invalid Source Country"]);
             }
 
             if (parameters.OutSpatialReference > 0)
@@ -431,7 +431,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Out Spatial Reference"]);
+                _logger.ArcGISDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
             if (parameters.SearchExtent != null)
@@ -440,7 +440,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Search Extent"]);
+                _logger.ArcGISDebug(_localizer["Invalid Search Extent"]);
             }
 
             if (parameters.LanguageCode != null)
@@ -449,7 +449,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Language Code"]);
+                _logger.ArcGISDebug(_localizer["Invalid Language Code"]);
             }
 
             if (parameters.LocationType >= 0)
@@ -458,7 +458,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Location Type"]);
+                _logger.ArcGISWarning(_localizer["Invalid Location Type"]);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -467,7 +467,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Preferred Label Value"]);
+                _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
             await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);

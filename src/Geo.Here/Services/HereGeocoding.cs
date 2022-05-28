@@ -131,7 +131,7 @@ namespace Geo.Here.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new HereException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -142,7 +142,7 @@ namespace Geo.Here.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new HereException(error, ex);
             }
         }
@@ -161,7 +161,7 @@ namespace Geo.Here.Services
             if (string.IsNullOrWhiteSpace(parameters.Query) && string.IsNullOrWhiteSpace(parameters.QualifiedQuery))
             {
                 var error = _localizer["Invalid Query And Qualified Query"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters));
             }
 
@@ -171,7 +171,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Query"]);
+                _logger.HereDebug(_localizer["Invalid Query"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.QualifiedQuery))
@@ -180,7 +180,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Qualified Query"]);
+                _logger.HereDebug(_localizer["Invalid Qualified Query"]);
             }
 
             if (parameters.InCountry.Count > 0)
@@ -189,7 +189,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid In Country"]);
+                _logger.HereDebug(_localizer["Invalid In Country"]);
             }
 
             AddLocatingParameters(parameters, query);
@@ -215,7 +215,7 @@ namespace Geo.Here.Services
             if (parameters.At is null)
             {
                 var error = _localizer["Invalid At"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters.At));
             }
 
@@ -242,7 +242,7 @@ namespace Geo.Here.Services
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
                 var error = _localizer["Invalid Query Error"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
@@ -271,7 +271,7 @@ namespace Geo.Here.Services
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
                 var error = _localizer["Invalid Query Error"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
@@ -283,7 +283,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Terms Limit"]);
+                _logger.HereWarning(_localizer["Invalid Terms Limit"]);
             }
 
             AddBoundingParameters(parameters, query);
@@ -309,7 +309,7 @@ namespace Geo.Here.Services
             if (parameters.At is null)
             {
                 var error = _localizer["Invalid At"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters.At));
             }
 
@@ -319,7 +319,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Categories"]);
+                _logger.HereDebug(_localizer["Invalid Categories"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Name))
@@ -328,7 +328,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Name"]);
+                _logger.HereDebug(_localizer["Invalid Name"]);
             }
 
             AddBoundingParameters(parameters, query);
@@ -354,7 +354,7 @@ namespace Geo.Here.Services
             if (string.IsNullOrWhiteSpace(parameters.Id))
             {
                 var error = _localizer["Invalid Id"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters.Id));
             }
 
@@ -394,7 +394,7 @@ namespace Geo.Here.Services
             if ((!hasAt && !hasCircle && !hasBoundingBox) || (hasAt && (hasCircle || hasBoundingBox)) || (hasCircle && hasBoundingBox))
             {
                 var error = _localizer["Invalid Bounding Parameters"];
-                _logger.LogError(error);
+                _logger.HereError(error);
                 throw new ArgumentException(error, nameof(parameters));
             }
 
@@ -404,7 +404,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid At Debug"]);
+                _logger.HereDebug(_localizer["Invalid At Debug"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.InCountry))
@@ -413,7 +413,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid In Country"]);
+                _logger.HereDebug(_localizer["Invalid In Country"]);
             }
 
             if (hasCircle)
@@ -422,7 +422,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid In Circle"]);
+                _logger.HereDebug(_localizer["Invalid In Circle"]);
             }
 
             if (hasBoundingBox)
@@ -431,7 +431,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid In Bounding Box"]);
+                _logger.HereDebug(_localizer["Invalid In Bounding Box"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Route))
@@ -440,7 +440,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Route"]);
+                _logger.HereDebug(_localizer["Invalid Route"]);
             }
 
             AddLimitingParameters(parameters, query);
@@ -459,7 +459,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid At Debug"]);
+                _logger.HereDebug(_localizer["Invalid At Debug"]);
             }
 
             AddLimitingParameters(parameters, query);
@@ -478,7 +478,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Limit"]);
+                _logger.HereDebug(_localizer["Invalid Limit"]);
             }
 
             AddBaseParameters(parameters, query);
@@ -497,7 +497,7 @@ namespace Geo.Here.Services
             }
             else
             {
-                _logger.LogDebug(_localizer["Invalid Language"]);
+                _logger.HereDebug(_localizer["Invalid Language"]);
             }
         }
 

@@ -93,7 +93,7 @@ namespace Geo.MapQuest.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger.LogError(error);
+                _logger.MapQuestError(error);
                 throw new MapQuestException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -104,7 +104,7 @@ namespace Geo.MapQuest.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger.LogError(error);
+                _logger.MapQuestError(error);
                 throw new MapQuestException(error, ex);
             }
         }
@@ -123,7 +123,7 @@ namespace Geo.MapQuest.Services
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
                 var error = _localizer["Invalid Location"];
-                _logger.LogError(error);
+                _logger.MapQuestError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
@@ -137,7 +137,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Bounding Box"]);
+                _logger.MapQuestWarning(_localizer["Invalid Bounding Box"]);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -150,7 +150,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Maximum Results"]);
+                _logger.MapQuestWarning(_localizer["Invalid Maximum Results"]);
             }
 
             if (parameters.IntlMode == InternationalMode.FiveBox)
@@ -167,7 +167,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.LogWarning(_localizer["Invalid Intl Mode"]);
+                _logger.MapQuestWarning(_localizer["Invalid Intl Mode"]);
             }
 
             AddBaseParameters(parameters, query);
@@ -193,7 +193,7 @@ namespace Geo.MapQuest.Services
             if (parameters.Location is null)
             {
                 var error = _localizer["Invalid Location"];
-                _logger.LogError(error);
+                _logger.MapQuestError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
