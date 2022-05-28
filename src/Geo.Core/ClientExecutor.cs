@@ -111,7 +111,7 @@ namespace Geo.Core
         {
             var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-            var json = response.Content.ReadAsStringAsync().Result;
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
