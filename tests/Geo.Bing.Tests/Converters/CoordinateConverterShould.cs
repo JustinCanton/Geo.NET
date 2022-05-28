@@ -9,18 +9,17 @@ namespace Geo.Bing.Tests.Converters
     using Geo.Bing.Converters;
     using Geo.Bing.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="CoordinateConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class CoordinateConverterShould
     {
         /// <summary>
         /// Tests the double array is successfully translated to a coordinate.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseCoordinate()
         {
             var obj = JsonConvert.DeserializeObject<CoordinateObject>("{'Point':[43.6477298,-79.3802169]}");

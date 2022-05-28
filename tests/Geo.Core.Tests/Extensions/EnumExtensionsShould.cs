@@ -9,18 +9,17 @@ namespace Geo.Core.Tests.Extensions
     using FluentAssertions;
     using Geo.Core.Extensions;
     using Geo.Core.Tests.Enums;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="EnumExtensions"/> class.
     /// </summary>
-    [TestFixture]
     public class EnumExtensionsShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionWhenNoAttribute()
         {
             Action act = () => Test.DoesNotHaveEnumMember.ToEnumString<Test>();
@@ -33,7 +32,7 @@ namespace Geo.Core.Tests.Extensions
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void GetProperName()
         {
             Test.HasEnumMember1

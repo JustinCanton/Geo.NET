@@ -9,18 +9,17 @@ namespace Geo.MapBox.Tests.Converters
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="CoordinateConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class CoordinateConverterShould
     {
         /// <summary>
         /// Tests the double array is successfully translated to a coordinate.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseCoordinate()
         {
             var obj = JsonConvert.DeserializeObject<CoordinateObject>("{'Coordinate':[40.752777282429321,-73.996387763584124]}");

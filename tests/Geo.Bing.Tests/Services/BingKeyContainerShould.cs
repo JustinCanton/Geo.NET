@@ -7,18 +7,17 @@ namespace Geo.Bing.Tests.Services
 {
     using FluentAssertions;
     using Geo.Bing.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="BingKeyContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class BingKeyContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetKey()
         {
             var keyContainer = new BingKeyContainer("abc123");

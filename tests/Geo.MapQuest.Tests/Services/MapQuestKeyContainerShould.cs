@@ -7,18 +7,17 @@ namespace Geo.MapQuest.Tests.Services
 {
     using FluentAssertions;
     using Geo.MapQuest.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="MapQuestKeyContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class MapQuestKeyContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetKey()
         {
             var keyContainer = new MapQuestKeyContainer("abc123");

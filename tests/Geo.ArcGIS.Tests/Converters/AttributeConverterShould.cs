@@ -10,18 +10,17 @@ namespace Geo.ArcGIS.Tests.Converters
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="AttributeConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class AttributeConverterShould
     {
         /// <summary>
         /// Tests the address attribute is correctly parsed.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseAddressAttribute()
         {
             var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"}}");
@@ -33,7 +32,7 @@ namespace Geo.ArcGIS.Tests.Converters
         /// <summary>
         /// Tests the location attribute is correctly parsed.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseLocationAttribute()
         {
             var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"ResultID\":123,\"LongLabel\":\"123 East\"}}");
@@ -45,7 +44,7 @@ namespace Geo.ArcGIS.Tests.Converters
         /// <summary>
         /// Tests the place attribute is correctly parsed.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParsePlaceAttribute()
         {
             var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"Place_addr\":\"123 East\",\"PlaceName\":\"East Side Company\"}}");

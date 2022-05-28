@@ -7,18 +7,17 @@ namespace Geo.MapQuest.Tests.Services
 {
     using FluentAssertions;
     using Geo.MapQuest.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="MapQuestEndpoint"/> class.
     /// </summary>
-    [TestFixture]
     public class MapQuestEndpointShould
     {
         /// <summary>
         /// Tests the licensed endpoint is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetLicensedEndpoint()
         {
             var endpoint = new MapQuestEndpoint(true);
@@ -28,7 +27,7 @@ namespace Geo.MapQuest.Tests.Services
         /// <summary>
         /// Tests the non-licensed endpoint is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetNonLicensedEndpoint()
         {
             var endpoint = new MapQuestEndpoint(false);

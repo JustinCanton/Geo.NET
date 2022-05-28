@@ -27,12 +27,11 @@ namespace Geo.Google.Tests.Services
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="GoogleGeocoding"/> class.
     /// </summary>
-    [TestFixture]
     public class GoogleGeocodingShould
     {
         private Mock<HttpMessageHandler> _mockHandler;
@@ -41,10 +40,9 @@ namespace Geo.Google.Tests.Services
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="GoogleGeocodingShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public GoogleGeocodingShould()
         {
             _keyContainer = new GoogleKeyContainer("abc123");
 
@@ -108,7 +106,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the key is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddGoogleKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -123,7 +121,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the base parameters are properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -142,7 +140,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the coordinate parameters are properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddCoordinateParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -169,7 +167,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the base search parameters are properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseSearchParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -206,7 +204,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the autocomplete parameters are properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddAutocompleteParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -237,7 +235,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the base search parameters are properly set into the query string only if they meet the requirements.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseSearchParametersWithRestrictions1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -267,7 +265,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the base search parameters are properly set into the query string only if they meet the requirements.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseSearchParametersWithRestrictions2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -297,7 +295,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the query autocomplete parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildQueryAutocompleteRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -328,7 +326,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the query autocomplete uri isn't built if an input isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildQueryAutocompleteRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -343,7 +341,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the place autocomplete parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildPlaceAutocompleteRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -395,7 +393,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the place autocomplete uri isn't built if an input isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildPlaceAutocompleteRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -410,7 +408,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the details parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildDetailsRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -440,7 +438,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the details uri isn't built if an place id isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildDetailsRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -455,7 +453,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the text search parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildTextSearchRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -484,7 +482,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the text search uri isn't built if an query isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildTextSearchRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -499,7 +497,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the nearby search parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildNearbySearchRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -530,7 +528,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the nearby search uri isn't built if an location isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildNearbySearchRequestWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -545,7 +543,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the nearby search uri isn't built if an query isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildNearbySearchRequestWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -571,7 +569,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the nearby search uri isn't built if an query isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildNearbySearchRequestWithException3()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -597,7 +595,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the nearby search uri isn't built if an query isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildNearbySearchRequestWithException4()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -623,7 +621,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the find place parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildFindPlaceRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -661,7 +659,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the find places uri isn't built if an input isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildFindPlaceRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -676,7 +674,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the geocoding uri isn't built if an address isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -691,7 +689,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the geocoding uri is built properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -735,7 +733,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri isn't built if an address isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -750,7 +748,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -789,7 +787,7 @@ namespace Geo.Google.Tests.Services
         /// Tests the geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -808,7 +806,7 @@ namespace Geo.Google.Tests.Services
         /// Tests the reverse geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -830,7 +828,7 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the region info to ccTLD works properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void RegionInfoToCCTLDSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

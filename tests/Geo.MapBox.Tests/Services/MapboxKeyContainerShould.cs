@@ -7,18 +7,17 @@ namespace Geo.MapBox.Tests.Services
 {
     using FluentAssertions;
     using Geo.MapBox.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="MapBoxKeyContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class MapboxKeyContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetKey()
         {
             var keyContainer = new MapBoxKeyContainer("abc123");

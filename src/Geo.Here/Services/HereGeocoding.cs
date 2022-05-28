@@ -7,7 +7,6 @@ namespace Geo.Here.Services
 {
     using System;
     using System.Collections.Specialized;
-    using System.Configuration;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;

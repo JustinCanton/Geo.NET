@@ -13,22 +13,20 @@ namespace Geo.ArcGIS.Tests.Services
     using Geo.ArcGIS.Services;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ArcGISTokenRetrevial"/> class.
     /// </summary>
-    [TestFixture]
     public class ArcGISTokenRetrevialShould
     {
         private Mock<HttpMessageHandler> _handlerMock;
         private ArcGISCredentialsContainer _keyContainer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="ArcGISTokenRetrevialShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public ArcGISTokenRetrevialShould()
         {
             _keyContainer = new ArcGISCredentialsContainer("abc123", "secret123");
 
@@ -50,7 +48,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the content for the token retrieval request is built successfully with the expected data.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildContentSuccessfully()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);
@@ -69,7 +67,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the get token method returns an empty token if there is an invalid key.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task GetTokenShouldReturnEmptyWithNoKey()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);
@@ -85,7 +83,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the get token method returns a token if everything works correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task GetTokenShouldReturnValidToken()
         {
             using var httpClient = new HttpClient(_handlerMock.Object);

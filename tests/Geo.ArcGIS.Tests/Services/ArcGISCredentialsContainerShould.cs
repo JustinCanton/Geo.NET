@@ -7,18 +7,17 @@ namespace Geo.ArcGIS.Tests.Services
 {
     using FluentAssertions;
     using Geo.ArcGIS.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ArcGISCredentialsContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class ArcGISCredentialsContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetKey()
         {
             var credentialsContainer = new ArcGISCredentialsContainer("abc123", "secret123");

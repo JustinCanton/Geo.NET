@@ -12,22 +12,20 @@ namespace Geo.ArcGIS.Tests.Services
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Services;
     using Moq;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ArcGISTokenContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class ArcGISTokenContainerShould
     {
         private Mock<IArcGISTokenRetrevial> _mockTokenRetrevial;
         private CancellationToken _quickExpireToken;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="ArcGISTokenContainerShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public ArcGISTokenContainerShould()
         {
             CancellationTokenSource source = new CancellationTokenSource();
             _quickExpireToken = source.Token;
@@ -51,7 +49,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the token is retrieved and returned.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task GetTokenSuccessfully()
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);
@@ -64,7 +62,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the same token is returned if the expiry time hasn't passed.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task GetTokenTwice()
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);
@@ -80,7 +78,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests a different token is returned if the expiry time has passed.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task GetTokenExpiredAndRefetched()
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);

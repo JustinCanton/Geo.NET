@@ -7,18 +7,17 @@ namespace Geo.Google.Tests.Services
 {
     using FluentAssertions;
     using Geo.Google.Services;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="GoogleKeyContainer"/> class.
     /// </summary>
-    [TestFixture]
     public class GoogleKeyContainerShould
     {
         /// <summary>
         /// Tests the key is properly set.
         /// </summary>
-        [Test]
+        [Fact]
         public void SetKey()
         {
             var keyContainer = new GoogleKeyContainer("abc123");

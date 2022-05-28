@@ -19,12 +19,11 @@ namespace Geo.Core.Tests
     using Moq;
     using Moq.Protected;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ClientExecutor"/> class.
     /// </summary>
-    [TestFixture]
     public class ClientExecutorShould
     {
         private const string _apiName = "Test";
@@ -32,10 +31,9 @@ namespace Geo.Core.Tests
         private IStringLocalizer<ClientExecutor> _localizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="ClientExecutorShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public ClientExecutorShould()
         {
             _mockHandler = new Mock<HttpMessageHandler>();
 
@@ -123,7 +121,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when null is passed for the uri.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnNullUri()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -138,7 +136,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown an invalid uri is passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnInvalidUri()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -153,7 +151,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown on an http failure.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnHttpFailure()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -168,7 +166,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the task is cancelled.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnCancelledRequest()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -182,7 +180,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnInvalidJson1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -196,7 +194,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowExceptionOnInvalidJson2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -211,7 +209,7 @@ namespace Geo.Core.Tests
         /// Test the return contains the error json when the status code is not successful.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReturnsErrorJson()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -225,7 +223,7 @@ namespace Geo.Core.Tests
         /// Test the return object is properly parsed and returned.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task SuccesfullyReturnObject()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -237,7 +235,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when null is passed for the uri.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnNullUri()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -252,7 +250,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown an invalid uri is passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnInvalidUri()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -267,7 +265,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown on an http failure.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnHttpFailure()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -282,7 +280,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the task is cancelled.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnCancelledRequest()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -297,7 +295,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnInvalidJson1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -312,7 +310,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnInvalidJson2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -327,7 +325,7 @@ namespace Geo.Core.Tests
         /// <summary>
         /// Test the return contains the error json when the status code is not successful.
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowWrappedExceptionOnErrorJson()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -343,7 +341,7 @@ namespace Geo.Core.Tests
         /// Test the return object is properly parsed and returned.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task SuccesfullyReturnOnlyObject()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

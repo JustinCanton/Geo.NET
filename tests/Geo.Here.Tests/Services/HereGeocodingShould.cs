@@ -24,12 +24,11 @@ namespace Geo.Here.Tests.Services
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="HereGeocoding"/> class.
     /// </summary>
-    [TestFixture]
     public class HereGeocodingShould
     {
         private Mock<HttpMessageHandler> _mockHandler;
@@ -38,10 +37,9 @@ namespace Geo.Here.Tests.Services
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="HereGeocodingShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public HereGeocodingShould()
         {
             _keyContainer = new HereKeyContainer("abc123");
 
@@ -167,7 +165,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the key is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddHereKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -182,7 +180,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the base parameters is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -201,7 +199,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the base filter parameters is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddLimitingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -222,7 +220,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the locating parameters is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddLocatingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -249,7 +247,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the bounding parameters is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBoundingParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -382,7 +380,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the bounding parameter are not set into the query properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBoundingParametersWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -432,7 +430,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -468,7 +466,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters fails if no query is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -483,7 +481,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -510,7 +508,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters fails if no query is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -525,7 +523,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the discover parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildDiscoverRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -558,7 +556,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the discover parameters fails if no query is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildDiscoverRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -573,7 +571,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the autosuggest parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildAutosuggestRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -608,7 +606,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the autosuggest parameters fails if no query is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildAutosuggestRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -623,7 +621,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the browse parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildBrowseRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -656,7 +654,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the browse parameters fails if no at is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildBrowseRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -671,7 +669,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the lookup parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildLookupRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -692,7 +690,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the lookup parameters fails if no id is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildLookupRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -707,7 +705,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the lookup uri is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -728,7 +726,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the lookup uri fails if the parameters are null.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriFailsWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -744,7 +742,7 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the lookup uri fails if no id is provided and the exception is wrapped in a here exception.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriFailsWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -762,7 +760,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -790,7 +788,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the reverse geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -814,7 +812,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the discover call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task DiscoverAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -842,7 +840,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the autosuggest call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task AutosuggestAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -871,7 +869,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the lookup call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task LookupAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -891,7 +889,7 @@ namespace Geo.Here.Tests.Services
         /// Tests the browse call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task BrowseAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

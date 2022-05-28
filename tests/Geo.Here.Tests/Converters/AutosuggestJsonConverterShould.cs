@@ -10,18 +10,17 @@ namespace Geo.Here.Tests.Converters
     using Geo.Here.Models.Responses;
     using Geo.Here.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="AutosuggestJsonConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class AutosuggestJsonConverterShould
     {
         /// <summary>
         /// Tests the autosuggest query location is correctly parsed.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseAutosuggestQueryLocation()
         {
             var obj = JsonConvert.DeserializeObject<AutosuggestObject>("{\"Autosuggest\":{\"href\":\"Query href\",\"title\":\"A query title\",\"id\":\"12345\"}}");
@@ -34,7 +33,7 @@ namespace Geo.Here.Tests.Converters
         /// <summary>
         /// Tests the autosuggest entity location is correctly parsed.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseAutosuggesEntityLocation()
         {
             var obj = JsonConvert.DeserializeObject<AutosuggestObject>("{\"Autosuggest\":{\"distance\":123,\"address\":{\"label\":\"An entity label\",\"countryName\":\"EntityLand\"},\"title\":\"An entity title\",\"id\":\"67890\"}}");

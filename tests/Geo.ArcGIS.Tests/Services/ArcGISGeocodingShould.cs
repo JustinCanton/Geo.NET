@@ -6,7 +6,6 @@
 namespace Geo.ArcGIS.Tests.Services
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
@@ -27,12 +26,11 @@ namespace Geo.ArcGIS.Tests.Services
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ArcGISGeocoding"/> class.
     /// </summary>
-    [TestFixture]
     public class ArcGISGeocodingShould
     {
         private Mock<HttpMessageHandler> _mockHandler;
@@ -41,10 +39,9 @@ namespace Geo.ArcGIS.Tests.Services
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="ArcGISGeocodingShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public ArcGISGeocodingShould()
         {
             _mockTokenContainer = new Mock<IArcGISTokenContainer>();
             _mockTokenContainer
@@ -142,7 +139,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the token is properly set into the query string.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task AddArcGISTokenSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -157,7 +154,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the storage parameter query information is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddStorageParameterSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -187,7 +184,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the address candidate uri is built properly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildAddressCandidateRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -210,7 +207,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the address candidate uri isn't built if an single line address isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildAddressCandidateRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -226,7 +223,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the place candidate uri is built properly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildPlaceCandidateRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -258,7 +255,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the suggest uri is built properly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildSuggestRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -294,7 +291,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the suggest uri isn't built if the text isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildSuggestRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -310,7 +307,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -347,7 +344,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri isn't built if the location isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -363,7 +360,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the geocoding uri is built properly.
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Test]
+        [Fact]
         public async Task BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -413,7 +410,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the geocoding uri isn't built if the address attributes aren't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -429,7 +426,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -452,7 +449,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the reverse geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -475,7 +472,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the suggest returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task SuggestAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -493,7 +490,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the place candidate returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task PlaceCandidateAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -512,7 +509,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// Tests the address candidate returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task AddressCandidateAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

@@ -26,12 +26,11 @@ namespace Geo.MapBox.Tests.Services
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="MapBoxGeocoding"/> class.
     /// </summary>
-    [TestFixture]
     public class MapBoxGeocodingShould
     {
         private Mock<HttpMessageHandler> _mockHandler;
@@ -40,10 +39,9 @@ namespace Geo.MapBox.Tests.Services
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="MapBoxGeocodingShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public MapBoxGeocodingShould()
         {
             _keyContainer = new MapBoxKeyContainer("abc123");
 
@@ -97,7 +95,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the key is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddMapBoxKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -112,7 +110,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the base parameters are properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBaseParametersSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -145,7 +143,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -201,7 +199,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters fails if no query is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -216,7 +214,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -261,7 +259,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters fails if no coordinate is provided.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestFailsWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -276,7 +274,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the reverse geocoding uri is done successfully.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -321,7 +319,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the reverse geocoding uri fails if the parameters are null.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriFailsWithException1()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -337,7 +335,7 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the validation and creation of the reverse geocoding uri fails if no id is provided and the exception is wrapped in a here exception.
         /// </summary>
-        [Test]
+        [Fact]
         public void ValidateAndCraftUriFailsWithException2()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -355,7 +353,7 @@ namespace Geo.MapBox.Tests.Services
         /// Tests the geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -406,7 +404,7 @@ namespace Geo.MapBox.Tests.Services
         /// Tests the reverse geocoding call returns successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

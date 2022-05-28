@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 		src\Source.props = src\Source.props
 		stylecop.json = stylecop.json
+		tests\Tests.with.xUnit.props = tests\Tests.with.xUnit.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"

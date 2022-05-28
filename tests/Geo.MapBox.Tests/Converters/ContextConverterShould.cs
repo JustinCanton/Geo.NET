@@ -9,18 +9,17 @@ namespace Geo.MapBox.Tests.Converters
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="ContextConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class ContextConverterShould
     {
         /// <summary>
         /// Tests the context information is parsed into a proper list of context items.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseContextInformation()
         {
             var obj = JsonConvert.DeserializeObject<ContextObject>("{\"Contexts\": [" +

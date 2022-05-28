@@ -9,18 +9,17 @@ namespace Geo.Bing.Tests.Converters
     using Geo.Bing.Converters;
     using Geo.Bing.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="BoundingBoxConverter"/> class.
     /// </summary>
-    [TestFixture]
     public class BoundingBoxConverterShould
     {
         /// <summary>
         /// Tests the double array is successfully translated to a bounding box.
         /// </summary>
-        [Test]
+        [Fact]
         public void CorrectlyParseBoundingBox()
         {
             var obj = JsonConvert.DeserializeObject<BoundingBoxObject>("{'Box':[40.752777282429321,-73.996387763584124,40.760502717570674,-73.982790236415866]}");

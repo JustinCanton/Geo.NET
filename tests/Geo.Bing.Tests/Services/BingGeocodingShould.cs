@@ -23,12 +23,11 @@ namespace Geo.Bing.Tests.Services
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="BingGeocoding"/> class.
     /// </summary>
-    [TestFixture]
     public class BingGeocodingShould
     {
         private Mock<HttpMessageHandler> _mockHandler;
@@ -37,10 +36,9 @@ namespace Geo.Bing.Tests.Services
         private IStringLocalizer<ClientExecutor> _coreLocalizer;
 
         /// <summary>
-        /// One time setup information.
+        /// Initializes a new instance of the <see cref="BingGeocodingShould"/> class.
         /// </summary>
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public BingGeocodingShould()
         {
             _keyContainer = new BingKeyContainer("123abc");
 
@@ -129,7 +127,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the key is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void AddBingKeySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -144,7 +142,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the base query information is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildBaseQuerySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -166,7 +164,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the base query information is properly set into the query string.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildLimitedResultQuerySuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -190,7 +188,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the geocoding uri isn't built if a query isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -205,7 +203,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the geocoding uri is built properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -231,7 +229,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri isn't built if a point isn't passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -246,7 +244,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -282,7 +280,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the address geocoding uri isn't built if not enought information is passed in.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildAddressGeocodingRequestWithException()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -297,7 +295,7 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the address geocoding uri is built properly.
         /// </summary>
-        [Test]
+        [Fact]
         public void BuildAddressGeocodingRequestSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -332,7 +330,7 @@ namespace Geo.Bing.Tests.Services
         /// Tests the geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -351,7 +349,7 @@ namespace Geo.Bing.Tests.Services
         /// Tests the reverse geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);
@@ -374,7 +372,7 @@ namespace Geo.Bing.Tests.Services
         /// Tests the address geocoding returns a response successfully.
         /// </summary>
         /// <returns>A <see cref="Task"/>.</returns>
-        [Test]
+        [Fact]
         public async Task AddressGeocodingAsyncSuccessfully()
         {
             using var httpClient = new HttpClient(_mockHandler.Object);

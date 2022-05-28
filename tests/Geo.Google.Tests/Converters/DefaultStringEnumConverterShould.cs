@@ -10,18 +10,17 @@ namespace Geo.Google.Tests.Converters
     using Geo.Google.Tests.Enums;
     using Geo.Google.Tests.Models;
     using Newtonsoft.Json;
-    using NUnit.Framework;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the <see cref="DefaultStringEnumConverter{T}"/> class.
     /// </summary>
-    [TestFixture]
     public class DefaultStringEnumConverterShould
     {
         /// <summary>
         /// Tests the default value is returned for an unknown name.
         /// </summary>
-        [Test]
+        [Fact]
         public void ReturnUnknownForRandomName()
         {
             var obj = JsonConvert.DeserializeObject<EnumObject>("{'Value':'notProperlySet'}");
@@ -31,7 +30,7 @@ namespace Geo.Google.Tests.Converters
         /// <summary>
         /// Tests the proper value is returned for an known name.
         /// </summary>
-        [Test]
+        [Fact]
         public void ReturnProperNameForExistingName()
         {
             var obj = JsonConvert.DeserializeObject<EnumObject>("{'Value':'tests_google_services'}");
