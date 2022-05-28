@@ -5,6 +5,8 @@
 
 namespace Geo.ArcGIS.Tests.Services
 {
+    using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -18,10 +20,12 @@ namespace Geo.ArcGIS.Tests.Services
     /// <summary>
     /// Unit tests for the <see cref="ArcGISTokenRetrevial"/> class.
     /// </summary>
-    public class ArcGISTokenRetrevialShould
+    public class ArcGISTokenRetrevialShould : IDisposable
     {
         private readonly Mock<HttpMessageHandler> _handlerMock;
         private readonly ArcGISCredentialsContainer _keyContainer;
+        private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISTokenRetrevialShould"/> class.
@@ -31,17 +35,27 @@ namespace Geo.ArcGIS.Tests.Services
             _keyContainer = new ArcGISCredentialsContainer("abc123", "secret123");
 
             _handlerMock = new Mock<HttpMessageHandler>();
+
+            _responseMessages.Add(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("{'access_token':'1234567890abc','expires_in':15000}"),
+            });
+
             _handlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{'access_token':'1234567890abc','expires_in':15000}"),
-                });
+                .ReturnsAsync(_responseMessages[^1]);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -92,6 +106,28 @@ namespace Geo.ArcGIS.Tests.Services
             var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
             token.AccessToken.Should().Be("1234567890abc");
             token.ExpiresIn.Should().Be(15000);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var message in _responseMessages)
+                {
+                    message?.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }
