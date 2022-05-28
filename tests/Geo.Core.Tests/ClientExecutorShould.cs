@@ -176,8 +176,7 @@ namespace Geo.Core.Tests
 
             executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/TaskCanceledException")))
                 .Should()
-                .Throw<TaskCanceledException>()
-                .WithMessage("A task was canceled.");
+                .Throw<TaskCanceledException>();
         }
 
         /// <summary>
