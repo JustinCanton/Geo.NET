@@ -460,7 +460,7 @@ namespace Geo.ArcGIS.Tests.Services
                 {
                     Latitude = 37.710620000000063,
                     Longitude = -85.837039999999945,
-                }
+                },
             };
 
             var response = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);

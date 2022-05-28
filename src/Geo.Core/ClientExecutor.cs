@@ -8,11 +8,8 @@ namespace Geo.Core
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Net.Http;
-    using System.Reflection;
-    using System.Reflection.Emit;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Localization;
@@ -23,7 +20,7 @@ namespace Geo.Core
     /// </summary>
     public class ClientExecutor
     {
-        private static ConcurrentDictionary<Type, Func<string, Exception, Exception>> cachedExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception, Exception>>();
+        private static readonly ConcurrentDictionary<Type, Func<string, Exception, Exception>> _cachedExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception, Exception>>();
         private readonly HttpClient _client;
         private readonly IStringLocalizer<ClientExecutor> _localizer;
 
@@ -147,7 +144,7 @@ namespace Geo.Core
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (cachedExceptionDelegates.TryGetValue(type, out var cachedConstructor))
+            if (_cachedExceptionDelegates.TryGetValue(type, out var cachedConstructor))
             {
                 return cachedConstructor;
             }
@@ -164,7 +161,7 @@ namespace Geo.Core
             var lambdaExpression = Expression.Lambda<Func<string, Exception, Exception>>(expression, parameters);
             var function = lambdaExpression.Compile();
 
-            return cachedExceptionDelegates.AddOrUpdate(type, function, (key, value) => function);
+            return _cachedExceptionDelegates.AddOrUpdate(type, function, (key, value) => function);
         }
     }
 }

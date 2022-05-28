@@ -23,6 +23,7 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Responses;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
 
     /// <summary>
     /// A service to call the MapBox geocoding API.
@@ -56,7 +57,7 @@ namespace Geo.MapBox.Services
         {
             _keyContainer = keyContainer;
             _localizer = localizer;
-            _logger = logger;
+            _logger = logger ?? NullLogger<MapBoxGeocoding>.Instance;
         }
 
         /// <inheritdoc/>
@@ -91,7 +92,7 @@ namespace Geo.MapBox.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger?.LogError(error);
+                _logger.LogError(error);
                 throw new MapBoxException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -102,7 +103,7 @@ namespace Geo.MapBox.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger?.LogError(error);
+                _logger.LogError(error);
                 throw new MapBoxException(error, ex);
             }
         }
@@ -118,7 +119,7 @@ namespace Geo.MapBox.Services
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
                 var error = _localizer["Invalid Query"];
-                _logger?.LogError(error);
+                _logger.LogError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
@@ -135,7 +136,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Bounding Box"]);
+                _logger.LogDebug(_localizer["Invalid Bounding Box"]);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -148,7 +149,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Proximity"]);
+                _logger.LogDebug(_localizer["Invalid Proximity"]);
             }
 
             AddBaseParameters(parameters, query);
@@ -171,7 +172,7 @@ namespace Geo.MapBox.Services
             if (parameters.Coordinate is null)
             {
                 var error = _localizer["Invalid Coordinate"];
-                _logger?.LogError(error);
+                _logger.LogError(error);
                 throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
 
@@ -204,7 +205,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Countries"]);
+                _logger.LogDebug(_localizer["Invalid Countries"]);
             }
 
             if (parameters.Languages.Count > 0)
@@ -213,7 +214,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Languages"]);
+                _logger.LogDebug(_localizer["Invalid Languages"]);
             }
 
             if (parameters.Limit > 0 && parameters.Limit < 6)
@@ -222,7 +223,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Languages"]);
+                _logger.LogDebug(_localizer["Invalid Languages"]);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -237,7 +238,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Types"]);
+                _logger.LogDebug(_localizer["Invalid Types"]);
             }
         }
 
