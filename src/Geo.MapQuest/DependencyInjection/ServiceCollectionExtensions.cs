@@ -19,6 +19,12 @@ namespace Geo.MapQuest.DependencyInjection
     {
         /// <summary>
         /// Adds the MapQuest services to the service collection.
+        /// <para>
+        /// Adds the services:
+        /// <list type="bullet">
+        /// <item><see cref="IMapQuestGeocoding"/></item>
+        /// </list>
+        /// </para>
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the MapQuest services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{MapQuestOptionsBuilder}"/> with the options to add to the MapQuest configuration.</param>

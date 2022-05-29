@@ -19,6 +19,12 @@ namespace Geo.MapBox.DependencyInjection
     {
         /// <summary>
         /// Adds the MapBox services to the service collection.
+        /// <para>
+        /// Adds the services:
+        /// <list type="bullet">
+        /// <item><see cref="IMapBoxGeocoding"/></item>
+        /// </list>
+        /// </para>
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the MapBox services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{MapBoxOptionsBuilder}"/> with the options to add to the MapBox configuration.</param>

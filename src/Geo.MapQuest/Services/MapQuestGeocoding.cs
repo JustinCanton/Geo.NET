@@ -27,14 +27,15 @@ namespace Geo.MapQuest.Services
     /// </summary>
     public class MapQuestGeocoding : ClientExecutor, IMapQuestGeocoding
     {
-        private const string _apiName = "MapQuest";
-        private readonly string _openGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/address";
-        private readonly string _openReverseGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/reverse";
-        private readonly string _geocodeUri = "http://www.mapquestapi.com/geocoding/v1/address";
-        private readonly string _reverseGeocodeUri = "http://www.mapquestapi.com/geocoding/v1/reverse";
+        private const string ApiName = "MapQuest";
+        private const string OpenGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/address";
+        private const string OpenReverseGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/reverse";
+        private const string GeocodeUri = "http://www.mapquestapi.com/geocoding/v1/address";
+        private const string ReverseGeocodeUri = "http://www.mapquestapi.com/geocoding/v1/reverse";
+
         private readonly IMapQuestKeyContainer _keyContainer;
         private readonly IMapQuestEndpoint _endpoint;
-        private readonly IStringLocalizer<MapQuestGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<MapQuestGeocoding> _logger;
 
         /// <summary>
@@ -43,21 +44,19 @@ namespace Geo.MapQuest.Services
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
         /// <param name="endpoint">A <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public MapQuestGeocoding(
             HttpClient client,
             IMapQuestKeyContainer keyContainer,
             IMapQuestEndpoint endpoint,
-            IStringLocalizer<MapQuestGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<MapQuestGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _keyContainer = keyContainer;
-            _endpoint = endpoint;
-            _localizer = localizer;
+            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
+            _localizer = localizerFactory?.Create(typeof(MapQuestGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
             _logger = logger ?? NullLogger<MapQuestGeocoding>.Instance;
         }
 
@@ -68,7 +67,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<GeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<GeocodeResult>, MapQuestException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -78,7 +77,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response<ReverseGeocodeResult>, MapQuestException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<ReverseGeocodeResult>, MapQuestException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? _geocodeUri : _openGeocodeUri);
+            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? GeocodeUri : OpenGeocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
@@ -187,7 +186,7 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? _reverseGeocodeUri : _openReverseGeocodeUri);
+            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? ReverseGeocodeUri : OpenReverseGeocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.Location is null)

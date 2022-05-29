@@ -22,17 +22,19 @@ namespace Geo.Core
     {
         private static readonly ConcurrentDictionary<Type, Func<string, Exception, Exception>> _cachedExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception, Exception>>();
         private readonly HttpClient _client;
-        private readonly IStringLocalizer<ClientExecutor> _localizer;
+        private readonly IStringLocalizer _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientExecutor"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the APIs.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        public ClientExecutor(HttpClient client, IStringLocalizer<ClientExecutor> localizer)
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        public ClientExecutor(
+            HttpClient client,
+            IStringLocalizerFactory localizerFactory)
         {
-            _client = client;
-            _localizer = localizer;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _localizer = localizerFactory?.Create(typeof(ClientExecutor)) ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
 
         /// <summary>

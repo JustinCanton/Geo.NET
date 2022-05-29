@@ -27,7 +27,7 @@ namespace Geo.ArcGIS.Services
         /// <param name="tokenRetrevial">A <see cref="IArcGISTokenRetrevial"/> used to retrieve the token if expired of none existant.</param>
         public ArcGISTokenContainer(IArcGISTokenRetrevial tokenRetrevial)
         {
-            _tokenRetrevial = tokenRetrevial;
+            _tokenRetrevial = tokenRetrevial ?? throw new ArgumentNullException(nameof(tokenRetrevial));
         }
 
         /// <inheritdoc/>

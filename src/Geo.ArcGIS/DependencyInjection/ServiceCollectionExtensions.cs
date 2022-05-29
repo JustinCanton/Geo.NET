@@ -19,6 +19,12 @@ namespace Geo.ArcGIS.DependencyInjection
     {
         /// <summary>
         /// Adds the ArcGIS services to the service collection.
+        /// <para>
+        /// Adds the services:
+        /// <list type="bullet">
+        /// <item><see cref="IArcGISGeocoding"/></item>
+        /// </list>
+        /// </para>
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the ArcGIS services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{ArcGISOptionsBuilder}"/> with the options to add to the ArcGIS configuration.</param>

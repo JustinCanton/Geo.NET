@@ -32,8 +32,8 @@ namespace Geo.ArcGIS.Services
             HttpClient client,
             IArcGISCredentialsContainer credentialsContainer)
         {
-            _client = client;
-            _credentialsContainer = credentialsContainer;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _credentialsContainer = credentialsContainer ?? throw new ArgumentNullException(nameof(credentialsContainer));
         }
 
         /// <inheritdoc/>

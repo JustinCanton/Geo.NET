@@ -30,13 +30,14 @@ namespace Geo.MapBox.Services
     /// </summary>
     public class MapBoxGeocoding : ClientExecutor, IMapBoxGeocoding
     {
-        private const string _apiName = "MapBox";
-        private readonly string _geocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
-        private readonly string _reverseGeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
-        private readonly string _placesEndpoint = "mapbox.places";
-        private readonly string _permanentEndpoint = "mapbox.places-permanent";
+        private const string ApiName = "MapBox";
+        private const string GeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
+        private const string ReverseGeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
+        private const string PlacesEndpoint = "mapbox.places";
+        private const string PermanentEndpoint = "mapbox.places-permanent";
+
         private readonly IMapBoxKeyContainer _keyContainer;
-        private readonly IStringLocalizer<MapBoxGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<MapBoxGeocoding> _logger;
 
         /// <summary>
@@ -44,19 +45,17 @@ namespace Geo.MapBox.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IMapBoxKeyContainer"/> used for fetching the here key.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,
             IMapBoxKeyContainer keyContainer,
-            IStringLocalizer<MapBoxGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<MapBoxGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _keyContainer = keyContainer;
-            _localizer = localizer;
+            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _localizer = localizerFactory?.Create(typeof(MapBoxGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
             _logger = logger ?? NullLogger<MapBoxGeocoding>.Instance;
         }
 
@@ -67,7 +66,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<List<string>>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<List<string>>, MapBoxException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -77,7 +76,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response<Coordinate>, MapBoxException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response<Coordinate>, MapBoxException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -123,7 +122,7 @@ namespace Geo.MapBox.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, _geocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Query));
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Query));
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -176,7 +175,7 @@ namespace Geo.MapBox.Services
                 throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, _reverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? _placesEndpoint : _permanentEndpoint, parameters.Coordinate));
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, ReverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Coordinate));
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
 #pragma warning disable CA1308 // Normalize strings to uppercase

@@ -19,6 +19,12 @@ namespace Geo.Here.DependencyInjection
     {
         /// <summary>
         /// Adds the HERE services to the service collection.
+        /// <para>
+        /// Adds the services:
+        /// <list type="bullet">
+        /// <item><see cref="IHereGeocoding"/></item>
+        /// </list>
+        /// </para>
         /// </summary>
         /// <param name="services">A <see cref="IServiceCollection"/> to add the HERE services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{HereOptionsBuilder}"/> with the options to add to the HERE configuration.</param>

@@ -27,15 +27,16 @@ namespace Geo.Here.Services
     /// </summary>
     public class HereGeocoding : ClientExecutor, IHereGeocoding
     {
-        private const string _apiName = "Here";
-        private readonly string _geocodeUri = "https://geocode.search.hereapi.com/v1/geocode";
-        private readonly string _reverseGeocodeUri = "https://revgeocode.search.hereapi.com/v1/revgeocode";
-        private readonly string _discoverUri = "https://discover.search.hereapi.com/v1/discover";
-        private readonly string _autosuggestUri = "https://autosuggest.search.hereapi.com/v1/autosuggest";
-        private readonly string _browseUri = "https://browse.search.hereapi.com/v1/browse";
-        private readonly string _lookupUri = "https://lookup.search.hereapi.com/v1/lookup";
+        private const string ApiName = "Here";
+        private const string GeocodeUri = "https://geocode.search.hereapi.com/v1/geocode";
+        private const string ReverseGeocodeUri = "https://revgeocode.search.hereapi.com/v1/revgeocode";
+        private const string DiscoverUri = "https://discover.search.hereapi.com/v1/discover";
+        private const string AutosuggestUri = "https://autosuggest.search.hereapi.com/v1/autosuggest";
+        private const string BrowseUri = "https://browse.search.hereapi.com/v1/browse";
+        private const string LookupUri = "https://lookup.search.hereapi.com/v1/lookup";
+
         private readonly IHereKeyContainer _keyContainer;
-        private readonly IStringLocalizer<HereGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<HereGeocoding> _logger;
 
         /// <summary>
@@ -43,19 +44,17 @@ namespace Geo.Here.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the HERE Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IHereKeyContainer"/> used for fetching the HERE key.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public HereGeocoding(
             HttpClient client,
             IHereKeyContainer keyContainer,
-            IStringLocalizer<HereGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<HereGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _keyContainer = keyContainer;
-            _localizer = localizer;
+            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _localizer = localizerFactory?.Create(typeof(HereGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
             _logger = logger ?? NullLogger<HereGeocoding>.Instance;
         }
 
@@ -66,7 +65,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<GeocodeParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<GeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<GeocodingResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -76,7 +75,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodeParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<ReverseGeocodingResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<ReverseGeocodingResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -86,7 +85,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<DiscoverParameters>(parameters, BuildDiscoverRequest);
 
-            return await CallAsync<DiscoverResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<DiscoverResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -96,7 +95,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<AutosuggestParameters>(parameters, BuildAutosuggestRequest);
 
-            return await CallAsync<AutosuggestResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<AutosuggestResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -106,7 +105,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<LookupParameters>(parameters, BuildLookupRequest);
 
-            return await CallAsync<LookupResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<LookupResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -116,7 +115,7 @@ namespace Geo.Here.Services
         {
             var uri = ValidateAndBuildUri<BrowseParameters>(parameters, BuildBrowseRequest);
 
-            return await CallAsync<BrowseResponse, HereException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<BrowseResponse, HereException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -155,7 +154,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter and the 'QualifiedQuery' parameter are null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodeParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_geocodeUri);
+            var uriBuilder = new UriBuilder(GeocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Query) && string.IsNullOrWhiteSpace(parameters.QualifiedQuery))
@@ -209,7 +208,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodeParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_reverseGeocodeUri);
+            var uriBuilder = new UriBuilder(ReverseGeocodeUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.At is null)
@@ -236,7 +235,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         internal Uri BuildDiscoverRequest(DiscoverParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_discoverUri);
+            var uriBuilder = new UriBuilder(DiscoverUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
@@ -265,7 +264,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
         internal Uri BuildAutosuggestRequest(AutosuggestParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_autosuggestUri);
+            var uriBuilder = new UriBuilder(AutosuggestUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
@@ -303,7 +302,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'At' parameter is null or invalid.</exception>
         internal Uri BuildBrowseRequest(BrowseParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_browseUri);
+            var uriBuilder = new UriBuilder(BrowseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (parameters.At is null)
@@ -348,7 +347,7 @@ namespace Geo.Here.Services
         /// <exception cref="ArgumentException">Thrown when the 'Id' parameter is null or invalid.</exception>
         internal Uri BuildLookupRequest(LookupParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_lookupUri);
+            var uriBuilder = new UriBuilder(LookupUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Id))

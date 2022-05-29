@@ -32,13 +32,14 @@ namespace Geo.ArcGIS.Services
     /// </summary>
     public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
     {
-        private const string _apiName = "ArcGIS";
-        private readonly string _candidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
-        private readonly string _suggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
-        private readonly string _reverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
-        private readonly string _geocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
+        private const string ApiName = "ArcGIS";
+        private const string CandidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
+        private const string SuggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
+        private const string ReverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
+        private const string GeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
+
         private readonly IArcGISTokenContainer _tokenContainer;
-        private readonly IStringLocalizer<ArcGISGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<ArcGISGeocoding> _logger;
 
         /// <summary>
@@ -46,19 +47,17 @@ namespace Geo.ArcGIS.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
         /// <param name="tokenContainer">A <see cref="IArcGISTokenContainer"/> used for retreiving the ArcGIS token.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public ArcGISGeocoding(
             HttpClient client,
             IArcGISTokenContainer tokenContainer,
-            IStringLocalizer<ArcGISGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<ArcGISGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _tokenContainer = tokenContainer;
-            _localizer = localizer;
+            _tokenContainer = tokenContainer ?? throw new ArgumentNullException(nameof(tokenContainer));
+            _localizer = localizerFactory?.Create(typeof(ArcGISGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
             _logger = logger ?? NullLogger<ArcGISGeocoding>.Instance;
         }
 
@@ -69,7 +68,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -79,7 +78,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -89,7 +88,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<SuggestResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<SuggestResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -99,7 +98,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -109,7 +108,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<GeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<GeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace Geo.ArcGIS.Services
                 throw new ArgumentException(error, nameof(parameters.SingleLineAddress));
             }
 
-            var uriBuilder = new UriBuilder(_candidatesUri);
+            var uriBuilder = new UriBuilder(CandidatesUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
             query.Add("outFields", "Match_addr,Addr_type");
@@ -183,7 +182,7 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildPlaceCandidateRequest(PlaceCandidateParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_candidatesUri);
+            var uriBuilder = new UriBuilder(CandidatesUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
             query.Add("outFields", "Place_addr,PlaceName");
@@ -232,7 +231,7 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal Task<Uri> BuildSuggestRequest(SuggestParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_suggestUri);
+            var uriBuilder = new UriBuilder(SuggestUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
@@ -294,7 +293,7 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_reverseGeocodingUri);
+            var uriBuilder = new UriBuilder(ReverseGeocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
@@ -375,7 +374,7 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildGeocodingRequest(GeocodingParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_geocodingUri);
+            var uriBuilder = new UriBuilder(GeocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
