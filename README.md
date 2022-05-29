@@ -33,17 +33,10 @@ The support for this project includes:
 	 - Open API
 		 - [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-	 - Lisenced Api
+	 - Lisenced API
 		 - [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 
-## Get Started
-
-Use a form of [Visual Studio](https://www.visualstudio.com/)  to work with the project for a seamless experience.
-
-Pull the project, and open the Geo.NET.sln file to build this library.
-
-Some of the best ways to contribute are to try things out, file issues, join in design conversations, and make pull-requests.
 
 ## Configuration and Sample Usage
 The configuration and sample usage for each supported interface can be found within each project.
@@ -54,3 +47,65 @@ The configuration and sample usage for each supported interface can be found wit
  - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
+
+
+## Roadmap
+
+### 1.0.0
+|Status|Goal|
+|:--:|--|
+|✅|Adding support for ArcGIS Suggest API|
+|✅|Adding support for ArcGIS Address Candidate API|
+|✅|Adding support for ArcGIS Place Candidate API|
+|✅|Adding support for ArcGIS Geocoding API|
+|✅|Adding support for ArcGIS Reverse Geocoding API|
+|✅|Adding support for Bing Geocoding API|
+|✅|Adding support for Bing Reverse Geocoding API|
+|✅|Adding support for Bing By Address API|
+|✅|Adding support for Google Geocoding API|
+|✅|Adding support for Google Reverse Geocoding API|
+|✅|Adding support for Google Places Search API|
+|✅|Adding support for Google Places Details API|
+|✅|Adding support for Google Autocomplete Places API|
+|✅|Adding support for Google Autocomplete Query API|
+|✅|Adding support for HERE Geocoding API|
+|✅|Adding support for HERE Reverse Geocoding API|
+|✅|Adding support for HERE Discover API|
+|✅|Adding support for HERE Auto Suggest API|
+|✅|Adding support for HERE Browse API|
+|✅|Adding support for HERE Lookup API|
+|✅|Adding support for MapBox Geocoding API|
+|✅|Adding support for MapBox Reverse Geocoding API|
+|✅|Adding support for MapQuest Geocoding Open API|
+|✅|Adding support for MapQuest Reverse Geocoding Open API|
+|✅|Adding support for MapQuest Geocoding Lisenced API|
+|✅|Adding support for MapQuest Reverse Geocoding Lisenced API|
+
+
+### 1.1.0
+|Status|Goal|
+|:--:|--|
+|✅|Adding score into the HERE Geocoding response|
+|✅|Adding net6.0 support|
+|❌|Adding ChangeLog|
+
+
+### 1.2.0
+|Status|Goal|
+|:--:|--|
+|❌|Adding support for conversion from coordinates to flexible polylines rather than requiring polylines as input|
+
+
+### Suggestions or Discussion Points
+|Decision|Suggestion|
+|:--:|--|
+|❓|Adding support for routing algorithms (This may spawn a new repository rather than being placed in Geo.NET)|
+
+
+## Get Started and How To Contribute
+
+Use a form of [Visual Studio](https://www.visualstudio.com/)  to work with the project for a seamless experience.
+
+Pull the project, and open the Geo.NET.sln file to build this library.
+
+Some of the best ways to contribute are to try things out, file issues, join in design conversations, and make pull-requests.
