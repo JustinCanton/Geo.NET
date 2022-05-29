@@ -93,13 +93,19 @@ The configuration and sample usage for each supported interface can be found wit
 ### 1.2.0
 |Status|Goal|
 |:--:|--|
-|❌|Adding support for conversion from coordinates to flexible polylines rather than requiring polylines as input|
+|❌|Adding support for conversion from coordinates to flexible polylines rather than requiring polylines as input for the HERE API|
 
 
 ### Suggestions or Discussion Points
+If you would like to weigh in on any suggestion, please make a Github Issue and we can discuss further.
+
+✅ = Accepted
+❌ = Rejected
+❓ = Still discussing
+
 |Decision|Suggestion|
 |:--:|--|
-|❓|Adding support for routing algorithms (This may spawn a new repository rather than being placed in Geo.NET)|
+|❓|Adding support for routing algorithms (This may spawn a new repository rather than being placed in this repository)|
 
 
 ## Get Started and How To Contribute
