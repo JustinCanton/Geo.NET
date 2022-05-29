@@ -10,7 +10,7 @@ namespace Geo.Core.Extensions
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Extension methods for the enum type.
+    /// Extension methods for the <see cref="Enum"/> type.
     /// </summary>
     public static class EnumExtensions
     {
@@ -22,11 +22,14 @@ namespace Geo.Core.Extensions
         /// <returns>A string with the enum value name.</returns>
         /// <exception cref="InvalidOperationException">Thrown when there is no <see cref="EnumMemberAttribute"/> on the enum.</exception>
         public static string ToEnumString<T>(this T value)
+            where T : Enum
         {
             var enumType = typeof(T);
-            var name = Enum.GetName(enumType, value);
-            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
-            return enumMemberAttribute.Value;
+            return ((EnumMemberAttribute[])enumType
+                .GetField(Enum.GetName(enumType, value))
+                .GetCustomAttributes(typeof(EnumMemberAttribute), true))
+                .Single()
+                .Value;
         }
     }
 }

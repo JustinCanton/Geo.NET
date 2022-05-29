@@ -3,27 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Google", "src\Geo.Google\Geo.Google.csproj", "{CCC422FD-3B45-457B-87A7-461D50E91334}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{B3BD11A7-1752-49E3-AE50-A65B5FE7B7B2}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.build.props = Directory.build.props
+		Geo.NET.ruleset = Geo.NET.ruleset
 		README.md = README.md
 		src\Source.props = src\Source.props
 		stylecop.json = stylecop.json
+		tests\Tests.with.xUnit.props = tests\Tests.with.xUnit.props
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F3BA9BC-542C-450C-96C9-F0D72FECC930}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Core", "src\Geo.Core\Geo.Core.csproj", "{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Google", "src\Geo.Google\Geo.Google.csproj", "{CCC422FD-3B45-457B-87A7-461D50E91334}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Bing", "src\Geo.Bing\Geo.Bing.csproj", "{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{67253D97-9FC9-4749-80DC-A5D84339DC05}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Core.Tests", "tests\Geo.Core.Tests\Geo.Core.Tests.csproj", "{E4659FE2-0285-46CA-9ECF-842F30D6C594}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Google.Tests", "tests\Geo.Google.Tests\Geo.Google.Tests.csproj", "{35450863-2923-488A-9A43-B5E7A1A72AD1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Bing.Tests", "tests\Geo.Bing.Tests\Geo.Bing.Tests.csproj", "{95E452E3-9DC1-4D07-B238-A952FA6B6D96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.ArcGIS", "src\Geo.ArcGIS\Geo.ArcGIS.csproj", "{10A8AD17-37B9-43F7-A4ED-4A45A2780633}"
 EndProject
@@ -33,13 +29,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapQuest", "src\Geo.Map
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapBox", "src\Geo.MapBox\Geo.MapBox.csproj", "{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.ArcGIS.Tests", "tests\Geo.ArcGIS.Tests\Geo.ArcGIS.Tests.csproj", "{E7302F39-7639-4C03-8A28-8855849B5DC0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{67253D97-9FC9-4749-80DC-A5D84339DC05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Here.Tests", "tests\Geo.Here.Tests\Geo.Here.Tests.csproj", "{3EE9598A-8464-450E-9BE4-C19E3FC1450D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Core.Tests", "test\Geo.Core.Tests\Geo.Core.Tests.csproj", "{E4659FE2-0285-46CA-9ECF-842F30D6C594}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapBox.Tests", "tests\Geo.MapBox.Tests\Geo.MapBox.Tests.csproj", "{2D1EB4BD-E554-46B6-8FEE-73CC486341F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Google.Tests", "test\Geo.Google.Tests\Geo.Google.Tests.csproj", "{35450863-2923-488A-9A43-B5E7A1A72AD1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapQuest.Tests", "tests\Geo.MapQuest.Tests\Geo.MapQuest.Tests.csproj", "{85FF4115-0880-4DF6-816A-B314CA0432D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Bing.Tests", "test\Geo.Bing.Tests\Geo.Bing.Tests.csproj", "{95E452E3-9DC1-4D07-B238-A952FA6B6D96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.ArcGIS.Tests", "test\Geo.ArcGIS.Tests\Geo.ArcGIS.Tests.csproj", "{E7302F39-7639-4C03-8A28-8855849B5DC0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Here.Tests", "test\Geo.Here.Tests\Geo.Here.Tests.csproj", "{3EE9598A-8464-450E-9BE4-C19E3FC1450D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapBox.Tests", "test\Geo.MapBox.Tests\Geo.MapBox.Tests.csproj", "{2D1EB4BD-E554-46B6-8FEE-73CC486341F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.MapQuest.Tests", "test\Geo.MapQuest.Tests\Geo.MapQuest.Tests.csproj", "{85FF4115-0880-4DF6-816A-B314CA0432D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,30 +51,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC422FD-3B45-457B-87A7-461D50E91334}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10A8AD17-37B9-43F7-A4ED-4A45A2780633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10A8AD17-37B9-43F7-A4ED-4A45A2780633}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10A8AD17-37B9-43F7-A4ED-4A45A2780633}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,6 +79,18 @@ Global
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4659FE2-0285-46CA-9ECF-842F30D6C594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35450863-2923-488A-9A43-B5E7A1A72AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E452E3-9DC1-4D07-B238-A952FA6B6D96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7302F39-7639-4C03-8A28-8855849B5DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -108,6 +112,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0A0E2B68-07CE-4800-885D-B5BAAFC8F214} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{CCC422FD-3B45-457B-87A7-461D50E91334} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{A8F0D064-3C22-4D57-ABE1-0F63CC9CC420} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{10A8AD17-37B9-43F7-A4ED-4A45A2780633} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{DF4A57B8-8457-4E55-93AD-4F2360624EAC} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{5BC3B60C-EE20-4820-8B67-3D5C9B282F1B} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{D4524DAE-9E5A-4AAE-9143-897E0D7443D0} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
 		{E4659FE2-0285-46CA-9ECF-842F30D6C594} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 		{35450863-2923-488A-9A43-B5E7A1A72AD1} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 		{95E452E3-9DC1-4D07-B238-A952FA6B6D96} = {67253D97-9FC9-4749-80DC-A5D84339DC05}

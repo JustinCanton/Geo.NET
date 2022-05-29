@@ -6,6 +6,9 @@
 namespace Geo.Core
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -17,18 +20,21 @@ namespace Geo.Core
     /// </summary>
     public class ClientExecutor
     {
+        private static readonly ConcurrentDictionary<Type, Func<string, Exception, Exception>> _cachedExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception, Exception>>();
         private readonly HttpClient _client;
-        private readonly IStringLocalizer<ClientExecutor> _localizer;
+        private readonly IStringLocalizer _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientExecutor"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the APIs.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        public ClientExecutor(HttpClient client, IStringLocalizer<ClientExecutor> localizer)
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        public ClientExecutor(
+            HttpClient client,
+            IStringLocalizerFactory localizerFactory)
         {
-            _client = client;
-            _localizer = localizer;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _localizer = localizerFactory?.Create(typeof(ClientExecutor)) ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
 
         /// <summary>
@@ -40,7 +46,7 @@ namespace Geo.Core
         /// <param name="apiName">The name of the API being called for exception logging purposes.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used for cancelling the request.</param>
         /// <returns>A <typeparamref name="TResult"/>.</returns>
-        /// <exception cref="TException">Thrown when any exception occurs and wraps the original exception.</exception>
+        /// <exception>An exception of type <typeparamref name="TException"/> thrown when any exception occurs and wraps the original exception.</exception>
         public async Task<TResult> CallAsync<TResult, TException>(Uri uri, string apiName, CancellationToken cancellationToken = default)
             where TResult : class
             where TException : Exception
@@ -53,36 +59,44 @@ namespace Geo.Core
             }
             catch (ArgumentNullException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Null Uri", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Null Uri", apiName].ToString(), ex) as TException;
             }
             catch (InvalidOperationException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Invalid Uri", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Invalid Uri", apiName].ToString(), ex) as TException;
             }
             catch (HttpRequestException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Request Failed", apiName].ToString(), ex) as TException;
             }
             catch (TaskCanceledException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Cancelled", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Request Cancelled", apiName].ToString(), ex) as TException;
             }
             catch (JsonReaderException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Reader Failed To Parse", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Reader Failed To Parse", apiName].ToString(), ex) as TException;
             }
             catch (JsonSerializationException ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Serializer Failed To Parse", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Serializer Failed To Parse", apiName].ToString(), ex) as TException;
             }
             catch (Exception ex)
             {
-                throw Activator.CreateInstance(typeof(TException), _localizer["Request Failed Exception", apiName].ToString(), ex) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                throw exceptionConstructor(_localizer["Request Failed Exception", apiName].ToString(), ex) as TException;
             }
 
             if (response.Result is null || !string.IsNullOrEmpty(response.JSON))
             {
-                var ex = Activator.CreateInstance(typeof(TException), _localizer["Request Failure", apiName].ToString()) as TException;
+                var exceptionConstructor = GetExceptionConstructor(typeof(TException));
+                var ex = exceptionConstructor(_localizer["Request Failure", apiName].ToString(), null) as TException;
                 ex.Data.Add("responseBody", response.JSON);
                 throw ex;
             }
@@ -111,7 +125,11 @@ namespace Geo.Core
         {
             var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
+#if NET5_0_OR_GREATER
+            var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
 
             if (!response.IsSuccessStatusCode)
             {
@@ -119,6 +137,33 @@ namespace Geo.Core
             }
 
             return (JsonConvert.DeserializeObject<TResult>(json), string.Empty);
+        }
+
+        private static Func<string, Exception, Exception> GetExceptionConstructor(Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (_cachedExceptionDelegates.TryGetValue(type, out var cachedConstructor))
+            {
+                return cachedConstructor;
+            }
+
+            var constructorParameters = new Type[] { typeof(string), typeof(Exception) };
+            var constructor = type.GetConstructor(constructorParameters);
+            var parameters = new List<ParameterExpression>()
+            {
+                Expression.Parameter(typeof(string)),
+                Expression.Parameter(typeof(Exception)),
+            };
+
+            var expression = Expression.New(constructor, parameters);
+            var lambdaExpression = Expression.Lambda<Func<string, Exception, Exception>>(expression, parameters);
+            var function = lambdaExpression.Compile();
+
+            return _cachedExceptionDelegates.AddOrUpdate(type, function, (key, value) => function);
         }
     }
 }

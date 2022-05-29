@@ -24,6 +24,7 @@ namespace Geo.ArcGIS.Services
     using Geo.Core.Extensions;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -31,13 +32,14 @@ namespace Geo.ArcGIS.Services
     /// </summary>
     public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
     {
-        private const string _apiName = "ArcGIS";
-        private readonly string _candidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
-        private readonly string _suggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
-        private readonly string _reverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
-        private readonly string _geocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
+        private const string ApiName = "ArcGIS";
+        private const string CandidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
+        private const string SuggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
+        private const string ReverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
+        private const string GeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
+
         private readonly IArcGISTokenContainer _tokenContainer;
-        private readonly IStringLocalizer<ArcGISGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<ArcGISGeocoding> _logger;
 
         /// <summary>
@@ -45,20 +47,18 @@ namespace Geo.ArcGIS.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
         /// <param name="tokenContainer">A <see cref="IArcGISTokenContainer"/> used for retreiving the ArcGIS token.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public ArcGISGeocoding(
             HttpClient client,
             IArcGISTokenContainer tokenContainer,
-            IStringLocalizer<ArcGISGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<ArcGISGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _tokenContainer = tokenContainer;
-            _localizer = localizer;
-            _logger = logger;
+            _tokenContainer = tokenContainer ?? throw new ArgumentNullException(nameof(tokenContainer));
+            _localizer = localizerFactory?.Create(typeof(ArcGISGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _logger = logger ?? NullLogger<ArcGISGeocoding>.Instance;
         }
 
         /// <inheritdoc/>
@@ -68,7 +68,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -78,7 +78,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -88,7 +88,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<SuggestResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<SuggestResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -98,7 +98,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -108,7 +108,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<GeocodingResponse, ArcGISException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<GeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Geo.ArcGIS.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArcGISException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -138,7 +138,7 @@ namespace Geo.ArcGIS.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArcGISException(error, ex);
             }
         }
@@ -154,11 +154,11 @@ namespace Geo.ArcGIS.Services
             if (string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
             {
                 var error = _localizer["Invalid Single Address Line"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.SingleLineAddress));
             }
 
-            var uriBuilder = new UriBuilder(_candidatesUri);
+            var uriBuilder = new UriBuilder(CandidatesUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
             query.Add("outFields", "Match_addr,Addr_type");
@@ -182,7 +182,7 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildPlaceCandidateRequest(PlaceCandidateParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_candidatesUri);
+            var uriBuilder = new UriBuilder(CandidatesUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
             query.Add("outFields", "Place_addr,PlaceName");
@@ -193,7 +193,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.Location != null)
@@ -202,16 +202,16 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Location"]);
+                _logger.ArcGISDebug(_localizer["Invalid Location"]);
             }
 
-            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 51)
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations <= 50)
             {
                 query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Maximum Locations"]);
+                _logger.ArcGISWarning(_localizer["Invalid Maximum Locations"]);
             }
 
             AddStorageParameter(parameters, query);
@@ -231,14 +231,14 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal Task<Uri> BuildSuggestRequest(SuggestParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_suggestUri);
+            var uriBuilder = new UriBuilder(SuggestUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
             if (string.IsNullOrWhiteSpace(parameters.Text))
             {
                 var error = _localizer["Invalid Text"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.Text));
             }
 
@@ -250,7 +250,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Location"]);
+                _logger.ArcGISDebug(_localizer["Invalid Location"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
@@ -259,7 +259,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.SearchExtent != null)
@@ -268,7 +268,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Search Extent"]);
+                _logger.ArcGISDebug(_localizer["Invalid Search Extent"]);
             }
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
@@ -277,7 +277,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Maximum Locations"]);
+                _logger.ArcGISWarning(_localizer["Invalid Maximum Locations"]);
             }
 
             uriBuilder.Query = query.ToString();
@@ -293,14 +293,14 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_reverseGeocodingUri);
+            var uriBuilder = new UriBuilder(ReverseGeocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
             if (parameters.Location is null)
             {
                 var error = _localizer["Invalid Location Error"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
@@ -312,7 +312,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Out Spatial Reference"]);
+                _logger.ArcGISDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
             if (parameters.LanguageCode != null)
@@ -321,7 +321,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Language Code"]);
+                _logger.ArcGISDebug(_localizer["Invalid Language Code"]);
             }
 
             if (parameters.FeatureTypes != null)
@@ -336,7 +336,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Feature Types"]);
+                _logger.ArcGISDebug(_localizer["Invalid Feature Types"]);
             }
 
             if (parameters.LocationType >= 0)
@@ -345,7 +345,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Location Type"]);
+                _logger.ArcGISWarning(_localizer["Invalid Location Type"]);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -354,7 +354,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Preferred Label Value"]);
+                _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
             AddStorageParameter(parameters, query);
@@ -374,14 +374,14 @@ namespace Geo.ArcGIS.Services
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
         internal async Task<Uri> BuildGeocodingRequest(GeocodingParameters parameters, CancellationToken cancellationToken)
         {
-            var uriBuilder = new UriBuilder(_geocodingUri);
+            var uriBuilder = new UriBuilder(GeocodingUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("f", "json");
 
             if (parameters.AddressAttributes is null || parameters.AddressAttributes.Count == 0)
             {
                 var error = _localizer["Invalid Address Attributes"];
-                _logger?.LogError(error);
+                _logger.ArcGISError(error);
                 throw new ArgumentException(error, nameof(parameters.AddressAttributes));
             }
 
@@ -412,7 +412,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Category"]);
+                _logger.ArcGISDebug(_localizer["Invalid Category"]);
             }
 
             if (parameters.SourceCountry.Count != 0)
@@ -421,7 +421,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Source Country"]);
+                _logger.ArcGISDebug(_localizer["Invalid Source Country"]);
             }
 
             if (parameters.OutSpatialReference > 0)
@@ -430,7 +430,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Out Spatial Reference"]);
+                _logger.ArcGISDebug(_localizer["Invalid Out Spatial Reference"]);
             }
 
             if (parameters.SearchExtent != null)
@@ -439,7 +439,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Search Extent"]);
+                _logger.ArcGISDebug(_localizer["Invalid Search Extent"]);
             }
 
             if (parameters.LanguageCode != null)
@@ -448,7 +448,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Language Code"]);
+                _logger.ArcGISDebug(_localizer["Invalid Language Code"]);
             }
 
             if (parameters.LocationType >= 0)
@@ -457,7 +457,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Location Type"]);
+                _logger.ArcGISWarning(_localizer["Invalid Location Type"]);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -466,7 +466,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Preferred Label Value"]);
+                _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
             await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
