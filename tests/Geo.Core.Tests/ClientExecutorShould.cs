@@ -27,9 +27,9 @@ namespace Geo.Core.Tests
     /// </summary>
     public class ClientExecutorShould : IDisposable
     {
-        private const string _apiName = "Test";
-        private readonly Mock<HttpMessageHandler> _mockHandler;
-        private readonly IStringLocalizer<ClientExecutor> _localizer;
+        private const string ApiName = "Test";
+        private readonly HttpClient _httpClient;
+        private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -38,9 +38,9 @@ namespace Geo.Core.Tests
         /// </summary>
         public ClientExecutorShould()
         {
-            _mockHandler = new Mock<HttpMessageHandler>();
+            var mockHandler = new Mock<HttpMessageHandler>();
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -48,7 +48,7 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new ArgumentNullException("requestUri"));
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -56,7 +56,7 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new InvalidOperationException("requestUri"));
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -64,7 +64,7 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new HttpRequestException());
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -78,7 +78,7 @@ namespace Geo.Core.Tests
                 Content = new StringContent("<html></html>"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -86,7 +86,7 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(_responseMessages[^1]);
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -100,7 +100,7 @@ namespace Geo.Core.Tests
                 Content = new StringContent("{'Message':'Access denied'}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -114,7 +114,7 @@ namespace Geo.Core.Tests
                 Content = new StringContent("{'TestField':1}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -123,8 +123,8 @@ namespace Geo.Core.Tests
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<ClientExecutor>(factory);
+            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _httpClient = new HttpClient(mockHandler.Object);
         }
 
         /// <inheritdoc/>
@@ -140,10 +140,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnNullUri()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/ArgumentNullException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/ArgumentNullException")))
                 .Should()
                 .Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null. (Parameter 'requestUri')");
@@ -155,10 +154,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidUri()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/InvalidOperationException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/InvalidOperationException")))
                 .Should()
                 .Throw<InvalidOperationException>()
                 .WithMessage("requestUri");
@@ -170,10 +168,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnHttpFailure()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/HttpRequestException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/HttpRequestException")))
                 .Should()
                 .Throw<HttpRequestException>()
                 .WithMessage("Exception of type 'System.Net.Http.HttpRequestException' was thrown.");
@@ -185,10 +182,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnCancelledRequest()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/TaskCanceledException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/TaskCanceledException")))
                 .Should()
                 .Throw<TaskCanceledException>();
         }
@@ -199,10 +195,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidJson1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonReaderException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonReaderException")))
                 .Should()
                 .Throw<JsonReaderException>();
         }
@@ -213,10 +208,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidJson2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonSerializationException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonSerializationException")))
                 .Should()
                 .Throw<JsonSerializationException>();
         }
@@ -228,9 +222,8 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task ReturnsErrorJson()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
-            var result = await executor.CallAsync<TestClass>(new Uri("http://test.com/Failure")).ConfigureAwait(false);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Failure")).ConfigureAwait(false);
             result.Result.Should().BeNull();
             result.JSON.Should().Be("{'Message':'Access denied'}");
         }
@@ -242,9 +235,9 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task SuccesfullyReturnObject()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
-            var result = await executor.CallAsync<TestClass>(new Uri("http://test.com/Success")).ConfigureAwait(false);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+
+            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Success")).ConfigureAwait(false);
             result.Result.TestField.Should().Be(1);
         }
 
@@ -254,10 +247,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnNullUri()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/ArgumentNullException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/ArgumentNullException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<ArgumentNullException>();
@@ -269,10 +261,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidUri()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/InvalidOperationException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/InvalidOperationException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<InvalidOperationException>();
@@ -284,10 +275,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnHttpFailure()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/HttpRequestException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/HttpRequestException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<HttpRequestException>();
@@ -299,10 +289,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnCancelledRequest()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/TaskCanceledException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/TaskCanceledException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<TaskCanceledException>();
@@ -314,10 +303,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidJson1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<JsonReaderException>();
@@ -329,10 +317,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidJson2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .WithInnerException<JsonSerializationException>();
@@ -344,10 +331,9 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnErrorJson()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
 
-            executor.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/Failure"), _apiName))
+            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/Failure"), ApiName))
                 .Should()
                 .Throw<TestException>()
                 .Where(x => x.Data.Count == 1 && x.Data["responseBody"].ToString() == "{'Message':'Access denied'}");
@@ -360,9 +346,9 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task SuccesfullyReturnOnlyObject()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var executor = new TestClientExecutor(httpClient, _localizer);
-            var result = await executor.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), _apiName).ConfigureAwait(false);
+            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+
+            var result = await sut.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), ApiName).ConfigureAwait(false);
             result.TestField.Should().Be(1);
         }
 
@@ -379,6 +365,8 @@ namespace Geo.Core.Tests
 
             if (disposing)
             {
+                _httpClient?.Dispose();
+
                 foreach (var message in _responseMessages)
                 {
                     message?.Dispose();

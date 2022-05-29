@@ -1,4 +1,4 @@
-﻿// <copyright file="CoreDI.cs" company="Geo.NET">
+﻿// <copyright file="ServiceCollectionExtensions.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -8,9 +8,9 @@ namespace Geo.Core.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Dependency injection methods for the Core functionality.
+    /// Extension methods for the <see cref="IServiceCollection"/> class.
     /// </summary>
-    public static class CoreDI
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the Core services to the service collection.

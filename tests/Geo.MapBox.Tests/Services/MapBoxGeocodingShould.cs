@@ -33,10 +33,9 @@ namespace Geo.MapBox.Tests.Services
     /// </summary>
     public class MapBoxGeocodingShould : IDisposable
     {
-        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly HttpClient _httpClient;
         private readonly MapBoxKeyContainer _keyContainer;
-        private readonly IStringLocalizer<MapBoxGeocoding> _localizer;
-        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -47,7 +46,7 @@ namespace Geo.MapBox.Tests.Services
         {
             _keyContainer = new MapBoxKeyContainer("abc123");
 
-            _mockHandler = new Mock<HttpMessageHandler>();
+            var mockHandler = new Mock<HttpMessageHandler>();
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -63,7 +62,7 @@ namespace Geo.MapBox.Tests.Services
             });
 
             // For reverse geocoding, use the places endpoint type
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -84,7 +83,7 @@ namespace Geo.MapBox.Tests.Services
             });
 
             // For reverse geocoding, use the permanent endpoint type
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -93,9 +92,8 @@ namespace Geo.MapBox.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<MapBoxGeocoding>(factory);
-            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _httpClient = new HttpClient(mockHandler.Object);
         }
 
         /// <inheritdoc/>
@@ -111,11 +109,11 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void AddMapBoxKeySuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
 
-            service.AddMapBoxKey(query);
+            sut.AddMapBoxKey(query);
             query.Count.Should().Be(1);
             query["access_token"].Should().Be("abc123");
         }
@@ -126,8 +124,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
@@ -144,7 +142,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
-            service.AddBaseParameters(parameters, query);
+            sut.AddBaseParameters(parameters, query);
             query.Count.Should().Be(5);
             query["country"].Should().Be("CA,FR");
             query["language"].Should().Be("en,fr-FR");
@@ -159,8 +157,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Query = "123 East",
@@ -192,7 +190,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
-            var uri = service.BuildGeocodingRequest(parameters);
+            var uri = sut.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("autocomplete=true");
             query.Should().Contain("bbox=123.45,45.67,165.43,87.65");
@@ -215,9 +213,9 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void BuildGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -230,8 +228,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -255,7 +253,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.District);
             parameters.Types.Add(FeatureType.Neighborhood);
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
             query.Should().Contain("country=BG,SE");
@@ -275,9 +273,9 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -290,8 +288,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void ValidateAndCraftUriSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -315,7 +313,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.District);
             parameters.Types.Add(FeatureType.Neighborhood);
 
-            var uri = service.ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, service.BuildReverseGeocodingRequest);
+            var uri = sut.ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, sut.BuildReverseGeocodingRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
             query.Should().Contain("country=BG,SE");
@@ -335,9 +333,9 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(null, sut.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
@@ -351,9 +349,9 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), sut.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapBoxException>()
@@ -369,8 +367,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Query = "123 East",
@@ -402,7 +400,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
-            var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Query.Count.Should().Be(2);
             result.Query.Should().ContainInOrder(new List<string>()
             {
@@ -420,8 +418,8 @@ namespace Geo.MapBox.Tests.Services
         [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapBoxGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -445,7 +443,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.District);
             parameters.Types.Add(FeatureType.Neighborhood);
 
-            var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             result.Query.ToString().Should().Be(new Coordinate()
             {
                 Latitude = -28.081626,
@@ -468,6 +466,8 @@ namespace Geo.MapBox.Tests.Services
 
             if (disposing)
             {
+                _httpClient?.Dispose();
+
                 foreach (var message in _responseMessages)
                 {
                     message?.Dispose();
@@ -475,6 +475,11 @@ namespace Geo.MapBox.Tests.Services
             }
 
             _disposed = true;
+        }
+
+        private MapBoxGeocoding BuildService()
+        {
+            return new MapBoxGeocoding(_httpClient, _keyContainer, _localizerFactory);
         }
     }
 }

@@ -34,10 +34,9 @@ namespace Geo.Google.Tests.Services
     /// </summary>
     public class GoogleGeocodingShould : IDisposable
     {
-        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly HttpClient _httpClient;
         private readonly GoogleKeyContainer _keyContainer;
-        private readonly IStringLocalizer<GoogleGeocoding> _localizer;
-        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -48,7 +47,7 @@ namespace Geo.Google.Tests.Services
         {
             _keyContainer = new GoogleKeyContainer("abc123");
 
-            _mockHandler = new Mock<HttpMessageHandler>();
+            var mockHandler = new Mock<HttpMessageHandler>();
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -73,7 +72,7 @@ namespace Geo.Google.Tests.Services
                     "'status':'OK'}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -95,7 +94,7 @@ namespace Geo.Google.Tests.Services
                     "'status':'OK'}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -104,9 +103,8 @@ namespace Geo.Google.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<GoogleGeocoding>(factory);
-            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _httpClient = new HttpClient(mockHandler.Object);
         }
 
         /// <inheritdoc/>
@@ -122,11 +120,11 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddGoogleKeySuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
 
-            service.AddGoogleKey(query);
+            sut.AddGoogleKey(query);
             query.Count.Should().Be(1);
             query["key"].Should().Be("abc123");
         }
@@ -137,15 +135,15 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
                 Language = new CultureInfo("da"),
             };
 
-            service.AddBaseParameters(parameters, query);
+            sut.AddBaseParameters(parameters, query);
             query.Count.Should().Be(1);
             query["language"].Should().Be("da");
         }
@@ -156,8 +154,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddCoordinateParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new CoordinateParameters()
             {
@@ -170,7 +168,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("da"),
             };
 
-            service.AddCoordinateParameters(parameters, query);
+            sut.AddCoordinateParameters(parameters, query);
             query.Count.Should().Be(3);
             query["location"].Should().Be("76.54,34.56");
             query["radius"].Should().Be("10000");
@@ -183,8 +181,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddBaseSearchParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -202,7 +200,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("pt-BR"),
             };
 
-            service.AddBaseSearchParameters(parameters, query);
+            sut.AddBaseSearchParameters(parameters, query);
             query.Count.Should().Be(8);
             query["minprice"].Should().Be("2");
             query["maxprice"].Should().Be("3");
@@ -220,8 +218,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddAutocompleteParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new QueryAutocompleteParameters()
             {
@@ -236,7 +234,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            service.AddAutocompleteParameters(parameters, query);
+            sut.AddAutocompleteParameters(parameters, query);
             query.Count.Should().Be(5);
             query["offset"].Should().Be("64");
             query["input"].Should().Be("123 East");
@@ -251,8 +249,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddBaseSearchParametersWithRestrictions1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -268,7 +266,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            service.AddBaseSearchParameters(parameters, query);
+            sut.AddBaseSearchParameters(parameters, query);
             query.Count.Should().Be(3);
             query["opennow"].Should().Be("false");
             query["location"].Should().Be("76.14,34.54");
@@ -281,8 +279,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void AddBaseSearchParametersWithRestrictions2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseSearchParameters()
             {
@@ -298,7 +296,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            service.AddBaseSearchParameters(parameters, query);
+            sut.AddBaseSearchParameters(parameters, query);
             query.Count.Should().Be(3);
             query["opennow"].Should().Be("false");
             query["location"].Should().Be("76.14,34.54");
@@ -311,8 +309,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildQueryAutocompleteRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new QueryAutocompleteParameters()
             {
                 Offset = 64,
@@ -326,7 +324,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            var uri = service.BuildQueryAutocompleteRequest(parameters);
+            var uri = sut.BuildQueryAutocompleteRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("offset=64");
             query.Should().Contain("input=123 East");
@@ -342,9 +340,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildQueryAutocompleteRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildQueryAutocompleteRequest(new QueryAutocompleteParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildQueryAutocompleteRequest(new QueryAutocompleteParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -357,8 +355,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildPlaceAutocompleteRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new PlacesAutocompleteParameters()
             {
                 Offset = 64,
@@ -388,7 +386,7 @@ namespace Geo.Google.Tests.Services
             parameters.Types.Add(PlaceType.Establishment);
             parameters.Types.Add(PlaceType.Regions);
 
-            var uri = service.BuildPlaceAutocompleteRequest(parameters);
+            var uri = sut.BuildPlaceAutocompleteRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("offset=64");
             query.Should().Contain("input=123 East");
@@ -409,9 +407,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildPlaceAutocompleteRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildPlaceAutocompleteRequest(new PlacesAutocompleteParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildPlaceAutocompleteRequest(new PlacesAutocompleteParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -424,8 +422,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildDetailsRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new DetailsParameters()
             {
                 PlaceId = "1a2b3c",
@@ -438,7 +436,7 @@ namespace Geo.Google.Tests.Services
             parameters.Fields.Add("field2");
             parameters.Fields.Add("field3");
 
-            var uri = service.BuildDetailsRequest(parameters);
+            var uri = sut.BuildDetailsRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("place_id=1a2b3c");
             query.Should().Contain("region=es");
@@ -454,9 +452,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildDetailsRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildDetailsRequest(new DetailsParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildDetailsRequest(new DetailsParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -469,8 +467,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildTextSearchRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new TextSearchParameters()
             {
                 Query = "456 West",
@@ -481,7 +479,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            var uri = service.BuildTextSearchRequest(parameters);
+            var uri = sut.BuildTextSearchRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("query=456 West");
             query.Should().Contain("region=es");
@@ -498,9 +496,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildTextSearchRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildTextSearchRequest(new TextSearchParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildTextSearchRequest(new TextSearchParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -513,8 +511,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildNearbySearchRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new NearbySearchParameters()
             {
                 RankBy = RankType.Prominence,
@@ -528,7 +526,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            var uri = service.BuildNearbySearchRequest(parameters);
+            var uri = sut.BuildNearbySearchRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("keyword=Test");
             query.Should().Contain("rankby=prominence");
@@ -544,9 +542,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildNearbySearchRequestWithException1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildNearbySearchRequest(new NearbySearchParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildNearbySearchRequest(new NearbySearchParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -559,8 +557,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildNearbySearchRequestWithException2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -572,7 +570,7 @@ namespace Geo.Google.Tests.Services
                 Radius = 1,
             };
 
-            Action act = () => service.BuildNearbySearchRequest(parameters);
+            Action act = () => sut.BuildNearbySearchRequest(parameters);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -585,8 +583,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildNearbySearchRequestWithException3()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -598,7 +596,7 @@ namespace Geo.Google.Tests.Services
                 Radius = 0,
             };
 
-            Action act = () => service.BuildNearbySearchRequest(parameters);
+            Action act = () => sut.BuildNearbySearchRequest(parameters);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -611,8 +609,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildNearbySearchRequestWithException4()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new NearbySearchParameters()
             {
                 Location = new Coordinate()
@@ -624,7 +622,7 @@ namespace Geo.Google.Tests.Services
                 Radius = 0,
             };
 
-            Action act = () => service.BuildNearbySearchRequest(parameters);
+            Action act = () => sut.BuildNearbySearchRequest(parameters);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -637,8 +635,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildFindPlaceRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new FindPlacesParameters()
             {
                 Input = "97 Test",
@@ -659,7 +657,7 @@ namespace Geo.Google.Tests.Services
             parameters.Fields.Add("field2");
             parameters.Fields.Add("field3");
 
-            var uri = service.BuildFindPlaceRequest(parameters);
+            var uri = sut.BuildFindPlaceRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("input=97 Test");
             query.Should().Contain("inputtype=textquery");
@@ -675,9 +673,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildFindPlaceRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildFindPlaceRequest(new FindPlacesParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildFindPlaceRequest(new FindPlacesParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -690,9 +688,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildGeocodingRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -705,8 +703,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Address = "123 East",
@@ -733,7 +731,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var uri = service.BuildGeocodingRequest(parameters);
+            var uri = sut.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("address=123 East");
             query.Should().Contain("components=country:ca|route:cctld|administrative_area:detroit");
@@ -749,9 +747,9 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -764,8 +762,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -787,7 +785,7 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("latlng=80.012,123.456");
             query.Should().Contain($"result_type={ResultType.Park.ToEnumString<ResultType>()}|{ResultType.Airport.ToEnumString<ResultType>()}|{ResultType.Sublocality.ToEnumString<ResultType>()}");
@@ -803,14 +801,14 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Address = "1600 Amphitheatre Pkwy, Mountain View",
             };
 
-            var response = await service.GeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(2);
         }
@@ -822,8 +820,8 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Coordinate = new Coordinate()
@@ -833,7 +831,7 @@ namespace Geo.Google.Tests.Services
                 },
             };
 
-            var response = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(1);
         }
@@ -844,13 +842,12 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void RegionInfoToCCTLDSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new GoogleGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
 
-            service.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
-            service.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
-            service.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
-            service.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
+            sut.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
+            sut.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
+            sut.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
+            sut.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
         }
 
         /// <summary>
@@ -866,6 +863,8 @@ namespace Geo.Google.Tests.Services
 
             if (disposing)
             {
+                _httpClient?.Dispose();
+
                 foreach (var message in _responseMessages)
                 {
                     message?.Dispose();
@@ -873,6 +872,11 @@ namespace Geo.Google.Tests.Services
             }
 
             _disposed = true;
+        }
+
+        private GoogleGeocoding BuildService()
+        {
+            return new GoogleGeocoding(_httpClient, _keyContainer, _localizerFactory);
         }
     }
 }

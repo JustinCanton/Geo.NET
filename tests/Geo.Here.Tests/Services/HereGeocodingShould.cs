@@ -32,10 +32,9 @@ namespace Geo.Here.Tests.Services
     /// </summary>
     public class HereGeocodingShould : IDisposable
     {
-        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly HttpClient _httpClient;
         private readonly HereKeyContainer _keyContainer;
-        private readonly IStringLocalizer<HereGeocoding> _localizer;
-        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -46,7 +45,7 @@ namespace Geo.Here.Tests.Services
         {
             _keyContainer = new HereKeyContainer("abc123");
 
-            _mockHandler = new Mock<HttpMessageHandler>();
+            var mockHandler = new Mock<HttpMessageHandler>();
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -59,7 +58,7 @@ namespace Geo.Here.Tests.Services
                         "\"mapView\":{\"west\":-0.18979,\"south\":51.45607,\"east\":-0.18691,\"north\":51.45787},\"scoring\":{\"queryScore\":0.99,\"fieldScore\":{\"streets\":[0.9],\"houseNumber\":1.0}}}]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -78,7 +77,7 @@ namespace Geo.Here.Tests.Services
                         "\"distance\":6,\"categories\":[{\"id\":\"200 - 2000 - 0011\",\"name\":\"Bar or Pub\",\"primary\":true},{\"id\":\"100 - 1000 - 0000\",\"name\":\"Restaurant\"}]}]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -97,7 +96,7 @@ namespace Geo.Here.Tests.Services
                         "\"lng\":-0.01137},\"access\":[{\"lat\":51.51129,\"lng\":-0.01135}],\"distance\":3452941,\"mapView\":{\"west\":-0.02104,\"south\":51.51082,\"east\":0.00436,\"north\":51.51477}}]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -119,7 +118,7 @@ namespace Geo.Here.Tests.Services
                         "\"highlights\":{\"title\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}],\"address\":{\"label\":[{\"start\":0,\"end\":3},{\"start\":4,\"end\":8}]}}}],\"queryTerms\":[]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -142,7 +141,7 @@ namespace Geo.Here.Tests.Services
                         "\"references\":[{\"supplier\":{\"id\":\"core\"},\"id\":\"1175964311\"}],\"foodTypes\":[{\"id\":\"800 - 064\",\"name\":\"Халықаралық\",\"primary\":true}]}]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -163,7 +162,7 @@ namespace Geo.Here.Tests.Services
                         "\"recurrence\":\"FREQ: DAILY; BYDAY: TU,WE,TH,SA\"},{\"start\":\"T230000\",\"duration\":\"PT24H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: FR\"},{\"start\":\"T120000\",\"duration\":\"PT11H00M\",\"recurrence\":\"FREQ: DAILY; BYDAY: SU\"}]}]}"),
             });
 
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -172,9 +171,8 @@ namespace Geo.Here.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<HereGeocoding>(factory);
-            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _httpClient = new HttpClient(mockHandler.Object);
         }
 
         /// <inheritdoc/>
@@ -190,11 +188,11 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddHereKeySuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
 
-            service.AddHereKey(query);
+            sut.AddHereKey(query);
             query.Count.Should().Be(1);
             query["apiKey"].Should().Be("abc123");
         }
@@ -205,15 +203,15 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
                 Language = new CultureInfo("es"),
             };
 
-            service.AddBaseParameters(parameters, query);
+            sut.AddBaseParameters(parameters, query);
             query.Count.Should().Be(1);
             query["lang"].Should().Be("es");
         }
@@ -224,8 +222,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddLimitingParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseFilterParameters()
             {
@@ -233,7 +231,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("da"),
             };
 
-            service.AddLimitingParameters(parameters, query);
+            sut.AddLimitingParameters(parameters, query);
             query.Count.Should().Be(2);
             query["limit"].Should().Be("17");
             query["lang"].Should().Be("da");
@@ -245,8 +243,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddLocatingParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseFilterParameters()
             {
@@ -259,7 +257,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("fr-FR"),
             };
 
-            service.AddLocatingParameters(parameters, query);
+            sut.AddLocatingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["at"].Should().Be("56.789,123.456");
             query["limit"].Should().Be("91");
@@ -272,8 +270,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddBoundingParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new AreaParameters()
             {
@@ -286,7 +284,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["at"].Should().Be("56.789,123.456");
             query["limit"].Should().Be("91");
@@ -305,7 +303,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("nl"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(4);
             query["in"].Should().Be("countryCode:BEL");
             query["at"].Should().Be("56.789,123.456");
@@ -328,7 +326,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("gl"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("circle:78.9,45.32;r=50000");
             query["limit"].Should().Be("83");
@@ -351,7 +349,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("da"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("countryCode:DNK,circle:48.9,15.32;r=6000");
             query["limit"].Should().Be("48");
@@ -371,7 +369,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("ca"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("bbox:-1.5,87.99,1.5,89.99");
             query["limit"].Should().Be("65");
@@ -392,7 +390,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            service.AddBoundingParameters(parameters, query);
+            sut.AddBoundingParameters(parameters, query);
             query.Count.Should().Be(3);
             query["in"].Should().Be("countryCode:POL,bbox:-43.5,45.99,-39.5,54.99");
             query["limit"].Should().Be("33");
@@ -405,10 +403,10 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void AddBoundingParametersWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
-            Action act = () => service.AddBoundingParameters(new AreaParameters(), query);
+            Action act = () => sut.AddBoundingParameters(new AreaParameters(), query);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -442,7 +440,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            act = () => service.AddBoundingParameters(new AreaParameters(), query);
+            act = () => sut.AddBoundingParameters(new AreaParameters(), query);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -455,8 +453,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodeParameters()
             {
                 Query = "123 East",
@@ -474,7 +472,7 @@ namespace Geo.Here.Tests.Services
             parameters.InCountry.Add(new RegionInfo("JP"));
             parameters.InCountry.Add(new RegionInfo("RS"));
 
-            var uri = service.BuildGeocodingRequest(parameters);
+            var uri = sut.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("qq=123 West");
@@ -491,9 +489,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildGeocodingRequest(new GeocodeParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildGeocodingRequest(new GeocodeParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -506,8 +504,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodeParameters()
             {
                 At = new Coordinate()
@@ -519,7 +517,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("at=76.789,-12.456");
             query.Should().Contain("limit=1");
@@ -533,9 +531,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodeParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildReverseGeocodingRequest(new ReverseGeocodeParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -548,8 +546,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildDiscoverRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new DiscoverParameters()
             {
                 Query = "123 East",
@@ -565,7 +563,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            var uri = service.BuildDiscoverRequest(parameters);
+            var uri = sut.BuildDiscoverRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("in=countryCode:POL");
@@ -581,9 +579,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildDiscoverRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildDiscoverRequest(new DiscoverParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildDiscoverRequest(new DiscoverParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -596,8 +594,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildAutosuggestRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new AutosuggestParameters()
             {
                 Query = "123 Weast",
@@ -614,7 +612,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var uri = service.BuildAutosuggestRequest(parameters);
+            var uri = sut.BuildAutosuggestRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 Weast");
             query.Should().Contain("termsLimit=7");
@@ -631,9 +629,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildAutosuggestRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildAutosuggestRequest(new AutosuggestParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildAutosuggestRequest(new AutosuggestParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -646,8 +644,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildBrowseRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new BrowseParameters()
             {
                 Categories = "Resturants",
@@ -662,7 +660,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var uri = service.BuildBrowseRequest(parameters);
+            var uri = sut.BuildBrowseRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("categories=Resturants");
             query.Should().Contain("name=Place");
@@ -679,9 +677,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildBrowseRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildBrowseRequest(new BrowseParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildBrowseRequest(new BrowseParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -694,15 +692,15 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildLookupRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
                 Language = new CultureInfo("ja"),
             };
 
-            var uri = service.BuildLookupRequest(parameters);
+            var uri = sut.BuildLookupRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
             query.Should().Contain("lang=ja");
@@ -715,9 +713,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void BuildLookupRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.BuildLookupRequest(new LookupParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildLookupRequest(new LookupParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -730,15 +728,15 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void ValidateAndCraftUriSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
                 Language = new CultureInfo("ja"),
             };
 
-            var uri = service.ValidateAndBuildUri<LookupParameters>(parameters, service.BuildLookupRequest);
+            var uri = sut.ValidateAndBuildUri<LookupParameters>(parameters, sut.BuildLookupRequest);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
             query.Should().Contain("lang=ja");
@@ -751,9 +749,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<LookupParameters>(null, service.BuildLookupRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<LookupParameters>(null, sut.BuildLookupRequest);
 
             act.Should()
                 .Throw<HereException>()
@@ -767,9 +765,9 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<LookupParameters>(new LookupParameters(), service.BuildLookupRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<LookupParameters>(new LookupParameters(), sut.BuildLookupRequest);
 
             act.Should()
                 .Throw<HereException>()
@@ -785,8 +783,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodeParameters()
             {
                 Query = "123 East",
@@ -802,7 +800,7 @@ namespace Geo.Here.Tests.Services
 
             parameters.InCountry.Add(new RegionInfo("DK"));
 
-            var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(1);
         }
 
@@ -813,8 +811,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodeParameters()
             {
                 At = new Coordinate()
@@ -826,7 +824,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(1);
         }
 
@@ -837,8 +835,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task DiscoverAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new DiscoverParameters()
             {
                 Query = "123 East",
@@ -854,7 +852,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            var result = await service.DiscoverAsync(parameters).ConfigureAwait(false);
+            var result = await sut.DiscoverAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(1);
         }
 
@@ -865,8 +863,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task AutosuggestAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new AutosuggestParameters()
             {
                 Query = "123 Weast",
@@ -883,7 +881,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await service.AutosuggestAsync(parameters).ConfigureAwait(false);
+            var result = await sut.AutosuggestAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(2);
         }
 
@@ -894,15 +892,15 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task LookupAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new LookupParameters()
             {
                 Id = "12345sudfinm",
                 Language = new CultureInfo("ja"),
             };
 
-            var result = await service.LookupAsync(parameters).ConfigureAwait(false);
+            var result = await sut.LookupAsync(parameters).ConfigureAwait(false);
             result.Title.Should().Be("Royal Oak");
             result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
         }
@@ -914,8 +912,8 @@ namespace Geo.Here.Tests.Services
         [Fact]
         public async Task BrowseAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new HereGeocoding(httpClient, _keyContainer, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new BrowseParameters()
             {
                 Categories = "Resturants",
@@ -930,7 +928,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await service.BrowseAsync(parameters).ConfigureAwait(false);
+            var result = await sut.BrowseAsync(parameters).ConfigureAwait(false);
             result.Items.Count.Should().Be(2);
         }
 
@@ -947,6 +945,8 @@ namespace Geo.Here.Tests.Services
 
             if (disposing)
             {
+                _httpClient?.Dispose();
+
                 foreach (var message in _responseMessages)
                 {
                     message?.Dispose();
@@ -954,6 +954,11 @@ namespace Geo.Here.Tests.Services
             }
 
             _disposed = true;
+        }
+
+        private HereGeocoding BuildService()
+        {
+            return new HereGeocoding(_httpClient, _keyContainer, _localizerFactory);
         }
     }
 }

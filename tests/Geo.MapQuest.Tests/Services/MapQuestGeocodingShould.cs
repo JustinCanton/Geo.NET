@@ -32,11 +32,10 @@ namespace Geo.MapQuest.Tests.Services
     /// </summary>
     public class MapQuestGeocodingShould : IDisposable
     {
-        private readonly Mock<HttpMessageHandler> _mockHandler;
+        private readonly HttpClient _httpClient;
         private readonly MapQuestKeyContainer _keyContainer;
         private readonly MapQuestEndpoint _endpoint;
-        private readonly IStringLocalizer<MapQuestGeocoding> _localizer;
-        private readonly IStringLocalizer<ClientExecutor> _coreLocalizer;
+        private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -48,7 +47,7 @@ namespace Geo.MapQuest.Tests.Services
             _keyContainer = new MapQuestKeyContainer("abc123");
             _endpoint = new MapQuestEndpoint(true);
 
-            _mockHandler = new Mock<HttpMessageHandler>();
+            var mockHandler = new Mock<HttpMessageHandler>();
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -69,7 +68,7 @@ namespace Geo.MapQuest.Tests.Services
             });
 
             // For reverse geocoding, use the places endpoint type
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -96,7 +95,7 @@ namespace Geo.MapQuest.Tests.Services
             });
 
             // For reverse geocoding, use the permanent endpoint type
-            _mockHandler
+            mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -105,9 +104,8 @@ namespace Geo.MapQuest.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-            _localizer = new StringLocalizer<MapQuestGeocoding>(factory);
-            _coreLocalizer = new StringLocalizer<ClientExecutor>(factory);
+            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _httpClient = new HttpClient(mockHandler.Object);
         }
 
         /// <inheritdoc/>
@@ -123,11 +121,11 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void AddMapBoxKeySuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
 
-            service.AddMapQuestKey(query);
+            sut.AddMapQuestKey(query);
             query.Count.Should().Be(1);
             query["key"].Should().Be("abc123");
         }
@@ -138,15 +136,15 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var query = new NameValueCollection();
             var parameters = new BaseParameters()
             {
                 IncludeThumbMaps = true,
             };
 
-            service.AddBaseParameters(parameters, query);
+            sut.AddBaseParameters(parameters, query);
             query.Count.Should().Be(1);
             query["thumbMaps"].Should().Be("true");
         }
@@ -157,8 +155,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildLicensedGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -175,7 +173,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
-            var uri = service.BuildGeocodingRequest(parameters);
+            var uri = sut.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=123 East");
             query.Should().Contain("boundingBox=87.65,123.45,45.67,165.43");
@@ -195,8 +193,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildNonLicensedGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false), _localizer, _coreLocalizer);
+            var sut = BuildService(new MapQuestEndpoint(false));
+
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -213,7 +211,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
-            var uri = service.BuildGeocodingRequest(parameters);
+            var uri = sut.BuildGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=123 East");
             query.Should().Contain("ignoreLatLngInput=false");
@@ -232,9 +230,9 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
-            Action act = () => service.BuildGeocodingRequest(new GeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildGeocodingRequest(new GeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -247,8 +245,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildLicensedReverseGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -261,7 +259,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=56.78,78.91");
             query.Should().Contain("includeNearestIntersection=true");
@@ -279,8 +277,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildNonLicensedReverseGeocodingRequestSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, new MapQuestEndpoint(false), _localizer, _coreLocalizer);
+            var sut = BuildService(new MapQuestEndpoint(false));
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -293,7 +291,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = true,
             };
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=56.78,78.91");
             query.Should().Contain("includeNearestIntersection=false");
@@ -311,9 +309,9 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void BuildReverseGeocodingRequestFailsWithException()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
-            Action act = () => service.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
+            var sut = BuildService();
+
+            Action act = () => sut.BuildReverseGeocodingRequest(new ReverseGeocodingParameters());
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -326,8 +324,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void ValidateAndCraftUriSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -340,7 +338,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = true,
             };
 
-            var uri = service.BuildReverseGeocodingRequest(parameters);
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=56.78,78.91");
             query.Should().Contain("includeNearestIntersection=false");
@@ -358,9 +356,9 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException1()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(null, service.BuildReverseGeocodingRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(null, sut.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
@@ -374,9 +372,9 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void ValidateAndCraftUriFailsWithException2()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
-            Action act = () => service.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), service.BuildReverseGeocodingRequest);
+            var sut = BuildService();
+
+            Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), sut.BuildReverseGeocodingRequest);
 
             act.Should()
                 .Throw<MapQuestException>()
@@ -392,8 +390,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public async Task GeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new GeocodingParameters()
             {
                 Location = "123 East",
@@ -410,7 +408,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
-            var result = await service.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].ProvidedLocation.Location.Should().Be("123 East");
@@ -425,8 +423,8 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public async Task ReverseGeocodingAsyncSuccessfully()
         {
-            using var httpClient = new HttpClient(_mockHandler.Object);
-            var service = new MapQuestGeocoding(httpClient, _keyContainer, _endpoint, _localizer, _coreLocalizer);
+            var sut = BuildService();
+
             var parameters = new ReverseGeocodingParameters()
             {
                 Location = new Coordinate()
@@ -439,7 +437,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = true,
             };
 
-            var result = await service.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
@@ -465,6 +463,8 @@ namespace Geo.MapQuest.Tests.Services
 
             if (disposing)
             {
+                _httpClient?.Dispose();
+
                 foreach (var message in _responseMessages)
                 {
                     message?.Dispose();
@@ -472,6 +472,11 @@ namespace Geo.MapQuest.Tests.Services
             }
 
             _disposed = true;
+        }
+
+        private MapQuestGeocoding BuildService(MapQuestEndpoint endpoint = null)
+        {
+            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint, _localizerFactory);
         }
     }
 }
