@@ -20,16 +20,18 @@ namespace Geo.Bing.Services
     using Geo.Core;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
 
     /// <summary>
     /// A service to call the Bing geocoding API.
     /// </summary>
     public class BingGeocoding : ClientExecutor, IBingGeocoding
     {
-        private const string _apiName = "Bing";
-        private readonly string _baseUri = "http://dev.virtualearth.net/REST/v1/Locations";
+        private const string ApiName = "Bing";
+        private const string BaseUri = "http://dev.virtualearth.net/REST/v1/Locations";
+
         private readonly IBingKeyContainer _keyContainer;
-        private readonly IStringLocalizer<BingGeocoding> _localizer;
+        private readonly IStringLocalizer _localizer;
         private readonly ILogger<BingGeocoding> _logger;
 
         /// <summary>
@@ -37,20 +39,18 @@ namespace Geo.Bing.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        /// <param name="coreLocalizer">A <see cref="IStringLocalizer{T}"/> used for localizing core log or exception messages.</param>
+        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
         /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
         public BingGeocoding(
             HttpClient client,
             IBingKeyContainer keyContainer,
-            IStringLocalizer<BingGeocoding> localizer,
-            IStringLocalizer<ClientExecutor> coreLocalizer,
+            IStringLocalizerFactory localizerFactory,
             ILogger<BingGeocoding> logger = null)
-            : base(client, coreLocalizer)
+            : base(client, localizerFactory)
         {
-            _keyContainer = keyContainer;
-            _localizer = localizer;
-            _logger = logger;
+            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _localizer = localizerFactory?.Create(typeof(BingGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _logger = logger ?? NullLogger<BingGeocoding>.Instance;
         }
 
         /// <inheritdoc/>
@@ -60,7 +60,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -70,7 +70,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -78,7 +78,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, _apiName, cancellationToken).ConfigureAwait(false);
+            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Geo.Bing.Services
             if (parameters is null)
             {
                 var error = _localizer["Null Parameters"];
-                _logger?.LogError(error);
+                _logger.BingError(error);
                 throw new BingException(error, new ArgumentNullException(nameof(parameters)));
             }
 
@@ -104,7 +104,7 @@ namespace Geo.Bing.Services
             catch (ArgumentException ex)
             {
                 var error = _localizer["Failed To Create Uri"];
-                _logger?.LogError(error);
+                _logger.BingError(error);
                 throw new BingException(error, ex);
             }
         }
@@ -117,13 +117,13 @@ namespace Geo.Bing.Services
         /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or empty.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_baseUri);
+            var uriBuilder = new UriBuilder(BaseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
                 var error = _localizer["Invalid Query"];
-                _logger?.LogError(error);
+                _logger.BingError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
@@ -149,11 +149,11 @@ namespace Geo.Bing.Services
             if (parameters.Point is null)
             {
                 var error = _localizer["Invalid Point"];
-                _logger?.LogError(error);
+                _logger.BingError(error);
                 throw new ArgumentException(error, nameof(parameters.Point));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri + $"/{parameters.Point}");
+            var uriBuilder = new UriBuilder(BaseUri + $"/{parameters.Point}");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             var includes = new CommaDelimitedStringCollection();
@@ -198,7 +198,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Do Not Include Entity Types"]);
+                _logger.BingDebug(_localizer["Do Not Include Entity Types"]);
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -225,11 +225,11 @@ namespace Geo.Bing.Services
                 parameters.CountryRegion == null)
             {
                 var error = _localizer["Invalid Address Information"];
-                _logger?.LogError(error);
+                _logger.BingError(error);
                 throw new ArgumentException(error, nameof(parameters));
             }
 
-            var uriBuilder = new UriBuilder(_baseUri);
+            var uriBuilder = new UriBuilder(BaseUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
             if (!string.IsNullOrWhiteSpace(parameters.AdministrationDistrict))
@@ -238,7 +238,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Administration District"]);
+                _logger.BingDebug(_localizer["Invalid Administration District"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Locality))
@@ -247,7 +247,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Locality"]);
+                _logger.BingDebug(_localizer["Invalid Locality"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.PostalCode))
@@ -256,7 +256,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Postal Code"]);
+                _logger.BingDebug(_localizer["Invalid Postal Code"]);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.AddressLine))
@@ -265,7 +265,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Address Line"]);
+                _logger.BingDebug(_localizer["Invalid Address Line"]);
             }
 
             if (parameters.CountryRegion != null)
@@ -274,7 +274,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Invalid Country Region"]);
+                _logger.BingDebug(_localizer["Invalid Country Region"]);
             }
 
             BuildLimitedResultQuery(parameters, ref query);
@@ -299,7 +299,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogWarning(_localizer["Invalid Maximum Results"]);
+                _logger.BingWarning(_localizer["Invalid Maximum Results"]);
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -318,7 +318,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Do Not Include Neighbourhood"]);
+                _logger.BingDebug(_localizer["Do Not Include Neighbourhood"]);
             }
 
             var includes = new CommaDelimitedStringCollection();
@@ -338,7 +338,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger?.LogDebug(_localizer["Do Not Include Types"]);
+                _logger.BingDebug(_localizer["Do Not Include Types"]);
             }
         }
 

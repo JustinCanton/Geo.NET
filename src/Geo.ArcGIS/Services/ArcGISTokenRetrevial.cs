@@ -32,8 +32,8 @@ namespace Geo.ArcGIS.Services
             HttpClient client,
             IArcGISCredentialsContainer credentialsContainer)
         {
-            _client = client;
-            _credentialsContainer = credentialsContainer;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _credentialsContainer = credentialsContainer ?? throw new ArgumentNullException(nameof(credentialsContainer));
         }
 
         /// <inheritdoc/>
@@ -55,7 +55,11 @@ namespace Geo.ArcGIS.Services
             using var content = BuildContent();
             var response = await _client.PostAsync(_tokenRefreshAddress, content, cancellationToken).ConfigureAwait(false);
 
-            var json = response.Content.ReadAsStringAsync().Result;
+#if NET5_0_OR_GREATER
+            var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
 
             return JsonConvert.DeserializeObject<Token>(json);
         }

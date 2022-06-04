@@ -17,5 +17,11 @@ namespace Geo.Here.Models.Responses
         /// </summary>
         [JsonProperty("distance")]
         public long Distance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scoring information, which indicates for each result how well it matches to the original query.
+        /// </summary>
+        [JsonProperty("scoring")]
+        public Score Scoring { get; set; }
     }
 }

@@ -33,17 +33,10 @@ The support for this project includes:
 	 - Open API
 		 - [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-	 - Lisenced Api
+	 - Lisenced API
 		 - [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 
-## Get Started
-
-Use a form of [Visual Studio](https://www.visualstudio.com/)  to work with the project for a seamless experience.
-
-Pull the project, and open the Geo.NET.sln file to build this library.
-
-Some of the best ways to contribute are to try things out, file issues, join in design conversations, and make pull-requests.
 
 ## Configuration and Sample Usage
 The configuration and sample usage for each supported interface can be found within each project.
@@ -54,3 +47,40 @@ The configuration and sample usage for each supported interface can be found wit
  - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
+
+
+## Roadmap
+
+### 1.1.0
+|Status|Goal|
+|:--:|--|
+|✅|Adding score into the HERE Geocoding response|
+|✅|Adding net6.0 support|
+|✅|Adding ChangeLog|
+
+
+### 1.2.0
+|Status|Goal|
+|:--:|--|
+|❌|Adding support for conversion from coordinates to flexible polylines rather than requiring polylines as input for the HERE API ([#36](https://github.com/JustinCanton/Geo.NET/issues/36))|
+
+
+### Suggestions or Discussion Points
+If you would like to weigh in on any suggestion, please make a Github Issue and we can discuss further.
+
+✅ = Accepted
+❌ = Rejected
+❓ = Still discussing
+
+|Decision|Suggestion|
+|:--:|--|
+|❓|Adding support for routing APIs (This may spawn a new repository rather than being placed in this repository)|
+
+
+## Get Started and How To Contribute
+
+Use a form of [Visual Studio](https://www.visualstudio.com/)  to work with the project for a seamless experience.
+
+Pull the project, and open the Geo.NET.sln file to build this library.
+
+Some of the best ways to contribute are to try things out, file issues, join in design conversations, and make pull-requests.

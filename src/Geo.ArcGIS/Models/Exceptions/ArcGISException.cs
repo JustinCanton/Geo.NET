@@ -25,7 +25,7 @@ namespace Geo.ArcGIS.Models.Exceptions
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
     public class ArcGISException : Exception
     {
-        private const string _defaultMessage = "{0} See the inner exception for more information.";
+        private const string DefaultMessage = "{0} See the inner exception for more information.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISException"/> class.
@@ -49,7 +49,7 @@ namespace Geo.ArcGIS.Models.Exceptions
         /// <param name="message">The message that describes the error.</param>
         /// <param name="inner">The exception that is the cause of the current exception.</param>
         public ArcGISException(string message, Exception inner)
-            : base(string.Format(CultureInfo.InvariantCulture, _defaultMessage, message), inner)
+            : base(string.Format(CultureInfo.InvariantCulture, DefaultMessage, message), inner)
         {
         }
     }
