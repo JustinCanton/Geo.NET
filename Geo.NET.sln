@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 		src\Source.props = src\Source.props
 		stylecop.json = stylecop.json
-		tests\Tests.with.xUnit.props = tests\Tests.with.xUnit.props
+		test\Tests.with.xUnit.props = test\Tests.with.xUnit.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F3BA9BC-542C-450C-96C9-F0D72FECC930}"

@@ -33,7 +33,7 @@ The support for this project includes:
 	 - Open API
 		 - [Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
-	 - Lisenced API
+	 - Licensed API
 		 - [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
 
