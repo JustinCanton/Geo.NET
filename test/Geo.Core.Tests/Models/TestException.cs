@@ -6,8 +6,9 @@
 namespace Geo.Core.Tests.Models
 {
     using System;
+    using Geo.Core.Models.Exceptions;
 
-    public class TestException : Exception
+    public sealed class TestException : GeoCoreException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestException"/> class.

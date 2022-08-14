@@ -47,18 +47,20 @@ namespace Geo.ArcGIS.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
         /// <param name="tokenContainer">A <see cref="IArcGISTokenContainer"/> used for retreiving the ArcGIS token.</param>
-        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
-        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
+        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
+        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public ArcGISGeocoding(
             HttpClient client,
             IArcGISTokenContainer tokenContainer,
+            IGeoNETExceptionProvider exceptionProvider,
             IStringLocalizerFactory localizerFactory,
-            ILogger<ArcGISGeocoding> logger = null)
-            : base(client, localizerFactory)
+            ILoggerFactory loggerFactory = null)
+            : base(client, exceptionProvider, localizerFactory, loggerFactory)
         {
             _tokenContainer = tokenContainer ?? throw new ArgumentNullException(nameof(tokenContainer));
             _localizer = localizerFactory?.Create(typeof(ArcGISGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
-            _logger = logger ?? NullLogger<ArcGISGeocoding>.Instance;
+            _logger = loggerFactory?.CreateLogger<ArcGISGeocoding>() ?? NullLogger<ArcGISGeocoding>.Instance;
         }
 
         /// <inheritdoc/>

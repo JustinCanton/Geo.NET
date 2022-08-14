@@ -36,6 +36,7 @@ namespace Geo.ArcGIS.Tests.Services
     {
         private readonly HttpClient _httpClient;
         private readonly Mock<IArcGISTokenContainer> _mockTokenContainer;
+        private readonly IGeoNETExceptionProvider _exceptionProvider;
         private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
@@ -144,6 +145,7 @@ namespace Geo.ArcGIS.Tests.Services
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _httpClient = new HttpClient(mockHandler.Object);
+            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -568,7 +570,7 @@ namespace Geo.ArcGIS.Tests.Services
 
         private ArcGISGeocoding BuildService()
         {
-            return new ArcGISGeocoding(_httpClient, _mockTokenContainer.Object, _localizerFactory);
+            return new ArcGISGeocoding(_httpClient, _mockTokenContainer.Object, _exceptionProvider, _localizerFactory);
         }
     }
 }

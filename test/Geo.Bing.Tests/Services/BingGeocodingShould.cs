@@ -33,6 +33,7 @@ namespace Geo.Bing.Tests.Services
     {
         private readonly HttpClient _httpClient;
         private readonly BingKeyContainer _keyContainer;
+        private readonly IGeoNETExceptionProvider _exceptionProvider;
         private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
@@ -129,6 +130,7 @@ namespace Geo.Bing.Tests.Services
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _httpClient = new HttpClient(mockHandler.Object);
+            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -432,7 +434,7 @@ namespace Geo.Bing.Tests.Services
 
         private BingGeocoding BuildService()
         {
-            return new BingGeocoding(_httpClient, _keyContainer, _localizerFactory);
+            return new BingGeocoding(_httpClient, _keyContainer, _exceptionProvider, _localizerFactory);
         }
     }
 }
