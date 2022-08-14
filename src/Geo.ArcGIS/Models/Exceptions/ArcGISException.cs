@@ -24,7 +24,7 @@ namespace Geo.ArcGIS.Models.Exceptions
     /// <exception cref="TaskCanceledException">Thrown when the ArcGIS request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-    public class ArcGISException : GeoCoreException
+    public sealed class ArcGISException : GeoCoreException
     {
         private const string DefaultMessage = "{0} See the inner exception for more information.";
 

@@ -24,7 +24,7 @@ namespace Geo.Google.Models.Exceptions
     /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-    public class GoogleException : GeoCoreException
+    public sealed class GoogleException : GeoCoreException
     {
         private const string DefaultMessage = "{0} See the inner exception for more information.";
 

@@ -14,7 +14,7 @@ namespace Geo.Core
     /// <summary>
     /// Used to provide an exception based on the exception type.
     /// </summary>
-    public class GeoNETExceptionProvider : IGeoNETExceptionProvider
+    public sealed class GeoNETExceptionProvider : IGeoNETExceptionProvider
     {
         private static readonly ConcurrentDictionary<Type, Func<string, Exception, Exception>> _cachedInnerExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception, Exception>>();
         private static readonly ConcurrentDictionary<Type, Func<string, Exception>> _cachedExceptionDelegates = new ConcurrentDictionary<Type, Func<string, Exception>>();
