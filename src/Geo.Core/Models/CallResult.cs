@@ -28,7 +28,6 @@ namespace Geo.Core.Models
             Body = body;
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CallResult{TResult}"/> class.
         /// </summary>

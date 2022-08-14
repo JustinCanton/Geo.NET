@@ -6,7 +6,6 @@
 namespace Geo.MapBox.Models.Exceptions
 {
     using System;
-    using System.Collections;
     using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
