@@ -6,9 +6,11 @@
 namespace Geo.MapBox.Models.Exceptions
 {
     using System;
+    using System.Collections;
     using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Geo.Core.Models.Exceptions;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -23,7 +25,7 @@ namespace Geo.MapBox.Models.Exceptions
     /// <exception cref="TaskCanceledException">Thrown when the MapBox request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-    public class MapBoxException : Exception
+    public sealed class MapBoxException : GeoCoreException
     {
         private const string DefaultMessage = "{0} See the inner exception for more information.";
 

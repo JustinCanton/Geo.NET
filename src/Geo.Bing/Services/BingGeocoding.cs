@@ -39,18 +39,20 @@ namespace Geo.Bing.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
-        /// <param name="localizerFactory">A <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
-        /// <param name="logger">A <see cref="ILogger{T}"/> used for logging information.</param>
+        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
+        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public BingGeocoding(
             HttpClient client,
             IBingKeyContainer keyContainer,
+            IGeoNETExceptionProvider exceptionProvider,
             IStringLocalizerFactory localizerFactory,
-            ILogger<BingGeocoding> logger = null)
-            : base(client, localizerFactory)
+            ILoggerFactory loggerFactory = null)
+            : base(client, exceptionProvider, localizerFactory, loggerFactory)
         {
             _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
             _localizer = localizerFactory?.Create(typeof(BingGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
-            _logger = logger ?? NullLogger<BingGeocoding>.Instance;
+            _logger = loggerFactory?.CreateLogger<BingGeocoding>() ?? NullLogger<BingGeocoding>.Instance;
         }
 
         /// <inheritdoc/>

@@ -9,6 +9,7 @@ namespace Geo.Here.Models.Exceptions
     using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Geo.Core.Models.Exceptions;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -23,7 +24,7 @@ namespace Geo.Here.Models.Exceptions
     /// <exception cref="TaskCanceledException">Thrown when the HERE request is cancelled.</exception>
     /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
     /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
-    public class HereException : Exception
+    public class HereException : GeoCoreException
     {
         private const string DefaultMessage = "{0} See the inner exception for more information.";
 
