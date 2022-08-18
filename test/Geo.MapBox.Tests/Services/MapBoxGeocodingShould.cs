@@ -213,6 +213,29 @@ namespace Geo.MapBox.Tests.Services
             path.Should().Contain("mapbox.places/123 East");
         }
 
+        [Fact]
+        public void BuildGeocodingRequest_WithCharacterNeedingEncoding_SuccessfullyBuildsAnEncodedUrl()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Query = "123 East #425",
+                Limit = 5,
+                Routing = true,
+            };
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("limit=5");
+            query.Should().Contain("routing=true");
+            query.Should().Contain("access_token=abc123");
+
+            var path = HttpUtility.UrlDecode(uri.AbsolutePath);
+            path.Should().Contain("mapbox.places/123 East #425");
+            uri.AbsolutePath.Should().Contain("mapbox.places/123+East+%23425");
+        }
+
         /// <summary>
         /// Tests the building of the geocoding parameters fails if no query is provided.
         /// </summary>
