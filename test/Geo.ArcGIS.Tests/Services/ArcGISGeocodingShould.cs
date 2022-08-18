@@ -7,7 +7,6 @@ namespace Geo.ArcGIS.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
     using System.Net.Http;
@@ -22,6 +21,7 @@ namespace Geo.ArcGIS.Tests.Services
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Services;
     using Geo.Core;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -164,11 +164,13 @@ namespace Geo.ArcGIS.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            await sut.AddArcGISToken(query, CancellationToken.None).ConfigureAwait(false);
-            query.Count.Should().Be(1);
-            query["token"].Should().Be("token123");
+            query = await sut.AddArcGISToken(query, CancellationToken.None).ConfigureAwait(false);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["token"].Should().Be("token123");
         }
 
         /// <summary>
@@ -179,25 +181,29 @@ namespace Geo.ArcGIS.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new StorageParameters()
             {
                 ForStorage = false,
             };
 
-            sut.AddStorageParameter(parameters, query);
-            query.Count.Should().Be(1);
-            query["forStorage"].Should().Be("false");
+            sut.AddStorageParameter(parameters, ref query);
 
-            query.Clear();
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["forStorage"].Should().Be("false");
+
+            query = QueryString.Empty;
             parameters = new StorageParameters()
             {
                 ForStorage = true,
             };
 
-            sut.AddStorageParameter(parameters, query);
-            query.Count.Should().Be(1);
-            query["forStorage"].Should().Be("true");
+            sut.AddStorageParameter(parameters, ref query);
+
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["forStorage"].Should().Be("true");
         }
 
         /// <summary>

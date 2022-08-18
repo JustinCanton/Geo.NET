@@ -6,14 +6,12 @@
 namespace Geo.Google.Services
 {
     using System;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Google.Abstractions;
@@ -22,6 +20,7 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -182,7 +181,7 @@ namespace Geo.Google.Services
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(GeocodingUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Address))
             {
@@ -191,11 +190,11 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.Address));
             }
 
-            query.Add("address", parameters.Address);
+            query = query.Add("address", parameters.Address);
 
             if (parameters.Components != null)
             {
-                query.Add("components", parameters.Components.ToString());
+                query = query.Add("components", parameters.Components.ToString());
             }
             else
             {
@@ -206,7 +205,7 @@ namespace Geo.Google.Services
                 parameters.Bounds.Southwest != null &&
                 parameters.Bounds.Northeast != null)
             {
-                query.Add("bounds", parameters.Bounds.ToString());
+                query = query.Add("bounds", parameters.Bounds.ToString());
             }
             else
             {
@@ -215,16 +214,16 @@ namespace Geo.Google.Services
 
             if (parameters.Region != null)
             {
-                query.Add("region", RegionInfoToCCTLD(parameters.Region));
+                query = query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Region"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -240,7 +239,7 @@ namespace Geo.Google.Services
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(GeocodingUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (parameters.Coordinate is null)
             {
@@ -249,7 +248,7 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
 
-            query.Add("latlng", parameters.Coordinate.ToString());
+            query = query.Add("latlng", parameters.Coordinate.ToString());
 
             if (parameters.ResultTypes != null)
             {
@@ -264,7 +263,7 @@ namespace Geo.Google.Services
                     resultTypesBuilder.Append(resultType.ToEnumString<ResultType>());
                 }
 
-                query.Add("result_type", resultTypesBuilder.ToString());
+                query = query.Add("result_type", resultTypesBuilder.ToString());
             }
             else
             {
@@ -284,16 +283,16 @@ namespace Geo.Google.Services
                     locationTypesBuilder.Append(locationType.ToEnumString<LocationType>());
                 }
 
-                query.Add("location_type", locationTypesBuilder.ToString());
+                query = query.Add("location_type", locationTypesBuilder.ToString());
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Location Types"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -309,7 +308,7 @@ namespace Geo.Google.Services
         internal Uri BuildFindPlaceRequest(FindPlacesParameters parameters)
         {
             var uriBuilder = new UriBuilder(FindPlaceUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
@@ -325,13 +324,13 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.InputType));
             }
 
-            query.Add("input", parameters.Input);
+            query = query.Add("input", parameters.Input);
 
-            query.Add("inputtype", parameters.InputType.ToEnumString());
+            query = query.Add("inputtype", parameters.InputType.ToEnumString());
 
             if (parameters.Fields != null && parameters.Fields.Count > 0)
             {
-                query.Add("fields", string.Join(",", parameters.Fields));
+                query = query.Add("fields", string.Join(",", parameters.Fields));
             }
             else
             {
@@ -343,13 +342,13 @@ namespace Geo.Google.Services
                 switch (parameters.LocationBias)
                 {
                     case Coordinate coordinate:
-                        query.Add("locationbias", $"point:{coordinate}");
+                        query = query.Add("locationbias", $"point:{coordinate}");
                         break;
                     case Circle circle:
-                        query.Add("locationbias", $"circle:{circle}");
+                        query = query.Add("locationbias", $"circle:{circle}");
                         break;
                     case Boundaries boundary:
-                        query.Add("locationbias", $"rectangle:{boundary}");
+                        query = query.Add("locationbias", $"rectangle:{boundary}");
                         break;
                     default:
                         _logger.GoogleWarning(_localizer["Invalid Location Bias Type"]);
@@ -361,9 +360,9 @@ namespace Geo.Google.Services
                 _logger.GoogleDebug(_localizer["Invalid Location Bias"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -383,7 +382,7 @@ namespace Geo.Google.Services
         internal Uri BuildNearbySearchRequest(NearbySearchParameters parameters)
         {
             var uriBuilder = new UriBuilder(NearbySearchUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (parameters.Location == null)
             {
@@ -417,7 +416,7 @@ namespace Geo.Google.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Keyword))
             {
-                query.Add("keyword", parameters.Keyword);
+                query = query.Add("keyword", parameters.Keyword);
             }
             else
             {
@@ -426,16 +425,16 @@ namespace Geo.Google.Services
 
             if (parameters.RankBy >= RankType.Prominence && parameters.RankBy <= RankType.Distance)
             {
-                query.Add("rankby", parameters.RankBy.ToEnumString());
+                query = query.Add("rankby", parameters.RankBy.ToEnumString());
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid RankBy"]);
             }
 
-            AddBaseSearchParameters(parameters, query);
+            AddBaseSearchParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -451,7 +450,7 @@ namespace Geo.Google.Services
         internal Uri BuildTextSearchRequest(TextSearchParameters parameters)
         {
             var uriBuilder = new UriBuilder(TextSearchUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
@@ -460,20 +459,20 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            query.Add("query", parameters.Query);
+            query = query.Add("query", parameters.Query);
 
             if (parameters.Region != null)
             {
-                query.Add("region", RegionInfoToCCTLD(parameters.Region));
+                query = query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Region"]);
             }
 
-            AddBaseSearchParameters(parameters, query);
+            AddBaseSearchParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -489,7 +488,7 @@ namespace Geo.Google.Services
         internal Uri BuildDetailsRequest(DetailsParameters parameters)
         {
             var uriBuilder = new UriBuilder(DetailsUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.PlaceId))
             {
@@ -498,11 +497,11 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.PlaceId));
             }
 
-            query.Add("place_id", parameters.PlaceId);
+            query = query.Add("place_id", parameters.PlaceId);
 
             if (parameters.Region != null)
             {
-                query.Add("region", RegionInfoToCCTLD(parameters.Region));
+                query = query.Add("region", RegionInfoToCCTLD(parameters.Region));
             }
             else
             {
@@ -511,7 +510,7 @@ namespace Geo.Google.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.SessionToken))
             {
-                query.Add("sessiontoken", parameters.SessionToken);
+                query = query.Add("sessiontoken", parameters.SessionToken);
             }
             else
             {
@@ -520,16 +519,16 @@ namespace Geo.Google.Services
 
             if (parameters.Fields != null && parameters.Fields.Count > 0)
             {
-                query.Add("fields", string.Join(",", parameters.Fields));
+                query = query.Add("fields", string.Join(",", parameters.Fields));
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Fields"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -545,7 +544,7 @@ namespace Geo.Google.Services
         internal Uri BuildPlaceAutocompleteRequest(PlacesAutocompleteParameters parameters)
         {
             var uriBuilder = new UriBuilder(PlaceAutocompleteUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
@@ -556,7 +555,7 @@ namespace Geo.Google.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.SessionToken))
             {
-                query.Add("sessiontoken", parameters.SessionToken);
+                query = query.Add("sessiontoken", parameters.SessionToken);
             }
             else
             {
@@ -565,7 +564,7 @@ namespace Geo.Google.Services
 
             if (parameters.Origin != null)
             {
-                query.Add("origin", parameters.Origin.ToString());
+                query = query.Add("origin", parameters.Origin.ToString());
             }
             else
             {
@@ -574,7 +573,7 @@ namespace Geo.Google.Services
 
             if (parameters.Types != null && parameters.Types.Count > 0)
             {
-                query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToEnumString())));
+                query = query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToEnumString())));
             }
             else
             {
@@ -583,7 +582,7 @@ namespace Geo.Google.Services
 
             if (parameters.Components != null)
             {
-                query.Add("components", parameters.Components.ToString());
+                query = query.Add("components", parameters.Components.ToString());
             }
             else
             {
@@ -591,12 +590,12 @@ namespace Geo.Google.Services
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("strictbounds", parameters.StrictBounds.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("strictbounds", parameters.StrictBounds.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
-            AddAutocompleteParameters(parameters, query);
+            AddAutocompleteParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -612,7 +611,7 @@ namespace Geo.Google.Services
         internal Uri BuildQueryAutocompleteRequest(QueryAutocompleteParameters parameters)
         {
             var uriBuilder = new UriBuilder(QueryAutocompleteUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
@@ -621,9 +620,9 @@ namespace Geo.Google.Services
                 throw new ArgumentException(error, nameof(parameters.Input));
             }
 
-            AddAutocompleteParameters(parameters, query);
+            AddAutocompleteParameters(parameters, ref query);
 
-            AddGoogleKey(query);
+            AddGoogleKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -634,12 +633,12 @@ namespace Geo.Google.Services
         /// Adds the autocomplete parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="QueryAutocompleteParameters"/> with the autocomplete parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddAutocompleteParameters(QueryAutocompleteParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddAutocompleteParameters(QueryAutocompleteParameters parameters, ref QueryString query)
         {
             if (parameters.Offset > 0)
             {
-                query.Add("offset", parameters.Offset.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("offset", parameters.Offset.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -648,26 +647,26 @@ namespace Geo.Google.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Input))
             {
-                query.Add("input", parameters.Input);
+                query = query.Add("input", parameters.Input);
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Input Info"]);
             }
 
-            AddCoordinateParameters(parameters, query);
+            AddCoordinateParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the base search parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseSearchParameters"/> with the base search parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseSearchParameters(BaseSearchParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBaseSearchParameters(BaseSearchParameters parameters, ref QueryString query)
         {
             if (parameters.MinimumPrice >= 0 && parameters.MinimumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
             {
-                query.Add("minprice", parameters.MinimumPrice.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("minprice", parameters.MinimumPrice.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -676,7 +675,7 @@ namespace Geo.Google.Services
 
             if (parameters.MaximumPrice >= 0 && parameters.MaximumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
             {
-                query.Add("maxprice", parameters.MaximumPrice.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("maxprice", parameters.MaximumPrice.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -684,12 +683,12 @@ namespace Geo.Google.Services
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("opennow", parameters.OpenNow.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("opennow", parameters.OpenNow.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.PageToken > 0)
             {
-                query.Add("pagetoken", parameters.PageToken.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("pagetoken", parameters.PageToken.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -698,26 +697,26 @@ namespace Geo.Google.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Type))
             {
-                query.Add("type", parameters.Type);
+                query = query.Add("type", parameters.Type);
             }
             else
             {
                 _logger.GoogleDebug(_localizer["Invalid Type"]);
             }
 
-            AddCoordinateParameters(parameters, query);
+            AddCoordinateParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the coordinate parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="CoordinateParameters"/> with the coordinate parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddCoordinateParameters(CoordinateParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddCoordinateParameters(CoordinateParameters parameters, ref QueryString query)
         {
             if (parameters.Location != null)
             {
-                query.Add("location", parameters.Location.ToString());
+                query = query.Add("location", parameters.Location.ToString());
             }
             else
             {
@@ -726,26 +725,26 @@ namespace Geo.Google.Services
 
             if (parameters.Radius > 0 && parameters.Radius <= 50000)
             {
-                query.Add("radius", parameters.Radius.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("radius", parameters.Radius.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 _logger.GoogleWarning(_localizer["Invalid Radius Value"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the base query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
         {
             if (parameters.Language != null)
             {
-                query.Add("language", parameters.Language.Name);
+                query = query.Add("language", parameters.Language.Name);
             }
             else
             {
@@ -756,10 +755,10 @@ namespace Geo.Google.Services
         /// <summary>
         /// Adds the Google key to the query parameters.
         /// </summary>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddGoogleKey(NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddGoogleKey(ref QueryString query)
         {
-            query.Add("key", _keyContainer.GetKey());
+            query = query.Add("key", _keyContainer.GetKey());
         }
 
         /// <summary>

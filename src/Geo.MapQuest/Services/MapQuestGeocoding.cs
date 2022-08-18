@@ -6,18 +6,17 @@
 namespace Geo.MapQuest.Services
 {
     using System;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.Core;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Enums;
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -119,7 +118,7 @@ namespace Geo.MapQuest.Services
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? GeocodeUri : OpenGeocodeUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
@@ -128,13 +127,13 @@ namespace Geo.MapQuest.Services
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
-            query.Add("location", parameters.Location);
+            query = query.Add("location", parameters.Location);
 
             if (!(parameters.BoundingBox is null) &&
                 (parameters.BoundingBox.East != 0 && parameters.BoundingBox.North != 0 &&
                 parameters.BoundingBox.West != 0 && parameters.BoundingBox.South != 0))
             {
-                query.Add("boundingBox", parameters.BoundingBox.ToString());
+                query = query.Add("boundingBox", parameters.BoundingBox.ToString());
             }
             else
             {
@@ -142,12 +141,12 @@ namespace Geo.MapQuest.Services
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("ignoreLatLngInput", parameters.IgnoreLatLngInput.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("ignoreLatLngInput", parameters.IgnoreLatLngInput.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.MaxResults > 0)
             {
-                query.Add("maxResults", parameters.MaxResults.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("maxResults", parameters.MaxResults.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -156,24 +155,24 @@ namespace Geo.MapQuest.Services
 
             if (parameters.IntlMode == InternationalMode.FiveBox)
             {
-                query.Add("intlMode", "5BOX");
+                query = query.Add("intlMode", "5BOX");
             }
             else if (parameters.IntlMode == InternationalMode.OneBox)
             {
-                query.Add("intlMode", "1BOX");
+                query = query.Add("intlMode", "1BOX");
             }
             else if (parameters.IntlMode == InternationalMode.Auto)
             {
-                query.Add("intlMode", "AUTO");
+                query = query.Add("intlMode", "AUTO");
             }
             else
             {
                 _logger.MapQuestWarning(_localizer["Invalid Intl Mode"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(query);
+            AddMapQuestKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -189,7 +188,7 @@ namespace Geo.MapQuest.Services
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? ReverseGeocodeUri : OpenReverseGeocodeUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (parameters.Location is null)
             {
@@ -198,19 +197,19 @@ namespace Geo.MapQuest.Services
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
-            query.Add("location", parameters.Location.ToString());
+            query = query.Add("location", parameters.Location.ToString());
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("includeNearestIntersection", parameters.IncludeNearestIntersection.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("includeNearestIntersection", parameters.IncludeNearestIntersection.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("includeRoadMetadata", parameters.IncludeRoadMetadata.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("includeRoadMetadata", parameters.IncludeRoadMetadata.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(query);
+            AddMapQuestKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -221,21 +220,21 @@ namespace Geo.MapQuest.Services
         /// Adds the base query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
         {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>
         /// Adds the MapQuest key to the query parameters.
         /// </summary>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddMapQuestKey(NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddMapQuestKey(ref QueryString query)
         {
-            query.Add("key", _keyContainer.GetKey());
+            query = query.Add("key", _keyContainer.GetKey());
         }
     }
 }

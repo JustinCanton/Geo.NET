@@ -7,7 +7,6 @@ namespace Geo.MapQuest.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -20,6 +19,7 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Services;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -125,11 +125,13 @@ namespace Geo.MapQuest.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            sut.AddMapQuestKey(query);
-            query.Count.Should().Be(1);
-            query["key"].Should().Be("abc123");
+            sut.AddMapQuestKey(ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("abc123");
         }
 
         /// <summary>
@@ -140,15 +142,17 @@ namespace Geo.MapQuest.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 IncludeThumbMaps = true,
             };
 
-            sut.AddBaseParameters(parameters, query);
-            query.Count.Should().Be(1);
-            query["thumbMaps"].Should().Be("true");
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["thumbMaps"].Should().Be("true");
         }
 
         /// <summary>
