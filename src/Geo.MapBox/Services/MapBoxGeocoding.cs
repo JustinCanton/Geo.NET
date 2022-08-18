@@ -126,6 +126,7 @@ namespace Geo.MapBox.Services
 
             var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Query));
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, HttpUtility.UrlEncode(parameters.Query)));
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
             query.Add("autocomplete", parameters.ReturnAutocomplete.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
