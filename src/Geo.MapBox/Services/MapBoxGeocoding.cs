@@ -10,9 +10,9 @@ namespace Geo.MapBox.Services
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Text.Encodings.Web;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.Core;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
@@ -124,7 +124,7 @@ namespace Geo.MapBox.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, HttpUtility.UrlEncode(parameters.Query)));
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, UrlEncoder.Default.Encode(parameters.Query)));
             var query = QueryString.Empty;
 
 #pragma warning disable CA1308 // Normalize strings to uppercase

@@ -233,7 +233,7 @@ namespace Geo.MapBox.Tests.Services
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);
             path.Should().Contain("mapbox.places/123 East #425");
-            uri.AbsolutePath.Should().Contain("mapbox.places/123+East+%23425");
+            uri.AbsolutePath.Should().Contain("mapbox.places/123%20East%20%23425");
         }
 
         /// <summary>
