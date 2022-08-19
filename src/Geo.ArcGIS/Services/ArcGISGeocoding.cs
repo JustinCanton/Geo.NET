@@ -7,14 +7,12 @@ namespace Geo.ArcGIS.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Configuration;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models.Exceptions;
@@ -22,6 +20,7 @@ namespace Geo.ArcGIS.Services
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;
     using Geo.Core.Extensions;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -161,15 +160,15 @@ namespace Geo.ArcGIS.Services
             }
 
             var uriBuilder = new UriBuilder(CandidatesUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query.Add("f", "json");
-            query.Add("outFields", "Match_addr,Addr_type");
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
+            query = query.Add("outFields", "Match_addr,Addr_type");
 
-            query.Add("singleLine", parameters.SingleLineAddress);
+            query = query.Add("singleLine", parameters.SingleLineAddress);
 
-            AddStorageParameter(parameters, query);
+            AddStorageParameter(parameters, ref query);
 
-            await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.Query = query.ToString();
 
@@ -185,13 +184,13 @@ namespace Geo.ArcGIS.Services
         internal async Task<Uri> BuildPlaceCandidateRequest(PlaceCandidateParameters parameters, CancellationToken cancellationToken)
         {
             var uriBuilder = new UriBuilder(CandidatesUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query.Add("f", "json");
-            query.Add("outFields", "Place_addr,PlaceName");
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
+            query = query.Add("outFields", "Place_addr,PlaceName");
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
-                query.Add("category", parameters.Category);
+                query = query.Add("category", parameters.Category);
             }
             else
             {
@@ -200,7 +199,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.Location != null)
             {
-                query.Add("location", parameters.Location.ToString());
+                query = query.Add("location", parameters.Location.ToString());
             }
             else
             {
@@ -209,16 +208,16 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations <= 50)
             {
-                query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 _logger.ArcGISWarning(_localizer["Invalid Maximum Locations"]);
             }
 
-            AddStorageParameter(parameters, query);
+            AddStorageParameter(parameters, ref query);
 
-            await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.Query = query.ToString();
 
@@ -234,8 +233,8 @@ namespace Geo.ArcGIS.Services
         internal Task<Uri> BuildSuggestRequest(SuggestParameters parameters, CancellationToken cancellationToken)
         {
             var uriBuilder = new UriBuilder(SuggestUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query.Add("f", "json");
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
 
             if (string.IsNullOrWhiteSpace(parameters.Text))
             {
@@ -244,11 +243,11 @@ namespace Geo.ArcGIS.Services
                 throw new ArgumentException(error, nameof(parameters.Text));
             }
 
-            query.Add("text", parameters.Text);
+            query = query.Add("text", parameters.Text);
 
             if (parameters.Location != null)
             {
-                query.Add("location", parameters.Location.ToString());
+                query = query.Add("location", parameters.Location.ToString());
             }
             else
             {
@@ -257,7 +256,7 @@ namespace Geo.ArcGIS.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
-                query.Add("category", parameters.Category);
+                query = query.Add("category", parameters.Category);
             }
             else
             {
@@ -266,7 +265,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.SearchExtent != null)
             {
-                query.Add("searchExtent", parameters.SearchExtent.ToString());
+                query = query.Add("searchExtent", parameters.SearchExtent.ToString());
             }
             else
             {
@@ -275,7 +274,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
             {
-                query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -296,8 +295,8 @@ namespace Geo.ArcGIS.Services
         internal async Task<Uri> BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters, CancellationToken cancellationToken)
         {
             var uriBuilder = new UriBuilder(ReverseGeocodingUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query.Add("f", "json");
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
 
             if (parameters.Location is null)
             {
@@ -306,11 +305,11 @@ namespace Geo.ArcGIS.Services
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
 
-            query.Add("location", parameters.Location.ToString());
+            query = query.Add("location", parameters.Location.ToString());
 
             if (parameters.OutSpatialReference > 0)
             {
-                query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -319,7 +318,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
+                query = query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
@@ -334,7 +333,7 @@ namespace Geo.ArcGIS.Services
                     featureTypesBuilder.Add(featureType.ToEnumString<FeatureType>());
                 }
 
-                query.Add("featureTypes", featureTypesBuilder.ToString());
+                query = query.Add("featureTypes", featureTypesBuilder.ToString());
             }
             else
             {
@@ -343,7 +342,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.LocationType >= 0)
             {
-                query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
+                query = query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
             }
             else
             {
@@ -352,16 +351,16 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.PreferredLabelValue >= 0)
             {
-                query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
+                query = query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
             }
             else
             {
                 _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
-            AddStorageParameter(parameters, query);
+            AddStorageParameter(parameters, ref query);
 
-            await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.Query = query.ToString();
 
@@ -377,8 +376,8 @@ namespace Geo.ArcGIS.Services
         internal async Task<Uri> BuildGeocodingRequest(GeocodingParameters parameters, CancellationToken cancellationToken)
         {
             var uriBuilder = new UriBuilder(GeocodingUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query.Add("f", "json");
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
 
             if (parameters.AddressAttributes is null || parameters.AddressAttributes.Count == 0)
             {
@@ -402,15 +401,15 @@ namespace Geo.ArcGIS.Services
                 records = attributes,
             };
 
-            query.Add("addresses", JsonConvert.SerializeObject(addresses));
+            query = query.Add("addresses", JsonConvert.SerializeObject(addresses));
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
-                query.Add("category", parameters.Category);
+                query = query.Add("category", parameters.Category);
             }
             else
             {
@@ -419,7 +418,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.SourceCountry.Count != 0)
             {
-                query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
+                query = query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {
@@ -428,7 +427,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.OutSpatialReference > 0)
             {
-                query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -437,7 +436,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.SearchExtent != null)
             {
-                query.Add("searchExtent", parameters.SearchExtent.ToString());
+                query = query.Add("searchExtent", parameters.SearchExtent.ToString());
             }
             else
             {
@@ -446,7 +445,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.LanguageCode != null)
             {
-                query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
+                query = query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
             }
             else
             {
@@ -455,7 +454,7 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.LocationType >= 0)
             {
-                query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
+                query = query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
             }
             else
             {
@@ -464,14 +463,14 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.PreferredLabelValue >= 0)
             {
-                query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
+                query = query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
             }
             else
             {
                 _logger.ArcGISWarning(_localizer["Invalid Preferred Label Value"]);
             }
 
-            await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.Query = query.ToString();
 
@@ -482,11 +481,11 @@ namespace Geo.ArcGIS.Services
         /// Adds the ArcGIS storage flag to the query parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="StorageParameters"/> with the storage information.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddStorageParameter(StorageParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddStorageParameter(StorageParameters parameters, ref QueryString query)
         {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("forStorage", parameters.ForStorage.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("forStorage", parameters.ForStorage.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
@@ -494,16 +493,18 @@ namespace Geo.ArcGIS.Services
         /// Adds the ArcGIS token to the query parameters.
         /// If the token cannot be generated, it will not be added to the request.
         /// </summary>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Task"/>.</returns>
-        internal async Task AddArcGISToken(NameValueCollection query, CancellationToken cancellationToken)
+        internal async Task<QueryString> AddArcGISToken(QueryString query, CancellationToken cancellationToken)
         {
             var token = await _tokenContainer.GetTokenAsync(cancellationToken).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(token))
             {
-                query.Add("token", token);
+                return query.Add("token", token);
             }
+
+            return query;
         }
     }
 }

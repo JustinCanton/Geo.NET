@@ -7,7 +7,6 @@ namespace Geo.Google.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using System.Net;
@@ -22,6 +21,7 @@ namespace Geo.Google.Tests.Services
     using Geo.Google.Models;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Services;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -124,11 +124,13 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            sut.AddGoogleKey(query);
-            query.Count.Should().Be(1);
-            query["key"].Should().Be("abc123");
+            sut.AddGoogleKey(ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("abc123");
         }
 
         /// <summary>
@@ -139,15 +141,17 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 Language = new CultureInfo("da"),
             };
 
-            sut.AddBaseParameters(parameters, query);
-            query.Count.Should().Be(1);
-            query["language"].Should().Be("da");
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["language"].Should().Be("da");
         }
 
         /// <summary>
@@ -158,7 +162,7 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new CoordinateParameters()
             {
                 Location = new Coordinate()
@@ -170,11 +174,13 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("da"),
             };
 
-            sut.AddCoordinateParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["location"].Should().Be("76.54,34.56");
-            query["radius"].Should().Be("10000");
-            query["language"].Should().Be("da");
+            sut.AddCoordinateParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["location"].Should().Be("76.54,34.56");
+            queryParameters["radius"].Should().Be("10000");
+            queryParameters["language"].Should().Be("da");
         }
 
         /// <summary>
@@ -185,7 +191,7 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseSearchParameters()
             {
                 MinimumPrice = 2,
@@ -202,16 +208,18 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("pt-BR"),
             };
 
-            sut.AddBaseSearchParameters(parameters, query);
-            query.Count.Should().Be(8);
-            query["minprice"].Should().Be("2");
-            query["maxprice"].Should().Be("3");
-            query["opennow"].Should().Be("false");
-            query["pagetoken"].Should().Be("987654");
-            query["type"].Should().Be("Restaurant");
-            query["location"].Should().Be("76.14,34.54");
-            query["radius"].Should().Be("10001");
-            query["language"].Should().Be("pt-BR");
+            sut.AddBaseSearchParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(8);
+            queryParameters["minprice"].Should().Be("2");
+            queryParameters["maxprice"].Should().Be("3");
+            queryParameters["opennow"].Should().Be("false");
+            queryParameters["pagetoken"].Should().Be("987654");
+            queryParameters["type"].Should().Be("Restaurant");
+            queryParameters["location"].Should().Be("76.14,34.54");
+            queryParameters["radius"].Should().Be("10001");
+            queryParameters["language"].Should().Be("pt-BR");
         }
 
         /// <summary>
@@ -222,7 +230,7 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new QueryAutocompleteParameters()
             {
                 Offset = 64,
@@ -236,13 +244,15 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            sut.AddAutocompleteParameters(parameters, query);
-            query.Count.Should().Be(5);
-            query["offset"].Should().Be("64");
-            query["input"].Should().Be("123 East");
-            query["location"].Should().Be("6.14,3.54");
-            query["radius"].Should().Be("25000");
-            query["language"].Should().Be("fr");
+            sut.AddAutocompleteParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(5);
+            queryParameters["offset"].Should().Be("64");
+            queryParameters["input"].Should().Be("123 East");
+            queryParameters["location"].Should().Be("6.14,3.54");
+            queryParameters["radius"].Should().Be("25000");
+            queryParameters["language"].Should().Be("fr");
         }
 
         /// <summary>
@@ -253,7 +263,7 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseSearchParameters()
             {
                 MinimumPrice = 5,
@@ -268,11 +278,13 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            sut.AddBaseSearchParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["opennow"].Should().Be("false");
-            query["location"].Should().Be("76.14,34.54");
-            query["language"].Should().Be("es");
+            sut.AddBaseSearchParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["opennow"].Should().Be("false");
+            queryParameters["location"].Should().Be("76.14,34.54");
+            queryParameters["language"].Should().Be("es");
         }
 
         /// <summary>
@@ -283,7 +295,7 @@ namespace Geo.Google.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseSearchParameters()
             {
                 MinimumPrice = 3,
@@ -298,11 +310,13 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
-            sut.AddBaseSearchParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["opennow"].Should().Be("false");
-            query["location"].Should().Be("76.14,34.54");
-            query["language"].Should().Be("es");
+            sut.AddBaseSearchParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["opennow"].Should().Be("false");
+            queryParameters["location"].Should().Be("76.14,34.54");
+            queryParameters["language"].Should().Be("es");
         }
 
         /// <summary>

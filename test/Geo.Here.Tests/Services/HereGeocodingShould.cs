@@ -7,7 +7,6 @@ namespace Geo.Here.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
     using System.Net.Http;
@@ -20,6 +19,7 @@ namespace Geo.Here.Tests.Services
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Services;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -192,11 +192,13 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            sut.AddHereKey(query);
-            query.Count.Should().Be(1);
-            query["apiKey"].Should().Be("abc123");
+            sut.AddHereKey(ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["apiKey"].Should().Be("abc123");
         }
 
         /// <summary>
@@ -207,15 +209,17 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 Language = new CultureInfo("es"),
             };
 
-            sut.AddBaseParameters(parameters, query);
-            query.Count.Should().Be(1);
-            query["lang"].Should().Be("es");
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["lang"].Should().Be("es");
         }
 
         /// <summary>
@@ -226,17 +230,19 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseFilterParameters()
             {
                 Limit = 17,
                 Language = new CultureInfo("da"),
             };
 
-            sut.AddLimitingParameters(parameters, query);
-            query.Count.Should().Be(2);
-            query["limit"].Should().Be("17");
-            query["lang"].Should().Be("da");
+            sut.AddLimitingParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(2);
+            queryParameters["limit"].Should().Be("17");
+            queryParameters["lang"].Should().Be("da");
         }
 
         /// <summary>
@@ -247,7 +253,7 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseFilterParameters()
             {
                 At = new Coordinate()
@@ -259,11 +265,13 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("fr-FR"),
             };
 
-            sut.AddLocatingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["at"].Should().Be("56.789,123.456");
-            query["limit"].Should().Be("91");
-            query["lang"].Should().Be("fr-FR");
+            sut.AddLocatingParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("fr-FR");
         }
 
         /// <summary>
@@ -274,7 +282,7 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new AreaParameters()
             {
                 At = new Coordinate()
@@ -286,13 +294,15 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["at"].Should().Be("56.789,123.456");
-            query["limit"].Should().Be("91");
-            query["lang"].Should().Be("fr");
+            sut.AddBoundingParameters(parameters, ref query);
 
-            query.Clear();
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("fr");
+
+            query = QueryString.Empty;
             parameters = new AreaParameters()
             {
                 InCountry = "BEL",
@@ -305,14 +315,16 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("nl"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(4);
-            query["in"].Should().Be("countryCode:BEL");
-            query["at"].Should().Be("56.789,123.456");
-            query["limit"].Should().Be("91");
-            query["lang"].Should().Be("nl");
+            sut.AddBoundingParameters(parameters, ref query);
 
-            query.Clear();
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(4);
+            queryParameters["in"].Should().Be("countryCode:BEL");
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("nl");
+
+            query = QueryString.Empty;
             parameters = new AreaParameters()
             {
                 InCircle = new Circle()
@@ -328,13 +340,15 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("gl"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["in"].Should().Be("circle:78.9,45.32;r=50000");
-            query["limit"].Should().Be("83");
-            query["lang"].Should().Be("gl");
+            sut.AddBoundingParameters(parameters, ref query);
 
-            query.Clear();
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["in"].Should().Be("circle:78.9,45.32;r=50000");
+            queryParameters["limit"].Should().Be("83");
+            queryParameters["lang"].Should().Be("gl");
+
+            query = QueryString.Empty;
             parameters = new AreaParameters()
             {
                 InCountry = "DNK",
@@ -351,13 +365,15 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("da"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["in"].Should().Be("countryCode:DNK,circle:48.9,15.32;r=6000");
-            query["limit"].Should().Be("48");
-            query["lang"].Should().Be("da");
+            sut.AddBoundingParameters(parameters, ref query);
 
-            query.Clear();
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["in"].Should().Be("countryCode:DNK,circle:48.9,15.32;r=6000");
+            queryParameters["limit"].Should().Be("48");
+            queryParameters["lang"].Should().Be("da");
+
+            query = QueryString.Empty;
             parameters = new AreaParameters()
             {
                 InBoundingBox = new BoundingBox()
@@ -371,13 +387,15 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("ca"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["in"].Should().Be("bbox:-1.5,87.99,1.5,89.99");
-            query["limit"].Should().Be("65");
-            query["lang"].Should().Be("ca");
+            sut.AddBoundingParameters(parameters, ref query);
 
-            query.Clear();
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["in"].Should().Be("bbox:-1.5,87.99,1.5,89.99");
+            queryParameters["limit"].Should().Be("65");
+            queryParameters["lang"].Should().Be("ca");
+
+            query = QueryString.Empty;
             parameters = new AreaParameters()
             {
                 InCountry = "POL",
@@ -392,11 +410,13 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            sut.AddBoundingParameters(parameters, query);
-            query.Count.Should().Be(3);
-            query["in"].Should().Be("countryCode:POL,bbox:-43.5,45.99,-39.5,54.99");
-            query["limit"].Should().Be("33");
-            query["lang"].Should().Be("pl");
+            sut.AddBoundingParameters(parameters, ref query);
+
+            queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["in"].Should().Be("countryCode:POL,bbox:-43.5,45.99,-39.5,54.99");
+            queryParameters["limit"].Should().Be("33");
+            queryParameters["lang"].Should().Be("pl");
         }
 
         /// <summary>
@@ -407,8 +427,8 @@ namespace Geo.Here.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
-            Action act = () => sut.AddBoundingParameters(new AreaParameters(), query);
+            var query = QueryString.Empty;
+            Action act = () => sut.AddBoundingParameters(new AreaParameters(), ref query);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -442,7 +462,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            act = () => sut.AddBoundingParameters(new AreaParameters(), query);
+            act = () => sut.AddBoundingParameters(new AreaParameters(), ref query);
 
             act.Should()
                 .Throw<ArgumentException>()

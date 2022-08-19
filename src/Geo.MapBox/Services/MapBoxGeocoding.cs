@@ -7,13 +7,12 @@ namespace Geo.MapBox.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Text.Encodings.Web;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.Core;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
@@ -21,6 +20,7 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -124,16 +124,16 @@ namespace Geo.MapBox.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Query));
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, UrlEncoder.Default.Encode(parameters.Query)));
+            var query = QueryString.Empty;
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("autocomplete", parameters.ReturnAutocomplete.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("autocomplete", parameters.ReturnAutocomplete.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.BoundingBox != null)
             {
-                query.Add("bbox", parameters.BoundingBox.ToString());
+                query = query.Add("bbox", parameters.BoundingBox.ToString());
             }
             else
             {
@@ -141,21 +141,21 @@ namespace Geo.MapBox.Services
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("fuzzyMatch", parameters.FuzzyMatch.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("fuzzyMatch", parameters.FuzzyMatch.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.Proximity != null)
             {
-                query.Add("proximity", parameters.Proximity.ToString());
+                query = query.Add("proximity", parameters.Proximity.ToString());
             }
             else
             {
                 _logger.MapBoxDebug(_localizer["Invalid Proximity"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(query);
+            AddMapBoxKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -178,15 +178,15 @@ namespace Geo.MapBox.Services
             }
 
             var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, ReverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Coordinate));
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("reverseMode", parameters.ReverseMode.ToString().ToLowerInvariant());
+            query = query.Add("reverseMode", parameters.ReverseMode.ToString().ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(query);
+            AddMapBoxKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -197,12 +197,12 @@ namespace Geo.MapBox.Services
         /// Adds the base query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
         {
             if (parameters.Countries.Count > 0)
             {
-                query.Add("country", string.Join(",", parameters.Countries.Select(x => x.TwoLetterISORegionName)));
+                query = query.Add("country", string.Join(",", parameters.Countries.Select(x => x.TwoLetterISORegionName)));
             }
             else
             {
@@ -211,7 +211,7 @@ namespace Geo.MapBox.Services
 
             if (parameters.Languages.Count > 0)
             {
-                query.Add("language", string.Join(",", parameters.Languages.Select(x => x.Name)));
+                query = query.Add("language", string.Join(",", parameters.Languages.Select(x => x.Name)));
             }
             else
             {
@@ -220,7 +220,7 @@ namespace Geo.MapBox.Services
 
             if (parameters.Limit > 0 && parameters.Limit < 6)
             {
-                query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -228,13 +228,13 @@ namespace Geo.MapBox.Services
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            query.Add("routing", parameters.Routing.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            query = query.Add("routing", parameters.Routing.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
             if (parameters.Types != null && parameters.Types.Count > 0)
             {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-                query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToString().ToLowerInvariant())));
+                query = query.Add("types", string.Join(",", parameters.Types.Select(x => x.ToString().ToLowerInvariant())));
 #pragma warning restore CA1308 // Normalize strings to uppercase
             }
             else
@@ -246,10 +246,10 @@ namespace Geo.MapBox.Services
         /// <summary>
         /// Adds the here key to the query parameters.
         /// </summary>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddMapBoxKey(NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddMapBoxKey(ref QueryString query)
         {
-            query.Add("access_token", _keyContainer.GetKey());
+            query = query.Add("access_token", _keyContainer.GetKey());
         }
     }
 }

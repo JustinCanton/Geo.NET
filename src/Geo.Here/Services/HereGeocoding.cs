@@ -6,18 +6,17 @@
 namespace Geo.Here.Services
 {
     using System;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using Geo.Core;
     using Geo.Here.Abstractions;
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -157,7 +156,7 @@ namespace Geo.Here.Services
         internal Uri BuildGeocodingRequest(GeocodeParameters parameters)
         {
             var uriBuilder = new UriBuilder(GeocodeUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Query) && string.IsNullOrWhiteSpace(parameters.QualifiedQuery))
             {
@@ -168,7 +167,7 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Query))
             {
-                query.Add("q", parameters.Query);
+                query = query.Add("q", parameters.Query);
             }
             else
             {
@@ -177,7 +176,7 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.QualifiedQuery))
             {
-                query.Add("qq", parameters.QualifiedQuery);
+                query = query.Add("qq", parameters.QualifiedQuery);
             }
             else
             {
@@ -186,16 +185,16 @@ namespace Geo.Here.Services
 
             if (parameters.InCountry.Count > 0)
             {
-                query.Add("in", string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName)));
+                query = query.Add("in", string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName)));
             }
             else
             {
                 _logger.HereDebug(_localizer["Invalid In Country"]);
             }
 
-            AddLocatingParameters(parameters, query);
+            AddLocatingParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -211,7 +210,7 @@ namespace Geo.Here.Services
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodeParameters parameters)
         {
             var uriBuilder = new UriBuilder(ReverseGeocodeUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (parameters.At is null)
             {
@@ -220,9 +219,9 @@ namespace Geo.Here.Services
                 throw new ArgumentException(error, nameof(parameters.At));
             }
 
-            AddLocatingParameters(parameters, query);
+            AddLocatingParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -238,7 +237,7 @@ namespace Geo.Here.Services
         internal Uri BuildDiscoverRequest(DiscoverParameters parameters)
         {
             var uriBuilder = new UriBuilder(DiscoverUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
@@ -247,11 +246,11 @@ namespace Geo.Here.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            query.Add("q", parameters.Query);
+            query = query.Add("q", parameters.Query);
 
-            AddBoundingParameters(parameters, query);
+            AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -267,7 +266,7 @@ namespace Geo.Here.Services
         internal Uri BuildAutosuggestRequest(AutosuggestParameters parameters)
         {
             var uriBuilder = new UriBuilder(AutosuggestUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
@@ -276,20 +275,20 @@ namespace Geo.Here.Services
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
 
-            query.Add("q", parameters.Query);
+            query = query.Add("q", parameters.Query);
 
             if (parameters.TermsLimit <= 10)
             {
-                query.Add("termsLimit", parameters.TermsLimit.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("termsLimit", parameters.TermsLimit.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 _logger.HereWarning(_localizer["Invalid Terms Limit"]);
             }
 
-            AddBoundingParameters(parameters, query);
+            AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -305,7 +304,7 @@ namespace Geo.Here.Services
         internal Uri BuildBrowseRequest(BrowseParameters parameters)
         {
             var uriBuilder = new UriBuilder(BrowseUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (parameters.At is null)
             {
@@ -316,7 +315,7 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Categories))
             {
-                query.Add("categories", parameters.Categories);
+                query = query.Add("categories", parameters.Categories);
             }
             else
             {
@@ -325,16 +324,16 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Name))
             {
-                query.Add("name", parameters.Name);
+                query = query.Add("name", parameters.Name);
             }
             else
             {
                 _logger.HereDebug(_localizer["Invalid Name"]);
             }
 
-            AddBoundingParameters(parameters, query);
+            AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -350,7 +349,7 @@ namespace Geo.Here.Services
         internal Uri BuildLookupRequest(LookupParameters parameters)
         {
             var uriBuilder = new UriBuilder(LookupUri);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Id))
             {
@@ -359,11 +358,11 @@ namespace Geo.Here.Services
                 throw new ArgumentException(error, nameof(parameters.Id));
             }
 
-            query.Add("id", parameters.Id);
+            query = query.Add("id", parameters.Id);
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
 
-            AddHereKey(query);
+            AddHereKey(ref query);
 
             uriBuilder.Query = query.ToString();
 
@@ -374,8 +373,8 @@ namespace Geo.Here.Services
         /// Adds the bounding query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="DiscoverParameters"/> with the bounding parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBoundingParameters(AreaParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBoundingParameters(AreaParameters parameters, ref QueryString query)
         {
             var hasAt = parameters.At != null && parameters.At.IsValid();
             var hasCircle = parameters.InCircle != null && parameters.InCircle.IsValid();
@@ -401,7 +400,7 @@ namespace Geo.Here.Services
 
             if (hasAt)
             {
-                query.Add("at", parameters.At.ToString());
+                query = query.Add("at", parameters.At.ToString());
             }
             else
             {
@@ -410,7 +409,7 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.InCountry))
             {
-                query.Add("in", $"countryCode:{parameters.InCountry}");
+                query = query.Add("in", $"countryCode:{parameters.InCountry}");
             }
             else
             {
@@ -419,7 +418,7 @@ namespace Geo.Here.Services
 
             if (hasCircle)
             {
-                query.Add("in", $"circle:{parameters.InCircle}");
+                query = query.Add("in", $"circle:{parameters.InCircle}");
             }
             else
             {
@@ -428,7 +427,7 @@ namespace Geo.Here.Services
 
             if (hasBoundingBox)
             {
-                query.Add("in", $"bbox:{parameters.InBoundingBox}");
+                query = query.Add("in", $"bbox:{parameters.InBoundingBox}");
             }
             else
             {
@@ -437,64 +436,64 @@ namespace Geo.Here.Services
 
             if (!string.IsNullOrWhiteSpace(parameters.Route))
             {
-                query.Add("route", parameters.Route);
+                query = query.Add("route", parameters.Route);
             }
             else
             {
                 _logger.HereDebug(_localizer["Invalid Route"]);
             }
 
-            AddLimitingParameters(parameters, query);
+            AddLimitingParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the locating query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddLocatingParameters(BaseFilterParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddLocatingParameters(BaseFilterParameters parameters, ref QueryString query)
         {
             if (parameters.At != null)
             {
-                query.Add("at", parameters.At.ToString());
+                query = query.Add("at", parameters.At.ToString());
             }
             else
             {
                 _logger.HereDebug(_localizer["Invalid At Debug"]);
             }
 
-            AddLimitingParameters(parameters, query);
+            AddLimitingParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the base limiting query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddLimitingParameters(BaseFilterParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddLimitingParameters(BaseFilterParameters parameters, ref QueryString query)
         {
             if (parameters.Limit > 0 && parameters.Limit <= 100)
             {
-                query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
+                query = query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 _logger.HereDebug(_localizer["Invalid Limit"]);
             }
 
-            AddBaseParameters(parameters, query);
+            AddBaseParameters(parameters, ref query);
         }
 
         /// <summary>
         /// Adds the base query parameters based on the allowed logic.
         /// </summary>
         /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
         {
             if (parameters.Language != null)
             {
-                query.Add("lang", parameters.Language.Name);
+                query = query.Add("lang", parameters.Language.Name);
             }
             else
             {
@@ -505,10 +504,10 @@ namespace Geo.Here.Services
         /// <summary>
         /// Adds the HERE key to the query parameters.
         /// </summary>
-        /// <param name="query">A <see cref="NameValueCollection"/> with the query parameters.</param>
-        internal void AddHereKey(NameValueCollection query)
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal void AddHereKey(ref QueryString query)
         {
-            query.Add("apiKey", _keyContainer.GetKey());
+            query = query.Add("apiKey", _keyContainer.GetKey());
         }
     }
 }
