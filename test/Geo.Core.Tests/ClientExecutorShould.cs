@@ -29,6 +29,7 @@ namespace Geo.Core.Tests
     {
         private const string ApiName = "Test";
         private readonly HttpClient _httpClient;
+        private readonly IGeoNETExceptionProvider _exceptionProvider;
         private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
@@ -125,6 +126,7 @@ namespace Geo.Core.Tests
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _httpClient = new HttpClient(mockHandler.Object);
+            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -140,7 +142,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnNullUri()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/ArgumentNullException")))
                 .Should()
@@ -154,7 +156,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidUri()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/InvalidOperationException")))
                 .Should()
@@ -168,7 +170,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnHttpFailure()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/HttpRequestException")))
                 .Should()
@@ -182,7 +184,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnCancelledRequest()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/TaskCanceledException")))
                 .Should()
@@ -195,7 +197,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidJson1()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonReaderException")))
                 .Should()
@@ -208,7 +210,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowExceptionOnInvalidJson2()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonSerializationException")))
                 .Should()
@@ -222,10 +224,11 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task ReturnsErrorJson()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
             var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Failure")).ConfigureAwait(false);
+            result.IsSuccessful.Should().BeFalse();
             result.Result.Should().BeNull();
-            result.JSON.Should().Be("{'Message':'Access denied'}");
+            result.Body.Should().Be("{'Message':'Access denied'}");
         }
 
         /// <summary>
@@ -235,9 +238,10 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task SuccesfullyReturnObject()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Success")).ConfigureAwait(false);
+            result.IsSuccessful.Should().BeTrue();
             result.Result.TestField.Should().Be(1);
         }
 
@@ -247,7 +251,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnNullUri()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/ArgumentNullException"), ApiName))
                 .Should()
@@ -261,7 +265,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidUri()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/InvalidOperationException"), ApiName))
                 .Should()
@@ -275,7 +279,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnHttpFailure()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/HttpRequestException"), ApiName))
                 .Should()
@@ -289,7 +293,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnCancelledRequest()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/TaskCanceledException"), ApiName))
                 .Should()
@@ -303,7 +307,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidJson1()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), ApiName))
                 .Should()
@@ -317,7 +321,7 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnInvalidJson2()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), ApiName))
                 .Should()
@@ -331,12 +335,16 @@ namespace Geo.Core.Tests
         [Fact]
         public void ThrowWrappedExceptionOnErrorJson()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/Failure"), ApiName))
                 .Should()
                 .Throw<TestException>()
-                .Where(x => x.Data.Count == 1 && x.Data["responseBody"].ToString() == "{'Message':'Access denied'}");
+                .Where(x =>
+                    x.Data.Count == 3 &&
+                    x.Data["responseBody"].ToString() == "{'Message':'Access denied'}" &&
+                    (HttpStatusCode)x.Data["responseStatusCode"] == HttpStatusCode.Forbidden &&
+                    x.Data["uri"].ToString() == "http://test.com/Failure");
         }
 
         /// <summary>
@@ -346,7 +354,7 @@ namespace Geo.Core.Tests
         [Fact]
         public async Task SuccesfullyReturnOnlyObject()
         {
-            var sut = new TestClientExecutor(_httpClient, _localizerFactory);
+            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _localizerFactory);
 
             var result = await sut.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), ApiName).ConfigureAwait(false);
             result.TestField.Should().Be(1);

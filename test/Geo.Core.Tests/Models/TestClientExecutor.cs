@@ -19,8 +19,11 @@ namespace Geo.Core.Tests.Models
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for calls.</param>
         /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
-        public TestClientExecutor(HttpClient client, IStringLocalizerFactory localizer)
-            : base(client, localizer)
+        public TestClientExecutor(
+            HttpClient client,
+            IGeoNETExceptionProvider exceptionProvider,
+            IStringLocalizerFactory localizer)
+            : base(client, exceptionProvider, localizer)
         {
         }
     }

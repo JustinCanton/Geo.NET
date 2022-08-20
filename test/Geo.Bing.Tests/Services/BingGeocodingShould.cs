@@ -7,7 +7,6 @@ namespace Geo.Bing.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
     using System.Net.Http;
@@ -19,6 +18,7 @@ namespace Geo.Bing.Tests.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Services;
     using Geo.Core;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -33,6 +33,7 @@ namespace Geo.Bing.Tests.Services
     {
         private readonly HttpClient _httpClient;
         private readonly BingKeyContainer _keyContainer;
+        private readonly IGeoNETExceptionProvider _exceptionProvider;
         private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
@@ -129,6 +130,7 @@ namespace Geo.Bing.Tests.Services
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _httpClient = new HttpClient(mockHandler.Object);
+            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -146,11 +148,13 @@ namespace Geo.Bing.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            sut.AddBingKey(query);
-            query.Count.Should().Be(1);
-            query["key"].Should().Be("123abc");
+            sut.AddBingKey(ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -161,7 +165,7 @@ namespace Geo.Bing.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 IncludeNeighbourhood = true,
@@ -170,9 +174,11 @@ namespace Geo.Bing.Tests.Services
             };
 
             sut.BuildBaseQuery(parameters, ref query);
-            query.Count.Should().Be(2);
-            query["includeNeighborhood"].Should().Be("1");
-            query["include"].Should().Contain("queryParse").And.Contain("ciso2");
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(2);
+            queryParameters["includeNeighborhood"].Should().Be("1");
+            queryParameters["include"].Should().Contain("queryParse").And.Contain("ciso2");
         }
 
         /// <summary>
@@ -183,7 +189,7 @@ namespace Geo.Bing.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new ResultParameters()
             {
                 MaximumResults = 7,
@@ -193,10 +199,12 @@ namespace Geo.Bing.Tests.Services
             };
 
             sut.BuildLimitedResultQuery(parameters, ref query);
-            query.Count.Should().Be(3);
-            query["maxResults"].Should().Be("7");
-            query["includeNeighborhood"].Should().Be("1");
-            query["include"].Should().Contain("queryParse").And.Contain("ciso2");
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(3);
+            queryParameters["maxResults"].Should().Be("7");
+            queryParameters["includeNeighborhood"].Should().Be("1");
+            queryParameters["include"].Should().Contain("queryParse").And.Contain("ciso2");
         }
 
         /// <summary>
@@ -432,7 +440,7 @@ namespace Geo.Bing.Tests.Services
 
         private BingGeocoding BuildService()
         {
-            return new BingGeocoding(_httpClient, _keyContainer, _localizerFactory);
+            return new BingGeocoding(_httpClient, _keyContainer, _exceptionProvider, _localizerFactory);
         }
     }
 }

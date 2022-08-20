@@ -49,23 +49,7 @@ The configuration and sample usage for each supported interface can be found wit
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
 
 
-## Roadmap
-
-### 1.1.0
-|Status|Goal|
-|:--:|--|
-|✅|Adding score into the HERE Geocoding response|
-|✅|Adding net6.0 support|
-|✅|Adding ChangeLog|
-
-
-### 1.2.0
-|Status|Goal|
-|:--:|--|
-|❌|Adding support for conversion from coordinates to flexible polylines rather than requiring polylines as input for the HERE API ([#36](https://github.com/JustinCanton/Geo.NET/issues/36))|
-
-
-### Suggestions or Discussion Points
+## Suggestions or Discussion Points
 If you would like to weigh in on any suggestion, please make a Github Issue and we can discuss further.
 
 ✅ = Accepted

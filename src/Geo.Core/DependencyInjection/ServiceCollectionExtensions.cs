@@ -19,7 +19,9 @@ namespace Geo.Core.DependencyInjection
         /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
         public static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
-            services.AddLocalization();
+            services
+                .AddLocalization()
+                .AddTransient<IGeoNETExceptionProvider, GeoNETExceptionProvider>();
 
             return services;
         }

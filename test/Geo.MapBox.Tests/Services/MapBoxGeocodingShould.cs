@@ -7,7 +7,6 @@ namespace Geo.MapBox.Tests.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Globalization;
     using System.Net;
     using System.Net.Http;
@@ -21,6 +20,7 @@ namespace Geo.MapBox.Tests.Services
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Services;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
@@ -35,6 +35,7 @@ namespace Geo.MapBox.Tests.Services
     {
         private readonly HttpClient _httpClient;
         private readonly MapBoxKeyContainer _keyContainer;
+        private readonly IGeoNETExceptionProvider _exceptionProvider;
         private readonly IStringLocalizerFactory _localizerFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
@@ -94,6 +95,7 @@ namespace Geo.MapBox.Tests.Services
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
             _httpClient = new HttpClient(mockHandler.Object);
+            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -111,11 +113,13 @@ namespace Geo.MapBox.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
 
-            sut.AddMapBoxKey(query);
-            query.Count.Should().Be(1);
-            query["access_token"].Should().Be("abc123");
+            sut.AddMapBoxKey(ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["access_token"].Should().Be("abc123");
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace Geo.MapBox.Tests.Services
         {
             var sut = BuildService();
 
-            var query = new NameValueCollection();
+            var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 Limit = 5,
@@ -142,13 +146,15 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
-            sut.AddBaseParameters(parameters, query);
-            query.Count.Should().Be(5);
-            query["country"].Should().Be("CA,FR");
-            query["language"].Should().Be("en,fr-FR");
-            query["limit"].Should().Be("5");
-            query["routing"].Should().Be("true");
-            query["types"].Should().Be("address,place");
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(5);
+            queryParameters["country"].Should().Be("CA,FR");
+            queryParameters["language"].Should().Be("en,fr-FR");
+            queryParameters["limit"].Should().Be("5");
+            queryParameters["routing"].Should().Be("true");
+            queryParameters["types"].Should().Be("address,place");
         }
 
         /// <summary>
@@ -205,6 +211,29 @@ namespace Geo.MapBox.Tests.Services
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);
             path.Should().Contain("mapbox.places/123 East");
+        }
+
+        [Fact]
+        public void BuildGeocodingRequest_WithCharacterNeedingEncoding_SuccessfullyBuildsAnEncodedUrl()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Query = "123 East #425",
+                Limit = 5,
+                Routing = true,
+            };
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("limit=5");
+            query.Should().Contain("routing=true");
+            query.Should().Contain("access_token=abc123");
+
+            var path = HttpUtility.UrlDecode(uri.AbsolutePath);
+            path.Should().Contain("mapbox.places/123 East #425");
+            uri.AbsolutePath.Should().Contain("mapbox.places/123%20East%20%23425");
         }
 
         /// <summary>
@@ -479,7 +508,7 @@ namespace Geo.MapBox.Tests.Services
 
         private MapBoxGeocoding BuildService()
         {
-            return new MapBoxGeocoding(_httpClient, _keyContainer, _localizerFactory);
+            return new MapBoxGeocoding(_httpClient, _keyContainer, _exceptionProvider, _localizerFactory);
         }
     }
 }
