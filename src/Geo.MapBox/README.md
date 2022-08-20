@@ -37,7 +37,7 @@ public MyService(IMapBoxGeocoding mapBoxGeocoding)
 Now simply call the geocoding methods in the interface.
 
 ## Endpoint Types
-MapQuest has 2 endpoint types, permanent and non-permanent.
+MapBox has 2 endpoint types, permanent and non-permanent.
 
  - Requests to the non-permanent endpoint must be triggered by user activity. Any results must be displayed on a Mapbox map and cannot be stored permanently, as described in Mapbox’s [terms of service](https://www.mapbox.com/tos/#geocoding).
  - The permanent endpoint gives you access to two services: permanent geocoding and batch geocoding.
