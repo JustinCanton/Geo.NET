@@ -20,7 +20,6 @@ namespace Geo.Bing.Tests.Services
     using Geo.Core;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
@@ -34,7 +33,7 @@ namespace Geo.Bing.Tests.Services
         private readonly HttpClient _httpClient;
         private readonly BingKeyContainer _keyContainer;
         private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IStringLocalizerFactory _localizerFactory;
+        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -128,7 +127,7 @@ namespace Geo.Bing.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
             _exceptionProvider = new GeoNETExceptionProvider();
         }
@@ -440,7 +439,7 @@ namespace Geo.Bing.Tests.Services
 
         private BingGeocoding BuildService()
         {
-            return new BingGeocoding(_httpClient, _keyContainer, _exceptionProvider, _localizerFactory);
+            return new BingGeocoding(_httpClient, _keyContainer, _exceptionProvider, _resourceStringProviderFactory);
         }
     }
 }
