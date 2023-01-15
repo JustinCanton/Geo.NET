@@ -20,7 +20,7 @@ namespace Geo.Core.DependencyInjection
         public static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
             services
-                .AddLocalization()
+                .AddTransient<IGeoNETResourceStringProviderFactory, GeoNETResourceStringProviderFactory>()
                 .AddTransient<IGeoNETExceptionProvider, GeoNETExceptionProvider>();
 
             return services;

@@ -21,7 +21,6 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
@@ -37,7 +36,7 @@ namespace Geo.MapBox.Services
         private const string PermanentEndpoint = "mapbox.places-permanent";
 
         private readonly IMapBoxKeyContainer _keyContainer;
-        private readonly IStringLocalizer _localizer;
+        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
         private readonly ILogger<MapBoxGeocoding> _logger;
 
         /// <summary>
@@ -46,18 +45,18 @@ namespace Geo.MapBox.Services
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IMapBoxKeyContainer"/> used for fetching the here key.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,
             IMapBoxKeyContainer keyContainer,
             IGeoNETExceptionProvider exceptionProvider,
-            IStringLocalizerFactory localizerFactory,
+            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, localizerFactory, loggerFactory)
+            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
         {
             _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _localizer = localizerFactory?.Create(typeof(MapBoxGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<MapBoxGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
             _logger = loggerFactory?.CreateLogger<MapBoxGeocoding>() ?? NullLogger<MapBoxGeocoding>.Instance;
         }
 
@@ -92,7 +91,7 @@ namespace Geo.MapBox.Services
         {
             if (parameters is null)
             {
-                var error = _localizer["Null Parameters"];
+                var error = _resourceStringProvider.GetString("Null Parameters");
                 _logger.MapBoxError(error);
                 throw new MapBoxException(error, new ArgumentNullException(nameof(parameters)));
             }
@@ -103,7 +102,7 @@ namespace Geo.MapBox.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _localizer["Failed To Create Uri"];
+                var error = _resourceStringProvider.GetString("Failed To Create Uri");
                 _logger.MapBoxError(error);
                 throw new MapBoxException(error, ex);
             }
@@ -119,7 +118,7 @@ namespace Geo.MapBox.Services
         {
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                var error = _localizer["Invalid Query"];
+                var error = _resourceStringProvider.GetString("Invalid Query");
                 _logger.MapBoxError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
@@ -137,7 +136,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Bounding Box"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Bounding Box"));
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -150,7 +149,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Proximity"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Proximity"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -172,7 +171,7 @@ namespace Geo.MapBox.Services
         {
             if (parameters.Coordinate is null)
             {
-                var error = _localizer["Invalid Coordinate"];
+                var error = _resourceStringProvider.GetString("Invalid Coordinate");
                 _logger.MapBoxError(error);
                 throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
@@ -206,7 +205,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Countries"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Countries"));
             }
 
             if (parameters.Languages.Count > 0)
@@ -215,7 +214,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Languages"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Languages"));
             }
 
             if (parameters.Limit > 0 && parameters.Limit < 6)
@@ -224,7 +223,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Languages"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Languages"));
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -239,7 +238,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_localizer["Invalid Types"]);
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Types"));
             }
         }
 
