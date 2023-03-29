@@ -29,7 +29,7 @@ namespace Geo.MapBox.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Longitude},{Latitude}";
+            return String.Format(CultureInfo.InvariantCulture, "{0},{1}", Longitude, Latitude);
         }
     }
 }
