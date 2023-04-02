@@ -43,6 +43,7 @@ namespace Geo.Bing.Tests.Services
         /// </summary>
         public BingGeocodingShould()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
             _keyContainer = new BingKeyContainer("123abc");
 
             var mockHandler = new Mock<HttpMessageHandler>();
@@ -160,9 +161,15 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the base query information is properly set into the query string.
         /// </summary>
-        [Fact]
-        public void BuildBaseQuerySuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildBaseQuerySuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var query = QueryString.Empty;
@@ -173,20 +180,30 @@ namespace Geo.Bing.Tests.Services
                 IncludeCiso2 = true,
             };
 
+            // Act
             sut.BuildBaseQuery(parameters, ref query);
 
+            // Assert
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(2);
             queryParameters["includeNeighborhood"].Should().Be("1");
             queryParameters["include"].Should().Contain("queryParse").And.Contain("ciso2");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
         /// Tests the base query information is properly set into the query string.
         /// </summary>
-        [Fact]
-        public void BuildLimitedResultQuerySuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildLimitedResultQuerySuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var query = QueryString.Empty;
@@ -198,13 +215,17 @@ namespace Geo.Bing.Tests.Services
                 IncludeCiso2 = true,
             };
 
+            // Act
             sut.BuildLimitedResultQuery(parameters, ref query);
 
+            // Assert
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(3);
             queryParameters["maxResults"].Should().Be("7");
             queryParameters["includeNeighborhood"].Should().Be("1");
             queryParameters["include"].Should().Contain("queryParse").And.Contain("ciso2");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -225,9 +246,15 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the geocoding uri is built properly.
         /// </summary>
-        [Fact]
-        public void BuildGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodingParameters()
@@ -239,13 +266,18 @@ namespace Geo.Bing.Tests.Services
                 IncludeCiso2 = true,
             };
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("query=1 Microsoft Way Redmond WA");
             query.Should().Contain("maxResults=7");
             query.Should().Contain("includeNeighborhood=1");
             query.Should().Contain("include=queryParse,ciso2");
             query.Should().Contain("key=123abc");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -266,9 +298,15 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
-        [Fact]
-        public void BuildReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
@@ -290,13 +328,18 @@ namespace Geo.Bing.Tests.Services
                 IncludeCiso2 = true,
             };
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("/40.7567,-73.9897");
             query.Should().Contain("includeEntityTypes=Address,Neighborhood,PopulatedPlace,Postcode1,AdminDivision1,AdminDivision2,CountryRegion");
             query.Should().Contain("includeNeighborhood=1");
             query.Should().Contain("include=queryParse,ciso2");
             query.Should().Contain("key=123abc");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -317,9 +360,15 @@ namespace Geo.Bing.Tests.Services
         /// <summary>
         /// Tests the address geocoding uri is built properly.
         /// </summary>
-        [Fact]
-        public void BuildAddressGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildAddressGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new AddressGeocodingParameters()
@@ -335,7 +384,10 @@ namespace Geo.Bing.Tests.Services
                 IncludeCiso2 = true,
             };
 
+            // Act
             var uri = sut.BuildAddressGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("adminDistrict=Ontario");
             query.Should().Contain("locality=Toronto");
@@ -346,6 +398,8 @@ namespace Geo.Bing.Tests.Services
             query.Should().Contain("includeNeighborhood=1");
             query.Should().Contain("include=queryParse,ciso2");
             query.Should().Contain("key=123abc");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>

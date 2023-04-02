@@ -209,10 +209,16 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the address candidate uri is built properly.
         /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Fact]
-        public async Task BuildAddressCandidateRequestSuccessfully()
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildAddressCandidateRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new AddressCandidateParameters()
@@ -221,13 +227,18 @@ namespace Geo.ArcGIS.Tests.Services
                 ForStorage = true,
             };
 
+            // Act
             var uri = await sut.BuildAddressCandidateRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("singleLine=123 East");
             query.Should().Contain("forStorage=true");
             query.Should().Contain("f=json");
             query.Should().Contain("outFields=Match_addr,Addr_type");
             query.Should().Contain("token=token123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -248,10 +259,16 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the place candidate uri is built properly.
         /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Fact]
-        public async Task BuildPlaceCandidateRequestSuccessfully()
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildPlaceCandidateRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new PlaceCandidateParameters()
@@ -266,7 +283,10 @@ namespace Geo.ArcGIS.Tests.Services
                 ForStorage = false,
             };
 
+            // Act
             var uri = await sut.BuildPlaceCandidateRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("f=json");
             query.Should().Contain("outFields=Place_addr,PlaceName");
@@ -275,15 +295,23 @@ namespace Geo.ArcGIS.Tests.Services
             query.Should().Contain("maxLocations=4");
             query.Should().Contain("forStorage=false");
             query.Should().Contain("token=token123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
         /// Tests the suggest uri is built properly.
         /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Fact]
-        public async Task BuildSuggestRequestSuccessfully()
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildSuggestRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new SuggestParameters()
@@ -305,13 +333,18 @@ namespace Geo.ArcGIS.Tests.Services
                 MaximumLocations = 2,
             };
 
+            // Act
             var uri = await sut.BuildSuggestRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("text=123 East");
             query.Should().Contain("category=restaurant");
             query.Should().Contain("location=123.456,56.789");
             query.Should().Contain("searchExtent=121.323,67.89,123.456,65.432");
             query.Should().Contain("maxLocations=2");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -332,10 +365,16 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Fact]
-        public async Task BuildReverseGeocodingRequestSuccessfully()
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
@@ -355,7 +394,10 @@ namespace Geo.ArcGIS.Tests.Services
             parameters.FeatureTypes.Add(FeatureType.Postal);
             parameters.FeatureTypes.Add(FeatureType.StreetName);
 
+            // Act
             var uri = await sut.BuildReverseGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=123.456,80.012");
             query.Should().Contain("outSR=12345");
@@ -365,6 +407,8 @@ namespace Geo.ArcGIS.Tests.Services
             query.Should().Contain("preferredLabelValues=postalCity");
             query.Should().Contain("forStorage=false");
             query.Should().Contain("token=token123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -385,10 +429,16 @@ namespace Geo.ArcGIS.Tests.Services
         /// <summary>
         /// Tests the geocoding uri is built properly.
         /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
         /// <returns>A <see cref="Task"/> with the results.</returns>
-        [Fact]
-        public async Task BuildGeocodingRequestSuccessfully()
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodingParameters()
@@ -420,7 +470,10 @@ namespace Geo.ArcGIS.Tests.Services
                     Region = "East Region",
                 });
 
+            // Act
             var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("addresses={\"records\":[{\"attributes\":{\"ObjectId\":1,\"SingleLine\":\"123 East\",\"Address\":\"Same As Above\",\"Neighbourhood\":\"East Hood\",\"City\":\"East City\",\"Subregion\":\"East Subregion\",\"Region\":\"East Region\"}}]}");
             query.Should().Contain("category=restaurant");
@@ -431,6 +484,8 @@ namespace Geo.ArcGIS.Tests.Services
             query.Should().Contain("locationType=rooftop");
             query.Should().Contain("preferredLabelValues=postalCity");
             query.Should().Contain("token=token123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>

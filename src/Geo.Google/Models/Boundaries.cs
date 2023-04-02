@@ -5,6 +5,7 @@
 
 namespace Geo.Google.Models
 {
+    using System.Globalization;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace Geo.Google.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Southwest.Latitude},{Southwest.Longitude}|{Northeast.Latitude},{Northeast.Longitude}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}|{2},{3}", Southwest.Latitude, Southwest.Longitude, Northeast.Latitude, Northeast.Longitude);
         }
     }
 }

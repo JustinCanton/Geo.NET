@@ -46,6 +46,7 @@ namespace Geo.Google.Tests.Services
         /// </summary>
         public GoogleGeocodingShould()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
             _keyContainer = new GoogleKeyContainer("abc123");
 
             var mockHandler = new Mock<HttpMessageHandler>();
@@ -322,9 +323,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the query autocomplete parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildQueryAutocompleteRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildQueryAutocompleteRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new QueryAutocompleteParameters()
@@ -340,7 +347,10 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("fr"),
             };
 
+            // Act
             var uri = sut.BuildQueryAutocompleteRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("offset=64");
             query.Should().Contain("input=123 East");
@@ -348,6 +358,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("radius=25000");
             query.Should().Contain("language=fr");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -368,9 +380,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the place autocomplete parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildPlaceAutocompleteRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildPlaceAutocompleteRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new PlacesAutocompleteParameters()
@@ -402,7 +420,10 @@ namespace Geo.Google.Tests.Services
             parameters.Types.Add(PlaceType.Establishment);
             parameters.Types.Add(PlaceType.Regions);
 
+            // Act
             var uri = sut.BuildPlaceAutocompleteRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("offset=64");
             query.Should().Contain("input=123 East");
@@ -415,6 +436,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("components=postal_code:12345|locality:tests");
             query.Should().Contain("strictbounds=true");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -435,9 +458,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the details parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildDetailsRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildDetailsRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new DetailsParameters()
@@ -452,7 +481,10 @@ namespace Geo.Google.Tests.Services
             parameters.Fields.Add("field2");
             parameters.Fields.Add("field3");
 
+            // Act
             var uri = sut.BuildDetailsRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("place_id=1a2b3c");
             query.Should().Contain("region=es");
@@ -460,6 +492,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("fields=field1,field2,field3");
             query.Should().Contain("language=fr");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -480,9 +514,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the text search parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildTextSearchRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildTextSearchRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new TextSearchParameters()
@@ -495,7 +535,10 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
+            // Act
             var uri = sut.BuildTextSearchRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("query=456 West");
             query.Should().Contain("region=es");
@@ -504,6 +547,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("opennow=true");
             query.Should().Contain("language=es");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -524,9 +569,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the nearby search parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildNearbySearchRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildNearbySearchRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new NearbySearchParameters()
@@ -542,7 +593,10 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("es"),
             };
 
+            // Act
             var uri = sut.BuildNearbySearchRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("keyword=Test");
             query.Should().Contain("rankby=prominence");
@@ -550,6 +604,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("radius=2");
             query.Should().Contain("language=es");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -648,9 +704,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the building of the find place parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildFindPlaceRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildFindPlaceRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new FindPlacesParameters()
@@ -673,7 +735,10 @@ namespace Geo.Google.Tests.Services
             parameters.Fields.Add("field2");
             parameters.Fields.Add("field3");
 
+            // Act
             var uri = sut.BuildFindPlaceRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("input=97 Test");
             query.Should().Contain("inputtype=textquery");
@@ -681,6 +746,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("fields=field1,field2,field3");
             query.Should().Contain("language=fr");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -716,9 +783,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the geocoding uri is built properly.
         /// </summary>
-        [Fact]
-        public void BuildGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodingParameters()
@@ -747,7 +820,10 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("address=123 East");
             query.Should().Contain("components=country:ca|route:cctld|administrative_area:detroit");
@@ -755,6 +831,8 @@ namespace Geo.Google.Tests.Services
             query.Should().Contain("region=us");
             query.Should().Contain("language=en");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -775,9 +853,15 @@ namespace Geo.Google.Tests.Services
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
-        [Fact]
-        public void BuildReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
@@ -801,13 +885,18 @@ namespace Geo.Google.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("latlng=80.012,123.456");
             query.Should().Contain($"result_type={ResultType.Park.ToEnumString<ResultType>()}|{ResultType.Airport.ToEnumString<ResultType>()}|{ResultType.Sublocality.ToEnumString<ResultType>()}");
             query.Should().Contain($"location_type={LocationType.Approximate.ToEnumString<LocationType>()}|{LocationType.Rooftop.ToEnumString<LocationType>()}");
             query.Should().Contain("language=en");
             query.Should().Contain("key=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
