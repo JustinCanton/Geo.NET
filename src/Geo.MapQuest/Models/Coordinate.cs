@@ -5,6 +5,7 @@
 
 namespace Geo.MapQuest.Models
 {
+    using System.Globalization;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -47,7 +48,7 @@ namespace Geo.MapQuest.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Latitude},{Longitude}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}", Latitude, Longitude);
         }
     }
 }

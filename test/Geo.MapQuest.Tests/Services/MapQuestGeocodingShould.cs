@@ -7,6 +7,7 @@ namespace Geo.MapQuest.Tests.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -157,9 +158,15 @@ namespace Geo.MapQuest.Tests.Services
         /// <summary>
         /// Tests the building of the licensed geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildLicensedGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildLicensedGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodingParameters()
@@ -178,7 +185,10 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=123 East");
             query.Should().Contain("boundingBox=87.65,123.45,45.67,165.43");
@@ -190,14 +200,22 @@ namespace Geo.MapQuest.Tests.Services
 
             var fullUri = HttpUtility.UrlDecode(uri.AbsoluteUri);
             fullUri.Should().Contain("mapquestapi.com/geocoding/v1/address");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
         /// Tests the building of the non-licensed geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildNonLicensedGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildNonLicensedGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService(new MapQuestEndpoint(false));
 
             var parameters = new GeocodingParameters()
@@ -216,7 +234,10 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=123 East");
             query.Should().Contain("ignoreLatLngInput=false");
@@ -227,6 +248,8 @@ namespace Geo.MapQuest.Tests.Services
 
             var fullUri = HttpUtility.UrlDecode(uri.AbsoluteUri);
             fullUri.Should().Contain("open.mapquestapi.com/geocoding/v1/address");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -247,9 +270,15 @@ namespace Geo.MapQuest.Tests.Services
         /// <summary>
         /// Tests the building of the licensed reverse geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildLicensedReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildLicensedReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
@@ -264,7 +293,10 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=56.78,78.91");
             query.Should().Contain("includeNearestIntersection=true");
@@ -274,14 +306,22 @@ namespace Geo.MapQuest.Tests.Services
 
             var fullUri = HttpUtility.UrlDecode(uri.AbsoluteUri);
             fullUri.Should().Contain("mapquestapi.com/geocoding/v1/reverse");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
         /// Tests the building of the non-licensed reverse geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildNonLicensedReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildNonLicensedReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService(new MapQuestEndpoint(false));
 
             var parameters = new ReverseGeocodingParameters()
@@ -296,7 +336,10 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = true,
             };
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("location=56.78,78.91");
             query.Should().Contain("includeNearestIntersection=false");
@@ -306,6 +349,8 @@ namespace Geo.MapQuest.Tests.Services
 
             var fullUri = HttpUtility.UrlDecode(uri.AbsoluteUri);
             fullUri.Should().Contain("open.mapquestapi.com/geocoding/v1/reverse");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>

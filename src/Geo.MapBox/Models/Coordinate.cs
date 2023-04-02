@@ -5,6 +5,7 @@
 
 namespace Geo.MapBox.Models
 {
+    using System.Globalization;
     using Geo.MapBox.Converters;
     using Newtonsoft.Json;
 
@@ -29,7 +30,7 @@ namespace Geo.MapBox.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Longitude},{Latitude}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}", Longitude, Latitude);
         }
     }
 }

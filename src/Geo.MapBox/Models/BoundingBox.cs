@@ -5,6 +5,7 @@
 
 namespace Geo.MapBox.Models
 {
+    using System.Globalization;
     using Geo.MapBox.Converters;
     using Newtonsoft.Json;
 
@@ -41,7 +42,7 @@ namespace Geo.MapBox.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{West},{South},{East},{North}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", West, South, East, North);
         }
     }
 }
