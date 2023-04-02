@@ -471,9 +471,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodeParameters()
@@ -493,7 +499,10 @@ namespace Geo.Here.Tests.Services
             parameters.InCountry.Add(new RegionInfo("JP"));
             parameters.InCountry.Add(new RegionInfo("RS"));
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("qq=123 West");
@@ -502,6 +511,8 @@ namespace Geo.Here.Tests.Services
             query.Should().Contain("limit=91");
             query.Should().Contain("lang=da");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -522,9 +533,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodeParameters()
@@ -538,12 +555,17 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("at=76.789,-12.456");
             query.Should().Contain("limit=1");
             query.Should().Contain("lang=en");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -564,9 +586,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the discover parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildDiscoverRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildDiscoverRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new DiscoverParameters()
@@ -584,7 +612,10 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
+            // Act
             var uri = sut.BuildDiscoverRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("in=countryCode:POL");
@@ -592,6 +623,8 @@ namespace Geo.Here.Tests.Services
             query.Should().Contain("limit=33");
             query.Should().Contain("lang=pl");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -612,9 +645,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the autosuggest parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildAutosuggestRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildAutosuggestRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new AutosuggestParameters()
@@ -633,7 +672,10 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            // Act
             var uri = sut.BuildAutosuggestRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 Weast");
             query.Should().Contain("termsLimit=7");
@@ -642,6 +684,8 @@ namespace Geo.Here.Tests.Services
             query.Should().Contain("limit=44");
             query.Should().Contain("lang=en");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -662,9 +706,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the browse parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildBrowseRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildBrowseRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new BrowseParameters()
@@ -681,7 +731,10 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            // Act
             var uri = sut.BuildBrowseRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("categories=Resturants");
             query.Should().Contain("name=Place");
@@ -690,6 +743,8 @@ namespace Geo.Here.Tests.Services
             query.Should().Contain("limit=44");
             query.Should().Contain("lang=en");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
@@ -710,9 +765,15 @@ namespace Geo.Here.Tests.Services
         /// <summary>
         /// Tests the building of the lookup parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildLookupRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildLookupRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new LookupParameters()
@@ -721,11 +782,16 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("ja"),
             };
 
+            // Act
             var uri = sut.BuildLookupRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("id=12345sudfinm");
             query.Should().Contain("lang=ja");
             query.Should().Contain("apiKey=abc123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>
