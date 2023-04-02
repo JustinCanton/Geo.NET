@@ -81,6 +81,18 @@ namespace Geo.MapQuest.Services
         }
 
         /// <summary>
+        /// Adds the base query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal static void AddBaseParameters(BaseParameters parameters, ref QueryString query)
+        {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query = query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -213,18 +225,6 @@ namespace Geo.MapQuest.Services
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
-        }
-
-        /// <summary>
-        /// Adds the base query parameters based on the allowed logic.
-        /// </summary>
-        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
-        {
-#pragma warning disable CA1308 // Normalize strings to uppercase
-            query = query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
-#pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>

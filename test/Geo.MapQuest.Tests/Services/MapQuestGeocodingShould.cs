@@ -140,15 +140,13 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            var sut = BuildService();
-
             var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 IncludeThumbMaps = true,
             };
 
-            sut.AddBaseParameters(parameters, ref query);
+            MapQuestGeocoding.AddBaseParameters(parameters, ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);

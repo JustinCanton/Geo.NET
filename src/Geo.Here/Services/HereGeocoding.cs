@@ -433,7 +433,17 @@ namespace Geo.Here.Services
                 _logger.HereDebug(_resourceStringProvider.GetString("Invalid In Bounding Box"));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.Route))
+            if (parameters.FlexiblePolyline != null)
+            {
+                var route = PolylineEncoderDecoder.Encode(
+                    parameters.FlexiblePolyline.Coordinates,
+                    parameters.FlexiblePolyline.Precision,
+                    parameters.FlexiblePolyline.ThirdDimension,
+                    parameters.FlexiblePolyline.ThirdDimensionPrecision);
+
+                query = query.Add("route", route);
+            }
+            else if (!string.IsNullOrWhiteSpace(parameters.Route))
             {
                 query = query.Add("route", parameters.Route);
             }

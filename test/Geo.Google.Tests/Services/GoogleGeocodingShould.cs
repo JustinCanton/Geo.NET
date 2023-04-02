@@ -945,12 +945,10 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void RegionInfoToCCTLDSuccessfully()
         {
-            var sut = BuildService();
-
-            sut.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
-            sut.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
-            sut.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
-            sut.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
         }
 
         /// <summary>

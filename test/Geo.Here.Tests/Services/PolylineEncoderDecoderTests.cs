@@ -1,4 +1,4 @@
-// <copyright file="FlexiblePolylineEncoderTests.cs" company="Geo.NET">
+// <copyright file="PolylineEncoderDecoderTests.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -18,7 +18,7 @@ namespace Geo.Here.Tests.Services
     /// <summary>
     /// Test cases for the <see cref="PolylineEncoderDecoder"/> class.
     /// </summary>
-    public class FlexiblePolylineEncoderTests
+    public class PolylineEncoderDecoderTests
     {
         private static readonly Regex EncodedResultRegex = new Regex(@"^\{\((?:(?<prec>\d+)(?:, ?)?)+\); \[(?<latlngz>\((?:(?:-?\d+\.\d+)(?:, ?)?){2,3}\)(?:, ?)?)+\]\}", RegexOptions.Compiled);
         private static readonly Regex EncodedResultCoordinatesRegex = new Regex(@"^\((?:(?<number>-?\d+\.\d+)(?:, ?)?){2,3}\)(?:, ?)?", RegexOptions.Compiled);
@@ -48,13 +48,13 @@ namespace Geo.Here.Tests.Services
                     for (int i = 0; i < decoded.Count; i++)
                     {
                         AssertEqualWithPrecision(
-                            expectedResult.Coordinates[i].Lat,
-                            decoded[i].Lat,
+                            expectedResult.Coordinates[i].Latitude,
+                            decoded[i].Latitude,
                             expectedResult.Precision.Precision2d);
 
                         AssertEqualWithPrecision(
-                            expectedResult.Coordinates[i].Lng,
-                            decoded[i].Lng,
+                            expectedResult.Coordinates[i].Longitude,
+                            decoded[i].Longitude,
                             expectedResult.Precision.Precision2d);
 
                         AssertEqualWithPrecision(
@@ -69,14 +69,6 @@ namespace Geo.Here.Tests.Services
                     }
                 }
             }
-        }
-
-        private void AssertEqualWithPrecision(double expected, double actual, int precision)
-        {
-            long expectedLong = (long)Math.Round(expected * (int)Math.Pow(10, precision), MidpointRounding.AwayFromZero);
-            long actualLong = (long)Math.Round(actual * (int)Math.Pow(10, precision), MidpointRounding.AwayFromZero);
-
-            expectedLong.Should().Be(actualLong);
         }
 
         [Fact]
@@ -263,7 +255,15 @@ namespace Geo.Here.Tests.Services
             }
         }
 
-        private ExpectedResult ParseExpectedTestResult(string encodedResult)
+        private static void AssertEqualWithPrecision(double expected, double actual, int precision)
+        {
+            long expectedLong = (long)Math.Round(expected * (int)Math.Pow(10, precision), MidpointRounding.AwayFromZero);
+            long actualLong = (long)Math.Round(actual * (int)Math.Pow(10, precision), MidpointRounding.AwayFromZero);
+
+            expectedLong.Should().Be(actualLong);
+        }
+
+        private static ExpectedResult ParseExpectedTestResult(string encodedResult)
         {
             var resultMatch = EncodedResultRegex.Match(encodedResult);
             if (!resultMatch.Success)

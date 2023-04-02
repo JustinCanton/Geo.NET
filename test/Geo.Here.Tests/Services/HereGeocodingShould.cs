@@ -418,6 +418,136 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("pl");
         }
 
+        [Fact]
+        public void AddBoundingParameters_WithFlexiblePolyline_CorrectlyAddsPolyline()
+        {
+            // Arrange
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new AreaParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                Limit = 91,
+                Language = new CultureInfo("fr"),
+                FlexiblePolyline = new FlexiblePolyline()
+                {
+                    Coordinates = new List<LatLngZ>()
+                    {
+                        new LatLngZ(52.5199356, 13.3866272),
+                        new LatLngZ(52.5100899, 13.2816896),
+                        new LatLngZ(52.4351807, 13.1935196),
+                        new LatLngZ(52.4107285, 13.1964502),
+                        new LatLngZ(52.38871, 13.1557798),
+                        new LatLngZ(52.3727798, 13.1491003),
+                        new LatLngZ(52.3737488, 13.1154604),
+                        new LatLngZ(52.3875198, 13.0872202),
+                        new LatLngZ(52.4029388, 13.0706196),
+                        new LatLngZ(52.4105797, 13.0755529),
+                    },
+                    Precision = 5,
+                    ThirdDimension = ThirdDimension.Absent,
+                    ThirdDimensionPrecision = 0,
+                },
+            };
+
+            // Act
+            sut.AddBoundingParameters(parameters, ref query);
+
+            // Assert
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(4);
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("fr");
+            queryParameters["route"].Should().Be("BF05xgKuy2xCx9B7vUl0OhnR54EqSzpEl-HxjD3pBiGnyGi2CvwFsgD3nD4vB6e");
+        }
+
+        [Fact]
+        public void AddBoundingParameters_WithRoute_CorrectlyAddsRoute()
+        {
+            // Arrange
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new AreaParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                Limit = 91,
+                Language = new CultureInfo("fr"),
+                Route = "BlBoz5xJ67i1BU1B7PUzIhaUxL7YU",
+            };
+
+            // Act
+            sut.AddBoundingParameters(parameters, ref query);
+
+            // Assert
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(4);
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("fr");
+            queryParameters["route"].Should().Be("BlBoz5xJ67i1BU1B7PUzIhaUxL7YU");
+        }
+
+        [Fact]
+        public void AddBoundingParameters_WithFlexiblePolylineAndRoute_CorrectlyAddsPolyline()
+        {
+            // Arrange
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new AreaParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                Limit = 91,
+                Language = new CultureInfo("fr"),
+                FlexiblePolyline = new FlexiblePolyline()
+                {
+                    Coordinates = new List<LatLngZ>()
+                    {
+                        new LatLngZ(52.5199356, 13.3866272),
+                        new LatLngZ(52.5100899, 13.2816896),
+                        new LatLngZ(52.4351807, 13.1935196),
+                        new LatLngZ(52.4107285, 13.1964502),
+                        new LatLngZ(52.38871, 13.1557798),
+                        new LatLngZ(52.3727798, 13.1491003),
+                        new LatLngZ(52.3737488, 13.1154604),
+                        new LatLngZ(52.3875198, 13.0872202),
+                        new LatLngZ(52.4029388, 13.0706196),
+                        new LatLngZ(52.4105797, 13.0755529),
+                    },
+                    Precision = 5,
+                    ThirdDimension = ThirdDimension.Absent,
+                    ThirdDimensionPrecision = 0,
+                },
+                Route = "BlBoz5xJ67i1BU1B7PUzIhaUxL7YU",
+            };
+
+            // Act
+            sut.AddBoundingParameters(parameters, ref query);
+
+            // Assert
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(4);
+            queryParameters["at"].Should().Be("56.789,123.456");
+            queryParameters["limit"].Should().Be("91");
+            queryParameters["lang"].Should().Be("fr");
+            queryParameters["route"].Should().Be("BF05xgKuy2xCx9B7vUl0OhnR54EqSzpEl-HxjD3pBiGnyGi2CvwFsgD3nD4vB6e");
+        }
+
         /// <summary>
         /// Tests the bounding parameter are not set into the query properly.
         /// </summary>

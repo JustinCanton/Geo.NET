@@ -309,7 +309,7 @@ namespace Geo.Here.Services
                     throw new ArgumentNullException(nameof(tuple), "Invalid LatLngZ tuple");
                 }
 
-                Add(tuple.Lat, tuple.Lng, tuple.Z);
+                Add(tuple.Latitude, tuple.Longitude, tuple.Z);
             }
 
             public string GetEncoded()
@@ -336,7 +336,7 @@ namespace Geo.Here.Services
                 }
 
                 long res = (thirdDimPrecision << 7) | (thirdDimensionValue << 4) | precision;
-                Converter.EncodeUnsignedVarint(PolylineEncoderDecoder.FormatVersion, _result);
+                Converter.EncodeUnsignedVarint(FormatVersion, _result);
                 Converter.EncodeUnsignedVarint(res, _result);
             }
 

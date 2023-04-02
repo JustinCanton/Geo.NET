@@ -17,23 +17,23 @@ namespace Geo.Here.Models.Parameters
         /// </summary>
         /// <param name="latitude">The latitude of the point.</param>
         /// <param name="longitude">The longitude of the point.</param>
-        /// <param name="thirdDimension">The Z dimension of the point.</param>
+        /// <param name="thirdDimension">Optional. The Z dimension of the point. Default = 0.</param>
         public LatLngZ(double latitude, double longitude, double thirdDimension = 0)
         {
-            Lat = latitude;
-            Lng = longitude;
+            Latitude = latitude;
+            Longitude = longitude;
             Z = thirdDimension;
         }
 
         /// <summary>
         /// Gets the latitude of the point.
         /// </summary>
-        public double Lat { get; }
+        public double Latitude { get; }
 
         /// <summary>
         /// Gets the longitude of the point.
         /// </summary>
-        public double Lng { get; }
+        public double Longitude { get; }
 
         /// <summary>
         /// Gets the Z dimension of the point.
@@ -43,7 +43,7 @@ namespace Geo.Here.Models.Parameters
         /// <inheritdoc/>
         public override string ToString()
         {
-            return "LatLngZ [lat=" + Lat + ", lng=" + Lng + ", z=" + Z + "]";
+            return "LatLngZ [Latitude=" + Latitude + ", Longitude=" + Longitude + ", Z=" + Z + "]";
         }
 
         /// <inheritdoc/>
@@ -56,7 +56,7 @@ namespace Geo.Here.Models.Parameters
 
             if (obj is LatLngZ latLngZ)
             {
-                if (latLngZ.Lat == Lat && latLngZ.Lng == Lng && latLngZ.Z == Z)
+                if (latLngZ.Latitude == Latitude && latLngZ.Longitude == Longitude && latLngZ.Z == Z)
                 {
                     return true;
                 }
@@ -68,7 +68,7 @@ namespace Geo.Here.Models.Parameters
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return HashCode.Combine(Lat, Lng, Z);
+            return HashCode.Combine(Latitude, Longitude, Z);
         }
     }
 }

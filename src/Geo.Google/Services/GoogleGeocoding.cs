@@ -144,6 +144,25 @@ namespace Geo.Google.Services
         }
 
         /// <summary>
+        /// Gets the ccTLD representation of a <see cref="RegionInfo"/> object.
+        /// </summary>
+        /// <param name="regionInfo">A <see cref="RegionInfo"/> with the region information to convert.</param>
+        /// <returns>A <see cref="string"/> with the ccTLD.</returns>
+        internal static string RegionInfoToCCTLD(RegionInfo regionInfo)
+        {
+            if (regionInfo.GeoId == new RegionInfo("GB").GeoId)
+            {
+                return "uk";
+            }
+            else
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                return regionInfo.TwoLetterISORegionName.ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -758,25 +777,6 @@ namespace Geo.Google.Services
         internal void AddGoogleKey(ref QueryString query)
         {
             query = query.Add("key", _keyContainer.GetKey());
-        }
-
-        /// <summary>
-        /// Gets the ccTLD representation of a <see cref="RegionInfo"/> object.
-        /// </summary>
-        /// <param name="regionInfo">A <see cref="RegionInfo"/> with the region information to convert.</param>
-        /// <returns>A <see cref="string"/> with the ccTLD.</returns>
-        internal string RegionInfoToCCTLD(RegionInfo regionInfo)
-        {
-            if (regionInfo.GeoId == new RegionInfo("GB").GeoId)
-            {
-                return "uk";
-            }
-            else
-            {
-#pragma warning disable CA1308 // Normalize strings to uppercase
-                return regionInfo.TwoLetterISORegionName.ToLowerInvariant();
-#pragma warning restore CA1308 // Normalize strings to uppercase
-            }
         }
     }
 }

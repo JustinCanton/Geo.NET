@@ -196,7 +196,7 @@ namespace Geo.Here.Resources.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The route is invalid and will not be used..
+        ///   Looks up a localized string similar to The route and flexible polyline are invalid and will not be used..
         /// </summary>
         internal static string Invalid_Route {
             get {

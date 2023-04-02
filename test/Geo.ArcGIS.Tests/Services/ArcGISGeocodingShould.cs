@@ -178,15 +178,13 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public void AddStorageParameterSuccessfully()
         {
-            var sut = BuildService();
-
             var query = QueryString.Empty;
             var parameters = new StorageParameters()
             {
                 ForStorage = false,
             };
 
-            sut.AddStorageParameter(parameters, ref query);
+            ArcGISGeocoding.AddStorageParameter(parameters, ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
@@ -198,7 +196,7 @@ namespace Geo.ArcGIS.Tests.Services
                 ForStorage = true,
             };
 
-            sut.AddStorageParameter(parameters, ref query);
+            ArcGISGeocoding.AddStorageParameter(parameters, ref query);
 
             queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);

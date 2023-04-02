@@ -44,8 +44,15 @@ namespace Geo.Here.Models.Parameters
         /// BFoz5xJ67i1B1B7PzIhaxL7Y
         /// BFoz5xJ67i1B1B7PzIhaxL7Y; w=5000
         /// BlD05xgKuy2xCCx9B7vUCl0OhnRC54EqSCzpEl-HCxjD3pBCiGnyGCi2CvwFCsgD3nDC4vB6eC;w=2000
-        /// These can be encoded and decoded using the python app found at https://github.com/heremaps/flexible-polyline/tree/master/python.
+        /// More information can be found at https://github.com/heremaps/flexible-polyline.
         /// </summary>
+        /// <remarks>Only one of <see cref="Route"/> or <see cref="FlexiblePolyline"/> will be applied to the request. If both are present, only <see cref="FlexiblePolyline"/> will be used.</remarks>
         public string Route { get; set; }
+
+        /// <summary>
+        /// Gets or sets the polyline information to be added as a filter.
+        /// </summary>
+        /// <remarks>Only one of <see cref="Route"/> or <see cref="FlexiblePolyline"/> will be applied to the request. If both are present, only <see cref="FlexiblePolyline"/> will be used.</remarks>
+        public FlexiblePolyline FlexiblePolyline { get; set; }
     }
 }

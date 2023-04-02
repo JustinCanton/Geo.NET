@@ -112,6 +112,18 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <summary>
+        /// Adds the ArcGIS storage flag to the query parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="StorageParameters"/> with the storage information.</param>
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal static void AddStorageParameter(StorageParameters parameters, ref QueryString query)
+        {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query = query.Add("forStorage", parameters.ForStorage.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -474,18 +486,6 @@ namespace Geo.ArcGIS.Services
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
-        }
-
-        /// <summary>
-        /// Adds the ArcGIS storage flag to the query parameters.
-        /// </summary>
-        /// <param name="parameters">A <see cref="StorageParameters"/> with the storage information.</param>
-        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddStorageParameter(StorageParameters parameters, ref QueryString query)
-        {
-#pragma warning disable CA1308 // Normalize strings to uppercase
-            query = query.Add("forStorage", parameters.ForStorage.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
-#pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>
