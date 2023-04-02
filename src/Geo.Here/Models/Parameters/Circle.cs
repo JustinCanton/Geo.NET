@@ -5,6 +5,8 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// Circle information for search bounds.
     /// </summary>
@@ -23,7 +25,7 @@ namespace Geo.Here.Models.Parameters
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Centre.Latitude},{Centre.Longitude};r={Radius}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1};r={2}", Centre.Latitude, Centre.Longitude, Radius);
         }
 
         /// <summary>
