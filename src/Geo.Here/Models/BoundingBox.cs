@@ -5,6 +5,7 @@
 
 namespace Geo.Here.Models
 {
+    using System.Globalization;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -39,7 +40,7 @@ namespace Geo.Here.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{West},{South},{East},{North}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", West, South, East, North);
         }
 
         /// <summary>

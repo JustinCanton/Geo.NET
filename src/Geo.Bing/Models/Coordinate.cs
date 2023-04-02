@@ -5,6 +5,7 @@
 
 namespace Geo.Bing.Models
 {
+    using System.Globalization;
     using Geo.Bing.Converters;
     using Newtonsoft.Json;
 
@@ -29,7 +30,7 @@ namespace Geo.Bing.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Latitude},{Longitude}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}", Latitude, Longitude);
         }
     }
 }

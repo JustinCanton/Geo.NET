@@ -5,6 +5,8 @@
 
 namespace Geo.MapQuest.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// The north/south/east/west bounding box for a map view.
     /// </summary>
@@ -33,7 +35,7 @@ namespace Geo.MapQuest.Models.Parameters
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{North},{West},{South},{East}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", North, West, South, East);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace Geo.MapBox.Tests.Services
         /// </summary>
         public MapBoxGeocodingShould()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
             _keyContainer = new MapBoxKeyContainer("abc123");
 
             var mockHandler = new Mock<HttpMessageHandler>();
@@ -160,9 +161,15 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new GeocodingParameters()
@@ -196,7 +203,10 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
+            // Act
             var uri = sut.BuildGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("autocomplete=true");
             query.Should().Contain("bbox=123.45,45.67,165.43,87.65");
@@ -211,6 +221,8 @@ namespace Geo.MapBox.Tests.Services
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);
             path.Should().Contain("mapbox.places/123 East");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         [Fact]
@@ -254,9 +266,15 @@ namespace Geo.MapBox.Tests.Services
         /// <summary>
         /// Tests the building of the reverse geocoding parameters is done successfully.
         /// </summary>
-        [Fact]
-        public void BuildReverseGeocodingRequestSuccessfully()
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public void BuildReverseGeocodingRequestSuccessfully(CultureInfo culture)
         {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
             var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
@@ -282,7 +300,10 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.District);
             parameters.Types.Add(FeatureType.Neighborhood);
 
+            // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("reverseMode=score");
             query.Should().Contain("country=BG,SE");
@@ -294,6 +315,8 @@ namespace Geo.MapBox.Tests.Services
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);
             path.Should().Contain("mapbox.places-permanent/78.91,56.78");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
         /// <summary>

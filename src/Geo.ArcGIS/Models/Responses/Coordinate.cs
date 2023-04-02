@@ -5,6 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
+    using System.Globalization;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Longitude},{Latitude}";
+            return string.Format(CultureInfo.InvariantCulture, "{0},{1}", Longitude, Latitude);
         }
     }
 }
