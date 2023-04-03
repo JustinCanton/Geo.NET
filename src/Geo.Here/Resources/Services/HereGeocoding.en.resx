@@ -163,7 +163,7 @@
     <value>The query cannot be null or empty.</value>
   </data>
   <data name="Invalid Route" xml:space="preserve">
-    <value>The route is invalid and will not be used.</value>
+    <value>The route and flexible polyline are invalid and will not be used.</value>
   </data>
   <data name="Invalid Terms Limit" xml:space="preserve">
     <value>The terms limit is invalid and will not be used.</value>
