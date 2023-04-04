@@ -18,4 +18,19 @@
     <ProjectReference Include="..\Geo.Core\Geo.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Services\ArcGISGeocoding.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ArcGISGeocoding.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Services\ArcGISGeocoding.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ArcGISGeocoding.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

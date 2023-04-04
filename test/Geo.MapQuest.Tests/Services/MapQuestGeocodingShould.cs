@@ -22,7 +22,6 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Services;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
@@ -37,7 +36,7 @@ namespace Geo.MapQuest.Tests.Services
         private readonly MapQuestKeyContainer _keyContainer;
         private readonly MapQuestEndpoint _endpoint;
         private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IStringLocalizerFactory _localizerFactory;
+        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -46,7 +45,6 @@ namespace Geo.MapQuest.Tests.Services
         /// </summary>
         public MapQuestGeocodingShould()
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
             _keyContainer = new MapQuestKeyContainer("abc123");
             _endpoint = new MapQuestEndpoint(true);
 
@@ -107,7 +105,7 @@ namespace Geo.MapQuest.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
             _exceptionProvider = new GeoNETExceptionProvider();
         }
@@ -142,15 +140,13 @@ namespace Geo.MapQuest.Tests.Services
         [Fact]
         public void AddBaseParametersSuccessfully()
         {
-            var sut = BuildService();
-
             var query = QueryString.Empty;
             var parameters = new BaseParameters()
             {
                 IncludeThumbMaps = true,
             };
 
-            sut.AddBaseParameters(parameters, ref query);
+            MapQuestGeocoding.AddBaseParameters(parameters, ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
@@ -528,7 +524,7 @@ namespace Geo.MapQuest.Tests.Services
 
         private MapQuestGeocoding BuildService(MapQuestEndpoint endpoint = null)
         {
-            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint, _exceptionProvider, _localizerFactory);
+            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint, _exceptionProvider, _resourceStringProviderFactory);
         }
     }
 }

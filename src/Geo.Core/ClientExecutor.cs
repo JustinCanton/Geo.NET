@@ -11,7 +11,6 @@ namespace Geo.Core
     using System.Threading.Tasks;
     using Geo.Core.Models;
     using Geo.Core.Models.Exceptions;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using Newtonsoft.Json;
@@ -23,7 +22,7 @@ namespace Geo.Core
     {
         private readonly HttpClient _client;
         private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IStringLocalizer _localizer;
+        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
         private readonly ILogger<ClientExecutor> _logger;
 
         /// <summary>
@@ -31,17 +30,17 @@ namespace Geo.Core
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the APIs.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public ClientExecutor(
             HttpClient client,
             IGeoNETExceptionProvider exceptionProvider,
-            IStringLocalizerFactory localizerFactory,
+            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
             ILoggerFactory loggerFactory = null)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _exceptionProvider = exceptionProvider ?? throw new ArgumentNullException(nameof(exceptionProvider));
-            _localizer = localizerFactory?.Create(typeof(ClientExecutor)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<ClientExecutor>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
             _logger = loggerFactory?.CreateLogger<ClientExecutor>() ?? NullLogger<ClientExecutor>.Instance;
         }
 
@@ -72,36 +71,36 @@ namespace Geo.Core
             }
             catch (ArgumentNullException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Null Uri", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Null Uri", apiName), ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Invalid Uri", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Invalid Uri", apiName), ex);
             }
             catch (HttpRequestException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Request Failed", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Failed", apiName), ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Request Cancelled", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Cancelled", apiName), ex);
             }
             catch (JsonReaderException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Reader Failed To Parse", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Reader Failed To Parse", apiName), ex);
             }
             catch (JsonSerializationException ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Serializer Failed To Parse", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Serializer Failed To Parse", apiName), ex);
             }
             catch (Exception ex)
             {
-                throw _exceptionProvider.GetException<TException>(_localizer["Request Failed Exception", apiName].ToString(), ex);
+                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Failed Exception", apiName), ex);
             }
 
             if (!response.IsSuccessful)
             {
-                var ex = _exceptionProvider.GetException<TException>(_localizer["Request Failure", apiName].ToString(), null);
+                var ex = _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Failure", apiName), null);
                 ex.Data.Add("uri", uri);
                 ex.Data.Add("responseStatusCode", response.StatusCode);
                 ex.Data.Add("responseBody", response.Body);

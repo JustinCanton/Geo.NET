@@ -118,57 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Failed To Create Uri" xml:space="preserve">
-    <value>Failed to create the HERE uri.</value>
+    <value>Failed to create the MapQuest uri.</value>
   </data>
-  <data name="Invalid At" xml:space="preserve">
-    <value>The at coordinates cannot be null.</value>
+  <data name="Invalid Bounding Box" xml:space="preserve">
+    <value>The bounding box is invalid and will not be used.</value>
   </data>
-  <data name="Invalid At Debug" xml:space="preserve">
-    <value>The at is invalid and will not be used.</value>
+  <data name="Invalid Intl Mode" xml:space="preserve">
+    <value>The intl mode is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Bounding Parameters" xml:space="preserve">
-    <value>The combination of bounding parameters is not valid.</value>
+  <data name="Invalid Location" xml:space="preserve">
+    <value>The location cannot be null or invalid.</value>
   </data>
-  <data name="Invalid Categories" xml:space="preserve">
-    <value>The categories are invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Id" xml:space="preserve">
-    <value>The id cannot be null.</value>
-  </data>
-  <data name="Invalid In Bounding Box" xml:space="preserve">
-    <value>The in bounding box is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid In Circle" xml:space="preserve">
-    <value>The in circle is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid In Country" xml:space="preserve">
-    <value>The in country is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Limit" xml:space="preserve">
-    <value>The limit is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Name" xml:space="preserve">
-    <value>The name is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Qualified Query" xml:space="preserve">
-    <value>The qualified query is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Query" xml:space="preserve">
-    <value>The query is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Query And Qualified Query" xml:space="preserve">
-    <value>Both query and qualifiedquery cannot be null or empty.</value>
-  </data>
-  <data name="Invalid Query Error" xml:space="preserve">
-    <value>The query cannot be null or empty.</value>
-  </data>
-  <data name="Invalid Route" xml:space="preserve">
-    <value>The route and flexible polyline are invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Terms Limit" xml:space="preserve">
-    <value>The terms limit is invalid and will not be used.</value>
+  <data name="Invalid Maximum Results" xml:space="preserve">
+    <value>The maximum results are invalid and will not be used.</value>
   </data>
   <data name="Null Parameters" xml:space="preserve">
-    <value>The HERE parameters are null.</value>
+    <value>The MapQuest parameters are null.</value>
   </data>
 </root>

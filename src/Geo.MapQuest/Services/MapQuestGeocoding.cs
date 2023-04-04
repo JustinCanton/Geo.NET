@@ -17,7 +17,6 @@ namespace Geo.MapQuest.Services
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
@@ -34,7 +33,7 @@ namespace Geo.MapQuest.Services
 
         private readonly IMapQuestKeyContainer _keyContainer;
         private readonly IMapQuestEndpoint _endpoint;
-        private readonly IStringLocalizer _localizer;
+        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
         private readonly ILogger<MapQuestGeocoding> _logger;
 
         /// <summary>
@@ -44,20 +43,20 @@ namespace Geo.MapQuest.Services
         /// <param name="keyContainer">A <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
         /// <param name="endpoint">A <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapQuestGeocoding(
             HttpClient client,
             IMapQuestKeyContainer keyContainer,
             IMapQuestEndpoint endpoint,
             IGeoNETExceptionProvider exceptionProvider,
-            IStringLocalizerFactory localizerFactory,
+            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, localizerFactory, loggerFactory)
+            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
         {
             _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
             _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
-            _localizer = localizerFactory?.Create(typeof(MapQuestGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<MapQuestGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
             _logger = loggerFactory?.CreateLogger<MapQuestGeocoding>() ?? NullLogger<MapQuestGeocoding>.Instance;
         }
 
@@ -82,6 +81,18 @@ namespace Geo.MapQuest.Services
         }
 
         /// <summary>
+        /// Adds the base query parameters based on the allowed logic.
+        /// </summary>
+        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
+        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
+        internal static void AddBaseParameters(BaseParameters parameters, ref QueryString query)
+        {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query = query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -92,7 +103,7 @@ namespace Geo.MapQuest.Services
         {
             if (parameters is null)
             {
-                var error = _localizer["Null Parameters"];
+                var error = _resourceStringProvider.GetString("Null Parameters");
                 _logger.MapQuestError(error);
                 throw new MapQuestException(error, new ArgumentNullException(nameof(parameters)));
             }
@@ -103,7 +114,7 @@ namespace Geo.MapQuest.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _localizer["Failed To Create Uri"];
+                var error = _resourceStringProvider.GetString("Failed To Create Uri");
                 _logger.MapQuestError(error);
                 throw new MapQuestException(error, ex);
             }
@@ -122,7 +133,7 @@ namespace Geo.MapQuest.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
-                var error = _localizer["Invalid Location"];
+                var error = _resourceStringProvider.GetString("Invalid Location");
                 _logger.MapQuestError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
@@ -137,7 +148,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_localizer["Invalid Bounding Box"]);
+                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Bounding Box"));
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -150,7 +161,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_localizer["Invalid Maximum Results"]);
+                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Maximum Results"));
             }
 
             if (parameters.IntlMode == InternationalMode.FiveBox)
@@ -167,7 +178,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_localizer["Invalid Intl Mode"]);
+                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Intl Mode"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -192,7 +203,7 @@ namespace Geo.MapQuest.Services
 
             if (parameters.Location is null)
             {
-                var error = _localizer["Invalid Location"];
+                var error = _resourceStringProvider.GetString("Invalid Location");
                 _logger.MapQuestError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
@@ -214,18 +225,6 @@ namespace Geo.MapQuest.Services
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
-        }
-
-        /// <summary>
-        /// Adds the base query parameters based on the allowed logic.
-        /// </summary>
-        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
-        /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
-        {
-#pragma warning disable CA1308 // Normalize strings to uppercase
-            query = query.Add("thumbMaps", parameters.IncludeThumbMaps.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
-#pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
         /// <summary>

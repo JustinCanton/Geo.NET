@@ -12,4 +12,22 @@
     <ProjectReference Include="..\..\src\Geo.Here\Geo.Here.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\original.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RoundHalfEven\decoded.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RoundHalfEven\encoded.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RoundHalfUp\decoded.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\RoundHalfUp\encoded.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

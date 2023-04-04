@@ -118,57 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Failed To Create Uri" xml:space="preserve">
-    <value>Failed to create the HERE uri.</value>
+    <value>Failed to create the ArcGIS uri.</value>
   </data>
-  <data name="Invalid At" xml:space="preserve">
-    <value>The at coordinates cannot be null.</value>
+  <data name="Invalid Address Attributes" xml:space="preserve">
+    <value>The address attributes cannot be null or empty.</value>
   </data>
-  <data name="Invalid At Debug" xml:space="preserve">
-    <value>The at is invalid and will not be used.</value>
+  <data name="Invalid Category" xml:space="preserve">
+    <value>The category is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Bounding Parameters" xml:space="preserve">
-    <value>The combination of bounding parameters is not valid.</value>
+  <data name="Invalid Feature Types" xml:space="preserve">
+    <value>The feature types are invalid and will not be used.</value>
   </data>
-  <data name="Invalid Categories" xml:space="preserve">
-    <value>The categories are invalid and will not be used.</value>
+  <data name="Invalid Language Code" xml:space="preserve">
+    <value>The language code is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Id" xml:space="preserve">
-    <value>The id cannot be null.</value>
+  <data name="Invalid Location" xml:space="preserve">
+    <value>The location is invalid and will not be used.</value>
   </data>
-  <data name="Invalid In Bounding Box" xml:space="preserve">
-    <value>The in bounding box is invalid and will not be used.</value>
+  <data name="Invalid Location Error" xml:space="preserve">
+    <value>The location cannot be null.</value>
   </data>
-  <data name="Invalid In Circle" xml:space="preserve">
-    <value>The in circle is invalid and will not be used.</value>
+  <data name="Invalid Location Type" xml:space="preserve">
+    <value>The location type is invalid and will not be used.</value>
   </data>
-  <data name="Invalid In Country" xml:space="preserve">
-    <value>The in country is invalid and will not be used.</value>
+  <data name="Invalid Maximum Locations" xml:space="preserve">
+    <value>The maximum locations is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Limit" xml:space="preserve">
-    <value>The limit is invalid and will not be used.</value>
+  <data name="Invalid Out Spatial Reference" xml:space="preserve">
+    <value>The out spatial reference is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Name" xml:space="preserve">
-    <value>The name is invalid and will not be used.</value>
+  <data name="Invalid Preferred Label Value" xml:space="preserve">
+    <value>The preferred label value is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Qualified Query" xml:space="preserve">
-    <value>The qualified query is invalid and will not be used.</value>
+  <data name="Invalid Search Extent" xml:space="preserve">
+    <value>The search extent is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Query" xml:space="preserve">
-    <value>The query is invalid and will not be used.</value>
+  <data name="Invalid Single Address Line" xml:space="preserve">
+    <value>The single line address cannot be null or empty.</value>
   </data>
-  <data name="Invalid Query And Qualified Query" xml:space="preserve">
-    <value>Both query and qualifiedquery cannot be null or empty.</value>
+  <data name="Invalid Source Country" xml:space="preserve">
+    <value>The source country is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Query Error" xml:space="preserve">
-    <value>The query cannot be null or empty.</value>
-  </data>
-  <data name="Invalid Route" xml:space="preserve">
-    <value>The route and flexible polyline are invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Terms Limit" xml:space="preserve">
-    <value>The terms limit is invalid and will not be used.</value>
+  <data name="Invalid Text" xml:space="preserve">
+    <value>The text cannot be null or empty.</value>
   </data>
   <data name="Null Parameters" xml:space="preserve">
-    <value>The HERE parameters are null.</value>
+    <value>The ArcGIS parameters are null.</value>
   </data>
 </root>

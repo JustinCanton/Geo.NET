@@ -117,58 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Do Not Include Entity Types" xml:space="preserve">
+    <value>The include entity types will not be used.</value>
+  </data>
+  <data name="Do Not Include Neighbourhood" xml:space="preserve">
+    <value>The include neighbourhood will not be used.</value>
+  </data>
+  <data name="Do Not Include Types" xml:space="preserve">
+    <value>The include types will not be used.</value>
+  </data>
   <data name="Failed To Create Uri" xml:space="preserve">
-    <value>Failed to create the HERE uri.</value>
+    <value>Failed to create the Bing uri.</value>
   </data>
-  <data name="Invalid At" xml:space="preserve">
-    <value>The at coordinates cannot be null.</value>
+  <data name="Invalid Address Information" xml:space="preserve">
+    <value>The address information cannot all be null or empty.</value>
   </data>
-  <data name="Invalid At Debug" xml:space="preserve">
-    <value>The at is invalid and will not be used.</value>
+  <data name="Invalid Address Line" xml:space="preserve">
+    <value>The address line is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Bounding Parameters" xml:space="preserve">
-    <value>The combination of bounding parameters is not valid.</value>
+  <data name="Invalid Administration District" xml:space="preserve">
+    <value>The administration district is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Categories" xml:space="preserve">
-    <value>The categories are invalid and will not be used.</value>
+  <data name="Invalid Country Region" xml:space="preserve">
+    <value>The country region is invalid and will not be used.</value>
   </data>
-  <data name="Invalid Id" xml:space="preserve">
-    <value>The id cannot be null.</value>
+  <data name="Invalid Input" xml:space="preserve">
+    <value>The input cannot be null or empty.</value>
   </data>
-  <data name="Invalid In Bounding Box" xml:space="preserve">
-    <value>The in bounding box is invalid and will not be used.</value>
+  <data name="Invalid Locality" xml:space="preserve">
+    <value>The locality is invalid and will not be used.</value>
   </data>
-  <data name="Invalid In Circle" xml:space="preserve">
-    <value>The in circle is invalid and will not be used.</value>
+  <data name="Invalid Maximum Results" xml:space="preserve">
+    <value>The maximum result is invalid and will not be used.</value>
   </data>
-  <data name="Invalid In Country" xml:space="preserve">
-    <value>The in country is invalid and will not be used.</value>
+  <data name="Invalid Point" xml:space="preserve">
+    <value>The point cannot be null.</value>
   </data>
-  <data name="Invalid Limit" xml:space="preserve">
-    <value>The limit is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Name" xml:space="preserve">
-    <value>The name is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Qualified Query" xml:space="preserve">
-    <value>The qualified query is invalid and will not be used.</value>
+  <data name="Invalid Postal Code" xml:space="preserve">
+    <value>The postal code is invalid and will not be used.</value>
   </data>
   <data name="Invalid Query" xml:space="preserve">
-    <value>The query is invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Query And Qualified Query" xml:space="preserve">
-    <value>Both query and qualifiedquery cannot be null or empty.</value>
-  </data>
-  <data name="Invalid Query Error" xml:space="preserve">
     <value>The query cannot be null or empty.</value>
   </data>
-  <data name="Invalid Route" xml:space="preserve">
-    <value>The route and flexible polyline are invalid and will not be used.</value>
-  </data>
-  <data name="Invalid Terms Limit" xml:space="preserve">
-    <value>The terms limit is invalid and will not be used.</value>
-  </data>
   <data name="Null Parameters" xml:space="preserve">
-    <value>The HERE parameters are null.</value>
+    <value>The Bing parameters are null.</value>
   </data>
 </root>

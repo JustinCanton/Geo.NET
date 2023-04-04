@@ -21,7 +21,6 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
@@ -40,7 +39,7 @@ namespace Geo.Google.Services
         private const string QueryAutocompleteUri = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json";
 
         private readonly IGoogleKeyContainer _keyContainer;
-        private readonly IStringLocalizer _localizer;
+        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
         private readonly ILogger<GoogleGeocoding> _logger;
 
         /// <summary>
@@ -49,18 +48,18 @@ namespace Geo.Google.Services
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Google Geocoding API.</param>
         /// <param name="keyContainer">A <see cref="IGoogleKeyContainer"/> used for fetching the Google key.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="localizerFactory">An <see cref="IStringLocalizerFactory"/> used to create a localizer for localizing log or exception messages.</param>
+        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public GoogleGeocoding(
             HttpClient client,
             IGoogleKeyContainer keyContainer,
             IGeoNETExceptionProvider exceptionProvider,
-            IStringLocalizerFactory localizerFactory,
+            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, localizerFactory, loggerFactory)
+            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
         {
             _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _localizer = localizerFactory?.Create(typeof(GoogleGeocoding)) ?? throw new ArgumentNullException(nameof(localizerFactory));
+            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<GoogleGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
             _logger = loggerFactory?.CreateLogger<GoogleGeocoding>() ?? NullLogger<GoogleGeocoding>.Instance;
         }
 
@@ -145,6 +144,25 @@ namespace Geo.Google.Services
         }
 
         /// <summary>
+        /// Gets the ccTLD representation of a <see cref="RegionInfo"/> object.
+        /// </summary>
+        /// <param name="regionInfo">A <see cref="RegionInfo"/> with the region information to convert.</param>
+        /// <returns>A <see cref="string"/> with the ccTLD.</returns>
+        internal static string RegionInfoToCCTLD(RegionInfo regionInfo)
+        {
+            if (regionInfo.GeoId == new RegionInfo("GB").GeoId)
+            {
+                return "uk";
+            }
+            else
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                return regionInfo.TwoLetterISORegionName.ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -155,7 +173,7 @@ namespace Geo.Google.Services
         {
             if (parameters is null)
             {
-                var error = _localizer["Null Parameters"];
+                var error = _resourceStringProvider.GetString("Null Parameters");
                 _logger.GoogleError(error);
                 throw new GoogleException(error, new ArgumentNullException(nameof(parameters)));
             }
@@ -166,7 +184,7 @@ namespace Geo.Google.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _localizer["Failed To Create Uri"];
+                var error = _resourceStringProvider.GetString("Failed To Create Uri");
                 _logger.GoogleError(error);
                 throw new GoogleException(error, ex);
             }
@@ -185,7 +203,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Address))
             {
-                var error = _localizer["Invalid Address"];
+                var error = _resourceStringProvider.GetString("Invalid Address");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Address));
             }
@@ -198,7 +216,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Components"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Components"));
             }
 
             if (parameters.Bounds != null &&
@@ -209,7 +227,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Bounds"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Bounds"));
             }
 
             if (parameters.Region != null)
@@ -218,7 +236,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Region"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Region"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -243,7 +261,7 @@ namespace Geo.Google.Services
 
             if (parameters.Coordinate is null)
             {
-                var error = _localizer["Invalid Coordinates"];
+                var error = _resourceStringProvider.GetString("Invalid Coordinates");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Coordinate));
             }
@@ -267,7 +285,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Result Types"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Result Types"));
             }
 
             if (parameters.LocationTypes != null)
@@ -287,7 +305,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Location Types"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Location Types"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -312,14 +330,14 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
-                var error = _localizer["Invalid Input"];
+                var error = _resourceStringProvider.GetString("Invalid Input");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Input));
             }
 
             if (parameters.InputType > InputType.PhoneNumber || parameters.InputType < InputType.TextQuery)
             {
-                var error = _localizer["Invalid Input Type"];
+                var error = _resourceStringProvider.GetString("Invalid Input Type");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.InputType));
             }
@@ -334,7 +352,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Fields"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Fields"));
             }
 
             if (parameters.LocationBias != null)
@@ -351,13 +369,13 @@ namespace Geo.Google.Services
                         query = query.Add("locationbias", $"rectangle:{boundary}");
                         break;
                     default:
-                        _logger.GoogleWarning(_localizer["Invalid Location Bias Type"]);
+                        _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Location Bias Type"));
                         break;
                 }
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Location Bias"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Location Bias"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -386,7 +404,7 @@ namespace Geo.Google.Services
 
             if (parameters.Location == null)
             {
-                var error = _localizer["Invalid Location"];
+                var error = _resourceStringProvider.GetString("Invalid Location");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Location));
             }
@@ -395,21 +413,21 @@ namespace Geo.Google.Services
             {
                 if (parameters.Radius > 0)
                 {
-                    var error = _localizer["Invalid RankBy Distance Radius"];
+                    var error = _resourceStringProvider.GetString("Invalid RankBy Distance Radius");
                     _logger.GoogleError(error);
                     throw new ArgumentException(error, nameof(parameters.Radius));
                 }
 
                 if (string.IsNullOrWhiteSpace(parameters.Keyword) && string.IsNullOrWhiteSpace(parameters.Type))
                 {
-                    var error = _localizer["Invalid RankBy Distance Request"];
+                    var error = _resourceStringProvider.GetString("Invalid RankBy Distance Request");
                     _logger.GoogleError(error);
                     throw new ArgumentException(error, nameof(parameters.RankBy));
                 }
             }
             else if (parameters.Radius <= 0)
             {
-                var error = _localizer["Invalid Radius"];
+                var error = _resourceStringProvider.GetString("Invalid Radius");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Radius));
             }
@@ -420,7 +438,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Keyword"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Keyword"));
             }
 
             if (parameters.RankBy >= RankType.Prominence && parameters.RankBy <= RankType.Distance)
@@ -429,7 +447,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid RankBy"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid RankBy"));
             }
 
             AddBaseSearchParameters(parameters, ref query);
@@ -454,7 +472,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                var error = _localizer["Invalid Query"];
+                var error = _resourceStringProvider.GetString("Invalid Query");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Query));
             }
@@ -467,7 +485,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Region"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Region"));
             }
 
             AddBaseSearchParameters(parameters, ref query);
@@ -492,7 +510,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.PlaceId))
             {
-                var error = _localizer["Invalid PlaceId"];
+                var error = _resourceStringProvider.GetString("Invalid PlaceId");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.PlaceId));
             }
@@ -505,7 +523,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Region"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Region"));
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.SessionToken))
@@ -514,7 +532,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Session Token"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Session Token"));
             }
 
             if (parameters.Fields != null && parameters.Fields.Count > 0)
@@ -523,7 +541,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Fields"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Fields"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -548,7 +566,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
-                var error = _localizer["Invalid Input"];
+                var error = _resourceStringProvider.GetString("Invalid Input");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Input));
             }
@@ -559,7 +577,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Session Token"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Session Token"));
             }
 
             if (parameters.Origin != null)
@@ -568,7 +586,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Origin"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Origin"));
             }
 
             if (parameters.Types != null && parameters.Types.Count > 0)
@@ -577,7 +595,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Types"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Types"));
             }
 
             if (parameters.Components != null)
@@ -586,7 +604,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Components"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Components"));
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -615,7 +633,7 @@ namespace Geo.Google.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Input))
             {
-                var error = _localizer["Invalid Input"];
+                var error = _resourceStringProvider.GetString("Invalid Input");
                 _logger.GoogleError(error);
                 throw new ArgumentException(error, nameof(parameters.Input));
             }
@@ -642,7 +660,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleWarning(_localizer["Invalid Offset"]);
+                _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Offset"));
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Input))
@@ -651,7 +669,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Input Info"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Input Info"));
             }
 
             AddCoordinateParameters(parameters, ref query);
@@ -670,7 +688,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleWarning(_localizer["Invalid Minimum Price"]);
+                _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Minimum Price"));
             }
 
             if (parameters.MaximumPrice >= 0 && parameters.MaximumPrice <= 4 && parameters.MinimumPrice <= parameters.MaximumPrice)
@@ -679,7 +697,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleWarning(_localizer["Invalid Maximum Price"]);
+                _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Maximum Price"));
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -692,7 +710,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleWarning(_localizer["Invalid Page Token"]);
+                _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Page Token"));
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Type))
@@ -701,7 +719,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Type"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Type"));
             }
 
             AddCoordinateParameters(parameters, ref query);
@@ -720,7 +738,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Location"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Location"));
             }
 
             if (parameters.Radius > 0 && parameters.Radius <= 50000)
@@ -729,7 +747,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleWarning(_localizer["Invalid Radius Value"]);
+                _logger.GoogleWarning(_resourceStringProvider.GetString("Invalid Radius Value"));
             }
 
             AddBaseParameters(parameters, ref query);
@@ -748,7 +766,7 @@ namespace Geo.Google.Services
             }
             else
             {
-                _logger.GoogleDebug(_localizer["Invalid Language"]);
+                _logger.GoogleDebug(_resourceStringProvider.GetString("Invalid Language"));
             }
         }
 
@@ -759,25 +777,6 @@ namespace Geo.Google.Services
         internal void AddGoogleKey(ref QueryString query)
         {
             query = query.Add("key", _keyContainer.GetKey());
-        }
-
-        /// <summary>
-        /// Gets the ccTLD representation of a <see cref="RegionInfo"/> object.
-        /// </summary>
-        /// <param name="regionInfo">A <see cref="RegionInfo"/> with the region information to convert.</param>
-        /// <returns>A <see cref="string"/> with the ccTLD.</returns>
-        internal string RegionInfoToCCTLD(RegionInfo regionInfo)
-        {
-            if (regionInfo.GeoId == new RegionInfo("GB").GeoId)
-            {
-                return "uk";
-            }
-            else
-            {
-#pragma warning disable CA1308 // Normalize strings to uppercase
-                return regionInfo.TwoLetterISORegionName.ToLowerInvariant();
-#pragma warning restore CA1308 // Normalize strings to uppercase
-            }
         }
     }
 }

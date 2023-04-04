@@ -23,7 +23,6 @@ namespace Geo.Google.Tests.Services
     using Geo.Google.Services;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
@@ -37,7 +36,7 @@ namespace Geo.Google.Tests.Services
         private readonly HttpClient _httpClient;
         private readonly GoogleKeyContainer _keyContainer;
         private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IStringLocalizerFactory _localizerFactory;
+        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -46,7 +45,6 @@ namespace Geo.Google.Tests.Services
         /// </summary>
         public GoogleGeocodingShould()
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
             _keyContainer = new GoogleKeyContainer("abc123");
 
             var mockHandler = new Mock<HttpMessageHandler>();
@@ -105,7 +103,7 @@ namespace Geo.Google.Tests.Services
                 .ReturnsAsync(_responseMessages[^1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _localizerFactory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
             _exceptionProvider = new GeoNETExceptionProvider();
         }
@@ -947,12 +945,10 @@ namespace Geo.Google.Tests.Services
         [Fact]
         public void RegionInfoToCCTLDSuccessfully()
         {
-            var sut = BuildService();
-
-            sut.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
-            sut.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
-            sut.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
-            sut.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("GB")).Should().Be("uk");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("US")).Should().Be("us");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("en-CA")).Should().Be("ca");
+            GoogleGeocoding.RegionInfoToCCTLD(new RegionInfo("fr-FR")).Should().Be("fr");
         }
 
         /// <summary>
@@ -981,7 +977,7 @@ namespace Geo.Google.Tests.Services
 
         private GoogleGeocoding BuildService()
         {
-            return new GoogleGeocoding(_httpClient, _keyContainer, _exceptionProvider, _localizerFactory);
+            return new GoogleGeocoding(_httpClient, _keyContainer, _exceptionProvider, _resourceStringProviderFactory);
         }
     }
 }

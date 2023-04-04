@@ -18,4 +18,19 @@
     <ProjectReference Include="..\Geo.Core\Geo.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Services\MapBoxGeocoding.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MapBoxGeocoding.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Services\MapBoxGeocoding.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MapBoxGeocoding.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

@@ -2,9 +2,18 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [1.3.0](https://github.com/JustinCanton/Geo.NET/compare/1.2.1...1.3.0) (2023-04-04)
+### Features
+- **core:** replacing the IStringLocalizer with a Geo.NET specific interface ([#50](https://github.com/JustinCanton/Geo.NET/issues/50)) ([cc43384](https://github.com/JustinCanton/Geo.NET/commit/cc43384815df870cbfb59c64ad0e9fe1e89aabf5))
+- **here:** adding support for encoding flexible polylines for the autosuggest, browse, and discover endpoints ([#56](https://github.com/JustinCanton/Geo.NET/issues/56)) ([7b99804](https://github.com/JustinCanton/Geo.NET/commit/98c7dd9df3a8da4258e3c4d7482d8a0d807783e2))
+
+## [1.2.1](https://github.com/JustinCanton/Geo.NET/compare/1.2.0...1.2.1) (2023-04-02)
+### Bug Fixes
+- **culture:** fixing an issue where the query string is generated incorrectly in different cultures ([#52](https://github.com/JustinCanton/Geo.NET/issues/52)) ([6421df0](https://github.com/JustinCanton/Geo.NET/commit/6421df0c4f314421718b6994b2c96d197ba955b1))
+
 ## [1.2.0](https://github.com/JustinCanton/Geo.NET/compare/1.1.1...1.2.0) (2022-08-20)
 ### Features
-- adding extra information and logging surrounding exceptions ([#44](https://github.com/JustinCanton/Geo.NET/pull/44)) ([7b5b154](https://github.com/JustinCanton/Geo.NET/commit/7b5b15441181bda16b0a644e2b3ef8e7b06cc074))
+-  **core:** adding extra information and logging surrounding exceptions ([#44](https://github.com/JustinCanton/Geo.NET/pull/44)) ([7b5b154](https://github.com/JustinCanton/Geo.NET/commit/7b5b15441181bda16b0a644e2b3ef8e7b06cc074))
 
 ### Bug Fixes
 - fixing an issue where the query is not properly encoded, and fixing an issue where the query string building is using an outdated method ([#46](https://github.com/JustinCanton/Geo.NET/pull/46)) ([5b55f4d](https://github.com/JustinCanton/Geo.NET/commit/5b55f4d249a617e4667e92b5cb0b2c9b6b02ec6f))

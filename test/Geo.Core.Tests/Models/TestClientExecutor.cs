@@ -7,7 +7,6 @@ namespace Geo.Core.Tests.Models
 {
     using System.Net.Http;
     using Geo.Core;
-    using Microsoft.Extensions.Localization;
 
     /// <summary>
     /// A test executor class for making http calls.
@@ -18,12 +17,13 @@ namespace Geo.Core.Tests.Models
         /// Initializes a new instance of the <see cref="TestClientExecutor"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for calls.</param>
-        /// <param name="localizer">A <see cref="IStringLocalizer{T}"/> used for localizing log or exception messages.</param>
+        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
+        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         public TestClientExecutor(
             HttpClient client,
             IGeoNETExceptionProvider exceptionProvider,
-            IStringLocalizerFactory localizer)
-            : base(client, exceptionProvider, localizer)
+            IGeoNETResourceStringProviderFactory resourceStringProviderFactory)
+            : base(client, exceptionProvider, resourceStringProviderFactory)
         {
         }
     }
