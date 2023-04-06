@@ -20,7 +20,6 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Services;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;

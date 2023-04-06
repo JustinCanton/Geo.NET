@@ -18,7 +18,6 @@ namespace Geo.Bing.Tests.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Services;
     using Geo.Core;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;

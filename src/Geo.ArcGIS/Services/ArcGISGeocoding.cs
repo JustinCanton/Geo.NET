@@ -20,7 +20,6 @@ namespace Geo.ArcGIS.Services
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;
     using Geo.Core.Extensions;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using Newtonsoft.Json;

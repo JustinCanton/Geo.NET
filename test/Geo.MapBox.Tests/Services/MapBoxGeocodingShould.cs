@@ -20,7 +20,6 @@ namespace Geo.MapBox.Tests.Services
     using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Services;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;

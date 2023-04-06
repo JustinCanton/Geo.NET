@@ -7,6 +7,7 @@ namespace Geo.Here.Tests.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -274,14 +275,14 @@ namespace Geo.Here.Tests.Services
             Precision precision;
             if (resultMatch.Groups["prec"].Captures.Count == 1)
             {
-                precision = new Precision(int.Parse(resultMatch.Groups["prec"].Captures[0].Value));
+                precision = new Precision(int.Parse(resultMatch.Groups["prec"].Captures[0].Value, CultureInfo.InvariantCulture));
             }
             else if (resultMatch.Groups["prec"].Captures.Count == 3)
             {
                 precision = new Precision(
-                    int.Parse(resultMatch.Groups["prec"].Captures[0].Value),
-                    int.Parse(resultMatch.Groups["prec"].Captures[1].Value),
-                    (ThirdDimension)int.Parse(resultMatch.Groups["prec"].Captures[2].Value));
+                    int.Parse(resultMatch.Groups["prec"].Captures[0].Value, CultureInfo.InvariantCulture),
+                    int.Parse(resultMatch.Groups["prec"].Captures[1].Value, CultureInfo.InvariantCulture),
+                    (ThirdDimension)int.Parse(resultMatch.Groups["prec"].Captures[2].Value, CultureInfo.InvariantCulture));
             }
             else
             {
@@ -296,15 +297,15 @@ namespace Geo.Here.Tests.Services
                 if (coordinateMatch.Groups["number"].Captures.Count == 2)
                 {
                     coordinate = new LatLngZ(
-                        double.Parse(coordinateMatch.Groups["number"].Captures[0].Value),
-                        double.Parse(coordinateMatch.Groups["number"].Captures[1].Value));
+                        double.Parse(coordinateMatch.Groups["number"].Captures[0].Value, CultureInfo.InvariantCulture),
+                        double.Parse(coordinateMatch.Groups["number"].Captures[1].Value, CultureInfo.InvariantCulture));
                 }
                 else if (coordinateMatch.Groups["number"].Captures.Count == 3)
                 {
                     coordinate = new LatLngZ(
-                        double.Parse(coordinateMatch.Groups["number"].Captures[0].Value),
-                        double.Parse(coordinateMatch.Groups["number"].Captures[1].Value),
-                        double.Parse(coordinateMatch.Groups["number"].Captures[2].Value));
+                        double.Parse(coordinateMatch.Groups["number"].Captures[0].Value, CultureInfo.InvariantCulture),
+                        double.Parse(coordinateMatch.Groups["number"].Captures[1].Value, CultureInfo.InvariantCulture),
+                        double.Parse(coordinateMatch.Groups["number"].Captures[2].Value, CultureInfo.InvariantCulture));
                 }
                 else
                 {
