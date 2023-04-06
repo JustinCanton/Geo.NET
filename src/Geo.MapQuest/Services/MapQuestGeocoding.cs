@@ -16,7 +16,6 @@ namespace Geo.MapQuest.Services
     using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 

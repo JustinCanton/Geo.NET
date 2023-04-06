@@ -20,7 +20,6 @@ namespace Geo.Google.Services
     using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 

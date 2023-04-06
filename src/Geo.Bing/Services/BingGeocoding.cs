@@ -16,7 +16,6 @@ namespace Geo.Bing.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
