@@ -35,7 +35,7 @@ namespace Geo.Bing.Services
         /// Initializes a new instance of the <see cref="BingGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
-        /// <param name="keyContainer">A <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
+        /// <param name="keyContainer">An <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
         /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>

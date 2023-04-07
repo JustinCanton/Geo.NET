@@ -26,7 +26,7 @@ namespace Geo.Here.Services
         /// The third dimension value will be eligible for encoding only when ThirdDimension is other than ABSENT.
         /// This is lossy compression based on precision accuracy.
         /// </summary>
-        /// <param name="coordinates">A <see cref="IEnumerable{T}"/> of <see cref="LatLngZ"/> of coordinate triples that to be encoded.</param>
+        /// <param name="coordinates">An <see cref="IEnumerable{T}"/> of <see cref="LatLngZ"/> of coordinate triples that to be encoded.</param>
         /// <param name="precision">Floating point precision of the coordinate to be encoded.</param>
         /// <param name="thirdDimension">A <see cref="ThirdDimension"/> which may be a level, altitude, elevation or some other custom value.</param>
         /// <param name="thirdDimPrecision">Floating point precision for thirdDimension value.</param>
@@ -53,10 +53,10 @@ namespace Geo.Here.Services
         }
 
         /// <summary>
-        /// Decode the encoded input <see cref="string"/> to a <see cref="IReadOnlyList{T}"/> of <see cref="LatLngZ"/>.
+        /// Decode the encoded input <see cref="string"/> to an <see cref="IReadOnlyList{T}"/> of <see cref="LatLngZ"/>.
         /// </summary>
         /// <param name="encoded">The encoded URL-safe encoded <see cref="string"/>.</param>
-        /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="LatLngZ"/> coordinate triples that are decoded from the input.</returns>
+        /// <returns>An <see cref="IReadOnlyList{T}"/> of <see cref="LatLngZ"/> coordinate triples that are decoded from the input.</returns>
         public static IReadOnlyList<LatLngZ> Decode(string encoded)
         {
             if (string.IsNullOrEmpty(encoded?.Trim()))

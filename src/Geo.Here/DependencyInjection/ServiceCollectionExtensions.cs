@@ -6,6 +6,7 @@
 namespace Geo.Here.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.Core.DependencyInjection;
     using Geo.Here.Abstractions;
     using Geo.Here.Models;
@@ -26,10 +27,15 @@ namespace Geo.Here.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the HERE services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the HERE services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{HereOptionsBuilder}"/> with the options to add to the HERE configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddHereServices(this IServiceCollection services, Action<HereOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddHereServices(
+            this IServiceCollection services,
+            Action<HereOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -45,9 +51,12 @@ namespace Geo.Here.DependencyInjection
                 services.AddSingleton<IHereKeyContainer>(new HereKeyContainer(string.Empty));
             }
 
-            services.AddHttpClient<IHereGeocoding, HereGeocoding>();
+            return services.AddHttpClient<IHereGeocoding, HereGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
 
-            return services;
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }

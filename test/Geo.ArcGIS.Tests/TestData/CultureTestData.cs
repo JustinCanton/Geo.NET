@@ -17,7 +17,7 @@ namespace Geo.ArcGIS.Tests
         /// <summary>
         /// Gets the enumerator for the test data.
         /// </summary>
-        /// <returns>A <see cref="IEnumerator{T}"/> of <see cref="object"/>[].</returns>
+        /// <returns>An <see cref="IEnumerator{T}"/> of <see cref="object"/>[].</returns>
         public IEnumerator<object[]> GetEnumerator()
         {
             var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
@@ -30,7 +30,7 @@ namespace Geo.ArcGIS.Tests
         /// <summary>
         /// Gets the enumerator for the test data.
         /// </summary>
-        /// <returns>A <see cref="IEnumerator"/>.</returns>
+        /// <returns>An <see cref="IEnumerator"/>.</returns>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

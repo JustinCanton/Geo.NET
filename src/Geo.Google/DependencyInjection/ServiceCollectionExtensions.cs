@@ -6,6 +6,7 @@
 namespace Geo.Google.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.Core.DependencyInjection;
     using Geo.Google.Abstractions;
     using Geo.Google.Models;
@@ -26,10 +27,15 @@ namespace Geo.Google.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the Google services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the Google services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{GoogleOptionsBuilder}"/> with the options to add to the Google configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddGoogleServices(this IServiceCollection services, Action<GoogleOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddGoogleServices(
+            this IServiceCollection services,
+            Action<GoogleOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -45,9 +51,12 @@ namespace Geo.Google.DependencyInjection
                 services.AddSingleton<IGoogleKeyContainer>(new GoogleKeyContainer(string.Empty));
             }
 
-            services.AddHttpClient<IGoogleGeocoding, GoogleGeocoding>();
+            return services.AddHttpClient<IGoogleGeocoding, GoogleGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
 
-            return services;
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }
