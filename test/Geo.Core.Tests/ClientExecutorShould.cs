@@ -145,7 +145,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/ArgumentNullException")))
                 .Should()
-                .Throw<ArgumentNullException>()
+                .ThrowAsync<ArgumentNullException>()
                 .WithMessage("Value cannot be null. (Parameter 'requestUri')");
         }
 
@@ -159,7 +159,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/InvalidOperationException")))
                 .Should()
-                .Throw<InvalidOperationException>()
+                .ThrowAsync<InvalidOperationException>()
                 .WithMessage("requestUri");
         }
 
@@ -173,7 +173,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/HttpRequestException")))
                 .Should()
-                .Throw<HttpRequestException>()
+                .ThrowAsync<HttpRequestException>()
                 .WithMessage("Exception of type 'System.Net.Http.HttpRequestException' was thrown.");
         }
 
@@ -187,7 +187,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/TaskCanceledException")))
                 .Should()
-                .Throw<TaskCanceledException>();
+                .ThrowAsync<TaskCanceledException>();
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonReaderException")))
                 .Should()
-                .Throw<JsonReaderException>();
+                .ThrowAsync<JsonReaderException>();
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonSerializationException")))
                 .Should()
-                .Throw<JsonSerializationException>();
+                .ThrowAsync<JsonSerializationException>();
         }
 
         /// <summary>
@@ -248,13 +248,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when null is passed for the uri.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnNullUri()
+        public async Task ThrowWrappedExceptionOnNullUri()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/ArgumentNullException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/ArgumentNullException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<ArgumentNullException>();
         }
 
@@ -262,13 +262,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown an invalid uri is passed in.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnInvalidUri()
+        public async Task ThrowWrappedExceptionOnInvalidUri()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/InvalidOperationException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/InvalidOperationException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<InvalidOperationException>();
         }
 
@@ -276,13 +276,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown on an http failure.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnHttpFailure()
+        public async Task ThrowWrappedExceptionOnHttpFailure()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/HttpRequestException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/HttpRequestException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<HttpRequestException>();
         }
 
@@ -290,13 +290,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when the task is cancelled.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnCancelledRequest()
+        public async Task ThrowWrappedExceptionOnCancelledRequest()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/TaskCanceledException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/TaskCanceledException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<TaskCanceledException>();
         }
 
@@ -304,13 +304,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnInvalidJson1()
+        public async Task ThrowWrappedExceptionOnInvalidJson1()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<JsonReaderException>();
         }
 
@@ -318,13 +318,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
         [Fact]
-        public void ThrowWrappedExceptionOnInvalidJson2()
+        public async Task ThrowWrappedExceptionOnInvalidJson2()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>())
                 .WithInnerException<JsonSerializationException>();
         }
 
@@ -338,7 +338,7 @@ namespace Geo.Core.Tests
 
             sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/Failure"), ApiName))
                 .Should()
-                .Throw<TestException>()
+                .ThrowAsync<TestException>()
                 .Where(x =>
                     x.Data.Count == 3 &&
                     x.Data["responseBody"].ToString() == "{'Message':'Access denied'}" &&

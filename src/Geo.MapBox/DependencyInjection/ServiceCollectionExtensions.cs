@@ -6,6 +6,7 @@
 namespace Geo.MapBox.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.Core.DependencyInjection;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Models;
@@ -26,10 +27,15 @@ namespace Geo.MapBox.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the MapBox services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the MapBox services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{MapBoxOptionsBuilder}"/> with the options to add to the MapBox configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddMapBoxServices(this IServiceCollection services, Action<MapBoxOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddMapBoxServices(
+            this IServiceCollection services,
+            Action<MapBoxOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -45,9 +51,12 @@ namespace Geo.MapBox.DependencyInjection
                 services.AddSingleton<IMapBoxKeyContainer>(new MapBoxKeyContainer(string.Empty));
             }
 
-            services.AddHttpClient<IMapBoxGeocoding, MapBoxGeocoding>();
+            return services.AddHttpClient<IMapBoxGeocoding, MapBoxGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
 
-            return services;
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }

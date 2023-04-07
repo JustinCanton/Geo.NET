@@ -27,7 +27,7 @@ namespace Geo.ArcGIS.Services
         /// Initializes a new instance of the <see cref="ArcGISTokenRetrevial"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the ArcGIS token generation API.</param>
-        /// <param name="credentialsContainer">A <see cref="IArcGISCredentialsContainer"/> used for fetching the ArcGIS credentials.</param>
+        /// <param name="credentialsContainer">An <see cref="IArcGISCredentialsContainer"/> used for fetching the ArcGIS credentials.</param>
         public ArcGISTokenRetrevial(
             HttpClient client,
             IArcGISCredentialsContainer credentialsContainer)

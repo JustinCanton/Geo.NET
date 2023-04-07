@@ -6,6 +6,7 @@
 namespace Geo.MapQuest.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.Core.DependencyInjection;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Models;
@@ -26,10 +27,15 @@ namespace Geo.MapQuest.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the MapQuest services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the MapQuest services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{MapQuestOptionsBuilder}"/> with the options to add to the MapQuest configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddMapQuestServices(this IServiceCollection services, Action<MapQuestOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddMapQuestServices(
+            this IServiceCollection services,
+            Action<MapQuestOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -47,9 +53,12 @@ namespace Geo.MapQuest.DependencyInjection
                 services.AddSingleton<IMapQuestEndpoint>(new MapQuestEndpoint(false));
             }
 
-            services.AddHttpClient<IMapQuestGeocoding, MapQuestGeocoding>();
+            return services.AddHttpClient<IMapQuestGeocoding, MapQuestGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
 
-            return services;
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }

@@ -6,6 +6,7 @@
 namespace Geo.ArcGIS.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Services;
@@ -26,10 +27,15 @@ namespace Geo.ArcGIS.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the ArcGIS services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the ArcGIS services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{ArcGISOptionsBuilder}"/> with the options to add to the ArcGIS configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddArcGISServices(this IServiceCollection services, Action<ArcGISOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddArcGISServices(
+            this IServiceCollection services,
+            Action<ArcGISOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -47,9 +53,13 @@ namespace Geo.ArcGIS.DependencyInjection
 
             services.AddHttpClient<IArcGISTokenRetrevial, ArcGISTokenRetrevial>();
             services.AddSingleton<IArcGISTokenContainer, ArcGISTokenContainer>();
-            services.AddHttpClient<IArcGISGeocoding, ArcGISGeocoding>();
 
-            return services;
+            return services.AddHttpClient<IArcGISGeocoding, ArcGISGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
+
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }

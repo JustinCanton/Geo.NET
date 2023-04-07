@@ -39,8 +39,8 @@ namespace Geo.MapQuest.Services
         /// Initializes a new instance of the <see cref="MapQuestGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
-        /// <param name="keyContainer">A <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
-        /// <param name="endpoint">A <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
+        /// <param name="keyContainer">An <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
+        /// <param name="endpoint">An <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
         /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
         /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
