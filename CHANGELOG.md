@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [1.4.0](https://github.com/JustinCanton/Geo.NET/compare/1.3.0...1.4.0) (2023-04-08)
+### Features
+- **core:** removing the asp framework dependency and creating a repository specific QueryString class ([#61](https://github.com/JustinCanton/Geo.NET/issues/61)) ([c6e4688](https://github.com/JustinCanton/Geo.NET/commit/c6e46888e8b6ec4fec96bf6b0a8c0fe77f91d140))
+- changing the DI methods to allow for configuration of the http client ([#66](https://github.com/JustinCanton/Geo.NET/issues/66)) ([5369e85](https://github.com/JustinCanton/Geo.NET/commit/5369e85ae2c95aff66ba23bfd444655fdb8a40d8))
+
 ## [1.3.0](https://github.com/JustinCanton/Geo.NET/compare/1.2.1...1.3.0) (2023-04-04)
 ### Features
 - **core:** replacing the IStringLocalizer with a Geo.NET specific interface ([#50](https://github.com/JustinCanton/Geo.NET/issues/50)) ([cc43384](https://github.com/JustinCanton/Geo.NET/commit/cc43384815df870cbfb59c64ad0e9fe1e89aabf5))

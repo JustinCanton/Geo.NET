@@ -19,7 +19,6 @@ namespace Geo.Here.Tests.Services
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Services;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;

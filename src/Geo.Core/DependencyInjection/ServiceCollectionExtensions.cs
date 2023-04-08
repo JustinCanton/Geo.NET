@@ -5,7 +5,9 @@
 
 namespace Geo.Core.DependencyInjection
 {
+    using System;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     /// <summary>
     /// Extension methods for the <see cref="IServiceCollection"/> class.
@@ -14,14 +16,26 @@ namespace Geo.Core.DependencyInjection
     {
         /// <summary>
         /// Adds the Core services to the service collection.
+        /// <para>
+        /// Adds the services:
+        /// <list type="bullet">
+        /// <item><see cref="IGeoNETResourceStringProviderFactory"/></item>
+        /// <item><see cref="IGeoNETExceptionProvider"/></item>
+        /// </list>
+        /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the Core services to.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the Core services to.</param>
+        /// <returns>The <see cref="IServiceCollection"/> for chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
         public static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
-            services
-                .AddTransient<IGeoNETResourceStringProviderFactory, GeoNETResourceStringProviderFactory>()
-                .AddTransient<IGeoNETExceptionProvider, GeoNETExceptionProvider>();
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            services.TryAddTransient<IGeoNETResourceStringProviderFactory, GeoNETResourceStringProviderFactory>();
+            services.TryAddTransient<IGeoNETExceptionProvider, GeoNETExceptionProvider>();
 
             return services;
         }

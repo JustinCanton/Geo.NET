@@ -21,7 +21,6 @@ namespace Geo.Google.Tests.Services
     using Geo.Google.Models;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Services;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;
