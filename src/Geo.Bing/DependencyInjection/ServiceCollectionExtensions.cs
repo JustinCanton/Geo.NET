@@ -6,6 +6,7 @@
 namespace Geo.Bing.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using Geo.Bing.Abstractions;
     using Geo.Bing.Models;
     using Geo.Bing.Services;
@@ -26,10 +27,15 @@ namespace Geo.Bing.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">A <see cref="IServiceCollection"/> to add the Bing services to.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the Bing services to.</param>
         /// <param name="optionsBuilder">A <see cref="Action{BingOptionsBuilder}"/> with the options to add to the Bing configuration.</param>
-        /// <returns>A <see cref="IServiceCollection"/> with the added services.</returns>
-        public static IServiceCollection AddBingServices(this IServiceCollection services, Action<BingOptionsBuilder> optionsBuilder)
+        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
+        public static IHttpClientBuilder AddBingServices(
+            this IServiceCollection services,
+            Action<BingOptionsBuilder> optionsBuilder,
+            Action<HttpClient> configureClient = null)
         {
             services.AddCoreServices();
 
@@ -45,9 +51,12 @@ namespace Geo.Bing.DependencyInjection
                 services.AddSingleton<IBingKeyContainer>(new BingKeyContainer(string.Empty));
             }
 
-            services.AddHttpClient<IBingGeocoding, BingGeocoding>();
+            return services.AddHttpClient<IBingGeocoding, BingGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
+        }
 
-            return services;
+        private static void DefaultHttpClientConfiguration(HttpClient client)
+        {
+            // No-op
         }
     }
 }

@@ -3,6 +3,7 @@
 
 	<Rules AnalyzerId="System.Diagnostics.CodeAnalysis" RuleNamespace="System.Diagnostics.CodeAnalysis">
 		<Rule Id="CA1014" Action="None"/>
+		<Rule Id="CA1704" Action="None"/>
 		<Rule Id="CA1805" Action="None"/>
 		<Rule Id="CA2208" Action="None"/>
 	</Rules>

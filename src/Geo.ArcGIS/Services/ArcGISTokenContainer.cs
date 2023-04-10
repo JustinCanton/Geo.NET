@@ -24,7 +24,7 @@ namespace Geo.ArcGIS.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISTokenContainer"/> class.
         /// </summary>
-        /// <param name="tokenRetrevial">A <see cref="IArcGISTokenRetrevial"/> used to retrieve the token if expired of none existant.</param>
+        /// <param name="tokenRetrevial">An <see cref="IArcGISTokenRetrevial"/> used to retrieve the token if expired of none existant.</param>
         public ArcGISTokenContainer(IArcGISTokenRetrevial tokenRetrevial)
         {
             _tokenRetrevial = tokenRetrevial ?? throw new ArgumentNullException(nameof(tokenRetrevial));

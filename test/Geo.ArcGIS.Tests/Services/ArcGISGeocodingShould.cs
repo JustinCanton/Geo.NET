@@ -21,7 +21,6 @@ namespace Geo.ArcGIS.Tests.Services
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Services;
     using Geo.Core;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;
