@@ -47,5 +47,29 @@ namespace Geo.Here.Enums
         /// </summary>
         [EnumMember(Value = "place")]
         Place,
+
+        /// <summary>
+        /// Indicates the intersection of multiple streets.
+        /// </summary>
+        [EnumMember(Value = "intersection")]
+        Intersection,
+
+        /// <summary>
+        /// Indicates a postal code result.
+        /// </summary>
+        [EnumMember(Value = "postalCodePoint")]
+        PostalCodePoint,
+
+        /// <summary>
+        /// Indicates a chain query response.
+        /// </summary>
+        [EnumMember(Value = "chainQuery")]
+        ChainQuery,
+
+        /// <summary>
+        /// Indicates a category response.
+        /// </summary>
+        [EnumMember(Value = "categoryQuery")]
+        CategoryQuery,
     }
 }
