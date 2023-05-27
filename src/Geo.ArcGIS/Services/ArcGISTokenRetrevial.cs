@@ -52,16 +52,18 @@ namespace Geo.ArcGIS.Services
                 };
             }
 
-            using var content = BuildContent();
-            var response = await _client.PostAsync(_tokenRefreshAddress, content, cancellationToken).ConfigureAwait(false);
+            using (var content = BuildContent())
+            {
+                var response = await _client.PostAsync(_tokenRefreshAddress, content, cancellationToken).ConfigureAwait(false);
 
 #if NET5_0_OR_GREATER
-            var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 #endif
 
-            return JsonConvert.DeserializeObject<Token>(json);
+                return JsonConvert.DeserializeObject<Token>(json);
+            }
         }
 
         /// <summary>

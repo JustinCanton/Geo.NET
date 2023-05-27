@@ -59,7 +59,7 @@ namespace Geo.MapBox.Tests.DependencyInjection
             // Act
             services.AddMapBoxServices(
                 options => options.UseKey("abc"),
-                client => client.Timeout = TimeSpan.FromSeconds(5));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(5));
 
             // Assert
             var provider = services.BuildServiceProvider();

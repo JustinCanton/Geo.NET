@@ -59,7 +59,7 @@ namespace Geo.Here.Tests.DependencyInjection
             // Act
             services.AddHereServices(
                 options => options.UseKey("abc"),
-                client => client.Timeout = TimeSpan.FromSeconds(4));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(4));
 
             // Assert
             var provider = services.BuildServiceProvider();

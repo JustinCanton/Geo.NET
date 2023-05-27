@@ -68,7 +68,18 @@ namespace Geo.Here.Models.Parameters
         /// <inheritdoc/>
         public override int GetHashCode()
         {
+#if NETSTANDARD2_1_OR_GREATER
             return HashCode.Combine(Latitude, Longitude, Z);
+#else
+            unchecked
+            {
+                int hc = -1817952719;
+                hc = (-1521134295 * hc) + Latitude.GetHashCode();
+                hc = (-1521134295 * hc) + Longitude.GetHashCode();
+                hc = (-1521134295 * hc) + Z.GetHashCode();
+                return hc;
+            }
+#endif
         }
     }
 }

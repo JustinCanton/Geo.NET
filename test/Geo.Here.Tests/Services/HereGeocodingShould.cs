@@ -63,7 +63,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/geocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -82,7 +82,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/revgeocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -101,7 +101,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/discover")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -123,7 +123,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/autosuggest")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -146,7 +146,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/browse")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -167,7 +167,7 @@ namespace Geo.Here.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/v1/lookup")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
@@ -560,7 +560,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'parameters')");
+#else
+                .WithMessage("*Parameter name: parameters");
+#endif
 
             var parameters = new AreaParameters()
             {
@@ -594,7 +598,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'parameters')");
+#else
+                .WithMessage("*Parameter name: parameters");
+#endif
         }
 
         /// <summary>
@@ -656,7 +664,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'parameters')");
+#else
+                .WithMessage("*Parameter name: parameters");
+#endif
         }
 
         /// <summary>
@@ -709,7 +721,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'At')");
+#else
+                .WithMessage("*Parameter name: At");
+#endif
         }
 
         /// <summary>
@@ -768,7 +784,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Query')");
+#else
+                .WithMessage("*Parameter name: Query");
+#endif
         }
 
         /// <summary>
@@ -829,7 +849,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Query')");
+#else
+                .WithMessage("*Parameter name: Query");
+#endif
         }
 
         /// <summary>
@@ -888,7 +912,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'At')");
+#else
+                .WithMessage("*Parameter name: At");
+#endif
         }
 
         /// <summary>
@@ -935,7 +963,11 @@ namespace Geo.Here.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Id')");
+#else
+                .WithMessage("*Parameter name: Id");
+#endif
         }
 
         /// <summary>
@@ -989,7 +1021,11 @@ namespace Geo.Here.Tests.Services
                 .Throw<HereException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Id')");
+#else
+                .WithMessage("*Parameter name: Id");
+#endif
         }
 
         /// <summary>

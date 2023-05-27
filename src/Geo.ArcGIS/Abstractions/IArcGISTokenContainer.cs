@@ -18,6 +18,6 @@ namespace Geo.ArcGIS.Abstractions
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="string"/> with the ArcGIS API token.</returns>
-        public Task<string> GetTokenAsync(CancellationToken cancellationToken);
+        Task<string> GetTokenAsync(CancellationToken cancellationToken);
     }
 }

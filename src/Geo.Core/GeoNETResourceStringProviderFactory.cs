@@ -55,7 +55,11 @@ namespace Geo.Core
             var assemblyName = resourceType.Assembly.GetName().Name;
             var resourceName = resourceType.FullName;
             var resourceFolderName = assemblyName + ".Resources";
+#if NETSTANDARD2_1_OR_GREATER
             return resourceName.Replace(assemblyName, resourceFolderName, StringComparison.InvariantCultureIgnoreCase);
+#else
+            return resourceName.Replace(assemblyName, resourceFolderName);
+#endif
         }
     }
 }
