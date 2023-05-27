@@ -34,13 +34,13 @@ namespace Geo.ArcGIS.Tests.Services
 
             _mockTokenRetrevial
                 .Setup(x => x.GetTokenAsync(
-                    It.Is<CancellationToken>(x => x == CancellationToken.None)))
+                    It.Is<CancellationToken>(y => y == CancellationToken.None)))
                 .ReturnsAsync(
                     new Token() { AccessToken = "key123", ExpiresIn = 100 });
 
             _mockTokenRetrevial
                 .Setup(x => x.GetTokenAsync(
-                    It.Is<CancellationToken>(x => x == _quickExpireToken)))
+                    It.Is<CancellationToken>(y => y == _quickExpireToken)))
                 .ReturnsAsync(
                     new Token() { AccessToken = "key456", ExpiresIn = 5 });
         }

@@ -61,7 +61,7 @@ namespace Geo.MapQuest.Tests.DependencyInjection
             // Act
             services.AddMapQuestServices(
                 options => options.UseKey("abc"),
-                client => client.Timeout = TimeSpan.FromSeconds(6));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(6));
 
             // Assert
             var provider = services.BuildServiceProvider();

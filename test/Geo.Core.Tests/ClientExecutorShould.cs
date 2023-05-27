@@ -84,7 +84,7 @@ namespace Geo.Core.Tests
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/JsonReaderException")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             mockHandler
                 .Protected()
@@ -106,7 +106,7 @@ namespace Geo.Core.Tests
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/Failure")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -120,7 +120,7 @@ namespace Geo.Core.Tests
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/Success")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();

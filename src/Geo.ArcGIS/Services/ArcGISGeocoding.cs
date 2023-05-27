@@ -134,6 +134,7 @@ namespace Geo.ArcGIS.Services
             TParameters parameters,
             Func<TParameters, CancellationToken, Task<Uri>> uriBuilderFunction,
             CancellationToken cancellationToken)
+            where TParameters : class
         {
             if (parameters is null)
             {
@@ -180,7 +181,7 @@ namespace Geo.ArcGIS.Services
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -229,7 +230,7 @@ namespace Geo.ArcGIS.Services
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -291,7 +292,7 @@ namespace Geo.ArcGIS.Services
                 _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Maximum Locations"));
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return Task.FromResult<Uri>(uriBuilder.Uri);
         }
@@ -372,7 +373,7 @@ namespace Geo.ArcGIS.Services
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -482,7 +483,7 @@ namespace Geo.ArcGIS.Services
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }

@@ -77,7 +77,7 @@ namespace Geo.Google.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?address")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -99,7 +99,7 @@ namespace Geo.Google.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("maps/api/geocode/json?latlng")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
@@ -371,7 +371,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Input')");
+#else
+                .WithMessage("*Parameter name: Input");
+#endif
         }
 
         /// <summary>
@@ -449,7 +453,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Input')");
+#else
+                .WithMessage("*Parameter name: Input");
+#endif
         }
 
         /// <summary>
@@ -505,7 +513,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'PlaceId')");
+#else
+                .WithMessage("*Parameter name: PlaceId");
+#endif
         }
 
         /// <summary>
@@ -560,7 +572,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Query')");
+#else
+                .WithMessage("*Parameter name: Query");
+#endif
         }
 
         /// <summary>
@@ -617,7 +633,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Location')");
+#else
+                .WithMessage("*Parameter name: Location");
+#endif
         }
 
         /// <summary>
@@ -643,7 +663,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Radius')");
+#else
+                .WithMessage("*Parameter name: Radius");
+#endif
         }
 
         /// <summary>
@@ -669,7 +693,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'RankBy')");
+#else
+                .WithMessage("*Parameter name: RankBy");
+#endif
         }
 
         /// <summary>
@@ -695,7 +723,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Radius')");
+#else
+                .WithMessage("*Parameter name: Radius");
+#endif
         }
 
         /// <summary>
@@ -759,7 +791,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Input')");
+#else
+                .WithMessage("*Parameter name: Input");
+#endif
         }
 
         /// <summary>
@@ -774,7 +810,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Address')");
+#else
+                .WithMessage("*Parameter name: Address");
+#endif
         }
 
         /// <summary>
@@ -844,7 +884,11 @@ namespace Geo.Google.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Coordinate')");
+#else
+                .WithMessage("*Parameter name: Coordinate");
+#endif
         }
 
         /// <summary>

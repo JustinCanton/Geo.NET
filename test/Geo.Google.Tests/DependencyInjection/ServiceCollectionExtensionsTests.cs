@@ -59,7 +59,7 @@ namespace Geo.Google.Tests.DependencyInjection
             // Act
             services.AddGoogleServices(
                 options => options.UseKey("abc"),
-                client => client.Timeout = TimeSpan.FromSeconds(3));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(3));
 
             // Assert
             var provider = services.BuildServiceProvider();

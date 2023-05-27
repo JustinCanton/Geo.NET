@@ -67,7 +67,7 @@ namespace Geo.MapBox.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("mapbox.places")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -88,7 +88,7 @@ namespace Geo.MapBox.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("mapbox.places-permanent")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
@@ -257,7 +257,11 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Query')");
+#else
+                .WithMessage("*Parameter name: Query");
+#endif
         }
 
         /// <summary>
@@ -328,7 +332,11 @@ namespace Geo.MapBox.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Coordinate')");
+#else
+                .WithMessage("*Parameter name: Coordinate");
+#endif
         }
 
         /// <summary>
@@ -406,7 +414,11 @@ namespace Geo.MapBox.Tests.Services
                 .Throw<MapBoxException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Coordinate')");
+#else
+                .WithMessage("*Parameter name: Coordinate");
+#endif
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ namespace Geo.MapBox.Services
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
@@ -87,6 +88,7 @@ namespace Geo.MapBox.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
         internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+            where TParameters : class
         {
             if (parameters is null)
             {
@@ -155,7 +157,7 @@ namespace Geo.MapBox.Services
 
             AddMapBoxKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -186,7 +188,7 @@ namespace Geo.MapBox.Services
 
             AddMapBoxKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
