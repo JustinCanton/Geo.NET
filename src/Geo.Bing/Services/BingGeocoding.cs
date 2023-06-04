@@ -16,6 +16,7 @@ namespace Geo.Bing.Services
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
+    using Geo.Core.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
@@ -88,6 +89,7 @@ namespace Geo.Bing.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
         internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+            where TParameters : class
         {
             if (parameters is null)
             {
@@ -132,7 +134,7 @@ namespace Geo.Bing.Services
 
             AddBingKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -204,7 +206,7 @@ namespace Geo.Bing.Services
 
             AddBingKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -280,7 +282,7 @@ namespace Geo.Bing.Services
 
             AddBingKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }

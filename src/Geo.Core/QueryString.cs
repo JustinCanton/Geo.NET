@@ -9,9 +9,6 @@ namespace Geo.Core
     using System.Collections.Generic;
     using System.Text;
     using System.Text.Encodings.Web;
-    using Microsoft.Extensions.Primitives;
-
-#nullable enable
 
     /// <summary>
     /// Provides correct handling for QueryString value when needed to reconstruct a request or redirect URI string.
@@ -31,7 +28,11 @@ namespace Geo.Core
         /// This value must be in escaped and delimited format with a leading '?' character.
         /// </summary>
         /// <param name="value">The query string to be assigned to the Value property.</param>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         public QueryString(string? value)
+#else
+        public QueryString(string value)
+#endif
         {
             if (!string.IsNullOrEmpty(value) && value[0] != '?')
             {
@@ -44,7 +45,11 @@ namespace Geo.Core
         /// <summary>
         /// Gets the escaped query string with the leading '?' character.
         /// </summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         public string? Value { get; }
+#else
+        public string Value { get; }
+#endif
 
         /// <summary>
         /// Gets a value indicating whether the query string is not empty.
@@ -147,45 +152,22 @@ namespace Geo.Core
         /// </summary>
         /// <param name="parameters">An <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair{TKey, TValue}"/> to append as query parameters.</param>
         /// <returns>The resulting QueryString.</returns>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         public static QueryString Create(IEnumerable<KeyValuePair<string, string?>> parameters)
+#else
+        public static QueryString Create(IEnumerable<KeyValuePair<string, string>> parameters)
+#endif
         {
             var builder = new StringBuilder();
             var first = true;
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             foreach (var pair in parameters ?? Array.Empty<KeyValuePair<string, string?>>())
+#else
+            foreach (var pair in parameters ?? Array.Empty<KeyValuePair<string, string>>())
+#endif
             {
                 AppendKeyValuePair(builder, pair.Key, pair.Value, first);
                 first = false;
-            }
-
-            return new QueryString(builder.ToString());
-        }
-
-        /// <summary>
-        /// Creates a query string composed from the given name value pairs.
-        /// </summary>
-        /// <param name="parameters">An <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair{TKey, TValue}"/> to append as query parameters.</param>
-        /// <returns>The resulting QueryString.</returns>
-        public static QueryString Create(IEnumerable<KeyValuePair<string, StringValues>> parameters)
-        {
-            var builder = new StringBuilder();
-            var first = true;
-
-            foreach (var pair in parameters ?? Array.Empty<KeyValuePair<string, StringValues>>())
-            {
-                // If nothing in this pair.Values, append null value and continue
-                if (StringValues.IsNullOrEmpty(pair.Value))
-                {
-                    AppendKeyValuePair(builder, pair.Key, null, first);
-                    first = false;
-                    continue;
-                }
-
-                // Otherwise, loop through values in pair.Value
-                foreach (var value in pair.Value)
-                {
-                    AppendKeyValuePair(builder, pair.Key, value, first);
-                    first = false;
-                }
             }
 
             return new QueryString(builder.ToString());
@@ -213,7 +195,11 @@ namespace Geo.Core
 #pragma warning restore CA1055 // URI-like return values should not be strings
         {
             // Escape things properly so System.Uri doesn't mis-interpret the data.
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             return !string.IsNullOrEmpty(Value) ? Value!.Replace("#", "%23", StringComparison.InvariantCulture) : string.Empty;
+#else
+            return !string.IsNullOrEmpty(Value) ? Value.Replace("#", "%23") : string.Empty;
+#endif
         }
 
         /// <summary>
@@ -223,12 +209,20 @@ namespace Geo.Core
         /// <returns>The concatenated <see cref="QueryString"/>.</returns>
         public QueryString Add(QueryString other)
         {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             if (!HasValue || Value!.Equals("?", StringComparison.Ordinal))
+#else
+            if (!HasValue || Value.Equals("?", StringComparison.Ordinal))
+#endif
             {
                 return other;
             }
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             if (!other.HasValue || other.Value!.Equals("?", StringComparison.Ordinal))
+#else
+            if (!other.HasValue || other.Value.Equals("?", StringComparison.Ordinal))
+#endif
             {
                 return this;
             }
@@ -236,8 +230,10 @@ namespace Geo.Core
             // ?name1=value1 Add ?name2=value2 returns ?name1=value1&name2=value2
 #if NET5_0_OR_GREATER
             return new QueryString(string.Concat(Value, "&", other.Value.AsSpan(1)));
-#else
+#elif NETSTANDARD2_1
             return new QueryString(Value + "&" + other.Value[1..]);
+#else
+            return new QueryString(Value + "&" + other.Value.Substring(1));
 #endif
         }
 
@@ -255,7 +251,11 @@ namespace Geo.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             if (!HasValue || Value!.Equals("?", StringComparison.Ordinal))
+#else
+            if (!HasValue || Value.Equals("?", StringComparison.Ordinal))
+#endif
             {
                 return Create(name, value);
             }
@@ -285,7 +285,11 @@ namespace Geo.Core
         /// </summary>
         /// <param name="obj">An object to compare.</param>
         /// <returns><see langword="true" /> if the query strings are equal.</returns>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         public override bool Equals(object? obj)
+#else
+        public override bool Equals(object obj)
+#endif
         {
             if (ReferenceEquals(null, obj))
             {
@@ -301,10 +305,18 @@ namespace Geo.Core
         /// <returns>The hash code as an <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             return HasValue ? Value!.GetHashCode(StringComparison.InvariantCulture) : 0;
+#else
+            return HasValue ? Value.GetHashCode() : 0;
+#endif
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         private static void AppendKeyValuePair(StringBuilder builder, string key, string? value, bool first)
+#else
+        private static void AppendKeyValuePair(StringBuilder builder, string key, string value, bool first)
+#endif
         {
             builder.Append(first ? '?' : '&');
             builder.Append(UrlEncoder.Default.Encode(key));
@@ -315,6 +327,4 @@ namespace Geo.Core
             }
         }
     }
-
-#nullable disable
 }

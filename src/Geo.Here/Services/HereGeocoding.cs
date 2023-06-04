@@ -12,6 +12,7 @@ namespace Geo.Here.Services
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.Here.Abstractions;
     using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
@@ -125,6 +126,7 @@ namespace Geo.Here.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
         internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+            where TParameters : class
         {
             if (parameters is null)
             {
@@ -194,7 +196,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -221,7 +223,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -250,7 +252,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -288,7 +290,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -333,7 +335,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -362,7 +364,7 @@ namespace Geo.Here.Services
 
             AddHereKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }

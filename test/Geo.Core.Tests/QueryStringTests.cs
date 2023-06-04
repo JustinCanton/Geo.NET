@@ -8,7 +8,6 @@ namespace Geo.Core.Tests
     using System;
     using System.Collections.Generic;
     using FluentAssertions;
-    using Microsoft.Extensions.Primitives;
     using Xunit;
 
     public class QueryStringTests
@@ -18,7 +17,14 @@ namespace Geo.Core.Tests
         {
             // Act and Assert
             Action act = () => new QueryString("hello");
-            act.Should().Throw<ArgumentException>().WithMessage("The leading '?' must be included for a non-empty query. (Parameter 'value')").And.ParamName.Should().Be("value");
+            act.Should()
+                .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
+                .WithMessage("The leading '?' must be included for a non-empty query. (Parameter 'value')")
+#else
+                .WithMessage($"The leading '?' must be included for a non-empty query.{Environment.NewLine}Parameter name: value")
+#endif
+                .And.ParamName.Should().Be("value");
         }
 
         [Fact]
@@ -71,29 +77,21 @@ namespace Geo.Core.Tests
         [Fact]
         public void CreateFromList_Success()
         {
-#nullable enable
             var query = QueryString.Create(new[]
             {
+#if NETCOREAPP3_1_OR_GREATER
                 new KeyValuePair<string, string?>("key1", "value1"),
                 new KeyValuePair<string, string?>("key2", "value2"),
                 new KeyValuePair<string, string?>("key3", "value3"),
                 new KeyValuePair<string, string?>("key4", null),
                 new KeyValuePair<string, string?>("key5", string.Empty),
-            });
-#nullable disable
-            Assert.Equal("?key1=value1&key2=value2&key3=value3&key4=&key5=", query.Value);
-        }
-
-        [Fact]
-        public void CreateFromListStringValues_Success()
-        {
-            var query = QueryString.Create(new[]
-            {
-                new KeyValuePair<string, StringValues>("key1", new StringValues("value1")),
-                new KeyValuePair<string, StringValues>("key2", new StringValues("value2")),
-                new KeyValuePair<string, StringValues>("key3", new StringValues("value3")),
-                new KeyValuePair<string, StringValues>("key4", default(StringValues)),
-                new KeyValuePair<string, StringValues>("key5", new StringValues(string.Empty)),
+#else
+                new KeyValuePair<string, string>("key1", "value1"),
+                new KeyValuePair<string, string>("key2", "value2"),
+                new KeyValuePair<string, string>("key3", "value3"),
+                new KeyValuePair<string, string>("key4", null),
+                new KeyValuePair<string, string>("key5", string.Empty),
+#endif
             });
             Assert.Equal("?key1=value1&key2=value2&key3=value3&key4=&key5=", query.Value);
         }

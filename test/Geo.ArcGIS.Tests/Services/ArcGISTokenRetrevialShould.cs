@@ -7,6 +7,7 @@ namespace Geo.ArcGIS.Tests.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -48,7 +49,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
         }
 
         /// <inheritdoc/>
@@ -65,16 +66,18 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task BuildContentSuccessfully()
         {
-            using var httpClient = new HttpClient(_handlerMock.Object);
-            var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
+            using (var httpClient = new HttpClient(_handlerMock.Object))
+            {
+                var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
 
-            var content = service.BuildContent();
-            content.Headers.ContentType.ToString().Should().Be("application/x-www-form-urlencoded");
+                var content = service.BuildContent();
+                content.Headers.ContentType.ToString().Should().Be("application/x-www-form-urlencoded");
 
-            var collection = await content.ReadAsStringAsync().ConfigureAwait(false);
-            collection.Should().Contain("client_id=abc123")
-                .And.Contain("client_secret=secret123")
-                .And.Contain("grant_type=client_credentials");
+                var collection = await content.ReadAsStringAsync().ConfigureAwait(false);
+                collection.Should().Contain("client_id=abc123")
+                    .And.Contain("client_secret=secret123")
+                    .And.Contain("grant_type=client_credentials");
+            }
         }
 
         /// <summary>
@@ -84,13 +87,15 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenShouldReturnEmptyWithNoKey()
         {
-            using var httpClient = new HttpClient(_handlerMock.Object);
-            var keyContainer = new ArcGISCredentialsContainer(string.Empty, string.Empty);
-            var service = new ArcGISTokenRetrevial(httpClient, keyContainer);
+            using (var httpClient = new HttpClient(_handlerMock.Object))
+            {
+                var keyContainer = new ArcGISCredentialsContainer(string.Empty, string.Empty);
+                var service = new ArcGISTokenRetrevial(httpClient, keyContainer);
 
-            var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
-            token.AccessToken.Should().Be(string.Empty);
-            token.ExpiresIn.Should().Be(int.MaxValue);
+                var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+                token.AccessToken.Should().Be(string.Empty);
+                token.ExpiresIn.Should().Be(int.MaxValue);
+            }
         }
 
         /// <summary>
@@ -100,12 +105,14 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenShouldReturnValidToken()
         {
-            using var httpClient = new HttpClient(_handlerMock.Object);
-            var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
+            using (var httpClient = new HttpClient(_handlerMock.Object))
+            {
+                var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
 
-            var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
-            token.AccessToken.Should().Be("1234567890abc");
-            token.ExpiresIn.Should().Be(15000);
+                var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+                token.AccessToken.Should().Be("1234567890abc");
+                token.ExpiresIn.Should().Be(15000);
+            }
         }
 
         /// <summary>

@@ -63,7 +63,7 @@ namespace Geo.ArcGIS.Tests.DependencyInjection
             // Act
             services.AddArcGISServices(
                 options => options.UseClientCredentials("abc", "123"),
-                client => client.Timeout = TimeSpan.FromSeconds(1));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(1));
 
             // Assert
             var provider = services.BuildServiceProvider();

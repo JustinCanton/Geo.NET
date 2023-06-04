@@ -169,6 +169,7 @@ namespace Geo.Google.Services
         /// <param name="uriBuilderFunction">The method to use to create the uri.</param>
         /// <returns>A <see cref="Uri"/> with the uri crafted from the parameters.</returns>
         internal Uri ValidateAndBuildUri<TParameters>(TParameters parameters, Func<TParameters, Uri> uriBuilderFunction)
+            where TParameters : class
         {
             if (parameters is null)
             {
@@ -242,7 +243,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -311,7 +312,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -381,7 +382,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -453,7 +454,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -491,7 +492,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -547,7 +548,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -614,7 +615,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }
@@ -641,7 +642,7 @@ namespace Geo.Google.Services
 
             AddGoogleKey(ref query);
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
         }

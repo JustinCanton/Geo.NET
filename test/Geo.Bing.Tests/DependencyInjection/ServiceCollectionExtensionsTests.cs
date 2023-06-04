@@ -59,7 +59,7 @@ namespace Geo.Bing.Tests.DependencyInjection
             // Act
             services.AddBingServices(
                 options => options.UseKey("abc"),
-                client => client.Timeout = TimeSpan.FromSeconds(2));
+                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(2));
 
             // Assert
             var provider = services.BuildServiceProvider();

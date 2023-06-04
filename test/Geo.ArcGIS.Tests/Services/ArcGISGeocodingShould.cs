@@ -71,7 +71,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/geocodeAddresses")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -90,7 +90,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/reverseGeocode")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -109,7 +109,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/suggest")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -124,7 +124,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("singleLine")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -138,7 +138,7 @@ namespace Geo.ArcGIS.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("/arcgis/rest/services/World/GeocodeServer/findAddressCandidates") && x.RequestUri.PathAndQuery.Contains("category")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
@@ -249,7 +249,11 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'SingleLineAddress')");
+#else
+                .WithMessage("*Parameter name: SingleLineAddress");
+#endif
         }
 
         /// <summary>
@@ -355,7 +359,11 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Text')");
+#else
+                .WithMessage("*Parameter name: Text");
+#endif
         }
 
         /// <summary>
@@ -419,7 +427,11 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Location')");
+#else
+                .WithMessage("*Parameter name: Location");
+#endif
         }
 
         /// <summary>
@@ -496,7 +508,11 @@ namespace Geo.ArcGIS.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'AddressAttributes')");
+#else
+                .WithMessage("*Parameter name: AddressAttributes");
+#endif
         }
 
         /// <summary>

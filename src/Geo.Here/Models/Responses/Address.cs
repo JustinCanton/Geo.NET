@@ -5,6 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
+    using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -31,10 +32,22 @@ namespace Geo.Here.Models.Responses
         public string CountryName { get; set; }
 
         /// <summary>
+        /// Gets or sets a state code or state name abbreviation – country specific. For example, in the United States it is the two letter state abbreviation: "CA" for California.
+        /// </summary>
+        [JsonProperty("stateCode")]
+        public string StateCode { get; set; }
+
+        /// <summary>
         /// Gets or sets a code/abbreviation for the state division of a country. For example: "North Rhine-Westphalia".
         /// </summary>
         [JsonProperty("state")]
         public string State { get; set; }
+
+        /// <summary>
+        /// Gets or sets a county code or county name abbreviation – country specific. For example, for Italy it is the province abbreviation: "RM" for Rome.
+        /// </summary>
+        [JsonProperty("countyCode")]
+        public string CountyCode { get; set; }
 
         /// <summary>
         /// Gets or sets a division of a state; typically, a secondary-level administrative division of a country or equivalent.
@@ -68,6 +81,12 @@ namespace Geo.Here.Models.Responses
         public string Street { get; set; }
 
         /// <summary>
+        /// Gets the names of streets in case of intersection result. For example: ["Friedrichstraße","Unter den Linden"].
+        /// </summary>
+        [JsonProperty("streets")]
+        public IList<string> Streets { get; } = new List<string>();
+
+        /// <summary>
         /// Gets or sets the name of block.
         /// </summary>
         [JsonProperty("block")]
@@ -92,5 +111,11 @@ namespace Geo.Here.Models.Responses
         /// </summary>
         [JsonProperty("houseNumber")]
         public string HouseNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of building.
+        /// </summary>
+        [JsonProperty("building")]
+        public string Building { get; set; }
     }
 }

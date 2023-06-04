@@ -7,7 +7,6 @@ namespace Geo.Core
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Reflection;
     using System.Resources;
 
@@ -16,7 +15,8 @@ namespace Geo.Core
     /// </summary>
     public sealed class GeoNETResourceStringProviderFactory : IGeoNETResourceStringProviderFactory
     {
-        private static IDictionary<(string resourceFileName, Assembly assembly), ResourceManager> _resourceManagers = new ConcurrentDictionary<(string resourceFileName, Assembly assembly), ResourceManager>();
+        private static ConcurrentDictionary<(string resourceFileName, Assembly assembly), ResourceManager> _resourceManagers =
+            new ConcurrentDictionary<(string resourceFileName, Assembly assembly), ResourceManager>();
 
         /// <inheritdoc/>
         public IGeoNETResourceStringProvider CreateResourceStringProvider<TResource>()
@@ -43,13 +43,9 @@ namespace Geo.Core
                 throw new ArgumentException("The resource file name cannot be null or empty", nameof(resourceFileName));
             }
 
-            if (_resourceManagers.TryGetValue((resourceFileName, assembly), out var resourceManager))
-            {
-                return new GeoNETResourceStringProvider(resourceManager);
-            }
-
-            resourceManager = new ResourceManager(resourceFileName, assembly == null ? Assembly.GetCallingAssembly() : assembly);
-            _resourceManagers.Add((resourceFileName, assembly), resourceManager);
+            var resourceManager = _resourceManagers.GetOrAdd(
+                (resourceFileName, assembly),
+                new ResourceManager(resourceFileName, assembly ?? Assembly.GetCallingAssembly()));
 
             return new GeoNETResourceStringProvider(resourceManager);
         }
@@ -59,7 +55,11 @@ namespace Geo.Core
             var assemblyName = resourceType.Assembly.GetName().Name;
             var resourceName = resourceType.FullName;
             var resourceFolderName = assemblyName + ".Resources";
+#if NETSTANDARD2_1_OR_GREATER
             return resourceName.Replace(assemblyName, resourceFolderName, StringComparison.InvariantCultureIgnoreCase);
+#else
+            return resourceName.Replace(assemblyName, resourceFolderName);
+#endif
         }
     }
 }

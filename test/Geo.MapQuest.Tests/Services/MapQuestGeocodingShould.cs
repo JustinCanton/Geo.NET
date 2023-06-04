@@ -74,7 +74,7 @@ namespace Geo.MapQuest.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/address")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -101,7 +101,7 @@ namespace Geo.MapQuest.Tests.Services
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.PathAndQuery.Contains("geocoding/v1/reverse")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[^1]);
+                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
@@ -261,7 +261,11 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Location')");
+#else
+                .WithMessage("*Parameter name: Location");
+#endif
         }
 
         /// <summary>
@@ -362,7 +366,11 @@ namespace Geo.MapQuest.Tests.Services
 
             act.Should()
                 .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Location')");
+#else
+                .WithMessage("*Parameter name: Location");
+#endif
         }
 
         /// <summary>
@@ -427,7 +435,11 @@ namespace Geo.MapQuest.Tests.Services
                 .Throw<MapQuestException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
                 .WithMessage("*(Parameter 'Location')");
+#else
+                .WithMessage("*Parameter name: Location");
+#endif
         }
 
         /// <summary>

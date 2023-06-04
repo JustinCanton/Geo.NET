@@ -54,13 +54,21 @@ namespace Geo.MapBox.Converters
                 return null;
             }
 
+#if NETSTANDARD2_1_OR_GREATER
             var languages = contextInfo.Where(x => x.Key.Contains(ContextFields.Language, StringComparison.OrdinalIgnoreCase));
+#else
+            var languages = contextInfo.Where(x => x.Key.Contains(ContextFields.Language));
+#endif
             if (!languages.Any())
             {
                 // There are 2 cases here:
                 // Either there are no extra languages, only the default,
                 // or there is a context group without the language tags.
+#if NETSTANDARD2_1_OR_GREATER
                 var textItems = contextInfo.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase));
+#else
+                var textItems = contextInfo.Keys.Where(x => x.Contains("text"));
+#endif
                 if (textItems.Count() > 1)
                 {
                     // This context group does not contain any language keys for an unknown reason.
