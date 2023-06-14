@@ -133,6 +133,7 @@ namespace Geo.MapBox.Tests.Services
             {
                 Limit = 5,
                 Routing = true,
+                Worldview = "ar",
             };
 
             parameters.Countries.Add(new RegionInfo("CA"));
@@ -147,12 +148,13 @@ namespace Geo.MapBox.Tests.Services
             sut.AddBaseParameters(parameters, ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
-            queryParameters.Count.Should().Be(5);
+            queryParameters.Count.Should().Be(6);
             queryParameters["country"].Should().Be("CA,FR");
             queryParameters["language"].Should().Be("en,fr-FR");
             queryParameters["limit"].Should().Be("5");
             queryParameters["routing"].Should().Be("true");
             queryParameters["types"].Should().Be("address,place");
+            queryParameters["worldview"].Should().Be("ar");
         }
 
         /// <summary>
@@ -189,6 +191,7 @@ namespace Geo.MapBox.Tests.Services
                 },
                 Limit = 5,
                 Routing = true,
+                Worldview = "cn",
             };
 
             parameters.Countries.Add(new RegionInfo("CA"));
@@ -214,6 +217,7 @@ namespace Geo.MapBox.Tests.Services
             query.Should().Contain("limit=5");
             query.Should().Contain("routing=true");
             query.Should().Contain("types=address,place");
+            query.Should().Contain("worldview=cn");
             query.Should().Contain("access_token=abc123");
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);
@@ -289,6 +293,7 @@ namespace Geo.MapBox.Tests.Services
                 ReverseMode = ReverseMode.Score,
                 Limit = 3,
                 Routing = false,
+                Worldview = "jp",
             };
 
             parameters.Countries.Add(new RegionInfo("BG"));
@@ -312,6 +317,7 @@ namespace Geo.MapBox.Tests.Services
             query.Should().Contain("limit=3");
             query.Should().Contain("routing=false");
             query.Should().Contain("types=country,district,neighborhood");
+            query.Should().Contain("worldview=jp");
             query.Should().Contain("access_token=abc123");
 
             var path = HttpUtility.UrlDecode(uri.AbsolutePath);

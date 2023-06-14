@@ -241,6 +241,15 @@ namespace Geo.MapBox.Services
             {
                 _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Types"));
             }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Worldview))
+            {
+                query = query.Add("worldview", parameters.Worldview);
+            }
+            else
+            {
+                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Worldview"));
+            }
         }
 
         /// <summary>

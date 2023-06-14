@@ -133,6 +133,15 @@ namespace Geo.MapBox.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The worldview is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Worldview {
+            get {
+                return ResourceManager.GetString("Invalid Worldview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The MapBox parameters are null..
         /// </summary>
         internal static string Null_Parameters {
