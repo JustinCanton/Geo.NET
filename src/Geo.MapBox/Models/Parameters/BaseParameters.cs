@@ -45,5 +45,12 @@ namespace Geo.MapBox.Models.Parameters
         /// Gets a list used to filter results to include only a subset (one or more) of the available feature types.
         /// </summary>
         public IList<FeatureType> Types { get; } = new List<FeatureType>();
+
+        /// <summary>
+        /// Gets or sets an optional parameter to identify geographic features whose characteristics are defined differently by audiences belonging to various regional, cultural, or political groups.
+        /// Specifies to return features that are defined differently by audiences that belong to various regional, cultural, or political groups.
+        /// Available worldviews are: ar,cn,in,jp,ma,ru,tr,us. If worldview is not set, the us worldview boundaries are returned by default.
+        /// </summary>
+        public string Worldview { get; set; }
     }
 }

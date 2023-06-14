@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [1.5.0](https://github.com/JustinCanton/Geo.NET/compare/1.4.0...1.5.0) (2023-06-04)
+### Features
+- **here**: Adding missing fields on Address model type for the Here Geocoding API ([e121354](https://github.com/JustinCanton/Geo.NET/commit/e121354c204eabd6bd63cbd651cf9b635108f498))
+- **framework**: adding support for netstandard2.0 ([#73](https://github.com/JustinCanton/Geo.NET/issues/73)) ([23e3569](https://github.com/JustinCanton/Geo.NET/commit/23e35698ecfad4ae22b02c851e5c7657d0356937))
+
+### Bug Fixes
+- **core**: fixing an issue where too many requests to create the same resource provider causes an exception in the dictionary ([#70](https://github.com/JustinCanton/Geo.NET/issues/70)) ([6f47d9a](https://github.com/JustinCanton/Geo.NET/commit/6f47d9a277ba8db6e5d9e33edd642d069e23b456))
+- **here**: Adding missing enum values on ResultType ([e7ed451](https://github.com/JustinCanton/Geo.NET/commit/e7ed4516a8aff0e6cc1cc69f8555ca993b86901e))
+
 ## [1.4.0](https://github.com/JustinCanton/Geo.NET/compare/1.3.0...1.4.0) (2023-04-08)
 ### Features
 - **core:** removing the asp framework dependency and creating a repository specific QueryString class ([#61](https://github.com/JustinCanton/Geo.NET/issues/61)) ([c6e4688](https://github.com/JustinCanton/Geo.NET/commit/c6e46888e8b6ec4fec96bf6b0a8c0fe77f91d140))
