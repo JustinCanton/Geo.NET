@@ -142,6 +142,15 @@ namespace Geo.Here.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The language is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Language {
+            get {
+                return ResourceManager.GetString("Invalid Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The limit is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Limit {
@@ -156,6 +165,15 @@ namespace Geo.Here.Resources.Services {
         internal static string Invalid_Name {
             get {
                 return ResourceManager.GetString("Invalid Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The political view is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Political_View {
+            get {
+                return ResourceManager.GetString("Invalid Political View", resourceCulture);
             }
         }
         
@@ -205,11 +223,29 @@ namespace Geo.Here.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The show parameter is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Show {
+            get {
+                return ResourceManager.GetString("Invalid Show", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The terms limit is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Terms_Limit {
             get {
                 return ResourceManager.GetString("Invalid Terms Limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The types parameter is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Types {
+            get {
+                return ResourceManager.GetString("Invalid Types", resourceCulture);
             }
         }
         
