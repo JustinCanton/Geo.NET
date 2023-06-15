@@ -192,6 +192,15 @@ namespace Geo.Here.Services
                 _logger.HereDebug(_resourceStringProvider.GetString("Invalid In Country"));
             }
 
+            if (parameters.Types.Any())
+            {
+                query = query.Add("types", string.Join(",", parameters.Types));
+            }
+            else
+            {
+                _logger.HereDebug(_resourceStringProvider.GetString("Invalid Types"));
+            }
+
             AddLocatingParameters(parameters, ref query);
 
             AddHereKey(ref query);
@@ -212,11 +221,30 @@ namespace Geo.Here.Services
             var uriBuilder = new UriBuilder(ReverseGeocodeUri);
             var query = QueryString.Empty;
 
-            if (parameters.At is null)
+            if ((parameters.At is null && parameters.InCircle is null)
+                || (parameters.At != null && parameters.InCircle != null))
             {
-                var error = _resourceStringProvider.GetString("Invalid At");
+                var error = _resourceStringProvider.GetString("Invalid Bounding Parameters");
                 _logger.HereError(error);
-                throw new ArgumentException(error, nameof(parameters.At));
+                throw new ArgumentException(error, nameof(parameters));
+            }
+
+            if (parameters.InCircle != null && parameters.InCircle.IsValid())
+            {
+                query = query.Add("in", $"circle:{parameters.InCircle}");
+            }
+            else
+            {
+                _logger.HereDebug(_resourceStringProvider.GetString("Invalid In Circle"));
+            }
+
+            if (parameters.Types.Any())
+            {
+                query = query.Add("types", string.Join(",", parameters.Types));
+            }
+            else
+            {
+                _logger.HereDebug(_resourceStringProvider.GetString("Invalid Types"));
             }
 
             AddLocatingParameters(parameters, ref query);
@@ -508,6 +536,24 @@ namespace Geo.Here.Services
             else
             {
                 _logger.HereDebug(_resourceStringProvider.GetString("Invalid Language"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.PoliticalView))
+            {
+                query = query.Add("politicalView", parameters.PoliticalView);
+            }
+            else
+            {
+                _logger.HereDebug(_resourceStringProvider.GetString("Invalid Political View"));
+            }
+
+            if (parameters.Show.Any())
+            {
+                query = query.Add("show", string.Join(",", parameters.Show));
+            }
+            else
+            {
+                _logger.HereDebug(_resourceStringProvider.GetString("Invalid Show"));
             }
         }
 

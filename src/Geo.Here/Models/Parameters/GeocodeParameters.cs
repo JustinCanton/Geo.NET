@@ -41,5 +41,22 @@ namespace Geo.Here.Models.Parameters
         /// Note: Either query or qualified query parameter is required on this endpoint. Both parameters can be provided in the same request.
         /// </summary>
         public string QualifiedQuery { get; set; }
+
+        /// <summary>
+        /// Gets a list of the types that should be included in the response. If this parameter is not set, all types are considered for the response.
+        /// Supported values are:
+        /// <list type="bullet">
+        /// <item>address: restricting results to result types houseNumber, street, postalCodePoint, intersection, or addressBlock.</item>
+        /// <item>area: restricting results to result types locality or administrativeArea including all the sub-types.</item>
+        /// <item>city: restricting results to result type locality and locality type city.</item>
+        /// <item>houseNumber: restricting results to result type: houseNumber, including house number types PA (Point Address) and interpolated, including exact house number matches and house number fallbacks.</item>
+        /// <item>
+        /// postalCode: restricting results to postal codes: either result type postalCodePoint or result type locality with locality type postalCode.
+        /// Note that in Ireland and Singapore, where each address has unique postal code, postalCodePoint results are replaced by houseNumber results.
+        /// </item>
+        /// <item>street: restricting results to result type street.</item>
+        /// </list>
+        /// </summary>
+        public IList<string> Types { get; } = new List<string>();
     }
 }

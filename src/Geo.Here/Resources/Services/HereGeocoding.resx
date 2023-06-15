@@ -144,11 +144,17 @@
   <data name="Invalid In Country" xml:space="preserve">
     <value>The in country is invalid and will not be used.</value>
   </data>
+  <data name="Invalid Language" xml:space="preserve">
+    <value>The language is invalid and will not be used.</value>
+  </data>
   <data name="Invalid Limit" xml:space="preserve">
     <value>The limit is invalid and will not be used.</value>
   </data>
   <data name="Invalid Name" xml:space="preserve">
     <value>The name is invalid and will not be used.</value>
+  </data>
+  <data name="Invalid Political View" xml:space="preserve">
+    <value>The political view is invalid and will not be used.</value>
   </data>
   <data name="Invalid Qualified Query" xml:space="preserve">
     <value>The qualified query is invalid and will not be used.</value>
@@ -165,8 +171,14 @@
   <data name="Invalid Route" xml:space="preserve">
     <value>The route and flexible polyline are invalid and will not be used.</value>
   </data>
+  <data name="Invalid Show" xml:space="preserve">
+    <value>The show parameter is invalid and will not be used.</value>
+  </data>
   <data name="Invalid Terms Limit" xml:space="preserve">
     <value>The terms limit is invalid and will not be used.</value>
+  </data>
+  <data name="Invalid Types" xml:space="preserve">
+    <value>The types parameter is invalid and will not be used.</value>
   </data>
   <data name="Null Parameters" xml:space="preserve">
     <value>The HERE parameters are null.</value>
