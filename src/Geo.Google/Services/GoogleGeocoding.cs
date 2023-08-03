@@ -760,7 +760,7 @@ namespace Geo.Google.Services
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
         {
-            if (parameters.Language != null)
+            if (parameters.Language != null && !string.IsNullOrWhiteSpace(parameters.Language.Name))
             {
                 query = query.Add("language", parameters.Language.Name);
             }
