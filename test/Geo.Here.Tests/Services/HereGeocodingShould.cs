@@ -225,6 +225,28 @@ namespace Geo.Here.Tests.Services
             queryParameters["show"].Should().Be("countryInfo,streetInfo");
         }
 
+        [Fact]
+        public void AddBaseParameters_WithInvariantCulture_IgnoresLanguage()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new BaseParameters()
+            {
+                Language = CultureInfo.InvariantCulture,
+                PoliticalView = "IND",
+            };
+            parameters.Show.Add("countryInfo");
+            parameters.Show.Add("streetInfo");
+
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(2);
+            queryParameters["politicalView"].Should().Be("IND");
+            queryParameters["show"].Should().Be("countryInfo,streetInfo");
+        }
+
         /// <summary>
         /// Tests the base filter parameters is properly set into the query string.
         /// </summary>

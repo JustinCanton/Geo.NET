@@ -152,6 +152,23 @@ namespace Geo.Google.Tests.Services
             queryParameters["language"].Should().Be("da");
         }
 
+        [Fact]
+        public void AddBaseParameters_WithInvariantCulture_IgnoresLanguage()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new BaseParameters()
+            {
+                Language = CultureInfo.InvariantCulture,
+            };
+
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(0);
+        }
+
         /// <summary>
         /// Tests the coordinate parameters are properly set into the query string.
         /// </summary>
