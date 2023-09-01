@@ -5,6 +5,8 @@
 
 namespace Geo.Bing.Models.Parameters
 {
+    using System.Globalization;
+
     /// <summary>
     /// Base parameters across all Bing geocoding APIs.
     /// </summary>
@@ -27,5 +29,10 @@ namespace Geo.Bing.Models.Parameters
         /// Gets or sets a value indicating whether to include the two-letter ISO country code or not.
         /// </summary>
         public bool IncludeCiso2 { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the culture to use for the request.
+        /// </summary>
+        public CultureInfo Culture { get; set; }
     }
 }
