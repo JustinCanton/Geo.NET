@@ -133,6 +133,15 @@ namespace Geo.Bing.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The culture is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Culture {
+            get {
+                return ResourceManager.GetString("Invalid Culture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input cannot be null or empty..
         /// </summary>
         internal static string Invalid_Input {

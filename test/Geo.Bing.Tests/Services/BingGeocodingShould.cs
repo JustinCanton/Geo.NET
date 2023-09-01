@@ -175,6 +175,7 @@ namespace Geo.Bing.Tests.Services
                 IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
+                Culture = new CultureInfo("es")
             };
 
             // Act
@@ -182,9 +183,10 @@ namespace Geo.Bing.Tests.Services
 
             // Assert
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
-            queryParameters.Count.Should().Be(2);
+            queryParameters.Count.Should().Be(3);
             queryParameters["includeNeighborhood"].Should().Be("1");
             queryParameters["include"].Should().Contain("queryParse").And.Contain("ciso2");
+            queryParameters["culture"].Should().Be("es");
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
         }
