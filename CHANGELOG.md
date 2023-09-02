@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [1.5.1](https://github.com/JustinCanton/Geo.NET/compare/1.5.0...1.5.1) (2023-09-01)
+### Features
+- **mapbox**: adding the new worldview parameter to the forward and reverse geocode parameters ([#77](https://github.com/JustinCanton/Geo.NET/issues/77)) ([cfc987c](https://github.com/JustinCanton/Geo.NET/commit/cfc987cc1f7db2e5d0a7e3981f3a0c4325d2211b))
+- **here**: adding new parameters to the different geocoding requests ([#78](https://github.com/JustinCanton/Geo.NET/issues/78)) ([fd96319](https://github.com/JustinCanton/Geo.NET/commit/fd9631956001379b67c2f93f7d1a462157b7007c))
+- **bing**: adding a missing culture parameter for Bing ([#82](https://github.com/JustinCanton/Geo.NET/issues/82)) ([2fc79ac](https://github.com/JustinCanton/Geo.NET/commit/2fc79ac6c9b7fe7fd5350c942e048f4813bcb52c))
+
+### Bug Fixes
+- **here**: fixing an issue where using an invariant culture leads to an empty language in the query string ([#83](https://github.com/JustinCanton/Geo.NET/issues/83)) ([176aca9](https://github.com/JustinCanton/Geo.NET/commit/176aca900dafc47eafc3434cc7a50c414738002a))
+
 
 ## [1.5.0](https://github.com/JustinCanton/Geo.NET/compare/1.4.0...1.5.0) (2023-06-04)
 ### Features
