@@ -175,7 +175,7 @@ namespace Geo.Bing.Tests.Services
                 IncludeNeighbourhood = true,
                 IncludeQueryParse = true,
                 IncludeCiso2 = true,
-                Culture = new CultureInfo("es")
+                Culture = new CultureInfo("es"),
             };
 
             // Act
