@@ -211,13 +211,40 @@ namespace Geo.Here.Tests.Services
             var parameters = new BaseParameters()
             {
                 Language = new CultureInfo("es"),
+                PoliticalView = "IND",
             };
+            parameters.Show.Add("countryInfo");
+            parameters.Show.Add("streetInfo");
 
             sut.AddBaseParameters(parameters, ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
-            queryParameters.Count.Should().Be(1);
+            queryParameters.Count.Should().Be(3);
             queryParameters["lang"].Should().Be("es");
+            queryParameters["politicalView"].Should().Be("IND");
+            queryParameters["show"].Should().Be("countryInfo,streetInfo");
+        }
+
+        [Fact]
+        public void AddBaseParameters_WithInvariantCulture_IgnoresLanguage()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+            var parameters = new BaseParameters()
+            {
+                Language = CultureInfo.InvariantCulture,
+                PoliticalView = "IND",
+            };
+            parameters.Show.Add("countryInfo");
+            parameters.Show.Add("streetInfo");
+
+            sut.AddBaseParameters(parameters, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(2);
+            queryParameters["politicalView"].Should().Be("IND");
+            queryParameters["show"].Should().Be("countryInfo,streetInfo");
         }
 
         /// <summary>
@@ -636,6 +663,9 @@ namespace Geo.Here.Tests.Services
             parameters.InCountry.Add(new RegionInfo("JP"));
             parameters.InCountry.Add(new RegionInfo("RS"));
 
+            parameters.Types.Add("address");
+            parameters.Types.Add("area");
+
             // Act
             var uri = sut.BuildGeocodingRequest(parameters);
 
@@ -645,6 +675,7 @@ namespace Geo.Here.Tests.Services
             query.Should().Contain("qq=123 West");
             query.Should().Contain("in=DNK,JPN,SRB");
             query.Should().Contain("at=56.789,123.456");
+            query.Should().Contain("types=address,area");
             query.Should().Contain("limit=91");
             query.Should().Contain("lang=da");
             query.Should().Contain("apiKey=abc123");
@@ -696,17 +727,57 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
+            parameters.Types.Add("city");
+            parameters.Types.Add("area");
+
             // Act
             var uri = sut.BuildReverseGeocodingRequest(parameters);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("at=76.789,-12.456");
+            query.Should().Contain("types=city,area");
             query.Should().Contain("limit=1");
             query.Should().Contain("lang=en");
             query.Should().Contain("apiKey=abc123");
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        [Fact]
+        public void BuildReverseGeocodingRequest_WithInCircleParameter_BuildsSuccessfully()
+        {
+            // Arrange
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodeParameters()
+            {
+                InCircle = new Circle()
+                {
+                    Centre = new Coordinate()
+                    {
+                        Latitude = 78.9,
+                        Longitude = 45.32,
+                    },
+                    Radius = 50000,
+                },
+                Limit = 1,
+                Language = new CultureInfo("en"),
+            };
+
+            parameters.Types.Add("city");
+            parameters.Types.Add("area");
+
+            // Act
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
+
+            // Assert
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("in=circle:78.9,45.32;r=50000");
+            query.Should().Contain("types=city,area");
+            query.Should().Contain("limit=1");
+            query.Should().Contain("lang=en");
+            query.Should().Contain("apiKey=abc123");
         }
 
         /// <summary>
@@ -722,9 +793,45 @@ namespace Geo.Here.Tests.Services
             act.Should()
                 .Throw<ArgumentException>()
 #if NETCOREAPP3_1_OR_GREATER
-                .WithMessage("*(Parameter 'At')");
+                .WithMessage("*(Parameter 'parameters')");
 #else
-                .WithMessage("*Parameter name: At");
+                .WithMessage("*Parameter name: parameters");
+#endif
+        }
+
+        /// <summary>
+        /// Tests the building of the reverse geocoding parameters fails if no query is provided.
+        /// </summary>
+        [Fact]
+        public void BuildReverseGeocodingRequest_WithBothInAndAt_FailsWithException()
+        {
+            var sut = BuildService();
+            var parameters = new ReverseGeocodeParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 76.789,
+                    Longitude = -12.456,
+                },
+                InCircle = new Circle()
+                {
+                    Centre = new Coordinate()
+                    {
+                        Latitude = 78.9,
+                        Longitude = 45.32,
+                    },
+                    Radius = 50000,
+                },
+            };
+
+            Action act = () => sut.BuildReverseGeocodingRequest(parameters);
+
+            act.Should()
+                .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
+                .WithMessage("*(Parameter 'parameters')");
+#else
+                .WithMessage("*Parameter name: parameters");
 #endif
         }
 

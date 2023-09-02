@@ -100,7 +100,7 @@ namespace Geo.Core
 
             if (!response.IsSuccessful)
             {
-                var ex = _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Failure", apiName), null);
+                var ex = _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Failure", apiName));
                 ex.Data.Add("uri", uri);
                 ex.Data.Add("responseStatusCode", response.StatusCode);
                 ex.Data.Add("responseBody", response.Body);

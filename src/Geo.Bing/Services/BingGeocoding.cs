@@ -341,6 +341,15 @@ namespace Geo.Bing.Services
             {
                 _logger.BingDebug(_resourceStringProvider.GetString("Do Not Include Types"));
             }
+
+            if (parameters.Culture != null && !string.IsNullOrWhiteSpace(parameters.Culture.Name))
+            {
+                query = query.Add("culture", parameters.Culture.Name);
+            }
+            else
+            {
+                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Culuture"));
+            }
         }
 
         /// <summary>

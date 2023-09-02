@@ -141,6 +141,9 @@
   <data name="Invalid Country Region" xml:space="preserve">
     <value>The country region is invalid and will not be used.</value>
   </data>
+  <data name="Invalid Culture" xml:space="preserve">
+    <value>The culture is invalid and will not be used.</value>
+  </data>
   <data name="Invalid Input" xml:space="preserve">
     <value>The input cannot be null or empty.</value>
   </data>

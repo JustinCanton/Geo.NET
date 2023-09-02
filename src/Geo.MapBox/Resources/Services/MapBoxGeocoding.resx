@@ -141,6 +141,9 @@
   <data name="Invalid Types" xml:space="preserve">
     <value>The types are invalid and will not be used.</value>
   </data>
+  <data name="Invalid Worldview" xml:space="preserve">
+    <value>The worldview is invalid and will not be used.</value>
+  </data>
   <data name="Null Parameters" xml:space="preserve">
     <value>The MapBox parameters are null.</value>
   </data>
