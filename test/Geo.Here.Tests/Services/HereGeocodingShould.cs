@@ -673,7 +673,7 @@ namespace Geo.Here.Tests.Services
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
             query.Should().Contain("q=123 East");
             query.Should().Contain("qq=123 West");
-            query.Should().Contain("in=DNK,JPN,SRB");
+            query.Should().Contain("in=countryCode:DNK,JPN,SRB");
             query.Should().Contain("at=56.789,123.456");
             query.Should().Contain("types=address,area");
             query.Should().Contain("limit=91");

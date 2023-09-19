@@ -185,7 +185,7 @@ namespace Geo.Here.Services
 
             if (parameters.InCountry.Count > 0)
             {
-                query = query.Add("in", string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName)));
+                query = query.Add("in", $"countryCode:{string.Join(",", parameters.InCountry.Select(x => x.ThreeLetterISORegionName))}");
             }
             else
             {
