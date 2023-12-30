@@ -138,6 +138,9 @@
   <data name="Invalid City" xml:space="preserve">
     <value>The city is invalid and will not be used</value>
   </data>
+  <data name="Invalid Country Code" xml:space="preserve">
+    <value>The country code is invalid and will not be used.</value>
+  </data>
   <data name="Invalid Feature Types" xml:space="preserve">
     <value>The feature types are invalid and will not be used.</value>
   </data>

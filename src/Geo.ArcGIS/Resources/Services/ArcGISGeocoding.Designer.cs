@@ -124,6 +124,15 @@ namespace Geo.ArcGIS.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The country code is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Country_Code {
+            get {
+                return ResourceManager.GetString("Invalid Country Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The feature types are invalid and will not be used..
         /// </summary>
         internal static string Invalid_Feature_Types {

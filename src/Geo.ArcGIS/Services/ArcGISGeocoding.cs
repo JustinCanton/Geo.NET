@@ -291,6 +291,15 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Category))
+            {
+                query = query.Add("category", parameters.Category);
+            }
+            else
+            {
                 _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Category"));
             }
 
@@ -420,7 +429,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Category"));
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
             }
 
             if (parameters.SourceCountry.Count != 0)

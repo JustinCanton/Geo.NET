@@ -5,6 +5,8 @@
 
 namespace Geo.ArcGIS.Models.Parameters
 {
+    using Newtonsoft.Json;
+
     /// <summary>
     /// The geocoding address parameters.
     /// </summary>
@@ -19,6 +21,7 @@ namespace Geo.ArcGIS.Models.Parameters
         /// Gets or sets the single line representation of the address.
         /// If this is passed in, the other fields will be ignored.
         /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SingleLine { get; set; }
     }
 }
