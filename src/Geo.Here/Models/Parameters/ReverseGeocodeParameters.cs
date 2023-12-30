@@ -12,7 +12,6 @@ namespace Geo.Here.Models.Parameters
     /// </summary>
     public class ReverseGeocodeParameters : BaseFilterParameters
     {
-
         /// <summary>
         /// Gets a list of the types that should be included in the response. If this parameter is not set, all types are considered for the response.
         /// Supported values are:

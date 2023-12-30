@@ -14,5 +14,10 @@ namespace Geo.ArcGIS.Models.Parameters
         /// Gets or sets the address you want to geocode as a single line of text.
         /// </summary>
         public string SingleLineAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets an ID attribute value that, along with the text attribute, links a suggestion to an address or place.
+        /// </summary>
+        public string MagicKey { get; set; }
     }
 }

@@ -70,6 +70,15 @@ namespace Geo.ArcGIS.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The address is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Address {
+            get {
+                return ResourceManager.GetString("Invalid Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The address attributes cannot be null or empty..
         /// </summary>
         internal static string Invalid_Address_Attributes {
@@ -79,11 +88,47 @@ namespace Geo.ArcGIS.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The second address is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Address2 {
+            get {
+                return ResourceManager.GetString("Invalid Address2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The third address is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Address3 {
+            get {
+                return ResourceManager.GetString("Invalid Address3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The category is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Category {
             get {
                 return ResourceManager.GetString("Invalid Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The city is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_City {
+            get {
+                return ResourceManager.GetString("Invalid City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The country code is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Country_Code {
+            get {
+                return ResourceManager.GetString("Invalid Country Code", resourceCulture);
             }
         }
         
@@ -142,6 +187,15 @@ namespace Geo.ArcGIS.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The neighbourhood is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Neighbourhood {
+            get {
+                return ResourceManager.GetString("Invalid Neighbourhood", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The out spatial reference is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Out_Spatial_Reference {
@@ -151,11 +205,38 @@ namespace Geo.ArcGIS.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The postal is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Postal {
+            get {
+                return ResourceManager.GetString("Invalid Postal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The postal extension is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_PostalExt {
+            get {
+                return ResourceManager.GetString("Invalid PostalExt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The preferred label value is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Preferred_Label_Value {
             get {
                 return ResourceManager.GetString("Invalid Preferred Label Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The region is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Region {
+            get {
+                return ResourceManager.GetString("Invalid Region", resourceCulture);
             }
         }
         
@@ -183,6 +264,15 @@ namespace Geo.ArcGIS.Resources.Services {
         internal static string Invalid_Source_Country {
             get {
                 return ResourceManager.GetString("Invalid Source Country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The subregion is invalid and will not be used.
+        /// </summary>
+        internal static string Invalid_Subregion {
+            get {
+                return ResourceManager.GetString("Invalid Subregion", resourceCulture);
             }
         }
         
