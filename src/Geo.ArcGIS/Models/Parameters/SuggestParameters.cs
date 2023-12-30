@@ -5,6 +5,9 @@
 
 namespace Geo.ArcGIS.Models.Parameters
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+    using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models.Responses;
 
     /// <summary>
@@ -42,5 +45,25 @@ namespace Geo.ArcGIS.Models.Parameters
         /// If any other value is specified, the default value is used.
         /// </summary>
         public uint MaximumLocations { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets a value representing the country. Providing this value increases geocoding speed.
+        /// Acceptable values include the full country name in English or the official language of the country, the two-character country code, or the three-character country code.
+        /// </summary>
+        public string CountryCode { get; set; }
+
+        /// <summary>
+        /// Gets a value representing the country. When a value is passed for this parameter,
+        /// all of the addresses in the input table are sent to the specified country to be geocoded.
+        /// You can specify multiple country codes to limit results to more than one country.
+        /// </summary>
+        public IList<RegionInfo> SourceCountry { get; } = new List<RegionInfo>();
+
+        /// <summary>
+        /// Gets or sets a configuration of output fields returned in a response from the
+        /// ArcGIS World Geocoding Service by specifying which address component values should be included in output fields.
+        /// The default value is postal city.
+        /// </summary>
+        public PreferredLabelValue PreferredLabelValue { get; set; } = PreferredLabelValue.PostalCity;
     }
 }

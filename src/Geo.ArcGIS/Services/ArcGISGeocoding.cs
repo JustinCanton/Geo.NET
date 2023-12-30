@@ -177,6 +177,11 @@ namespace Geo.ArcGIS.Services
 
             query = query.Add("singleLine", parameters.SingleLineAddress);
 
+            if (parameters.MagicKey != null)
+            {
+                query = query.Add("magicKey", parameters.MagicKey);
+            }
+
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
@@ -198,6 +203,96 @@ namespace Geo.ArcGIS.Services
             var query = QueryString.Empty;
             query = query.Add("f", "json");
             query = query.Add("outFields", "Place_addr,PlaceName");
+
+            if (!string.IsNullOrWhiteSpace(parameters.Address))
+            {
+                query = query.Add("address", parameters.Address);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Address2))
+            {
+                query = query.Add("address2", parameters.Address2);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address2"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Address3))
+            {
+                query = query.Add("address3", parameters.Address3);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address3"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Neighbourhood))
+            {
+                query = query.Add("neighborhood", parameters.Neighbourhood);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Neighbourhood"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.City))
+            {
+                query = query.Add("city", parameters.City);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid City"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Subregion))
+            {
+                query = query.Add("subregion", parameters.Subregion);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Subregion"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Region))
+            {
+                query = query.Add("region", parameters.Region);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Region"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Postal))
+            {
+                query = query.Add("postal", parameters.Postal);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Postal"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.PostalExt))
+            {
+                query = query.Add("postalExt", parameters.PostalExt);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid PostalExt"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.CountryCode))
+            {
+                query = query.Add("countryCode", parameters.CountryCode);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
+            }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
@@ -224,6 +319,42 @@ namespace Geo.ArcGIS.Services
             else
             {
                 _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Maximum Locations"));
+            }
+
+            if (parameters.OutSpatialReference > 0)
+            {
+                query = query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Out Spatial Reference"));
+            }
+
+            if (parameters.SearchExtent != null)
+            {
+                query = query.Add("searchExtent", parameters.SearchExtent.ToString());
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Search Extent"));
+            }
+
+            if (parameters.LanguageCode != null)
+            {
+                query = query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Language Code"));
+            }
+
+            if (parameters.LocationType >= 0)
+            {
+                query = query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
+            }
+            else
+            {
+                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Location Type"));
             }
 
             AddStorageParameter(parameters, ref query);
@@ -290,6 +421,33 @@ namespace Geo.ArcGIS.Services
             else
             {
                 _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Maximum Locations"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.CountryCode))
+            {
+                query = query.Add("countryCode", parameters.CountryCode);
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
+            }
+
+            if (parameters.SourceCountry.Count != 0)
+            {
+                query = query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
+            }
+            else
+            {
+                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Source Country"));
+            }
+
+            if (parameters.PreferredLabelValue >= 0)
+            {
+                query = query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
+            }
+            else
+            {
+                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Preferred Label Value"));
             }
 
             uriBuilder.AddQuery(query);
