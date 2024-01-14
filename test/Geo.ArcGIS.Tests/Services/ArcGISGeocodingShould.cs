@@ -164,7 +164,7 @@ namespace Geo.ArcGIS.Tests.Services
 
             var query = QueryString.Empty;
 
-            query = await sut.AddArcGISToken(query, CancellationToken.None).ConfigureAwait(false);
+            query = await sut.AddArcGISToken(query, CancellationToken.None);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
@@ -224,7 +224,7 @@ namespace Geo.ArcGIS.Tests.Services
             };
 
             // Act
-            var uri = await sut.BuildAddressCandidateRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+            var uri = await sut.BuildAddressCandidateRequest(parameters, CancellationToken.None);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -284,7 +284,7 @@ namespace Geo.ArcGIS.Tests.Services
             };
 
             // Act
-            var uri = await sut.BuildPlaceCandidateRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+            var uri = await sut.BuildPlaceCandidateRequest(parameters, CancellationToken.None);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -334,7 +334,7 @@ namespace Geo.ArcGIS.Tests.Services
             };
 
             // Act
-            var uri = await sut.BuildSuggestRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+            var uri = await sut.BuildSuggestRequest(parameters, CancellationToken.None);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -399,7 +399,7 @@ namespace Geo.ArcGIS.Tests.Services
             parameters.FeatureTypes.Add(FeatureType.StreetName);
 
             // Act
-            var uri = await sut.BuildReverseGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+            var uri = await sut.BuildReverseGeocodingRequest(parameters, CancellationToken.None);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -479,7 +479,7 @@ namespace Geo.ArcGIS.Tests.Services
                 });
 
             // Act
-            var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None).ConfigureAwait(false);
+            var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None);
 
             // Assert
             var query = HttpUtility.UrlDecode(uri.PathAndQuery);
@@ -533,7 +533,7 @@ namespace Geo.ArcGIS.Tests.Services
                     SingleLine = "123 East",
                 });
 
-            var response = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.GeocodingAsync(parameters);
             response.Locations.Count.Should().Be(1);
             response.SpatialReference.WellKnownID.Should().Be(4326);
         }
@@ -556,7 +556,7 @@ namespace Geo.ArcGIS.Tests.Services
                 },
             };
 
-            var response = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.ReverseGeocodingAsync(parameters);
             response.Address.MatchAddress.Should().Be("Cali's California Style Burritos");
             response.Location.Longitude.Should().Be(-85.837039999999945);
         }
@@ -575,7 +575,7 @@ namespace Geo.ArcGIS.Tests.Services
                 Text = "123 East",
             };
 
-            var response = await sut.SuggestAsync(parameters).ConfigureAwait(false);
+            var response = await sut.SuggestAsync(parameters);
             response.Suggestions.Count.Should().Be(5);
         }
 
@@ -593,7 +593,7 @@ namespace Geo.ArcGIS.Tests.Services
                 Category = "restaurants",
             };
 
-            var response = await sut.PlaceCandidateAsync(parameters).ConfigureAwait(false);
+            var response = await sut.PlaceCandidateAsync(parameters);
             response.Candidates.Count.Should().Be(0);
             response.SpatialReference.WellKnownID.Should().Be(4326);
         }
@@ -612,7 +612,7 @@ namespace Geo.ArcGIS.Tests.Services
                 SingleLineAddress = "123 East",
             };
 
-            var response = await sut.AddressCandidateAsync(parameters).ConfigureAwait(false);
+            var response = await sut.AddressCandidateAsync(parameters);
             response.Candidates.Count.Should().Be(1);
             response.SpatialReference.WellKnownID.Should().Be(4326);
         }

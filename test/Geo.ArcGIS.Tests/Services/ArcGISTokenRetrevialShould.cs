@@ -72,7 +72,7 @@ namespace Geo.ArcGIS.Tests.Services
                 var content = service.BuildContent();
                 content.Headers.ContentType.ToString().Should().Be("application/x-www-form-urlencoded");
 
-                var collection = await content.ReadAsStringAsync().ConfigureAwait(false);
+                var collection = await content.ReadAsStringAsync();
                 collection.Should().Contain("client_id=abc123")
                     .And.Contain("client_secret=secret123")
                     .And.Contain("grant_type=client_credentials");
@@ -91,7 +91,7 @@ namespace Geo.ArcGIS.Tests.Services
                 var keyContainer = new ArcGISCredentialsContainer(string.Empty, string.Empty);
                 var service = new ArcGISTokenRetrevial(httpClient, keyContainer);
 
-                var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+                var token = await service.GetTokenAsync(CancellationToken.None);
                 token.AccessToken.Should().Be(string.Empty);
                 token.ExpiresIn.Should().Be(int.MaxValue);
             }
@@ -108,7 +108,7 @@ namespace Geo.ArcGIS.Tests.Services
             {
                 var service = new ArcGISTokenRetrevial(httpClient, _keyContainer);
 
-                var token = await service.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+                var token = await service.GetTokenAsync(CancellationToken.None);
                 token.AccessToken.Should().Be("1234567890abc");
                 token.ExpiresIn.Should().Be(15000);
             }

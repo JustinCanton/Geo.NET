@@ -224,7 +224,7 @@ namespace Geo.Core.Tests
         public async Task ReturnsErrorJson()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
-            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Failure")).ConfigureAwait(false);
+            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Failure"));
             result.IsSuccessful.Should().BeFalse();
             result.Result.Should().BeNull();
             result.Body.Should().Be("{'Message':'Access denied'}");
@@ -239,7 +239,7 @@ namespace Geo.Core.Tests
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Success")).ConfigureAwait(false);
+            var result = await sut.CallAsync<TestClass>(new Uri("http://test.com/Success"));
             result.IsSuccessful.Should().BeTrue();
             result.Result.TestField.Should().Be(1);
         }
@@ -355,7 +355,7 @@ namespace Geo.Core.Tests
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            var result = await sut.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), ApiName).ConfigureAwait(false);
+            var result = await sut.CallAsync<TestClass, TestException>(new Uri("http://test.com/Success"), ApiName);
             result.TestField.Should().Be(1);
         }
 

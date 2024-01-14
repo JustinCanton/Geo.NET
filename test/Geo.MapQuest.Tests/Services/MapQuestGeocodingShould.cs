@@ -467,7 +467,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = false,
             };
 
-            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].ProvidedLocation.Location.Should().Be("123 East");
@@ -496,7 +496,7 @@ namespace Geo.MapQuest.Tests.Services
                 IncludeThumbMaps = true,
             };
 
-            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters);
             result.Results.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
             result.Results[0].Locations.Count.Should().Be(1);
