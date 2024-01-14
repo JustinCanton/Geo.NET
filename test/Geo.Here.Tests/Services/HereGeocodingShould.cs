@@ -1159,7 +1159,7 @@ namespace Geo.Here.Tests.Services
 
             parameters.InCountry.Add(new RegionInfo("DK"));
 
-            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1183,7 +1183,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1211,7 +1211,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            var result = await sut.DiscoverAsync(parameters).ConfigureAwait(false);
+            var result = await sut.DiscoverAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1240,7 +1240,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.AutosuggestAsync(parameters).ConfigureAwait(false);
+            var result = await sut.AutosuggestAsync(parameters);
             result.Items.Count.Should().Be(2);
         }
 
@@ -1259,7 +1259,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("ja"),
             };
 
-            var result = await sut.LookupAsync(parameters).ConfigureAwait(false);
+            var result = await sut.LookupAsync(parameters);
             result.Title.Should().Be("Royal Oak");
             result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
         }
@@ -1287,7 +1287,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.BrowseAsync(parameters).ConfigureAwait(false);
+            var result = await sut.BrowseAsync(parameters);
             result.Items.Count.Should().Be(2);
         }
 

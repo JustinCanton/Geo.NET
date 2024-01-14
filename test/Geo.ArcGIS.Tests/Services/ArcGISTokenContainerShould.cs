@@ -54,7 +54,7 @@ namespace Geo.ArcGIS.Tests.Services
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);
 
-            var token = await tokenContainer.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+            var token = await tokenContainer.GetTokenAsync(CancellationToken.None);
             token.Should().Be("key123");
         }
 
@@ -67,10 +67,10 @@ namespace Geo.ArcGIS.Tests.Services
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);
 
-            var token = await tokenContainer.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+            var token = await tokenContainer.GetTokenAsync(CancellationToken.None);
             token.Should().Be("key123");
 
-            var tokenAgain = await tokenContainer.GetTokenAsync(_quickExpireToken).ConfigureAwait(false);
+            var tokenAgain = await tokenContainer.GetTokenAsync(_quickExpireToken);
             tokenAgain.Should().Be("key123");
         }
 
@@ -83,10 +83,10 @@ namespace Geo.ArcGIS.Tests.Services
         {
             var tokenContainer = new ArcGISTokenContainer(_mockTokenRetrevial.Object);
 
-            var token = await tokenContainer.GetTokenAsync(_quickExpireToken).ConfigureAwait(false);
+            var token = await tokenContainer.GetTokenAsync(_quickExpireToken);
             token.Should().Be("key456");
 
-            var tokenAgain = await tokenContainer.GetTokenAsync(CancellationToken.None).ConfigureAwait(false);
+            var tokenAgain = await tokenContainer.GetTokenAsync(CancellationToken.None);
             tokenAgain.Should().Be("key123");
         }
     }

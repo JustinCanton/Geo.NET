@@ -467,7 +467,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.Address);
             parameters.Types.Add(FeatureType.Place);
 
-            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters);
             result.Query.Count.Should().Be(2);
             result.Query.Should().ContainInOrder(new List<string>()
             {
@@ -510,7 +510,7 @@ namespace Geo.MapBox.Tests.Services
             parameters.Types.Add(FeatureType.District);
             parameters.Types.Add(FeatureType.Neighborhood);
 
-            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters);
             result.Query.ToString().Should().Be(new Coordinate()
             {
                 Latitude = -28.081626,

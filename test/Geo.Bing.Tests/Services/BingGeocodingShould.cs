@@ -427,7 +427,7 @@ namespace Geo.Bing.Tests.Services
                 Query = "1 Microsoft Way Redmond WA",
             };
 
-            var response = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.GeocodingAsync(parameters);
             response.StatusCode.Should().Be(200);
             response.ResourceSets.Count.Should().Be(1);
         }
@@ -450,7 +450,7 @@ namespace Geo.Bing.Tests.Services
                 },
             };
 
-            var response = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.ReverseGeocodingAsync(parameters);
             response.StatusCode.Should().Be(200);
             response.ResourceSets.Count.Should().Be(1);
         }
@@ -473,7 +473,7 @@ namespace Geo.Bing.Tests.Services
                 CountryRegion = new RegionInfo("en-CA"),
             };
 
-            var response = await sut.AddressGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.AddressGeocodingAsync(parameters);
             response.StatusCode.Should().Be(200);
             response.ResourceSets.Count.Should().Be(1);
             response.ResourceSets[0].EstimatedTotal.Should().Be(2);

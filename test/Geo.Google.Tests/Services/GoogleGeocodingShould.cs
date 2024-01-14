@@ -971,7 +971,7 @@ namespace Geo.Google.Tests.Services
                 Address = "1600 Amphitheatre Pkwy, Mountain View",
             };
 
-            var response = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.GeocodingAsync(parameters);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(2);
         }
@@ -994,7 +994,7 @@ namespace Geo.Google.Tests.Services
                 },
             };
 
-            var response = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.ReverseGeocodingAsync(parameters);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(1);
         }
