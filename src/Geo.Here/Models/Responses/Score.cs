@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The overall score of the geocoding search.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the entire query score.
         /// </summary>
-        [JsonProperty("queryScore")]
+        [JsonPropertyName("queryScore")]
         public double QueryScore { get; set; }
 
         /// <summary>
         /// Gets or sets the score for the different fields of a location.
         /// </summary>
-        [JsonProperty("fieldScore")]
+        [JsonPropertyName("fieldScore")]
         public FieldScore FieldScore { get; set; }
     }
 }

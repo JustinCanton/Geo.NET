@@ -6,7 +6,7 @@
 namespace Geo.MapBox.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from the MapBox request.
@@ -17,25 +17,25 @@ namespace Geo.MapBox.Models.Responses
         /// <summary>
         /// Gets or sets the GeoJSON type for the results.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the query information sent to MapBox.
         /// </summary>
-        [JsonProperty("query")]
+        [JsonPropertyName("query")]
         public TQuery Query { get; set; }
 
         /// <summary>
         /// Gets a list of features that matched the query.
         /// </summary>
-        [JsonProperty("features")]
+        [JsonPropertyName("features")]
         public IList<Feature> Features { get; } = new List<Feature>();
 
         /// <summary>
         /// Gets or sets a string that attributes the results of the Mapbox Geocoding API to Mapbox.
         /// </summary>
-        [JsonProperty("attribution")]
+        [JsonPropertyName("attribution")]
         public string Attribution { get; set; }
     }
 }

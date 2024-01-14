@@ -7,13 +7,13 @@ namespace Geo.Core
 {
     using System;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.Core.Models;
     using Geo.Core.Models.Exceptions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A base class used for calls to APIs.
@@ -85,11 +85,7 @@ namespace Geo.Core
             {
                 throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Request Cancelled", apiName), ex);
             }
-            catch (JsonReaderException ex)
-            {
-                throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Reader Failed To Parse", apiName), ex);
-            }
-            catch (JsonSerializationException ex)
+            catch (JsonException ex)
             {
                 throw _exceptionProvider.GetException<TException>(_resourceStringProvider.GetString("Serializer Failed To Parse", apiName), ex);
             }
@@ -127,14 +123,13 @@ namespace Geo.Core
         /// DNS failure, server certificate validation or timeout.
         /// </exception>
         /// <exception cref="TaskCanceledException">Thrown when the request is cancelled.</exception>
-        /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-        /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+        /// <exception cref="JsonException">Thrown when when an error occurs during JSON deserialization.</exception>
         internal async Task<CallResult<TResult>> CallAsync<TResult>(Uri uri, CancellationToken cancellationToken = default)
             where TResult : class
         {
             var response = await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -145,7 +140,7 @@ namespace Geo.Core
                 return new CallResult<TResult>(response.StatusCode, json);
             }
 
-            return new CallResult<TResult>(JsonConvert.DeserializeObject<TResult>(json), response.StatusCode, json);
+            return new CallResult<TResult>(JsonSerializer.Deserialize<TResult>(json), response.StatusCode, json);
         }
     }
 }

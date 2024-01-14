@@ -7,8 +7,6 @@ namespace Geo.ArcGIS.Converters
 {
     using System;
     using Geo.ArcGIS.Models.Responses;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A converter class for the Attribute class.

@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Attribute information returned when searching for an address.
@@ -15,13 +15,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the match address information.
         /// </summary>
-        [JsonProperty("Match_addr")]
+        [JsonPropertyName("Match_addr")]
         public string MatchAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the address type information.
         /// </summary>
-        [JsonProperty("Addr_type")]
+        [JsonPropertyName("Addr_type")]
         public string AddressType { get; set; }
     }
 }

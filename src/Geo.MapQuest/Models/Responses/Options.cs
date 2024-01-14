@@ -5,7 +5,7 @@
 
 namespace Geo.MapQuest.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The options sent in with the request.
@@ -18,14 +18,14 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets or sets the max number of locations to return from the geocode.
         /// The default is 5.
         /// </summary>
-        [JsonProperty("maxResults")]
+        [JsonPropertyName("maxResults")]
         public int MaxResults { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a URL to a static map thumbnail image for a location being geocoded should be returned.
         /// Default is true.
         /// </summary>
-        [JsonProperty("thumbMaps")]
+        [JsonPropertyName("thumbMaps")]
         public bool ThumbMaps { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Geo.MapQuest.Models.Responses
         /// or if it should ignore that and try and geocode what it can.
         /// The default value is false.
         /// </summary>
-        [JsonProperty("ignoreLatLngInput")]
+        [JsonPropertyName("ignoreLatLngInput")]
         public bool IgnoreLatLngInput { get; set; }
     }
 }

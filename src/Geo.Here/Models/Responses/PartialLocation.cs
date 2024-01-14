@@ -6,8 +6,8 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using Geo.Here.Enums;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Contains a partial view of the location.
@@ -17,43 +17,43 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the type of the house number.
         /// </summary>
-        [JsonProperty("houseNumberType")]
+        [JsonPropertyName("houseNumberType")]
         public HouseNumberType HouseNumberType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the address block.
         /// </summary>
-        [JsonProperty("addressBlockType")]
+        [JsonPropertyName("addressBlockType")]
         public AddressBlockType AddressBlockType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the locality.
         /// </summary>
-        [JsonProperty("localityType")]
+        [JsonPropertyName("localityType")]
         public LocalityType LocalityType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the administrative area.
         /// </summary>
-        [JsonProperty("administrativeAreaType")]
+        [JsonPropertyName("administrativeAreaType")]
         public AdministrativeAreaType AdministrativeAreaType { get; set; }
 
         /// <summary>
         /// Gets or sets the postal address of the result item.
         /// </summary>
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public Address Address { get; set; }
 
         /// <summary>
         /// Gets the list of categories assigned to this place.
         /// </summary>
-        [JsonProperty("categories")]
+        [JsonPropertyName("categories")]
         public IList<Category> Categories { get; } = new List<Category>();
 
         /// <summary>
         /// Gets the list of food types assigned to this place.
         /// </summary>
-        [JsonProperty("foodTypes")]
+        [JsonPropertyName("foodTypes")]
         public IList<Category> FoodTypes { get; } = new List<Category>();
     }
 }

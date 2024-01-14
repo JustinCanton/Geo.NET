@@ -9,8 +9,6 @@ namespace Geo.MapBox.Converters
     using System.Collections.Generic;
     using System.Linq;
     using Geo.MapBox.Models.Responses;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A converter for a <see cref="JObject"/> to a <see cref="Feature"/>.

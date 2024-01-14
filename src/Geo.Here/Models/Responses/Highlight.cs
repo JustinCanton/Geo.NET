@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A highlight of the search.
@@ -16,7 +16,7 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets ranges of indexes that matched in the title attribute.
         /// </summary>
-        [JsonProperty("titles")]
+        [JsonPropertyName("titles")]
         public IList<IndexMatch> Titles { get; } = new List<IndexMatch>();
     }
 }

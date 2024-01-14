@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The open hours information for a place.
@@ -16,13 +16,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets a value indicating whether the place is open now or not.
         /// </summary>
-        [JsonProperty("open_now")]
+        [JsonPropertyName("open_now")]
         public bool OpenNow { get; set; }
 
         /// <summary>
         /// Gets the weekday text.
         /// </summary>
-        [JsonProperty("weekday_text")]
+        [JsonPropertyName("weekday_text")]
         public IList<string> WeekdayText { get; } = new List<string>();
     }
 }

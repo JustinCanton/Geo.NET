@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The base response items returned from all requests.
@@ -15,7 +15,7 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets a unique identifier that can be used with other Google APIs.
         /// </summary>
-        [JsonProperty("place_id")]
+        [JsonPropertyName("place_id")]
         public string PlaceId { get; set; }
     }
 }

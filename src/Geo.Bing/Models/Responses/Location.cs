@@ -6,7 +6,7 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A location with all of the necessary location information.
@@ -16,38 +16,38 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets or sets the type of the underlying resource.
         /// </summary>
-        [JsonProperty("__type")]
+        [JsonPropertyName("__type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the geographic area that contains the location.
         /// A bounding box contains SouthLatitude, WestLongitude, NorthLatitude, and EastLongitude values in degrees.
         /// </summary>
-        [JsonProperty("bbox")]
+        [JsonPropertyName("bbox")]
         public BoundingBox BoundingBox { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the location.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the latitude and longitude coordinates of the location.
         /// </summary>
-        [JsonProperty("point")]
+        [JsonPropertyName("point")]
         public Point Point { get; set; }
 
         /// <summary>
         /// Gets or sets the classification of the geographic entity returned, such as Address.
         /// </summary>
-        [JsonProperty("entityType")]
+        [JsonPropertyName("entityType")]
         public string EntityType { get; set; }
 
         /// <summary>
         /// Gets or sets the postal address for the location.
         /// </summary>
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public Address Address { get; set; }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Geo.Bing.Models.Responses
         /// but a match is not found for the house number, the geocode result with a Roadblock entity type may be returned.
         /// You can check the entityType field value to determine what type of entity the geocode result represents.
         /// </summary>
-        [JsonProperty("confidence")]
+        [JsonPropertyName("confidence")]
         public string Confidence { get; set; }
 
         /// <summary>
@@ -95,13 +95,13 @@ namespace Geo.Bing.Models.Responses
         /// UpHierarchy: The location represents a move up the geographic hierarchy. This occurs when a match for the location request was not found, so a less precise result is returned.
         /// For example, if a match for the requested address cannot be found, then a match code of UpHierarchy with a RoadBlock entity type may be returned.
         /// </summary>
-        [JsonProperty("matchCodes")]
+        [JsonPropertyName("matchCodes")]
         public IList<string> MatchCodes { get; } = new List<string>();
 
         /// <summary>
         /// Gets a collection of geocoded points that differ in how they were calculated and their suggested use.
         /// </summary>
-        [JsonProperty("geocodePoints")]
+        [JsonPropertyName("geocodePoints")]
         public IList<Point> GeocodePoints { get; } = new List<Point>();
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Geo.Bing.Models.Responses
         /// CountryRegion
         /// Landmark.
         /// </summary>
-        [JsonProperty("queryParseValues")]
+        [JsonPropertyName("queryParseValues")]
         public IList<QueryParseValue> QueryParseValues { get; } = new List<QueryParseValue>();
     }
 }

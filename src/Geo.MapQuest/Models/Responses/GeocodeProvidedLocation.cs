@@ -5,7 +5,7 @@
 
 namespace Geo.MapQuest.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The location information provided to the geocode request.
@@ -15,7 +15,7 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the location provided.
         /// </summary>
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public string Location { get; set; }
     }
 }

@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from a discover request.
@@ -16,7 +16,7 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets the list of locations that match the discover request.
         /// </summary>
-        [JsonProperty("items")]
+        [JsonPropertyName("items")]
         public IList<DiscoverLocation> Items { get; } = new List<DiscoverLocation>();
     }
 }

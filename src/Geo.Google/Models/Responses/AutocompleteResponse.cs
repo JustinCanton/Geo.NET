@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The Google autocomplete response object.
@@ -17,13 +17,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets a list of the predictions for the Google request.
         /// </summary>
-        [JsonProperty("predictions")]
+        [JsonPropertyName("predictions")]
         public IEnumerable<TResponseType> Predictions { get; } = new List<TResponseType>();
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.
         /// </summary>
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 }

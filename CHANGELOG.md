@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [1.6.0](https://github.com/JustinCanton/Geo.NET/compare/1.5.2...1.6.0) (2023-12-29)
+### Features
+- **arcgis**: updating the parameter objects to include new parameters for endpoints ([#91](https://github.com/JustinCanton/Geo.NET/issues/73)) ([0c9028a](https://github.com/JustinCanton/Geo.NET/commit/0c9028a76ecc4695f105062393203aae5a43eeff))
+
 ## [1.5.2](https://github.com/JustinCanton/Geo.NET/compare/1.5.1...1.5.2) (2023-09-18)
 ### Bug Fixes
 - **here**:  fixing an issue where the in parameter of the geocoding endpoint is not passed correctly ([#87](https://github.com/JustinCanton/Geo.NET/issues/87)) ([7f2adf0](https://github.com/JustinCanton/Geo.NET/commit/7f2adf0383c85bb8d79cf6b321d125bef9a4c7f8))

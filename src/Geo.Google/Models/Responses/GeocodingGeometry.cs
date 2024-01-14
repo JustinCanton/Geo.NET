@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using Geo.Google.Enums;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The geometry object returned by geocoding requests.
@@ -16,13 +16,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets additional data about the specified location.
         /// </summary>
-        [JsonProperty("location_type")]
+        [JsonPropertyName("location_type")]
         public LocationType LocationType { get; set; }
 
         /// <summary>
         /// Gets or sets the (optionally returned) boundaries which can fully contain the returned result.
         /// </summary>
-        [JsonProperty("bounds")]
+        [JsonPropertyName("bounds")]
         public Boundaries Bounds { get; set; }
     }
 }

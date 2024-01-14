@@ -9,6 +9,7 @@ namespace Geo.Core.Tests
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
@@ -18,7 +19,6 @@ namespace Geo.Core.Tests
     using Microsoft.Extensions.Options;
     using Moq;
     using Moq.Protected;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -72,27 +72,13 @@ namespace Geo.Core.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .Throws(new TaskCanceledException());
 
-            _responseMessages.Add(new HttpResponseMessage()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("<html></html>"),
-            });
-
             mockHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/JsonReaderException")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/JsonException")),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
-
-            mockHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("http://test.com/JsonSerializationException")),
-                    ItExpr.IsAny<CancellationToken>())
-                .Throws(new JsonSerializationException());
+                .Throws(new JsonException());
 
             _responseMessages.Add(new HttpResponseMessage()
             {
@@ -194,26 +180,13 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
         [Fact]
-        public void ThrowExceptionOnInvalidJson1()
-        {
-            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
-
-            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonReaderException")))
-                .Should()
-                .ThrowAsync<JsonReaderException>();
-        }
-
-        /// <summary>
-        /// Checks an exception is thrown when the returned json is invalid.
-        /// </summary>
-        [Fact]
         public void ThrowExceptionOnInvalidJson2()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonSerializationException")))
+            sut.Invoking(x => x.CallAsync<TestClass>(new Uri("http://test.com/JsonException")))
                 .Should()
-                .ThrowAsync<JsonSerializationException>();
+                .ThrowAsync<JsonException>();
         }
 
         /// <summary>
@@ -304,28 +277,14 @@ namespace Geo.Core.Tests
         /// Checks an exception is thrown when the returned json is invalid.
         /// </summary>
         [Fact]
-        public async Task ThrowWrappedExceptionOnInvalidJson1()
+        public async Task ThrowWrappedExceptionOnInvalidJson()
         {
             var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
 
-            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonReaderException"), ApiName))
+            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonException"), ApiName))
                 .Should()
                 .ThrowAsync<TestException>())
-                .WithInnerException<JsonReaderException>();
-        }
-
-        /// <summary>
-        /// Checks an exception is thrown when the returned json is invalid.
-        /// </summary>
-        [Fact]
-        public async Task ThrowWrappedExceptionOnInvalidJson2()
-        {
-            var sut = new TestClientExecutor(_httpClient, _exceptionProvider, _resourceStringProviderFactory);
-
-            (await sut.Invoking(x => x.CallAsync<TestClass, TestException>(new Uri("http://test.com/JsonSerializationException"), ApiName))
-                .Should()
-                .ThrowAsync<TestException>())
-                .WithInnerException<JsonSerializationException>();
+                .WithInnerException<JsonException>();
         }
 
         /// <summary>

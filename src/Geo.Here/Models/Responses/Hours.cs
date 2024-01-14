@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Contains the hours of operation for a location.
@@ -16,19 +16,19 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets the text information for a set of hours.
         /// </summary>
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public IList<string> Text { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a value indicating whether the location is open during these hours.
         /// </summary>
-        [JsonProperty("isOpen")]
+        [JsonPropertyName("isOpen")]
         public bool IsOpen { get; set; }
 
         /// <summary>
         /// Gets the time periods for these hours.
         /// </summary>
-        [JsonProperty("structured")]
+        [JsonPropertyName("structured")]
         public IList<TimePeriod> Structured { get; } = new List<TimePeriod>();
     }
 }

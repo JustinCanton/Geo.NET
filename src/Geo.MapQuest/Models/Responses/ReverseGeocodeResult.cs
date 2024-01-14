@@ -6,7 +6,7 @@
 namespace Geo.MapQuest.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The result of a reverse geocode request.
@@ -16,13 +16,13 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the provided location properties passed in the reverse geocode request.
         /// </summary>
-        [JsonProperty("providedLocation")]
+        [JsonPropertyName("providedLocation")]
         public ReverseGeocodeProvidedLocation ProvidedLocation { get; set; }
 
         /// <summary>
         /// Gets the locations that match the reverse geocode request.
         /// </summary>
-        [JsonProperty("locations")]
+        [JsonPropertyName("locations")]
         public IList<ReverseGeocodeLocation> Locations { get; } = new List<ReverseGeocodeLocation>();
     }
 }

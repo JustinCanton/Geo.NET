@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A response for a geocoding operation.
@@ -16,13 +16,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the spatial reference of the location.
         /// </summary>
-        [JsonProperty("spatialReference")]
+        [JsonPropertyName("spatialReference")]
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
         /// Gets the possible locations to match the geocoding.
         /// </summary>
-        [JsonProperty("locations")]
+        [JsonPropertyName("locations")]
         public IList<LocationInformation> Locations { get; } = new List<LocationInformation>();
     }
 }

@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from a browse request.
@@ -16,7 +16,7 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets the list of locations that match the browse request.
         /// </summary>
-        [JsonProperty("items")]
+        [JsonPropertyName("items")]
         public IList<BrowseLocation> Items { get; } = new List<BrowseLocation>();
     }
 }

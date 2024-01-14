@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Index of a match based on some parameters.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the first index of the matched range (0-based indexing).
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public int Start { get; set; }
 
         /// <summary>
         /// Gets or sets the last index of the matched range (0-based indexing).
         /// </summary>
-        [JsonProperty("end")]
+        [JsonPropertyName("end")]
         public int End { get; set; }
     }
 }

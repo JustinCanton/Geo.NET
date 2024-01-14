@@ -7,9 +7,8 @@ namespace Geo.Bing.Converters
 {
     using System;
     using System.Linq;
+    using System.Text.Json.Serialization;
     using Geo.Bing.Models;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A converter for a <see cref="double"/>[] to a <see cref="Coordinate"/>.

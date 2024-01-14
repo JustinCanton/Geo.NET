@@ -8,8 +8,6 @@ namespace Geo.MapBox.Converters
     using System;
     using System.Linq;
     using Geo.MapBox.Models;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A converter for a <see cref="double"/>[] to a <see cref="Coordinate"/>.

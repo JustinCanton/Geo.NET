@@ -6,7 +6,7 @@
 namespace Geo.MapQuest.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from a MapQuest request.
@@ -18,19 +18,19 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the information related to the request.
         /// </summary>
-        [JsonProperty("info")]
+        [JsonPropertyName("info")]
         public Information Information { get; set; }
 
         /// <summary>
         /// Gets or sets the options related to the request.
         /// </summary>
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public Options Options { get; set; }
 
         /// <summary>
         /// Gets the results from the request.
         /// </summary>
-        [JsonProperty("results")]
+        [JsonPropertyName("results")]
         public IList<T> Results { get; } = new List<T>();
     }
 }

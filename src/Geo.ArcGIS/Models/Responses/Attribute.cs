@@ -6,7 +6,6 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using Geo.ArcGIS.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A base attribute class.

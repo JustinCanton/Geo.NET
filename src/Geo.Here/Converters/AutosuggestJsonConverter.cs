@@ -7,8 +7,6 @@ namespace Geo.Here.Converters
 {
     using System;
     using Geo.Here.Models.Responses;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A json converter for the autosuggest json response.

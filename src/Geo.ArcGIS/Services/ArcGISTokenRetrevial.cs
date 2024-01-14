@@ -8,11 +8,11 @@ namespace Geo.ArcGIS.Services
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Models;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A class for retreiving the ArcGIS API token.
@@ -56,13 +56,13 @@ namespace Geo.ArcGIS.Services
             {
                 var response = await _client.PostAsync(_tokenRefreshAddress, content, cancellationToken).ConfigureAwait(false);
 
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
                 var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 #endif
 
-                return JsonConvert.DeserializeObject<Token>(json);
+                return JsonSerializer.Deserialize<Token>(json);
             }
         }
 

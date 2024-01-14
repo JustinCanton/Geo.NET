@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A group of contact information for a location.
@@ -16,37 +16,37 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets a list of phone numbers associated with a location.
         /// </summary>
-        [JsonProperty("phone")]
+        [JsonPropertyName("phone")]
         public IList<ContactItem> Phones { get; } = new List<ContactItem>();
 
         /// <summary>
         /// Gets a list of mobile numbers associated with a location.
         /// </summary>
-        [JsonProperty("mobile")]
+        [JsonPropertyName("mobile")]
         public IList<ContactItem> Mobiles { get; } = new List<ContactItem>();
 
         /// <summary>
         /// Gets a list of toll free numbers associated with a location.
         /// </summary>
-        [JsonProperty("tollFree")]
+        [JsonPropertyName("tollFree")]
         public IList<ContactItem> TollFrees { get; } = new List<ContactItem>();
 
         /// <summary>
         /// Gets a list of fax numbers associated with a location.
         /// </summary>
-        [JsonProperty("fax")]
+        [JsonPropertyName("fax")]
         public IList<ContactItem> Faxes { get; } = new List<ContactItem>();
 
         /// <summary>
         /// Gets a list of websites associated with a location.
         /// </summary>
-        [JsonProperty("www")]
+        [JsonPropertyName("www")]
         public IList<ContactItem> Websites { get; } = new List<ContactItem>();
 
         /// <summary>
         /// Gets a list of emails associated with a location.
         /// </summary>
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public IList<ContactItem> Emails { get; } = new List<ContactItem>();
     }
 }

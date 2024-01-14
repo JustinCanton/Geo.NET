@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A suggestion for refining search query terms.
@@ -15,25 +15,25 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the term that will be suggested to the user.
         /// </summary>
-        [JsonProperty("term")]
+        [JsonPropertyName("term")]
         public string Term { get; set; }
 
         /// <summary>
         /// Gets or sets the sub-string of the original query that is replaced by this Query Term.
         /// </summary>
-        [JsonProperty("replaces")]
+        [JsonPropertyName("replaces")]
         public string Replaces { get; set; }
 
         /// <summary>
         /// Gets or sets the start index in codepoints (inclusive) of the text replaced in the original query.
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public int Start { get; set; }
 
         /// <summary>
         /// Gets or sets the end index in codepoints (exclusive) of the text replaced in the original query.
         /// </summary>
-        [JsonProperty("end")]
+        [JsonPropertyName("end")]
         public int End { get; set; }
     }
 }

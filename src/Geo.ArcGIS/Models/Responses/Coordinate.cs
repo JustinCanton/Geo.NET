@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A coordinate lat/lng combination.
@@ -16,13 +16,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the longitude of the coordinate.
         /// </summary>
-        [JsonProperty("x")]
+        [JsonPropertyName("x")]
         public double Longitude { get; set; }
 
         /// <summary>
         /// Gets or sets the latitude of the coordinate.
         /// </summary>
-        [JsonProperty("y")]
+        [JsonPropertyName("y")]
         public double Latitude { get; set; }
 
         /// <inheritdoc/>

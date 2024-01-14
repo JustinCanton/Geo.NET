@@ -6,7 +6,7 @@
 namespace Geo.MapQuest.Models.Responses
 {
     using System;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The copyright information.
@@ -16,19 +16,19 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the copyright text.
         /// </summary>
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the copyright image url.
         /// </summary>
-        [JsonProperty("imageUrl")]
+        [JsonPropertyName("imageUrl")]
         public Uri ImageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the alternate copyright image text.
         /// </summary>
-        [JsonProperty("imageAltText")]
+        [JsonPropertyName("imageAltText")]
         public string ImageAlternateText { get; set; }
     }
 }

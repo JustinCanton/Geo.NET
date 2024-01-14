@@ -6,7 +6,7 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A point on the Earth specified by a latitude and longitude.
@@ -16,13 +16,13 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets or sets the type of the underlying shape.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the coordinate information for the point.
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public Coordinate Coordinates { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Geo.Bing.Models.Responses
         /// Parcel: The geocode point was matched to the center of a parcel.
         /// Rooftop: The geocode point was matched to the rooftop of a building.
         /// </summary>
-        [JsonProperty("calculationMethod")]
+        [JsonPropertyName("calculationMethod")]
         public string CalculationMethod { get; set; }
 
         /// <summary>
@@ -47,14 +47,14 @@ namespace Geo.Bing.Models.Responses
         /// Display
         /// Route.
         /// </summary>
-        [JsonProperty("usageTypes")]
+        [JsonPropertyName("usageTypes")]
         public IList<string> UsageTypes { get; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the geographic area that contains the location.
         /// A bounding box contains SouthLatitude, WestLongitude, NorthLatitude, and EastLongitude values in degrees.
         /// </summary>
-        [JsonProperty("boundingBox")]
+        [JsonPropertyName("boundingBox")]
         public BoundingBox BoundingBox { get; set; }
     }
 }

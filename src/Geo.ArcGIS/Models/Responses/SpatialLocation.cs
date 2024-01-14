@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A location with a spatial reference.
@@ -15,7 +15,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the spatial reference of the location.
         /// </summary>
-        [JsonProperty("spatialReference")]
+        [JsonPropertyName("spatialReference")]
         public SpatialReference SpatialReference { get; set; }
     }
 }

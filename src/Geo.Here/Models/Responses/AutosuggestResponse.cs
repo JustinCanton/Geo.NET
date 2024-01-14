@@ -6,8 +6,8 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using Geo.Here.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The response from a autosuggest request.
@@ -17,13 +17,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets the list of locations that match the discover request.
         /// </summary>
-        [JsonProperty("items", ItemConverterType = typeof(AutosuggestJsonConverter))]
+        [JsonPropertyName("items", ItemConverterType = typeof(AutosuggestJsonConverter))]
         public IList<BaseLocation> Items { get; } = new List<BaseLocation>();
 
         /// <summary>
         /// Gets the suggestions for refining individual query terms.
         /// </summary>
-        [JsonProperty("queryTerms")]
+        [JsonPropertyName("queryTerms")]
         public IList<QueryTerm> QueryTerms { get; } = new List<QueryTerm>();
     }
 }

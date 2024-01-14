@@ -5,7 +5,7 @@
 
 namespace Geo.Bing.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A parsed valueof the location query string.
@@ -15,13 +15,13 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets or sets the property name from the query string.
         /// </summary>
-        [JsonProperty("property")]
+        [JsonPropertyName("property")]
         public string Property { get; set; }
 
         /// <summary>
         /// Gets or sets the value from the query string.
         /// </summary>
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
 }

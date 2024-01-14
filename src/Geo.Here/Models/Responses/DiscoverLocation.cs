@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Discover location matches.
@@ -16,37 +16,37 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the related ontology id.
         /// </summary>
-        [JsonProperty("ontologyId")]
+        [JsonPropertyName("ontologyId")]
         public string OntologyId { get; set; }
 
         /// <summary>
         /// Gets the list of chains assigned to this place.
         /// </summary>
-        [JsonProperty("chains")]
+        [JsonPropertyName("chains")]
         public IList<Chain> Chains { get; } = new List<Chain>();
 
         /// <summary>
         /// Gets the list of supplier references available for this place.
         /// </summary>
-        [JsonProperty("references")]
+        [JsonPropertyName("references")]
         public IList<Reference> References { get; } = new List<Reference>();
 
         /// <summary>
         /// Gets the list of contact information like phone, email, WWW.
         /// </summary>
-        [JsonProperty("contacts")]
+        [JsonPropertyName("contacts")]
         public IList<Contact> Contacts { get; } = new List<Contact>();
 
         /// <summary>
         /// Gets a list of hours during which the place is open for business.
         /// </summary>
-        [JsonProperty("openingHours")]
+        [JsonPropertyName("openingHours")]
         public IList<Hours> OpeningHours { get; } = new List<Hours>();
 
         /// <summary>
         /// Gets the phonemes for address and place names.
         /// </summary>
-        [JsonProperty("phonemes")]
+        [JsonPropertyName("phonemes")]
         public IList<LocationPhoneme> Phonemes { get; } = new List<LocationPhoneme>();
     }
 }

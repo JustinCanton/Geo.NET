@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Contains a reference to an image.
@@ -16,25 +16,25 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets the maximum height of the image.
         /// </summary>
-        [JsonProperty("height")]
+        [JsonPropertyName("height")]
         public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum width of the image.
         /// </summary>
-        [JsonProperty("width")]
+        [JsonPropertyName("width")]
         public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets a string used to identify the photo when you perform a Photo request.
         /// </summary>
-        [JsonProperty("photo_reference")]
+        [JsonPropertyName("photo_reference")]
         public string PhotoReference { get; set; }
 
         /// <summary>
         /// Gets a list that contains any required attributions. This field will always be present, but may be empty.
         /// </summary>
-        [JsonProperty("html_attributions")]
+        [JsonPropertyName("html_attributions")]
         public IList<string> HtmlAttributes { get; } = new List<string>();
     }
 }

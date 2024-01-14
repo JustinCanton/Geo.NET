@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Attribute information returned when searching for an place.
@@ -15,13 +15,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the place address information.
         /// </summary>
-        [JsonProperty("Place_addr")]
+        [JsonPropertyName("Place_addr")]
         public string PlaceAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the place name information.
         /// </summary>
-        [JsonProperty("PlaceName")]
+        [JsonPropertyName("PlaceName")]
         public string PlaceName { get; set; }
     }
 }

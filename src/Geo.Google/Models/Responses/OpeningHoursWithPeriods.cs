@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// An opening hours object with period information.
@@ -16,7 +16,7 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets an array of opening periods covering seven days, starting from Sunday, in chronological order.
         /// </summary>
-        [JsonProperty("periods")]
+        [JsonPropertyName("periods")]
         public IList<Period> Periods { get; } = new List<Period>();
     }
 }

@@ -11,6 +11,7 @@ namespace Geo.ArcGIS.Services
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.ArcGIS.Abstractions;
@@ -22,7 +23,6 @@ namespace Geo.ArcGIS.Services
     using Geo.Core.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A service to call the ArcGIS geocoding API.
@@ -570,7 +570,12 @@ namespace Geo.ArcGIS.Services
                 records = attributes,
             };
 
-            query = query.Add("addresses", JsonConvert.SerializeObject(addresses));
+#if NET6_0_OR_GREATER
+            var options = new JsonSerializerOptions() { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
+#else
+            var options = new JsonSerializerOptions() { IgnoreNullValues = true };
+#endif
+            query = query.Add("addresses", JsonSerializer.Serialize(addresses, options));
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
             query = query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
