@@ -37,7 +37,7 @@ namespace Geo.Bing.Models.Responses
         public string CalculationMethod { get; set; }
 
         /// <summary>
-        /// Gets the best use for the geocode point.
+        /// Gets or sets the best use for the geocode point.
         /// Each geocode point is defined as a Route point, a Display point or both.
         /// Use Route points if you are creating a route to the location.
         /// Use Display points if you are showing the location on a map.
@@ -48,7 +48,7 @@ namespace Geo.Bing.Models.Responses
         /// Route.
         /// </summary>
         [JsonPropertyName("usageTypes")]
-        public IList<string> UsageTypes { get; } = new List<string>();
+        public IList<string> UsageTypes { get; set;  } = new List<string>();
 
         /// <summary>
         /// Gets or sets the geographic area that contains the location.

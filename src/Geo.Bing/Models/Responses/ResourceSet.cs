@@ -20,9 +20,9 @@ namespace Geo.Bing.Models.Responses
         public long EstimatedTotal { get; set; }
 
         /// <summary>
-        /// Gets a collection of one or more resources. The resources that are returned depend on the request.
+        /// Gets or sets a collection of one or more resources. The resources that are returned depend on the request.
         /// </summary>
         [JsonPropertyName("resources")]
-        public IList<Location> Resources { get; } = new List<Location>();
+        public IList<Location> Resources { get; set; } = new List<Location>();
     }
 }

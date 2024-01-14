@@ -5,8 +5,8 @@
 
 namespace Geo.Bing.Models.Responses
 {
-    using Geo.Bing.Converters;
     using System.Text.Json.Serialization;
+    using Geo.Bing.Converters;
 
     /// <summary>
     /// A bounding box is defined by two latitudes and two longitudes that represent the four sides of a rectangular area on the Earth.

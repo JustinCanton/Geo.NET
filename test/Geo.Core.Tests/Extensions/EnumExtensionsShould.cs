@@ -26,7 +26,7 @@ namespace Geo.Core.Tests.Extensions
 
             act.Should()
                 .Throw<InvalidOperationException>()
-                .WithMessage("Sequence contains no elements");
+                .WithMessage("There is no EnumMember attribute on the enum value");
         }
 
         /// <summary>

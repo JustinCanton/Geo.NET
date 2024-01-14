@@ -78,7 +78,7 @@ namespace Geo.Bing.Models.Responses
         public string Confidence { get; set; }
 
         /// <summary>
-        /// Gets one or more match code values that represent the geocoding level for each location in the response.
+        /// Gets or sets one or more match code values that represent the geocoding level for each location in the response.
         /// For example, a geocoded location with match codes of Good and Ambiguous means that more than one geocode location was found for the location information
         /// and that the geocode service did not have search up-hierarchy to find a match.
         /// Similarly, a geocoded location with match codes of Ambiguous and UpHierarchy implies that a geocode location could not be found that matched all the provided location information,
@@ -96,16 +96,16 @@ namespace Geo.Bing.Models.Responses
         /// For example, if a match for the requested address cannot be found, then a match code of UpHierarchy with a RoadBlock entity type may be returned.
         /// </summary>
         [JsonPropertyName("matchCodes")]
-        public IList<string> MatchCodes { get; } = new List<string>();
+        public IList<string> MatchCodes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets a collection of geocoded points that differ in how they were calculated and their suggested use.
+        /// Gets or sets a collection of geocoded points that differ in how they were calculated and their suggested use.
         /// </summary>
         [JsonPropertyName("geocodePoints")]
-        public IList<Point> GeocodePoints { get; } = new List<Point>();
+        public IList<Point> GeocodePoints { get; set; } = new List<Point>();
 
         /// <summary>
-        /// Gets a collection of parsed values that shows how a location query string was parsed into one or more of the following address values.
+        /// Gets or sets a collection of parsed values that shows how a location query string was parsed into one or more of the following address values.
         /// AddressLine
         /// Locality
         /// AdminDistrict
@@ -115,6 +115,6 @@ namespace Geo.Bing.Models.Responses
         /// Landmark.
         /// </summary>
         [JsonPropertyName("queryParseValues")]
-        public IList<QueryParseValue> QueryParseValues { get; } = new List<QueryParseValue>();
+        public IList<QueryParseValue> QueryParseValues { get; set; } = new List<QueryParseValue>();
     }
 }

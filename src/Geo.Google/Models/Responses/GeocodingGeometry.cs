@@ -5,8 +5,8 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Geo.Google.Enums;
     using System.Text.Json.Serialization;
+    using Geo.Google.Enums;
 
     /// <summary>
     /// The geometry object returned by geocoding requests.

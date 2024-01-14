@@ -97,7 +97,7 @@ namespace Geo.Core.Tests
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'TestField':1}"),
+                Content = new StringContent("{\"TestField\":1}"),
             });
 
             mockHandler

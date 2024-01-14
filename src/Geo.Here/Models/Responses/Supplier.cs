@@ -5,8 +5,8 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Geo.Here.Enums;
     using System.Text.Json.Serialization;
+    using Geo.Here.Enums;
 
     /// <summary>
     /// A supplier of reference information.

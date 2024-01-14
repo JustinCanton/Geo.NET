@@ -40,7 +40,7 @@ namespace Geo.Core.Extensions
 
             if (attributes.Length == 0)
             {
-                throw new InvalidOperationException("There is no EnumMember attribute on the enum value.");
+                throw new InvalidOperationException("There is no EnumMember attribute on the enum value");
             }
 
 #if NET6_0_OR_GREATER

@@ -52,11 +52,11 @@ namespace Geo.Bing.Models.Responses
         public string AuthenticationResultCode { get; set; }
 
         /// <summary>
-        /// Gets a collection of error descriptions.
+        /// Gets or sets a collection of error descriptions.
         /// For example, ErrorDetails can identify parameter values that are not valid or missing.
         /// </summary>
         [JsonPropertyName("errorDetails")]
-        public IList<string> ErrorDetails { get; } = new List<string>();
+        public IList<string> ErrorDetails { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a unique identifier for the request.
@@ -65,10 +65,10 @@ namespace Geo.Bing.Models.Responses
         public string TraceId { get; set; }
 
         /// <summary>
-        /// Gets a collection of ResourceSet objects.
+        /// Gets or sets a collection of ResourceSet objects.
         /// A ResourceSet is a container of Resources returned by the request. For more information, see the ResourceSet section below.
         /// </summary>
         [JsonPropertyName("resourceSets")]
-        public IList<ResourceSet> ResourceSets { get; } = new List<ResourceSet>();
+        public IList<ResourceSet> ResourceSets { get; set; } = new List<ResourceSet>();
     }
 }
