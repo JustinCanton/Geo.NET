@@ -45,25 +45,25 @@ jobs:
     # Get the version information
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
-      if: ${{ contains(github.event_name, 'push') }}
+      if: ${{ success() && contains(github.event_name, 'push') }}
       with:
         versionSpec: '5.x'
     - name: Determine Version
       uses: gittools/actions/gitversion/execute@v0.9.7
-      if: ${{ contains(github.event_name, 'push') }}
+      if: ${{ success() && contains(github.event_name, 'push') }}
       with:
         useConfigFile: true
     - name: Display SemVer
-      if: ${{ contains(github.event_name, 'push') }}
+      if: ${{ success() && contains(github.event_name, 'push') }}
       run: |
         echo "SemVer: $GITVERSION_SEMVER"
 
     # Package and publish
     - name: Package
-      if: ${{ contains(github.event_name, 'push') }}
+      if: ${{ success() && contains(github.event_name, 'push') }}
       run: dotnet pack --no-build --configuration Release --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
     - name: Push
-      if: ${{ contains(github.event_name, 'push') }}
+      if: ${{ success() && contains(github.event_name, 'push') }}
       run: |
         cd Packages
         dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
