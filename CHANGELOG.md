@@ -2,9 +2,18 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [2.0.0](https://github.com/JustinCanton/Geo.NET/compare/1.6.0...2.0.0) (2024-01-20)
+### ⚠ BREAKING CHANGES
+- removed native support for net5.0 since it is an out of support item, and dropped netstandard2.1 since this supports netstandard2.0
+- removed the usage of Newtonsoft.Json and now uses on System.Text.Json
+
+### Features
+- **runtime**: updating the .net version support for net8.0, and removing native support for netstandard2.1 and net5.0 ([#58](https://github.com/JustinCanton/Geo.NET/issues/58)) ([4398a10](https://github.com/JustinCanton/Geo.NET/commit/4398a10afb21d3e7e86fba0fa4052adb67ca1faa))
+- **serialization**: updating to use System.Text.Json instead of Newtonsoft.Json ([#40](https://github.com/JustinCanton/Geo.NET/issues/40)) ([4398a10](https://github.com/JustinCanton/Geo.NET/commit/4398a10afb21d3e7e86fba0fa4052adb67ca1faa))
+
 ## [1.6.0](https://github.com/JustinCanton/Geo.NET/compare/1.5.2...1.6.0) (2023-12-29)
 ### Features
-- **arcgis**: updating the parameter objects to include new parameters for endpoints ([#91](https://github.com/JustinCanton/Geo.NET/issues/73)) ([0c9028a](https://github.com/JustinCanton/Geo.NET/commit/0c9028a76ecc4695f105062393203aae5a43eeff))
+- **arcgis**: updating the parameter objects to include new parameters for endpoints ([#88](https://github.com/JustinCanton/Geo.NET/issues/88)) ([0c9028a](https://github.com/JustinCanton/Geo.NET/commit/0c9028a76ecc4695f105062393203aae5a43eeff))
 
 ## [1.5.2](https://github.com/JustinCanton/Geo.NET/compare/1.5.1...1.5.2) (2023-09-18)
 ### Bug Fixes

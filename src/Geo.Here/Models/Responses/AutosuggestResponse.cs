@@ -7,7 +7,6 @@ namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
-    using Geo.Here.Converters;
 
     /// <summary>
     /// The response from a autosuggest request.
@@ -15,15 +14,15 @@ namespace Geo.Here.Models.Responses
     public class AutosuggestResponse
     {
         /// <summary>
-        /// Gets the list of locations that match the discover request.
+        /// Gets or sets the list of locations that match the discover request.
         /// </summary>
-        [JsonPropertyName("items", ItemConverterType = typeof(AutosuggestJsonConverter))]
-        public IList<BaseLocation> Items { get; } = new List<BaseLocation>();
+        [JsonPropertyName("items")]
+        public IList<BaseLocation> Items { get; set; } = new List<BaseLocation>();
 
         /// <summary>
-        /// Gets the suggestions for refining individual query terms.
+        /// Gets or sets the suggestions for refining individual query terms.
         /// </summary>
         [JsonPropertyName("queryTerms")]
-        public IList<QueryTerm> QueryTerms { get; } = new List<QueryTerm>();
+        public IList<QueryTerm> QueryTerms { get; set; } = new List<QueryTerm>();
     }
 }

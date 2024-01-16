@@ -26,28 +26,28 @@ namespace Geo.Here.Models.Responses
         public string OntologyId { get; set; }
 
         /// <summary>
-        /// Gets the list of chains assigned to this place.
+        /// Gets or sets the list of chains assigned to this place.
         /// </summary>
         [JsonPropertyName("chains")]
-        public IList<Chain> Chains { get; } = new List<Chain>();
+        public IList<Chain> Chains { get; set; } = new List<Chain>();
 
         /// <summary>
-        /// Gets the list of supplier references available for this place.
+        /// Gets or sets the list of supplier references available for this place.
         /// </summary>
         [JsonPropertyName("references")]
-        public IList<Reference> References { get; } = new List<Reference>();
+        public IList<Reference> References { get; set; } = new List<Reference>();
 
         /// <summary>
-        /// Gets the list of contact information like phone, email, WWW.
+        /// Gets or sets the list of contact information like phone, email, WWW.
         /// </summary>
         [JsonPropertyName("contacts")]
-        public IList<Contact> Contacts { get; } = new List<Contact>();
+        public IList<Contact> Contacts { get; set; } = new List<Contact>();
 
         /// <summary>
-        /// Gets a list of hours during which the place is open for business..
+        /// Gets or sets a list of hours during which the place is open for business..
         /// </summary>
         [JsonPropertyName("openingHours")]
-        public IList<Hours> OpeningHours { get; } = new List<Hours>();
+        public IList<Hours> OpeningHours { get; set; } = new List<Hours>();
 
         /// <summary>
         /// Gets or sets an item describing how the parts of the response element matched the input query.

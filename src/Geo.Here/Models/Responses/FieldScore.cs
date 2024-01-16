@@ -26,10 +26,10 @@ namespace Geo.Here.Models.Responses
         public double City { get; set; }
 
         /// <summary>
-        /// Gets the street scores.
+        /// Gets or sets the street scores.
         /// </summary>
         [JsonPropertyName("streets")]
-        public IList<double> Streets { get; } = new List<double>();
+        public IList<double> Streets { get; set; } = new List<double>();
 
         /// <summary>
         /// Gets or sets the house number score.

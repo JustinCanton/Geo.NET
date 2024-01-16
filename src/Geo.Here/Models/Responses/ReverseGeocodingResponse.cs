@@ -14,9 +14,9 @@ namespace Geo.Here.Models.Responses
     public class ReverseGeocodingResponse
     {
         /// <summary>
-        /// Gets the list of locations that match the reverse geocoding request.
+        /// Gets or sets the list of locations that match the reverse geocoding request.
         /// </summary>
         [JsonPropertyName("items")]
-        public IList<GeocodeLocation> Items { get; } = new List<GeocodeLocation>();
+        public IList<GeocodeLocation> Items { get; set; } = new List<GeocodeLocation>();
     }
 }

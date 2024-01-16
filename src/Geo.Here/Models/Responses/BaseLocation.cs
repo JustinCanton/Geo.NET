@@ -6,11 +6,13 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Text.Json.Serialization;
+    using Geo.Here.Converters;
     using Geo.Here.Enums;
 
     /// <summary>
     /// The base resopnse items across all responses.
     /// </summary>
+    [JsonConverter(typeof(AutosuggestJsonConverter))]
     public class BaseLocation
     {
         /// <summary>
@@ -29,6 +31,7 @@ namespace Geo.Here.Models.Responses
         /// Gets or sets the type of the location.
         /// </summary>
         [JsonPropertyName("resultType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ResultType ResultType { get; set; }
     }
 }

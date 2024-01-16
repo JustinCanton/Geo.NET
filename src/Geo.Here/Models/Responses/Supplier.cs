@@ -17,6 +17,7 @@ namespace Geo.Here.Models.Responses
         /// Gets or sets the type of the location.
         /// </summary>
         [JsonPropertyName("id")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public SupplierType Id { get; set; }
     }
 }

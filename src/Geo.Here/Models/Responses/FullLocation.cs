@@ -20,11 +20,11 @@ namespace Geo.Here.Models.Responses
         public Coordinate Position { get; set; }
 
         /// <summary>
-        /// Gets the coordinates of the place you are navigating to (for example, driving or walking).
+        /// Gets or sets the coordinates of the place you are navigating to (for example, driving or walking).
         /// This is a point on a road or in a parking lot.
         /// </summary>
         [JsonPropertyName("access")]
-        public IList<Coordinate> Access { get; } = new List<Coordinate>();
+        public IList<Coordinate> Access { get; set; } = new List<Coordinate>();
 
         /// <summary>
         /// Gets or sets the geo coordinates of the map bounding box containing the results.

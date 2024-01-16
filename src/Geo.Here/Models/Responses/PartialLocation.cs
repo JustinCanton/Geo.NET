@@ -18,24 +18,28 @@ namespace Geo.Here.Models.Responses
         /// Gets or sets the type of the house number.
         /// </summary>
         [JsonPropertyName("houseNumberType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public HouseNumberType HouseNumberType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the address block.
         /// </summary>
         [JsonPropertyName("addressBlockType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AddressBlockType AddressBlockType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the locality.
         /// </summary>
         [JsonPropertyName("localityType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LocalityType LocalityType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the administrative area.
         /// </summary>
         [JsonPropertyName("administrativeAreaType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AdministrativeAreaType AdministrativeAreaType { get; set; }
 
         /// <summary>
@@ -45,15 +49,15 @@ namespace Geo.Here.Models.Responses
         public Address Address { get; set; }
 
         /// <summary>
-        /// Gets the list of categories assigned to this place.
+        /// Gets or sets the list of categories assigned to this place.
         /// </summary>
         [JsonPropertyName("categories")]
-        public IList<Category> Categories { get; } = new List<Category>();
+        public IList<Category> Categories { get; set; } = new List<Category>();
 
         /// <summary>
-        /// Gets the list of food types assigned to this place.
+        /// Gets or sets the list of food types assigned to this place.
         /// </summary>
         [JsonPropertyName("foodTypes")]
-        public IList<Category> FoodTypes { get; } = new List<Category>();
+        public IList<Category> FoodTypes { get; set; } = new List<Category>();
     }
 }

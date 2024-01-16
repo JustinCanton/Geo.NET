@@ -6,76 +6,138 @@
 namespace Geo.Here.Converters
 {
     using System;
+    using System.Globalization;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+    using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.Here.Models.Responses;
 
     /// <summary>
     /// A json converter for the autosuggest json response.
     /// </summary>
-    public class AutosuggestJsonConverter : JsonConverter
+    public class AutosuggestJsonConverter : JsonConverter<BaseLocation>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-
-            return typeof(BaseLocation).IsAssignableFrom(objectType);
-        }
+        private static readonly Type Entity = typeof(AutosuggestEntityLocation);
+        private static readonly Type Query = typeof(AutosuggestQueryLocation);
 
         /// <inheritdoc/>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override BaseLocation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            if (objectType == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (serializer == null)
+            var typeReader = reader;
+
+            if (typeReader.TokenType == JsonTokenType.Null)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                return null;
             }
 
-            var jobj = JObject.Load(reader);
-            if (jobj.TryGetValue(nameof(AutosuggestEntityLocation.Address), StringComparison.OrdinalIgnoreCase, out _))
+            if (typeReader.TokenType != JsonTokenType.StartObject)
             {
-                var obj = new AutosuggestEntityLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the autosuggest. Expected to find an object, instead found {0}", reader.TokenType.GetName()));
+            }
+
+            var isEntity = false;
+            var addressAttributeName = Entity.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestEntityLocation.Address))?.Name;
+            var hrefAttributeName = Query.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestQueryLocation.Href))?.Name;
+
+            while (typeReader.Read())
+            {
+                if (typeReader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+
+                if (typeReader.TokenType != JsonTokenType.PropertyName)
+                {
+                    throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the autosuggest. Expected to find a property name, instead found {0}", reader.TokenType.GetName()));
+                }
+
+                if (typeReader.GetString() == addressAttributeName)
+                {
+                    isEntity = true;
+                    break;
+                }
+
+                if (typeReader.GetString() == hrefAttributeName)
+                {
+                    isEntity = false;
+                    break;
+                }
+
+                typeReader.Read();
+            }
+
+            if (isEntity)
+            {
+                return JsonSerializer.Deserialize(ref reader, typeof(AutosuggestEntityLocation)) as AutosuggestEntityLocation;
             }
             else
             {
-                var obj = new AutosuggestQueryLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                return JsonSerializer.Deserialize(ref reader, typeof(AutosuggestQueryLocation)) as AutosuggestQueryLocation;
             }
+
+            // Switch to the reader instead of the typeReader
+            // Read the StartObject
+            /*reader.Read();
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    return location;
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    var propertyName = reader.GetString();
+                    reader.Read();
+                    switch (propertyName)
+                    {
+                        case BaseType.GetAttribute<JsonPropertyNameAttribute>(nameof(BaseLocation.Title)):
+                            location.Title = reader.GetString();
+                            break;
+                    }
+                }
+            }*/
         }
 
         /// <inheritdoc/>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, BaseLocation value, JsonSerializerOptions options)
         {
             if (writer == null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                writer.WriteNullValue();
+                return;
             }
 
-            if (serializer == null)
+            if (value.GetType() == Entity)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                JsonSerializer.Serialize(writer, value, Entity);
             }
-
-            serializer.Serialize(writer, value);
+            else
+            {
+                JsonSerializer.Serialize(writer, value, Query);
+            }
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Geo.Here.Models.Responses
     public class Highlight
     {
         /// <summary>
-        /// Gets ranges of indexes that matched in the title attribute.
+        /// Gets or sets ranges of indexes that matched in the title attribute.
         /// </summary>
         [JsonPropertyName("titles")]
-        public IList<IndexMatch> Titles { get; } = new List<IndexMatch>();
+        public IList<IndexMatch> Titles { get; set; } = new List<IndexMatch>();
     }
 }

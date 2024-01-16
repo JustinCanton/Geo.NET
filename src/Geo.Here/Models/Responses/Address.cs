@@ -81,10 +81,10 @@ namespace Geo.Here.Models.Responses
         public string Street { get; set; }
 
         /// <summary>
-        /// Gets the names of streets in case of intersection result. For example: ["Friedrichstraße","Unter den Linden"].
+        /// Gets or sets the names of streets in case of intersection result. For example: ["Friedrichstraße","Unter den Linden"].
         /// </summary>
         [JsonPropertyName("streets")]
-        public IList<string> Streets { get; } = new List<string>();
+        public IList<string> Streets { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the name of block.
