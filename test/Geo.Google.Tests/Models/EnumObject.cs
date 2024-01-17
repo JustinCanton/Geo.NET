@@ -5,7 +5,6 @@
 
 namespace Geo.Google.Tests.Models
 {
-    using Geo.Google.Converters;
     using Geo.Google.Tests.Enums;
     using Newtonsoft.Json;
 

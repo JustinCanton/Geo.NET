@@ -6,7 +6,6 @@
 namespace Geo.Google.Tests.Converters
 {
     using FluentAssertions;
-    using Geo.Google.Converters;
     using Geo.Google.Tests.Enums;
     using Geo.Google.Tests.Models;
     using Newtonsoft.Json;

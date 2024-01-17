@@ -83,7 +83,7 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets or sets the side of street.
         /// </summary>
         [JsonPropertyName("sideOfStreet")]
-        [JsonConverter(typeof(DefaultStringEnumConverter<SideOfStreet>))]
+        [JsonConverter(typeof(JsonStringEnumMemberConverter<SideOfStreet>))]
         public SideOfStreet SideOfStreet { get; set; }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Geo.MapQuest.Models.Responses
         /// Gets or sets the type of location.
         /// </summary>
         [JsonPropertyName("type")]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumMemberConverter<Enums.Type>))]
         public Enums.Type Type { get; set; }
 
         /// <summary>

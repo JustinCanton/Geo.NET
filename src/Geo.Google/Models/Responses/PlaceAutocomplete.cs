@@ -7,7 +7,6 @@ namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
-    using Geo.Google.Converters;
     using Geo.Google.Enums;
 
     /// <summary>
