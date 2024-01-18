@@ -21,16 +21,16 @@ namespace Geo.Google.Models.Responses
         public string FormattedAddress { get; set; }
 
         /// <summary>
-        /// Gets an array containing the separate components applicable to this address.
+        /// Gets or sets an array containing the separate components applicable to this address.
         /// </summary>
         [JsonPropertyName("address_components")]
-        public IList<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
+        public IList<AddressComponent> AddressComponents { get; set; } = new List<AddressComponent>();
 
         /// <summary>
-        /// Gets an array indicates the type of the returned result.
+        /// Gets or sets an array indicates the type of the returned result.
         /// </summary>
-        [JsonPropertyName("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public IList<AddressType> Types { get; } = new List<AddressType>();
+        [JsonPropertyName("types")]
+        public IList<AddressType> Types { get; set; } = new List<AddressType>();
 
         /// <summary>
         /// Gets or sets the geometry information for the location.
@@ -53,10 +53,10 @@ namespace Geo.Google.Models.Responses
         public bool PartialMatch { get; set; }
 
         /// <summary>
-        /// Gets an array denoting all the localities contained in a postal code.
+        /// Gets or sets an array denoting all the localities contained in a postal code.
         /// This is only populated when the result is a postal code that contains multiple localities.
         /// </summary>
         [JsonPropertyName("postcode_localities")]
-        public IList<string> PostcodeLocalities { get; } = new List<string>();
+        public IList<string> PostcodeLocalities { get; set; } = new List<string>();
     }
 }

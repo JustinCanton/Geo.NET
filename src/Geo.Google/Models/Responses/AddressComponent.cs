@@ -27,9 +27,9 @@ namespace Geo.Google.Models.Responses
         public string ShortName { get; set; }
 
         /// <summary>
-        /// Gets an array indicating the type of the address component.
+        /// Gets or sets an array indicating the type of the address component.
         /// </summary>
-        [JsonPropertyName("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public IList<AddressType> Types { get; } = new List<AddressType>();
+        [JsonPropertyName("types")]
+        public IList<AddressType> Types { get; set; } = new List<AddressType>();
     }
 }

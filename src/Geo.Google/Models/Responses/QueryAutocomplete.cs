@@ -21,16 +21,16 @@ namespace Geo.Google.Models.Responses
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets an array of terms identifying each section of the returned description.
+        /// Gets or sets an array of terms identifying each section of the returned description.
         /// </summary>
         [JsonPropertyName("terms")]
-        public IList<Term> Terms { get; } = new List<Term>();
+        public IList<Term> Terms { get; set; } = new List<Term>();
 
         /// <summary>
-        /// Gets an array with offset value and length.
+        /// Gets or sets an array with offset value and length.
         /// These describe the location of the entered term in the prediction result text, so that the term can be highlighted if desired.
         /// </summary>
         [JsonPropertyName("matched_substrings")]
-        public IList<MatchedSubstring> MatchedSubstrings { get; } = new List<MatchedSubstring>();
+        public IList<MatchedSubstring> MatchedSubstrings { get; set; } = new List<MatchedSubstring>();
     }
 }

@@ -14,16 +14,16 @@ namespace Geo.Google.Models.Responses
     public class FindPlaceResponse
     {
         /// <summary>
-        /// Gets a list of html attributions about this listing which must be displayed to the user.
+        /// Gets or sets a list of html attributions about this listing which must be displayed to the user.
         /// </summary>
         [JsonPropertyName("html_attributions")]
-        public IList<string> HtmlAttributes { get; } = new List<string>();
+        public IList<string> HtmlAttributes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets a list of the results for the Google request.
+        /// Gets or sets a list of the results for the Google request.
         /// </summary>
         [JsonPropertyName("candidates")]
-        public IEnumerable<Place<OpeningHours>> Candidates { get; } = new List<Place<OpeningHours>>();
+        public IEnumerable<Place<OpeningHours>> Candidates { get; set; } = new List<Place<OpeningHours>>();
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.

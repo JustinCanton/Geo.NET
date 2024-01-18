@@ -23,15 +23,15 @@ namespace Geo.Google.Models.Responses
         public int Distance { get; set; }
 
         /// <summary>
-        /// Gets an array indicates the type of the returned result.
+        /// Gets or sets an array indicates the type of the returned result.
         /// </summary>
-        [JsonPropertyName("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public IList<AddressType> Types { get; } = new List<AddressType>();
+        [JsonPropertyName("types")]
+        public IList<AddressType> Types { get; set; } = new List<AddressType>();
 
         /// <summary>
-        /// Gets pre-formatted text that can be shown in your autocomplete results.
+        /// Gets or sets pre-formatted text that can be shown in your autocomplete results.
         /// </summary>
         [JsonPropertyName("matched_substrings")]
-        public IList<StructureFormatting> StructuredFormatting { get; } = new List<StructureFormatting>();
+        public IList<StructureFormatting> StructuredFormatting { get; set; } = new List<StructureFormatting>();
     }
 }

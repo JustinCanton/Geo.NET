@@ -14,10 +14,10 @@ namespace Geo.Google.Models.Responses
     public class GeocodingResponse
     {
         /// <summary>
-        /// Gets a list of the results for the Google Geocoding API call.
+        /// Gets or sets a list of the results for the Google Geocoding API call.
         /// </summary>
         [JsonPropertyName("results")]
-        public IEnumerable<Geocoding> Results { get; } = new List<Geocoding>();
+        public IEnumerable<Geocoding> Results { get; set; } = new List<Geocoding>();
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.

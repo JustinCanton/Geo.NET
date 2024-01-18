@@ -34,12 +34,12 @@ namespace Geo.Google.Models.Responses
         public Geometry Geometry { get; set; }
 
         /// <summary>
-        /// Gets an array of photo objects, each containing a reference to an image.
+        /// Gets or sets an array of photo objects, each containing a reference to an image.
         /// A Place Search will return at most one photo object.
         /// Performing a Place Details request on the place may return up to ten photos.
         /// </summary>
         [JsonPropertyName("photos")]
-        public IList<Photo> Photos { get; } = new List<Photo>();
+        public IList<Photo> Photos { get; set; } = new List<Photo>();
 
         /// <summary>
         /// Gets or sets the place's rating, from 1.0 to 5.0, based on aggregated user reviews.
@@ -54,10 +54,10 @@ namespace Geo.Google.Models.Responses
         public string Icon { get; set; }
 
         /// <summary>
-        /// Gets an array indicates the type of the returned result.
+        /// Gets or sets an array indicates the type of the returned result.
         /// </summary>
-        [JsonPropertyName("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public IList<AddressType> Types { get; } = new List<AddressType>();
+        [JsonPropertyName("types")]
+        public IList<AddressType> Types { get; set; } = new List<AddressType>();
 
         /// <summary>
         /// Gets or sets a feature name of a nearby location.

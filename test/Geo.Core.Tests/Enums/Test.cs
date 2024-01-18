@@ -6,10 +6,13 @@
 namespace Geo.Core.Tests.Enums
 {
     using System.Runtime.Serialization;
+    using System.Text.Json.Serialization;
+    using Geo.Core.Converters;
 
     /// <summary>
     /// Test enum values.
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumMemberConverter<Test>))]
     public enum Test
     {
         /// <summary>

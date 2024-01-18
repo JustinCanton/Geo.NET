@@ -15,10 +15,10 @@ namespace Geo.Google.Models.Responses
     public class AutocompleteResponse<TResponseType>
     {
         /// <summary>
-        /// Gets a list of the predictions for the Google request.
+        /// Gets or sets a list of the predictions for the Google request.
         /// </summary>
         [JsonPropertyName("predictions")]
-        public IEnumerable<TResponseType> Predictions { get; } = new List<TResponseType>();
+        public IEnumerable<TResponseType> Predictions { get; set; } = new List<TResponseType>();
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.

@@ -20,9 +20,9 @@ namespace Geo.Google.Models.Responses
         public bool OpenNow { get; set; }
 
         /// <summary>
-        /// Gets the weekday text.
+        /// Gets or sets the weekday text.
         /// </summary>
         [JsonPropertyName("weekday_text")]
-        public IList<string> WeekdayText { get; } = new List<string>();
+        public IList<string> WeekdayText { get; set; } = new List<string>();
     }
 }

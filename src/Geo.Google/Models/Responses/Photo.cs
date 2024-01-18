@@ -32,9 +32,9 @@ namespace Geo.Google.Models.Responses
         public string PhotoReference { get; set; }
 
         /// <summary>
-        /// Gets a list that contains any required attributions. This field will always be present, but may be empty.
+        /// Gets or sets a list that contains any required attributions. This field will always be present, but may be empty.
         /// </summary>
         [JsonPropertyName("html_attributions")]
-        public IList<string> HtmlAttributes { get; } = new List<string>();
+        public IList<string> HtmlAttributes { get; set; } = new List<string>();
     }
 }

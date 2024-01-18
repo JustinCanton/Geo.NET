@@ -15,10 +15,10 @@ namespace Geo.Google.Models.Responses
     public class Details : Place<OpeningHoursWithPeriods>
     {
         /// <summary>
-        /// Gets an array containing the separate components applicable to this address.
+        /// Gets or sets an array containing the separate components applicable to this address.
         /// </summary>
         [JsonPropertyName("address_components")]
-        public IList<AddressComponent> AddressComponents { get; } = new List<AddressComponent>();
+        public IList<AddressComponent> AddressComponents { get; set; } = new List<AddressComponent>();
 
         /// <summary>
         /// Gets or sets a representation of the place's address in the adr microformat (http://microformats.org/wiki/adr).
@@ -64,9 +64,9 @@ namespace Geo.Google.Models.Responses
         public string Website { get; set; }
 
         /// <summary>
-        /// Gets an array of up to five reviews.
+        /// Gets or sets an array of up to five reviews.
         /// </summary>
         [JsonPropertyName("reviews")]
-        public IList<Review> Reviews { get; } = new List<Review>();
+        public IList<Review> Reviews { get; set; } = new List<Review>();
     }
 }
