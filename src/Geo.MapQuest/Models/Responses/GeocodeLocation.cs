@@ -7,7 +7,7 @@ namespace Geo.MapQuest.Models.Responses
 {
     using System;
     using System.Text.Json.Serialization;
-    using Geo.MapQuest.Converters;
+    using Geo.Core.Converters;
     using Geo.MapQuest.Enums;
 
     /// <summary>
