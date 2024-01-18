@@ -21,9 +21,9 @@ namespace Geo.ArcGIS.Models.Responses
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
-        /// Gets an array of possible matches for the place and location passed in.
+        /// Gets or sets an array of possible matches for the place and location passed in.
         /// </summary>
         [JsonPropertyName("candidates")]
-        public IList<Candidate> Candidates { get; } = new List<Candidate>();
+        public IList<Candidate> Candidates { get; set; } = new List<Candidate>();
     }
 }

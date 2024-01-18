@@ -85,30 +85,6 @@ namespace Geo.Here.Converters
             {
                 return JsonSerializer.Deserialize(ref reader, typeof(AutosuggestQueryLocation)) as AutosuggestQueryLocation;
             }
-
-            // Switch to the reader instead of the typeReader
-            // Read the StartObject
-            /*reader.Read();
-
-            while (reader.Read())
-            {
-                if (reader.TokenType == JsonTokenType.EndObject)
-                {
-                    return location;
-                }
-
-                if (reader.TokenType == JsonTokenType.PropertyName)
-                {
-                    var propertyName = reader.GetString();
-                    reader.Read();
-                    switch (propertyName)
-                    {
-                        case BaseType.GetAttribute<JsonPropertyNameAttribute>(nameof(BaseLocation.Title)):
-                            location.Title = reader.GetString();
-                            break;
-                    }
-                }
-            }*/
         }
 
         /// <inheritdoc/>

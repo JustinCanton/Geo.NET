@@ -6,87 +6,125 @@
 namespace Geo.ArcGIS.Converters
 {
     using System;
+    using System.Globalization;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using Geo.ArcGIS.Models.Responses;
+    using Geo.Core.Extensions;
 
     /// <summary>
     /// A converter class for the Attribute class.
     /// </summary>
-    public class AttributeConverter : JsonConverter
+    public class AttributeConverter : JsonConverter<Models.Responses.Attribute>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        private const string LocationAttribute = "LongLabel";
+        private const string AddressAttribute = "Match_addr";
+        private static readonly Type Location = typeof(LocationAttribute);
+        private static readonly Type Address = typeof(AddressAttribute);
+        private static readonly Type Place = typeof(PlaceAttribute);
+
+        /// <inheritdoc/>
+        public override Models.Responses.Attribute Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (objectType == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            return typeof(Models.Responses.Attribute).IsAssignableFrom(objectType);
-        }
-
-        /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
+            var typeReader = reader;
 
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            JObject obj = JObject.Load(reader);
-
-            if (obj is null)
+            if (typeReader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
-            Models.Responses.Attribute attr;
-            if (!string.IsNullOrWhiteSpace((string)obj["LongLabel"]))
+            if (typeReader.TokenType != JsonTokenType.StartObject)
             {
-                attr = new LocationAttribute();
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the attribute. Expected to find an object, instead found {0}", reader.TokenType.GetName()));
             }
-            else if (!string.IsNullOrWhiteSpace((string)obj["Match_addr"]))
+
+            // 0 = Location
+            // 1 = Address
+            // 2 = Place
+            var type = 2;
+
+            while (typeReader.Read())
             {
-                attr = new AddressAttribute();
+                if (typeReader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+
+                if (typeReader.TokenType != JsonTokenType.PropertyName)
+                {
+                    throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the attribute. Expected to find a property name, instead found {0}", reader.TokenType.GetName()));
+                }
+
+                if (typeReader.GetString() == LocationAttribute)
+                {
+                    type = 0;
+                    break;
+                }
+
+                if (typeReader.GetString() == AddressAttribute)
+                {
+                    type = 1;
+                    break;
+                }
+
+                typeReader.Read();
+            }
+
+            if (type == 0)
+            {
+                return JsonSerializer.Deserialize(ref reader, typeof(LocationAttribute)) as LocationAttribute;
+            }
+            else if (type == 1)
+            {
+                return JsonSerializer.Deserialize(ref reader, typeof(AddressAttribute)) as AddressAttribute;
             }
             else
             {
-                attr = new PlaceAttribute();
+                return JsonSerializer.Deserialize(ref reader, typeof(PlaceAttribute)) as PlaceAttribute;
             }
-
-            serializer.Populate(obj.CreateReader(), attr);
-
-            return attr;
         }
 
-        /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <inheritdoc/>
+        public override void Write(Utf8JsonWriter writer, Models.Responses.Attribute value, JsonSerializerOptions options)
         {
             if (writer == null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                writer.WriteNullValue();
+                return;
             }
 
-            if (serializer == null)
+            if (value.GetType() == Location)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                JsonSerializer.Serialize(writer, value, Location);
             }
-
-            serializer.Serialize(writer, value);
+            else if (value.GetType() == Address)
+            {
+                JsonSerializer.Serialize(writer, value, Address);
+            }
+            else
+            {
+                JsonSerializer.Serialize(writer, value, Place);
+            }
         }
     }
 }
