@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A response  location for the autosuggest request.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the URL of the follow-up query.
         /// </summary>
-        [JsonProperty("href")]
+        [JsonPropertyName("href")]
         public string Href { get; set; }
 
         /// <summary>
         /// Gets or sets an item describing how the parts of the response element matched the input query.
         /// </summary>
-        [JsonProperty("highlights")]
+        [JsonPropertyName("highlights")]
         public Highlight Highlight { get; set; }
     }
 }

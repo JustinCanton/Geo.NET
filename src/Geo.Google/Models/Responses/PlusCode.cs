@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// An encoded location reference, derived from latitude and longitude coordinates,
@@ -18,13 +18,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets a 4 character area code and 6 character or longer local code (849VCWC8+R9).
         /// </summary>
-        [JsonProperty("global_code")]
+        [JsonPropertyName("global_code")]
         public string GlobalCode { get; set; }
 
         /// <summary>
         /// Gets or sets a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
         /// </summary>
-        [JsonProperty("compound_code")]
+        [JsonPropertyName("compound_code")]
         public string CompoundCode { get; set; }
     }
 }

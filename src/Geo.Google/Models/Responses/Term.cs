@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Identifies a section of the returned description.
@@ -15,13 +15,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets the start position of this term in the description.
         /// </summary>
-        [JsonProperty("offset")]
+        [JsonPropertyName("offset")]
         public int Offset { get; set; }
 
         /// <summary>
         /// Gets or sets the text of the term.
         /// </summary>
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
 }

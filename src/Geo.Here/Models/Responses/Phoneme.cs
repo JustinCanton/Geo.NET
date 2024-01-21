@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A phoneme of a location.
@@ -15,19 +15,19 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the actual phonetic transcription in the NT-SAMPA format.
         /// </summary>
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets the bcp47 language code.
         /// </summary>
-        [JsonProperty("language")]
+        [JsonPropertyName("language")]
         public string Language { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not it is the preferred phoneme.
         /// </summary>
-        [JsonProperty("preferred")]
+        [JsonPropertyName("preferred")]
         public bool Preferred { get; set; }
     }
 }

@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using System;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The location attributes.
@@ -16,361 +16,361 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the id of the result.
         /// </summary>
-        [JsonProperty("ResultID")]
+        [JsonPropertyName("ResultID")]
         public int ResultId { get; set; }
 
         /// <summary>
         /// Gets or sets the match address.
         /// </summary>
-        [JsonProperty("Match_addr")]
+        [JsonPropertyName("Match_addr")]
         public string MatchAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the long label string for the address.
         /// </summary>
-        [JsonProperty("LongLabel")]
+        [JsonPropertyName("LongLabel")]
         public string LongLabel { get; set; }
 
         /// <summary>
         /// Gets or sets the short label string for the address.
         /// </summary>
-        [JsonProperty("ShortLabel")]
+        [JsonPropertyName("ShortLabel")]
         public string ShortLabel { get; set; }
 
         /// <summary>
         /// Gets or sets the address type.
         /// </summary>
-        [JsonProperty("Addr_type")]
+        [JsonPropertyName("Addr_type")]
         public string AddressType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of address.
         /// </summary>
-        [JsonProperty("Type")]
+        [JsonPropertyName("Type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the place name if the address has a name.
         /// </summary>
-        [JsonProperty("PlaceName")]
+        [JsonPropertyName("PlaceName")]
         public string PlaceName { get; set; }
 
         /// <summary>
         /// Gets or sets the block name.
         /// </summary>
-        [JsonProperty("Block")]
+        [JsonPropertyName("Block")]
         public string Block { get; set; }
 
         /// <summary>
         /// Gets or sets the sector of the address.
         /// </summary>
-        [JsonProperty("Sector")]
+        [JsonPropertyName("Sector")]
         public string Sector { get; set; }
 
         /// <summary>
         /// Gets or sets the neighbourhood information for the address.
         /// </summary>
-        [JsonProperty("Neighborhood")]
+        [JsonPropertyName("Neighborhood")]
         public string Neighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets the district of the address.
         /// </summary>
-        [JsonProperty("District")]
+        [JsonPropertyName("District")]
         public string District { get; set; }
 
         /// <summary>
         /// Gets or sets the city of the address.
         /// </summary>
-        [JsonProperty("City")]
+        [JsonPropertyName("City")]
         public string City { get; set; }
 
         /// <summary>
         /// Gets or sets the metropolitian area of the address.
         /// </summary>
-        [JsonProperty("MetroArea")]
+        [JsonPropertyName("MetroArea")]
         public string MetropolitanArea { get; set; }
 
         /// <summary>
         /// Gets or sets the sub-region of the address.
         /// </summary>
-        [JsonProperty("Subregion")]
+        [JsonPropertyName("Subregion")]
         public string Subregion { get; set; }
 
         /// <summary>
         /// Gets or sets the region of the address.
         /// </summary>
-        [JsonProperty("Region")]
+        [JsonPropertyName("Region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Gets or sets the territory of the address.
         /// </summary>
-        [JsonProperty("Territory")]
+        [JsonPropertyName("Territory")]
         public string Territory { get; set; }
 
         /// <summary>
         /// Gets or sets the postal code of the address.
         /// </summary>
-        [JsonProperty("Postal")]
+        [JsonPropertyName("Postal")]
         public string PostalCode { get; set; }
 
         /// <summary>
         /// Gets or sets the postal code extension of the address.
         /// </summary>
-        [JsonProperty("PostalExt")]
+        [JsonPropertyName("PostalExt")]
         public string PostalCodeExtension { get; set; }
 
         /// <summary>
         /// Gets or sets the country code of the address.
         /// </summary>
-        [JsonProperty("CountryCode")]
+        [JsonPropertyName("CountryCode")]
         public string CountryCode { get; set; }
 
         /// <summary>
         /// Gets or sets the location name.
         /// </summary>
-        [JsonProperty("Loc_name")]
+        [JsonPropertyName("Loc_name")]
         public string LocationName { get; set; }
 
         /// <summary>
         /// Gets or sets the status of the result.
         /// </summary>
-        [JsonProperty("Status")]
+        [JsonPropertyName("Status")]
         public string Status { get; set; }
 
         /// <summary>
         /// Gets or sets the score of the result.
         /// </summary>
-        [JsonProperty("Score")]
+        [JsonPropertyName("Score")]
         public double Score { get; set; }
 
         /// <summary>
         /// Gets or sets the place address.
         /// </summary>
-        [JsonProperty("Place_addr")]
+        [JsonPropertyName("Place_addr")]
         public string PlaceAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the phone number of the location.
         /// </summary>
-        [JsonProperty("Phone")]
+        [JsonPropertyName("Phone")]
         public string Phone { get; set; }
 
         /// <summary>
         /// Gets or sets the url of the location.
         /// </summary>
-        [JsonProperty("URL")]
+        [JsonPropertyName("URL")]
         public Uri URL { get; set; }
 
         /// <summary>
         /// Gets or sets the rank of the location.
         /// </summary>
-        [JsonProperty("Rank")]
+        [JsonPropertyName("Rank")]
         public int Rank { get; set; }
 
         /// <summary>
         /// Gets or sets the additional building information for a location.
         /// </summary>
-        [JsonProperty("AddBldg")]
+        [JsonPropertyName("AddBldg")]
         public string AddBuilding { get; set; }
 
         /// <summary>
         /// Gets or sets the additional number information for a building.
         /// </summary>
-        [JsonProperty("AddNum")]
+        [JsonPropertyName("AddNum")]
         public string AdditionalNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the additional number from information for a location.
         /// </summary>
-        [JsonProperty("AddNumFrom")]
+        [JsonPropertyName("AddNumFrom")]
         public string AdditionalNumberFrom { get; set; }
 
         /// <summary>
         /// Gets or sets the additional number to information for a location.
         /// </summary>
-        [JsonProperty("AddNumTo")]
+        [JsonPropertyName("AddNumTo")]
         public string AdditionalNumberTo { get; set; }
 
         /// <summary>
         /// Gets or sets the additional range for a location.
         /// </summary>
-        [JsonProperty("AddRange")]
+        [JsonPropertyName("AddRange")]
         public string AddRange { get; set; }
 
         /// <summary>
         /// Gets or sets the side information for a location.
         /// </summary>
-        [JsonProperty("Side")]
+        [JsonPropertyName("Side")]
         public string Side { get; set; }
 
         /// <summary>
         /// Gets or sets the street pre-direction for a location.
         /// </summary>
-        [JsonProperty("StPreDir")]
+        [JsonPropertyName("StPreDir")]
         public string StreetPreDirection { get; set; }
 
         /// <summary>
         /// Gets or sets the street pre-type for a location.
         /// </summary>
-        [JsonProperty("StPreType")]
+        [JsonPropertyName("StPreType")]
         public string StreetPreType { get; set; }
 
         /// <summary>
         /// Gets or sets the street name a location is on.
         /// </summary>
-        [JsonProperty("StName")]
+        [JsonPropertyName("StName")]
         public string StreetName { get; set; }
 
         /// <summary>
         /// Gets or sets the street type a location is on.
         /// </summary>
-        [JsonProperty("StType")]
+        [JsonPropertyName("StType")]
         public string StreetType { get; set; }
 
         /// <summary>
         /// Gets or sets the street direction a location is on.
         /// </summary>
-        [JsonProperty("StDir")]
+        [JsonPropertyName("StDir")]
         public string StreetDirection { get; set; }
 
         /// <summary>
         /// Gets or sets the building type of a location.
         /// </summary>
-        [JsonProperty("BldgType")]
+        [JsonPropertyName("BldgType")]
         public string BuildingType { get; set; }
 
         /// <summary>
         /// Gets or sets the building name of a location.
         /// </summary>
-        [JsonProperty("BldgName")]
+        [JsonPropertyName("BldgName")]
         public string BuildingName { get; set; }
 
         /// <summary>
         /// Gets or sets the level type of a location.
         /// </summary>
-        [JsonProperty("LevelType")]
+        [JsonPropertyName("LevelType")]
         public string LevelType { get; set; }
 
         /// <summary>
         /// Gets or sets the level name of a location.
         /// </summary>
-        [JsonProperty("LevelName")]
+        [JsonPropertyName("LevelName")]
         public string LevelName { get; set; }
 
         /// <summary>
         /// Gets or sets the unit type of a location.
         /// </summary>
-        [JsonProperty("UnitType")]
+        [JsonPropertyName("UnitType")]
         public string UnitType { get; set; }
 
         /// <summary>
         /// Gets or sets the unit name of a location.
         /// </summary>
-        [JsonProperty("UnitName")]
+        [JsonPropertyName("UnitName")]
         public string UnitName { get; set; }
 
         /// <summary>
         /// Gets or sets the sub-address of a location.
         /// </summary>
-        [JsonProperty("SubAddr")]
+        [JsonPropertyName("SubAddr")]
         public string SubAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the street address of a location.
         /// </summary>
-        [JsonProperty("StAddr")]
+        [JsonPropertyName("StAddr")]
         public string StreetAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the neighbourhood of a location.
         /// </summary>
-        [JsonProperty("Nbrhd")]
+        [JsonPropertyName("Nbrhd")]
         public string LocationNeighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets the region abbreviation of a location.
         /// </summary>
-        [JsonProperty("RegionAbbr")]
+        [JsonPropertyName("RegionAbbr")]
         public string RegionAbbreviation { get; set; }
 
         /// <summary>
         /// Gets or sets the zone of a location.
         /// </summary>
-        [JsonProperty("Zone")]
+        [JsonPropertyName("Zone")]
         public string Zone { get; set; }
 
         /// <summary>
         /// Gets or sets the country of a location.
         /// </summary>
-        [JsonProperty("Country")]
+        [JsonPropertyName("Country")]
         public string Country { get; set; }
 
         /// <summary>
         /// Gets or sets the language code of a location.
         /// </summary>
-        [JsonProperty("LangCode")]
+        [JsonPropertyName("LangCode")]
         public string LanguageCode { get; set; }
 
         /// <summary>
         /// Gets or sets the distance to a location.
         /// </summary>
-        [JsonProperty("Distance")]
+        [JsonPropertyName("Distance")]
         public double Distance { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of a location.
         /// </summary>
-        [JsonProperty("X")]
+        [JsonPropertyName("X")]
         public double Longitude { get; set; }
 
         /// <summary>
         /// Gets or sets the latitude of a location.
         /// </summary>
-        [JsonProperty("Y")]
+        [JsonPropertyName("Y")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the display longitude of a location.
         /// </summary>
-        [JsonProperty("DisplayX")]
+        [JsonPropertyName("DisplayX")]
         public double DisplayLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the display latitude of a location.
         /// </summary>
-        [JsonProperty("DisplayY")]
+        [JsonPropertyName("DisplayY")]
         public double DisplayLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the west-most longitude of a location.
         /// </summary>
-        [JsonProperty("Xmin")]
+        [JsonPropertyName("Xmin")]
         public double WestLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the east-most longitude of a location.
         /// </summary>
-        [JsonProperty("Xmax")]
+        [JsonPropertyName("Xmax")]
         public double EastLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the south-most latitude of a location.
         /// </summary>
-        [JsonProperty("Ymin")]
+        [JsonPropertyName("Ymin")]
         public double SouthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the north-most latitude of a location.
         /// </summary>
-        [JsonProperty("Ymax")]
+        [JsonPropertyName("Ymax")]
         public double NorthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets any extra information about a location.
         /// </summary>
-        [JsonProperty("ExInfo")]
+        [JsonPropertyName("ExInfo")]
         public string ExtraInformation { get; set; }
     }
 }

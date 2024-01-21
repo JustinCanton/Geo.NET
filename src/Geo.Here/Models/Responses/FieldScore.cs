@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The scores for the different location information.
@@ -16,25 +16,25 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the country score.
         /// </summary>
-        [JsonProperty("country")]
+        [JsonPropertyName("country")]
         public double Country { get; set; }
 
         /// <summary>
         /// Gets or sets the city score.
         /// </summary>
-        [JsonProperty("city")]
+        [JsonPropertyName("city")]
         public double City { get; set; }
 
         /// <summary>
-        /// Gets the street scores.
+        /// Gets or sets the street scores.
         /// </summary>
-        [JsonProperty("streets")]
-        public IList<double> Streets { get; } = new List<double>();
+        [JsonPropertyName("streets")]
+        public IList<double> Streets { get; set; } = new List<double>();
 
         /// <summary>
         /// Gets or sets the house number score.
         /// </summary>
-        [JsonProperty("houseNumber")]
+        [JsonPropertyName("houseNumber")]
         public double HouseNumber { get; set; }
     }
 }

@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A chain assigned to a location.
@@ -15,7 +15,7 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the identifier number for an associated chain.
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
     }
 }

@@ -34,7 +34,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     # Perform the dotnet actions
-    - name: Install dependencies
+    - name: Restore
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release

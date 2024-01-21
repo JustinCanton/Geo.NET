@@ -48,18 +48,18 @@ namespace Geo.Bing.Tests.Services
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
-                    "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used," +
-                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
-                    "'resourceSets':[{'estimatedTotal':1,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
-                    "'bbox':[47.643502452429324,-122.14677698166385,47.65122788757068,-122.13148835833614],'name':'1 Microsoft Way, Redmond, WA 98052'," +
-                    "'point':{'type':'Point','coordinates':[47.64736517,-122.13913267]},'address':{'addressLine':'1 Microsoft Way','adminDistrict':'WA'," +
-                    "'adminDistrict2':'King County','countryRegion':'United States','formattedAddress':'1 Microsoft Way, Redmond, WA 98052','locality':'Redmond'," +
-                    "'postalCode':'98052','countryRegionIso2':'US'},'confidence':'High','entityType':'Address','geocodePoints':[{'type':'Point'," +
-                    "'coordinates':[47.64736517,-122.13913267],'calculationMethod':'Rooftop','usageTypes':['Display']},{'type':'Point'," +
-                    "'coordinates':[47.644459999999,-122.130462999999],'calculationMethod':'Rooftop','usageTypes':['Route']}],'matchCodes':['Good']," +
-                    "'queryParseValues':[{'property':'AddressLine','value':'1 microsoft way'},{'property':'Locality','value':'redmond'},{'property':'AdminDistrict','value':'wa'}]}]}]," +
-                    "'statusCode':200,'statusDescription':'OK','traceId':'03a0308fc21d4984873f095704aaa59e|CH000010A2|0.0.0.1|Ref A: AA58A734408F404DA92D6F4BC96F8B40 Ref B: CH1EDGE0809 Ref C: 2020-07-24T00:29:16Z'}"),
+                Content = new StringContent("{\"authenticationResultCode\":\"ValidCredentials\",\"brandLogoUri\":\"http://dev.virtualearth.net/Branding/logo_powered_by.png\"," +
+                    "\"copyright\":\"Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used," +
+                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.\"," +
+                    "\"resourceSets\":[{\"estimatedTotal\":1,\"resources\":[{\"__type\":\"Location:http://schemas.microsoft.com/search/local/ws/rest/v1\"," +
+                    "\"bbox\":[47.643502452429324,-122.14677698166385,47.65122788757068,-122.13148835833614],\"name\":\"1 Microsoft Way, Redmond, WA 98052\"," +
+                    "\"point\":{\"type\":\"Point\",\"coordinates\":[47.64736517,-122.13913267]},\"address\":{\"addressLine\":\"1 Microsoft Way\",\"adminDistrict\":\"WA\"," +
+                    "\"adminDistrict2\":\"King County\",\"countryRegion\":\"United States\",\"formattedAddress\":\"1 Microsoft Way, Redmond, WA 98052\",\"locality\":\"Redmond\"," +
+                    "\"postalCode\":\"98052\",\"countryRegionIso2\":\"US\"},\"confidence\":\"High\",\"entityType\":\"Address\",\"geocodePoints\":[{\"type\":\"Point\"," +
+                    "\"coordinates\":[47.64736517,-122.13913267],\"calculationMethod\":\"Rooftop\",\"usageTypes\":[\"Display\"]},{\"type\":\"Point\"," +
+                    "\"coordinates\":[47.644459999999,-122.130462999999],\"calculationMethod\":\"Rooftop\",\"usageTypes\":[\"Route\"]}],\"matchCodes\":[\"Good\"]," +
+                    "\"queryParseValues\":[{\"property\":\"AddressLine\",\"value\":\"1 microsoft way\"},{\"property\":\"Locality\",\"value\":\"redmond\"},{\"property\":\"AdminDistrict\",\"value\":\"wa\"}]}]}]," +
+                    "\"statusCode\":200,\"statusDescription\":\"OK\",\"traceId\":\"03a0308fc21d4984873f095704aaa59e|CH000010A2|0.0.0.1|Ref A: AA58A734408F404DA92D6F4BC96F8B40 Ref B: CH1EDGE0809 Ref C: 2020-07-24T00:29:16Z\"}"),
             });
 
             mockHandler
@@ -73,17 +73,17 @@ namespace Geo.Bing.Tests.Services
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
-                    "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
-                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
-                    "'resourceSets':[{'estimatedTotal':1,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
-                    "'bbox':[40.752777282429321,-73.996387763584124,40.760502717570674,-73.982790236415866],'name':'640 8th Ave, New York, NY 10036'," +
-                    "'point':{'type':'Point','coordinates':[40.75664,-73.989589]},'address':{'addressLine':'640 8th Ave','adminDistrict':'NY','adminDistrict2':'New York Co.'," +
-                    "'countryRegion':'United States','formattedAddress':'640 8th Ave, New York, NY 10036'," +
-                    "'intersection':{'baseStreet':'8th Ave','secondaryStreet1':'W 41st St','secondaryStreet2':'W 42nd St','intersectionType':'Between','displayName':'8th Ave, between W 41st St and W 42nd St'}," +
-                    "'locality':'Garment District','postalCode':'10036'},'confidence':'High','entityType':'Address'," +
-                    "'geocodePoints':[{'type':'Point','coordinates':[40.75664,-73.989589],'calculationMethod':'Parcel','usageTypes':['Display']}],'matchCodes':['Good']}]}]," +
-                    "'statusCode':200,'statusDescription':'OK','traceId':'e511dfd0857b41f1aee1bc60510c92dd|CH000010AD|0.0.0.1|CH01EAP00000CE7'}"),
+                Content = new StringContent("{\"authenticationResultCode\":\"ValidCredentials\",\"brandLogoUri\":\"http://dev.virtualearth.net/Branding/logo_powered_by.png\"," +
+                    "\"copyright\":\"Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
+                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.\"," +
+                    "\"resourceSets\":[{\"estimatedTotal\":1,\"resources\":[{\"__type\":\"Location:http://schemas.microsoft.com/search/local/ws/rest/v1\"," +
+                    "\"bbox\":[40.752777282429321,-73.996387763584124,40.760502717570674,-73.982790236415866],\"name\":\"640 8th Ave, New York, NY 10036\"," +
+                    "\"point\":{\"type\":\"Point\",\"coordinates\":[40.75664,-73.989589]},\"address\":{\"addressLine\":\"640 8th Ave\",\"adminDistrict\":\"NY\",\"adminDistrict2\":\"New York Co.\"," +
+                    "\"countryRegion\":\"United States\",\"formattedAddress\":\"640 8th Ave, New York, NY 10036\"," +
+                    "\"intersection\":{\"baseStreet\":\"8th Ave\",\"secondaryStreet1\":\"W 41st St\",\"secondaryStreet2\":\"W 42nd St\",\"intersectionType\":\"Between\",\"displayName\":\"8th Ave, between W 41st St and W 42nd St\"}," +
+                    "\"locality\":\"Garment District\",\"postalCode\":\"10036\"},\"confidence\":\"High\",\"entityType\":\"Address\"," +
+                    "\"geocodePoints\":[{\"type\":\"Point\",\"coordinates\":[40.75664,-73.989589],\"calculationMethod\":\"Parcel\",\"usageTypes\":[\"Display\"]}],\"matchCodes\":[\"Good\"]}]}]," +
+                    "\"statusCode\":200,\"statusDescription\":\"OK\",\"traceId\":\"e511dfd0857b41f1aee1bc60510c92dd|CH000010AD|0.0.0.1|CH01EAP00000CE7\"}"),
             });
 
             mockHandler
@@ -97,24 +97,24 @@ namespace Geo.Bing.Tests.Services
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'authenticationResultCode':'ValidCredentials','brandLogoUri':'http://dev.virtualearth.net/Branding/logo_powered_by.png'," +
-                    "'copyright':'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
-                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.'," +
-                    "'resourceSets':[{'estimatedTotal':2,'resources':[{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
-                    "'bbox':[43.643867082429324,-79.387334063313247,43.651592517570677,-79.37309973668674],'name':'222 Bay St, Downtown Toronto, Toronto, ON M5J, Canada'," +
-                    "'point':{'type':'Point','coordinates':[43.6477298,-79.3802169]},'address':{'addressLine':'222 Bay St','adminDistrict':'ON'," +
-                    "'adminDistrict2':'Toronto','countryRegion':'Canada','formattedAddress':'222 Bay St, Downtown Toronto, Toronto, ON M5J, Canada'," +
-                    "'locality':'Toronto','postalCode':'M5J'},'confidence':'Medium','entityType':'Address'," +
-                    "'geocodePoints':[{'type':'Point','coordinates':[43.6477298,-79.3802169],'calculationMethod':'Rooftop','usageTypes':['Display']}," +
-                    "{'type':'Point','coordinates':[43.647807064497,-79.3798914855925],'calculationMethod':'Rooftop','usageTypes':['Route']}]," +
-                    "'matchCodes':['Ambiguous']},{'__type':'Location:http://schemas.microsoft.com/search/local/ws/rest/v1'," +
-                    "'bbox':[43.643967351394977,-79.3870843772517,43.65169278653633,-79.372850026866857],'name':'222 Bay St, Downtown Toronto, Toronto, ON M5L, Canada'," +
-                    "'point':{'type':'Point','coordinates':[43.647830068965654,-79.379967202059277]},'address':{'addressLine':'222 Bay St'," +
-                    "'adminDistrict':'ON','adminDistrict2':'Toronto','countryRegion':'Canada','formattedAddress':'222 Bay St, Downtown Toronto, Toronto, ON M5L, Canada'," +
-                    "'locality':'Toronto','postalCode':'M5L'},'confidence':'Medium','entityType':'Address'," +
-                    "'geocodePoints':[{'type':'Point','coordinates':[43.647830068965654,-79.379967202059277],'calculationMethod':'InterpolationOffset','usageTypes':['Display']}," +
-                    "{'type':'Point','coordinates':[43.647843999251016,-79.379908116806476],'calculationMethod':'Interpolation','usageTypes':['Route']}],'matchCodes':['Ambiguous']}]}]," +
-                    "'statusCode':200,'statusDescription':'OK','traceId':'6ae6e5559034467397975a98e8058202|CH0000108C|0.0.0.1|Ref A: AADC32DAE8A14CA3BF8B7C11893FE2DC Ref B: CH1EDGE1106 Ref C: 2020-07-30T02:28:48Z'}"),
+                Content = new StringContent("{\"authenticationResultCode\":\"ValidCredentials\",\"brandLogoUri\":\"http://dev.virtualearth.net/Branding/logo_powered_by.png\"," +
+                    "\"copyright\":\"Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, " +
+                    "reproduced or transmitted in any manner without express written permission from Microsoft Corporation.\"," +
+                    "\"resourceSets\":[{\"estimatedTotal\":2,\"resources\":[{\"__type\":\"Location:http://schemas.microsoft.com/search/local/ws/rest/v1\"," +
+                    "\"bbox\":[43.643867082429324,-79.387334063313247,43.651592517570677,-79.37309973668674],\"name\":\"222 Bay St, Downtown Toronto, Toronto, ON M5J, Canada\"," +
+                    "\"point\":{\"type\":\"Point\",\"coordinates\":[43.6477298,-79.3802169]},\"address\":{\"addressLine\":\"222 Bay St\",\"adminDistrict\":\"ON\"," +
+                    "\"adminDistrict2\":\"Toronto\",\"countryRegion\":\"Canada\",\"formattedAddress\":\"222 Bay St, Downtown Toronto, Toronto, ON M5J, Canada\"," +
+                    "\"locality\":\"Toronto\",\"postalCode\":\"M5J\"},\"confidence\":\"Medium\",\"entityType\":\"Address\"," +
+                    "\"geocodePoints\":[{\"type\":\"Point\",\"coordinates\":[43.6477298,-79.3802169],\"calculationMethod\":\"Rooftop\",\"usageTypes\":[\"Display\"]}," +
+                    "{\"type\":\"Point\",\"coordinates\":[43.647807064497,-79.3798914855925],\"calculationMethod\":\"Rooftop\",\"usageTypes\":[\"Route\"]}]," +
+                    "\"matchCodes\":[\"Ambiguous\"]},{\"__type\":\"Location:http://schemas.microsoft.com/search/local/ws/rest/v1\"," +
+                    "\"bbox\":[43.643967351394977,-79.3870843772517,43.65169278653633,-79.372850026866857],\"name\":\"222 Bay St, Downtown Toronto, Toronto, ON M5L, Canada\"," +
+                    "\"point\":{\"type\":\"Point\",\"coordinates\":[43.647830068965654,-79.379967202059277]},\"address\":{\"addressLine\":\"222 Bay St\"," +
+                    "\"adminDistrict\":\"ON\",\"adminDistrict2\":\"Toronto\",\"countryRegion\":\"Canada\",\"formattedAddress\":\"222 Bay St, Downtown Toronto, Toronto, ON M5L, Canada\"," +
+                    "\"locality\":\"Toronto\",\"postalCode\":\"M5L\"},\"confidence\":\"Medium\",\"entityType\":\"Address\"," +
+                    "\"geocodePoints\":[{\"type\":\"Point\",\"coordinates\":[43.647830068965654,-79.379967202059277],\"calculationMethod\":\"InterpolationOffset\",\"usageTypes\":[\"Display\"]}," +
+                    "{\"type\":\"Point\",\"coordinates\":[43.647843999251016,-79.379908116806476],\"calculationMethod\":\"Interpolation\",\"usageTypes\":[\"Route\"]}],\"matchCodes\":[\"Ambiguous\"]}]}]," +
+                    "\"statusCode\":200,\"statusDescription\":\"OK\",\"traceId\":\"6ae6e5559034467397975a98e8058202|CH0000108C|0.0.0.1|Ref A: AADC32DAE8A14CA3BF8B7C11893FE2DC Ref B: CH1EDGE1106 Ref C: 2020-07-30T02:28:48Z\"}"),
             });
 
             mockHandler

@@ -6,9 +6,8 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Geo.Google.Converters;
+    using System.Text.Json.Serialization;
     using Geo.Google.Enums;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A place autocomplete result returned by Google.
@@ -20,19 +19,19 @@ namespace Geo.Google.Models.Responses
         /// This field is only returned when the origin point is specified in the request.
         /// This field is not returned in predictions of type route.
         /// </summary>
-        [JsonProperty("distance_meters")]
+        [JsonPropertyName("distance_meters")]
         public int Distance { get; set; }
 
         /// <summary>
-        /// Gets an array indicates the type of the returned result.
+        /// Gets or sets an array indicates the type of the returned result.
         /// </summary>
-        [JsonProperty("types", ItemConverterType = typeof(DefaultStringEnumConverter<AddressType>))]
-        public IList<AddressType> Types { get; } = new List<AddressType>();
+        [JsonPropertyName("types")]
+        public IList<AddressType> Types { get; set; } = new List<AddressType>();
 
         /// <summary>
-        /// Gets pre-formatted text that can be shown in your autocomplete results.
+        /// Gets or sets pre-formatted text that can be shown in your autocomplete results.
         /// </summary>
-        [JsonProperty("matched_substrings")]
-        public IList<StructureFormatting> StructuredFormatting { get; } = new List<StructureFormatting>();
+        [JsonPropertyName("matched_substrings")]
+        public IList<StructureFormatting> StructuredFormatting { get; set; } = new List<StructureFormatting>();
     }
 }

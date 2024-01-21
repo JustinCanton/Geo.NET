@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Phonemes for a location.
@@ -14,51 +14,51 @@ namespace Geo.Here.Models.Responses
     public class LocationPhoneme
     {
         /// <summary>
-        /// Gets phonemes for the name of the place.
+        /// Gets or sets phonemes for the name of the place.
         /// </summary>
-        [JsonProperty("placeName")]
-        public IList<Phoneme> PlaceNames { get; } = new List<Phoneme>();
+        [JsonPropertyName("placeName")]
+        public IList<Phoneme> PlaceNames { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the county name.
+        /// Gets or sets phonemes for the county name.
         /// </summary>
-        [JsonProperty("countryName")]
-        public IList<Phoneme> CountryNames { get; } = new List<Phoneme>();
+        [JsonPropertyName("countryName")]
+        public IList<Phoneme> CountryNames { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the county name.
+        /// Gets or sets phonemes for the county name.
         /// </summary>
-        [JsonProperty("county")]
-        public IList<Phoneme> County { get; } = new List<Phoneme>();
+        [JsonPropertyName("county")]
+        public IList<Phoneme> County { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the city name.
+        /// Gets or sets phonemes for the city name.
         /// </summary>
-        [JsonProperty("city")]
-        public IList<Phoneme> City { get; } = new List<Phoneme>();
+        [JsonPropertyName("city")]
+        public IList<Phoneme> City { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the subdistrict name.
+        /// Gets or sets phonemes for the subdistrict name.
         /// </summary>
-        [JsonProperty("subdistrict")]
-        public IList<Phoneme> SubDistrict { get; } = new List<Phoneme>();
+        [JsonPropertyName("subdistrict")]
+        public IList<Phoneme> SubDistrict { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the name of the place.
+        /// Gets or sets phonemes for the name of the place.
         /// </summary>
-        [JsonProperty("street")]
-        public IList<Phoneme> Street { get; } = new List<Phoneme>();
+        [JsonPropertyName("street")]
+        public IList<Phoneme> Street { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the block.
+        /// Gets or sets phonemes for the block.
         /// </summary>
-        [JsonProperty("block")]
-        public IList<Phoneme> Block { get; } = new List<Phoneme>();
+        [JsonPropertyName("block")]
+        public IList<Phoneme> Block { get; set; } = new List<Phoneme>();
 
         /// <summary>
-        /// Gets phonemes for the sub-block.
+        /// Gets or sets phonemes for the sub-block.
         /// </summary>
-        [JsonProperty("subblock")]
-        public IList<Phoneme> SubBlock { get; } = new List<Phoneme>();
+        [JsonPropertyName("subblock")]
+        public IList<Phoneme> SubBlock { get; set; } = new List<Phoneme>();
     }
 }

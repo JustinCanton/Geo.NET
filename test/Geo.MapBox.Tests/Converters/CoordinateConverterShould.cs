@@ -5,10 +5,10 @@
 
 namespace Geo.MapBox.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Geo.MapBox.Tests.Converters
         [Fact]
         public void CorrectlyParseCoordinate()
         {
-            var obj = JsonConvert.DeserializeObject<CoordinateObject>("{'Coordinate':[40.752777282429321,-73.996387763584124]}");
+            var obj = JsonSerializer.Deserialize<CoordinateObject>("{\"Coordinate\":[40.752777282429321,-73.996387763584124]}");
             obj.Coordinate.Longitude.Should().Be(40.752777282429321);
             obj.Coordinate.Latitude.Should().Be(-73.996387763584124);
         }

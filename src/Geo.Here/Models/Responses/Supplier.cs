@@ -5,8 +5,8 @@
 
 namespace Geo.Here.Models.Responses
 {
+    using System.Text.Json.Serialization;
     using Geo.Here.Enums;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A supplier of reference information.
@@ -16,7 +16,8 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the type of the location.
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public SupplierType Id { get; set; }
     }
 }

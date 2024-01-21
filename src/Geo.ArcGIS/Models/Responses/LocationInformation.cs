@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A location from ArcGIS.
@@ -15,19 +15,19 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the address of this match.
         /// </summary>
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public string Address { get; set; }
 
         /// <summary>
         /// Gets or sets The lat/lng coordinates of this match.
         /// </summary>
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public Coordinate Location { get; set; }
 
         /// <summary>
         /// Gets or sets the confidence level of the geocoder in this match, on a scale of 1-100.
         /// </summary>
-        [JsonProperty("score")]
+        [JsonPropertyName("score")]
         public double Score { get; set; }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// This will change depending on what call candidate call is placed.
         /// This will contain either PlaceName and PlaceAddress or MatchAddress and AddressType.
         /// </summary>
-        [JsonProperty("attributes")]
+        [JsonPropertyName("attributes")]
         public Attribute Attributes { get; set; }
     }
 }

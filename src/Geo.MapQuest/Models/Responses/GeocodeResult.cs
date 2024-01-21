@@ -6,7 +6,7 @@
 namespace Geo.MapQuest.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The result of a geocode request.
@@ -16,13 +16,13 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the provided location properties passed in the geocode request.
         /// </summary>
-        [JsonProperty("providedLocation")]
+        [JsonPropertyName("providedLocation")]
         public GeocodeProvidedLocation ProvidedLocation { get; set; }
 
         /// <summary>
-        /// Gets the locations that match the geocode request.
+        /// Gets or sets the locations that match the geocode request.
         /// </summary>
-        [JsonProperty("locations")]
-        public IList<GeocodeLocation> Locations { get; } = new List<GeocodeLocation>();
+        [JsonPropertyName("locations")]
+        public IList<GeocodeLocation> Locations { get; set; } = new List<GeocodeLocation>();
     }
 }

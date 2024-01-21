@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The bounding box information for a location.
@@ -16,25 +16,25 @@ namespace Geo.ArcGIS.Models
         /// <summary>
         /// Gets or sets the south-most latitude point of the bounding box.
         /// </summary>
-        [JsonProperty("ymin")]
+        [JsonPropertyName("ymin")]
         public double SouthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the west-most longitude point of the bounding box.
         /// </summary>
-        [JsonProperty("xmin")]
+        [JsonPropertyName("xmin")]
         public double WestLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the north-most latitude point of the bounding box.
         /// </summary>
-        [JsonProperty("ymax")]
+        [JsonPropertyName("ymax")]
         public double NorthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the east-most longitude point of the bounding box.
         /// </summary>
-        [JsonProperty("xmax")]
+        [JsonPropertyName("xmax")]
         public double EastLongitude { get; set; }
 
         /// <inheritdoc/>

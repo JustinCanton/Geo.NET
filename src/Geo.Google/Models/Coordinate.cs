@@ -6,7 +6,7 @@
 namespace Geo.Google.Models
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A latitude/longitude pair forming a coordinate.
@@ -16,13 +16,13 @@ namespace Geo.Google.Models
         /// <summary>
         /// Gets or sets the latitude of a location.
         /// </summary>
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of a location.
         /// </summary>
-        [JsonProperty("lng")]
+        [JsonPropertyName("lng")]
         public double Longitude { get; set; }
 
         /// <inheritdoc/>

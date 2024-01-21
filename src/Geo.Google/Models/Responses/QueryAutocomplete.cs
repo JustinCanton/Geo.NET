@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A query autocomplete result returned by Google.
@@ -17,20 +17,20 @@ namespace Geo.Google.Models.Responses
         /// Gets or sets the human-readable name for the returned result.
         /// For establishment results, this is usually the business name.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets an array of terms identifying each section of the returned description.
+        /// Gets or sets an array of terms identifying each section of the returned description.
         /// </summary>
-        [JsonProperty("terms")]
-        public IList<Term> Terms { get; } = new List<Term>();
+        [JsonPropertyName("terms")]
+        public IList<Term> Terms { get; set; } = new List<Term>();
 
         /// <summary>
-        /// Gets an array with offset value and length.
+        /// Gets or sets an array with offset value and length.
         /// These describe the location of the entered term in the prediction result text, so that the term can be highlighted if desired.
         /// </summary>
-        [JsonProperty("matched_substrings")]
-        public IList<MatchedSubstring> MatchedSubstrings { get; } = new List<MatchedSubstring>();
+        [JsonPropertyName("matched_substrings")]
+        public IList<MatchedSubstring> MatchedSubstrings { get; set; } = new List<MatchedSubstring>();
     }
 }

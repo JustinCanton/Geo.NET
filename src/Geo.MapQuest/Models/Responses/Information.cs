@@ -6,7 +6,7 @@
 namespace Geo.MapQuest.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The general information.
@@ -16,19 +16,19 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the status code for the request.
         /// </summary>
-        [JsonProperty("statuscode")]
+        [JsonPropertyName("statuscode")]
         public int StatusCode { get; set; }
 
         /// <summary>
         /// Gets or sets the copyright information for the request.
         /// </summary>
-        [JsonProperty("copyright")]
+        [JsonPropertyName("copyright")]
         public Copyright Copyright { get; set; }
 
         /// <summary>
-        /// Gets the extra messages for the request.
+        /// Gets or sets the extra messages for the request.
         /// </summary>
-        [JsonProperty("messages")]
-        public IList<string> Messages { get; } = new List<string>();
+        [JsonPropertyName("messages")]
+        public IList<string> Messages { get; set; } = new List<string>();
     }
 }

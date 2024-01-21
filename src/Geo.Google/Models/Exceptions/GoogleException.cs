@@ -8,9 +8,9 @@ namespace Geo.Google.Models.Exceptions
     using System;
     using System.Globalization;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Geo.Core.Models.Exceptions;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A wrapper exception for any exceptions thrown in the Google functionality. The current exceptions wrapped by this exception are listed.
@@ -22,8 +22,7 @@ namespace Geo.Google.Models.Exceptions
     /// DNS failure, server certificate validation or timeout.
     /// </exception>
     /// <exception cref="TaskCanceledException">Thrown when the Google request is cancelled.</exception>
-    /// <exception cref="JsonReaderException">Thrown when an error occurs while reading the return JSON text.</exception>
-    /// <exception cref="JsonSerializationException">Thrown when when an error occurs during JSON deserialization.</exception>
+    /// <exception cref="JsonException">Thrown when when an error occurs during JSON deserialization.</exception>
     public sealed class GoogleException : GeoCoreException
     {
         private const string DefaultMessage = "{0} See the inner exception for more information.";

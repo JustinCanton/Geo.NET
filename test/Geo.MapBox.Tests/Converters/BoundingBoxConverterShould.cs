@@ -5,10 +5,10 @@
 
 namespace Geo.MapBox.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Geo.MapBox.Tests.Converters
         [Fact]
         public void CorrectlyParseBoundingBox()
         {
-            var obj = JsonConvert.DeserializeObject<BoundingBoxObject>("{'Box':[40.752777282429321,-73.996387763584124,40.760502717570674,-73.982790236415866]}");
+            var obj = JsonSerializer.Deserialize<BoundingBoxObject>("{\"Box\":[40.752777282429321,-73.996387763584124,40.760502717570674,-73.982790236415866]}");
             obj.Box.West.Should().Be(40.752777282429321);
             obj.Box.South.Should().Be(-73.996387763584124);
             obj.Box.East.Should().Be(40.760502717570674);

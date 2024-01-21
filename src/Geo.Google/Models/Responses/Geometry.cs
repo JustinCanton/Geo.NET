@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Contains the geometry information for the location.
@@ -15,14 +15,14 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets the geocoded latitude,longitude value.
         /// </summary>
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public Coordinate Location { get; set; }
 
         /// <summary>
         /// Gets or sets the recommended viewport for displaying the returned result,
         /// specified as two latitude,longitude values defining the southwest and northeast corner of the viewport bounding box.
         /// </summary>
-        [JsonProperty("viewport")]
+        [JsonPropertyName("viewport")]
         public Boundaries Viewport { get; set; }
     }
 }

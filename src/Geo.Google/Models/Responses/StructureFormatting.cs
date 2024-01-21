@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Pre-formatted text that can be shown in your autocomplete results.
@@ -16,20 +16,20 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets the main text of a prediction, usually the name of the place.
         /// </summary>
-        [JsonProperty("main_text")]
+        [JsonPropertyName("main_text")]
         public string MainText { get; set; }
 
         /// <summary>
         /// Gets or sets the secondary text of a prediction, usually the location of the place.
         /// </summary>
-        [JsonProperty("secondary_text")]
+        [JsonPropertyName("secondary_text")]
         public string SecondaryText { get; set; }
 
         /// <summary>
-        /// Gets an array with offset value and length.
+        /// Gets or sets an array with offset value and length.
         /// These describe the location of the entered term in the prediction result text, so that the term can be highlighted if desired.
         /// </summary>
-        [JsonProperty("main_text_matched_substrings")]
-        public IList<MatchedSubstring> MatchedSubstrings { get; } = new List<MatchedSubstring>();
+        [JsonPropertyName("main_text_matched_substrings")]
+        public IList<MatchedSubstring> MatchedSubstrings { get; set;  } = new List<MatchedSubstring>();
     }
 }

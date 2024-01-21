@@ -39,7 +39,7 @@ namespace Geo.ArcGIS.Tests.Services
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'access_token':'1234567890abc','expires_in':15000}"),
+                Content = new StringContent("{\"access_token\":\"1234567890abc\",\"expires_in\":15000}"),
             });
 
             _handlerMock

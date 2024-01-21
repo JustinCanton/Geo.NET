@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A structure containing the time period information.
@@ -15,19 +15,19 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the start of the hours.
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public string Start { get; set; }
 
         /// <summary>
         /// Gets or sets the duration of this time period.
         /// </summary>
-        [JsonProperty("duration")]
+        [JsonPropertyName("duration")]
         public string Duration { get; set; }
 
         /// <summary>
         /// Gets or sets the recurrence of this time period.
         /// </summary>
-        [JsonProperty("recurrence")]
+        [JsonPropertyName("recurrence")]
         public string Recurrence { get; set; }
     }
 }

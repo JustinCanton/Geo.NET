@@ -5,11 +5,11 @@
 
 namespace Geo.ArcGIS.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.ArcGIS.Converters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -23,7 +23,7 @@ namespace Geo.ArcGIS.Tests.Converters
         [Fact]
         public void CorrectlyParseAddressAttribute()
         {
-            var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"}}");
+            var obj = JsonSerializer.Deserialize<AttributeObject>("{\"Attribute\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"}}");
             obj.Attribute.GetType().Should().Be(typeof(AddressAttribute));
             ((AddressAttribute)obj.Attribute).MatchAddress.Should().Be("123 East");
             ((AddressAttribute)obj.Attribute).AddressType.Should().Be("POI");
@@ -35,7 +35,7 @@ namespace Geo.ArcGIS.Tests.Converters
         [Fact]
         public void CorrectlyParseLocationAttribute()
         {
-            var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"ResultID\":123,\"LongLabel\":\"123 East\"}}");
+            var obj = JsonSerializer.Deserialize<AttributeObject>("{\"Attribute\":{\"ResultID\":123,\"LongLabel\":\"123 East\"}}");
             obj.Attribute.GetType().Should().Be(typeof(LocationAttribute));
             ((LocationAttribute)obj.Attribute).ResultId.Should().Be(123);
             ((LocationAttribute)obj.Attribute).LongLabel.Should().Be("123 East");
@@ -47,7 +47,7 @@ namespace Geo.ArcGIS.Tests.Converters
         [Fact]
         public void CorrectlyParsePlaceAttribute()
         {
-            var obj = JsonConvert.DeserializeObject<AttributeObject>("{\"Attribute\":{\"Place_addr\":\"123 East\",\"PlaceName\":\"East Side Company\"}}");
+            var obj = JsonSerializer.Deserialize<AttributeObject>("{\"Attribute\":{\"Place_addr\":\"123 East\",\"PlaceName\":\"East Side Company\"}}");
             obj.Attribute.GetType().Should().Be(typeof(PlaceAttribute));
             ((PlaceAttribute)obj.Attribute).PlaceAddress.Should().Be("123 East");
             ((PlaceAttribute)obj.Attribute).PlaceName.Should().Be("East Side Company");

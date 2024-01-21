@@ -5,8 +5,8 @@
 
 namespace Geo.Bing.Models.Responses
 {
+    using System.Text.Json.Serialization;
     using Geo.Bing.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A bounding box is defined by two latitudes and two longitudes that represent the four sides of a rectangular area on the Earth.
@@ -17,25 +17,25 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets or sets the south-most latitude point of the bounding box.
         /// </summary>
-        [JsonProperty("southLatitude")]
+        [JsonPropertyName("southLatitude")]
         public double SouthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the west-most longitude point of the bounding box.
         /// </summary>
-        [JsonProperty("westLongitude")]
+        [JsonPropertyName("westLongitude")]
         public double WestLongitude { get; set; }
 
         /// <summary>
         /// Gets or sets the north-most latitude point of the bounding box.
         /// </summary>
-        [JsonProperty("northLatitude")]
+        [JsonPropertyName("northLatitude")]
         public double NorthLatitude { get; set; }
 
         /// <summary>
         /// Gets or sets the east-most longitude point of the bounding box.
         /// </summary>
-        [JsonProperty("eastLongitude")]
+        [JsonPropertyName("eastLongitude")]
         public double EastLongitude { get; set; }
     }
 }

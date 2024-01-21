@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from a reverse geocoding request.
@@ -14,9 +14,9 @@ namespace Geo.Here.Models.Responses
     public class ReverseGeocodingResponse
     {
         /// <summary>
-        /// Gets the list of locations that match the reverse geocoding request.
+        /// Gets or sets the list of locations that match the reverse geocoding request.
         /// </summary>
-        [JsonProperty("items")]
-        public IList<GeocodeLocation> Items { get; } = new List<GeocodeLocation>();
+        [JsonPropertyName("items")]
+        public IList<GeocodeLocation> Items { get; set; } = new List<GeocodeLocation>();
     }
 }

@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A location response from a geocode method.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the distance from the search center to this result item in meters. For example: "172039".
         /// </summary>
-        [JsonProperty("distance")]
+        [JsonPropertyName("distance")]
         public long Distance { get; set; }
 
         /// <summary>
         /// Gets or sets the scoring information, which indicates for each result how well it matches to the original query.
         /// </summary>
-        [JsonProperty("scoring")]
+        [JsonPropertyName("scoring")]
         public Score Scoring { get; set; }
     }
 }

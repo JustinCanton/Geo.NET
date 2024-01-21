@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A response for a reverse geocoding operation.
@@ -15,13 +15,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the address information.
         /// </summary>
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public Address Address { get; set; }
 
         /// <summary>
         /// Gets or sets the location information.
         /// </summary>
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public SpatialLocation Location { get; set; }
     }
 }

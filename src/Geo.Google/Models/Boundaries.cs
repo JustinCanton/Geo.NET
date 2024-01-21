@@ -6,7 +6,7 @@
 namespace Geo.Google.Models
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Contains two latitude,longitude values defining the southwest and northeast corner of the bounding box.
@@ -16,13 +16,13 @@ namespace Geo.Google.Models
         /// <summary>
         /// Gets or sets the northeast coordinate of the bounding box.
         /// </summary>
-        [JsonProperty("northeast")]
+        [JsonPropertyName("northeast")]
         public Coordinate Northeast { get; set; }
 
         /// <summary>
         /// Gets or sets the southwest coordinate of the bounding box.
         /// </summary>
-        [JsonProperty("southwest")]
+        [JsonPropertyName("southwest")]
         public Coordinate Southwest { get; set; }
 
         /// <inheritdoc/>

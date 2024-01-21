@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A reference about a location.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the information about the supplier of this reference.
         /// </summary>
-        [JsonProperty("supplier")]
+        [JsonPropertyName("supplier")]
         public Supplier Supplier { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of the place as provided by the supplier.
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
     }
 }

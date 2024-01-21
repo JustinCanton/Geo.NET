@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A group of contact information for a location.
@@ -14,39 +14,39 @@ namespace Geo.Here.Models.Responses
     public class Contact
     {
         /// <summary>
-        /// Gets a list of phone numbers associated with a location.
+        /// Gets or sets a list of phone numbers associated with a location.
         /// </summary>
-        [JsonProperty("phone")]
-        public IList<ContactItem> Phones { get; } = new List<ContactItem>();
+        [JsonPropertyName("phone")]
+        public IList<ContactItem> Phones { get; set; } = new List<ContactItem>();
 
         /// <summary>
-        /// Gets a list of mobile numbers associated with a location.
+        /// Gets or sets a list of mobile numbers associated with a location.
         /// </summary>
-        [JsonProperty("mobile")]
-        public IList<ContactItem> Mobiles { get; } = new List<ContactItem>();
+        [JsonPropertyName("mobile")]
+        public IList<ContactItem> Mobiles { get; set; } = new List<ContactItem>();
 
         /// <summary>
-        /// Gets a list of toll free numbers associated with a location.
+        /// Gets or sets a list of toll free numbers associated with a location.
         /// </summary>
-        [JsonProperty("tollFree")]
-        public IList<ContactItem> TollFrees { get; } = new List<ContactItem>();
+        [JsonPropertyName("tollFree")]
+        public IList<ContactItem> TollFrees { get; set; } = new List<ContactItem>();
 
         /// <summary>
-        /// Gets a list of fax numbers associated with a location.
+        /// Gets or sets a list of fax numbers associated with a location.
         /// </summary>
-        [JsonProperty("fax")]
-        public IList<ContactItem> Faxes { get; } = new List<ContactItem>();
+        [JsonPropertyName("fax")]
+        public IList<ContactItem> Faxes { get; set; } = new List<ContactItem>();
 
         /// <summary>
-        /// Gets a list of websites associated with a location.
+        /// Gets or sets a list of websites associated with a location.
         /// </summary>
-        [JsonProperty("www")]
-        public IList<ContactItem> Websites { get; } = new List<ContactItem>();
+        [JsonPropertyName("www")]
+        public IList<ContactItem> Websites { get; set; } = new List<ContactItem>();
 
         /// <summary>
-        /// Gets a list of emails associated with a location.
+        /// Gets or sets a list of emails associated with a location.
         /// </summary>
-        [JsonProperty("email")]
-        public IList<ContactItem> Emails { get; } = new List<ContactItem>();
+        [JsonPropertyName("email")]
+        public IList<ContactItem> Emails { get; set; } = new List<ContactItem>();
     }
 }
