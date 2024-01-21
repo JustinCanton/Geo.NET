@@ -5,10 +5,10 @@
 
 namespace Geo.MapBox.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Geo.MapBox.Tests.Converters
         [Fact]
         public void CorrectlyParseContextInformation()
         {
-            var obj = JsonConvert.DeserializeObject<ContextObject>("{\"Contexts\": [" +
+            var obj = JsonSerializer.Deserialize<ContextObject>("{\"Contexts\": [" +
                 "{" +
                     "\"id\": \"postcode.7266040401534490\"," +
                     "\"text_de\": \"4226\"," +

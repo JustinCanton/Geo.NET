@@ -5,10 +5,10 @@
 
 namespace Geo.MapBox.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.MapBox.Converters;
     using Geo.MapBox.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Geo.MapBox.Tests.Converters
         [Fact]
         public void CorrectlyParseFeatureInformation()
         {
-            var obj = JsonConvert.DeserializeObject<FeatureObject>("{\"Features\": [" +
+            var obj = JsonSerializer.Deserialize<FeatureObject>("{\"Features\": [" +
             "{" +
                 "\"id\": \"address.4562086697174018\"," +
                 "\"type\": \"Feature\"," +
@@ -125,6 +125,7 @@ namespace Geo.MapBox.Tests.Converters
             "}]}");
 
             obj.Features.Count.Should().Be(1);
+            obj.Features[0].Id.Should().Be("address.4562086697174018");
             obj.Features[0].PlaceInformation.Count.Should().Be(5);
             obj.Features[0].PlaceInformation[0].PlaceName.Should().Be("123 Easthill Drive, Robina Queensland 4226, Australien");
             obj.Features[0].PlaceInformation[0].Language.Should().Be("de");

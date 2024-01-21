@@ -7,55 +7,119 @@ namespace Geo.MapBox.Converters
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+    using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.MapBox.Models.Responses;
 
     /// <summary>
     /// A converter for a <see cref="Dictionary{TKey, TValue}"/> to a <see cref="Context"/>.
     /// </summary>
-    public class ContextConverter : JsonConverter
+    public class ContextConverter : JsonConverter<Context>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        private static readonly Type ContextType = typeof(Context);
+        private static readonly Dictionary<string, string> JsonNameMapping = GetJsonNameMapping();
+
+        /// <inheritdoc/>
+        public override Context Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (objectType == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            return objectType == typeof(List<Context>);
-        }
-
-        /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            var token = JObject.Load(reader);
-            var contextInfo = token.ToObject<Dictionary<string, string>>();
-
-            if (contextInfo is null)
+            if (reader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the context. Expected to find an object, instead found {0}", reader.TokenType.GetName()));
+            }
+
+            var data = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options);
+
+            if (data is null)
+            {
+                return null;
+            }
+
+            return PopulateData(data, options);
+        }
+
+        /// <inheritdoc/>
+        public override void Write(Utf8JsonWriter writer, Context value, JsonSerializerOptions options)
+        {
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
+
+            JsonSerializer.Serialize(writer, value, options);
+        }
+
+        private static Dictionary<string, string> GetJsonNameMapping()
+        {
+            var mapping = new Dictionary<string, string>();
+            foreach (var property in ContextType.GetProperties())
+            {
+                var attributeName = ContextType.GetAttribute<JsonPropertyNameAttribute>(property.Name)?.Name;
+                if (attributeName == null)
+                {
+                    continue;
+                }
+
+                mapping.Add(property.Name, attributeName);
+            }
+
+            return mapping;
+        }
+
+        private static string GetString(Dictionary<string, string> data, string name)
+        {
+            data.TryGetValue(JsonNameMapping[name], out var value);
+            return value;
+        }
+
+        private Context PopulateData(Dictionary<string, string> data, JsonSerializerOptions options)
+        {
+            var context = new Context();
+            context.Id = GetString(data, nameof(Context.Id));
+            context.Wikidata = GetString(data, nameof(Context.Wikidata));
+            context.ShortCode = GetString(data, nameof(Context.ShortCode));
+            context.ContextText = GetContextText(data);
+
+            return context;
+        }
+
+        private IList<ContextText> GetContextText(Dictionary<string, string> data)
+        {
+            var texts = new List<ContextText>();
+
 #if NETSTANDARD2_1_OR_GREATER
-            var languages = contextInfo.Where(x => x.Key.Contains(ContextFields.Language, StringComparison.OrdinalIgnoreCase));
+            var languages = data.Where(x => x.Key.Contains(ContextFields.Language, StringComparison.OrdinalIgnoreCase));
 #else
-            var languages = contextInfo.Where(x => x.Key.Contains(ContextFields.Language));
+            var languages = data.Where(x => x.Key.Contains(ContextFields.Language));
 #endif
             if (!languages.Any())
             {
@@ -63,9 +127,9 @@ namespace Geo.MapBox.Converters
                 // Either there are no extra languages, only the default,
                 // or there is a context group without the language tags.
 #if NETSTANDARD2_1_OR_GREATER
-                var textItems = contextInfo.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase));
+                var textItems = data.Keys.Where(x => x.Contains("text", StringComparison.OrdinalIgnoreCase));
 #else
-                var textItems = contextInfo.Keys.Where(x => x.Contains("text"));
+                var textItems = data.Keys.Where(x => x.Contains("text"));
 #endif
                 if (textItems.Count() > 1)
                 {
@@ -84,56 +148,27 @@ namespace Geo.MapBox.Converters
                 }
             }
 
-            var context = new Context();
-            contextInfo.TryGetValue(ContextFields.Id, out var id);
-            context.Id = id;
-            contextInfo.TryGetValue(ContextFields.Wikidata, out var wikidata);
-            context.Wikidata = wikidata;
-            contextInfo.TryGetValue(ContextFields.ShortCode, out var shortCode);
-            context.ShortCode = shortCode;
-
             // There will be {languages.Count()} items in this context group.
             foreach (var language in languages)
             {
                 var contextText = new ContextText();
 
                 var languageEnding = language.Key.Substring(8);
-                contextInfo.TryGetValue(string.Concat(ContextFields.Language, languageEnding), out var lang);
+                data.TryGetValue(string.Concat(ContextFields.Language, languageEnding), out var lang);
                 if (lang == null)
                 {
                     lang = language.Value;
                 }
 
                 contextText.Language = lang;
-                contextInfo.TryGetValue(string.Concat(ContextFields.Text, languageEnding), out var text);
+                data.TryGetValue(string.Concat(ContextFields.Text, languageEnding), out var text);
                 contextText.Text = text;
                 contextText.IsDefault = string.IsNullOrWhiteSpace(languageEnding);
 
-                context.ContextText.Add(contextText);
+                texts.Add(contextText);
             }
 
-            return context;
-        }
-
-        /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (writer == null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            serializer.Serialize(writer, value);
+            return texts;
         }
 
         /// <summary>
@@ -141,21 +176,6 @@ namespace Geo.MapBox.Converters
         /// </summary>
         private static class ContextFields
         {
-            /// <summary>
-            /// Gets the id field name.
-            /// </summary>
-            public static string Id => "id";
-
-            /// <summary>
-            /// Gets the wikidata field name.
-            /// </summary>
-            public static string Wikidata => "wikidata";
-
-            /// <summary>
-            /// Gets the short code field name.
-            /// </summary>
-            public static string ShortCode => "short_code";
-
             /// <summary>
             /// Gets the language field name.
             /// </summary>

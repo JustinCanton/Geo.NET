@@ -5,11 +5,11 @@
 
 namespace Geo.ArcGIS.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.ArcGIS.Converters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.ArcGIS.Tests.Models;
-    using System.Text.Json;
     using Xunit;
 
     /// <summary>

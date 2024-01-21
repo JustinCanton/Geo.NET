@@ -34,8 +34,8 @@ namespace Geo.MapBox.Models.Responses
         public string ShortCode { get; set; }
 
         /// <summary>
-        /// Gets the text items of the context.
+        /// Gets or sets the text items of the context.
         /// </summary>
-        public IList<ContextText> ContextText { get; } = new List<ContextText>();
+        public IList<ContextText> ContextText { get; set; } = new List<ContextText>();
     }
 }

@@ -27,10 +27,10 @@ namespace Geo.MapBox.Models.Responses
         public TQuery Query { get; set; }
 
         /// <summary>
-        /// Gets a list of features that matched the query.
+        /// Gets or sets a list of features that matched the query.
         /// </summary>
         [JsonPropertyName("features")]
-        public IList<Feature> Features { get; } = new List<Feature>();
+        public IList<Feature> Features { get; set; } = new List<Feature>();
 
         /// <summary>
         /// Gets or sets a string that attributes the results of the Mapbox Geocoding API to Mapbox.

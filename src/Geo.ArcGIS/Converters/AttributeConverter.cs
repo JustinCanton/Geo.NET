@@ -19,9 +19,9 @@ namespace Geo.ArcGIS.Converters
     {
         private const string LocationAttribute = "LongLabel";
         private const string AddressAttribute = "Match_addr";
-        private static readonly Type Location = typeof(LocationAttribute);
-        private static readonly Type Address = typeof(AddressAttribute);
-        private static readonly Type Place = typeof(PlaceAttribute);
+        private static readonly Type LocationType = typeof(LocationAttribute);
+        private static readonly Type AddressType = typeof(AddressAttribute);
+        private static readonly Type PlaceType = typeof(PlaceAttribute);
 
         /// <inheritdoc/>
         public override Models.Responses.Attribute Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -82,15 +82,15 @@ namespace Geo.ArcGIS.Converters
 
             if (type == 0)
             {
-                return JsonSerializer.Deserialize(ref reader, typeof(LocationAttribute)) as LocationAttribute;
+                return JsonSerializer.Deserialize<LocationAttribute>(ref reader, options);
             }
             else if (type == 1)
             {
-                return JsonSerializer.Deserialize(ref reader, typeof(AddressAttribute)) as AddressAttribute;
+                return JsonSerializer.Deserialize<AddressAttribute>(ref reader, options);
             }
             else
             {
-                return JsonSerializer.Deserialize(ref reader, typeof(PlaceAttribute)) as PlaceAttribute;
+                return JsonSerializer.Deserialize<PlaceAttribute>(ref reader, options);
             }
         }
 
@@ -113,17 +113,17 @@ namespace Geo.ArcGIS.Converters
                 return;
             }
 
-            if (value.GetType() == Location)
+            if (value.GetType() == LocationType)
             {
-                JsonSerializer.Serialize(writer, value, Location);
+                JsonSerializer.Serialize(writer, value, LocationType, options);
             }
-            else if (value.GetType() == Address)
+            else if (value.GetType() == AddressType)
             {
-                JsonSerializer.Serialize(writer, value, Address);
+                JsonSerializer.Serialize(writer, value, AddressType, options);
             }
             else
             {
-                JsonSerializer.Serialize(writer, value, Place);
+                JsonSerializer.Serialize(writer, value, PlaceType, options);
             }
         }
     }

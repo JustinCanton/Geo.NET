@@ -18,8 +18,8 @@ namespace Geo.Here.Converters
     /// </summary>
     public class AutosuggestJsonConverter : JsonConverter<BaseLocation>
     {
-        private static readonly Type Entity = typeof(AutosuggestEntityLocation);
-        private static readonly Type Query = typeof(AutosuggestQueryLocation);
+        private static readonly Type EntityType = typeof(AutosuggestEntityLocation);
+        private static readonly Type QueryType = typeof(AutosuggestQueryLocation);
 
         /// <inheritdoc/>
         public override BaseLocation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -47,8 +47,8 @@ namespace Geo.Here.Converters
             }
 
             var isEntity = false;
-            var addressAttributeName = Entity.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestEntityLocation.Address))?.Name;
-            var hrefAttributeName = Query.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestQueryLocation.Href))?.Name;
+            var addressAttributeName = EntityType.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestEntityLocation.Address))?.Name;
+            var hrefAttributeName = QueryType.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestQueryLocation.Href))?.Name;
 
             while (typeReader.Read())
             {
@@ -79,11 +79,11 @@ namespace Geo.Here.Converters
 
             if (isEntity)
             {
-                return JsonSerializer.Deserialize(ref reader, typeof(AutosuggestEntityLocation)) as AutosuggestEntityLocation;
+                return JsonSerializer.Deserialize<AutosuggestEntityLocation>(ref reader, options);
             }
             else
             {
-                return JsonSerializer.Deserialize(ref reader, typeof(AutosuggestQueryLocation)) as AutosuggestQueryLocation;
+                return JsonSerializer.Deserialize<AutosuggestQueryLocation>(ref reader, options);
             }
         }
 
@@ -106,13 +106,13 @@ namespace Geo.Here.Converters
                 return;
             }
 
-            if (value.GetType() == Entity)
+            if (value.GetType() == EntityType)
             {
-                JsonSerializer.Serialize(writer, value, Entity);
+                JsonSerializer.Serialize(writer, value, EntityType, options);
             }
             else
             {
-                JsonSerializer.Serialize(writer, value, Query);
+                JsonSerializer.Serialize(writer, value, QueryType, options);
             }
         }
     }
