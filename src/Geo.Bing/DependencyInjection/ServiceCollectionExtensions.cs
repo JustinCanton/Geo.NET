@@ -10,7 +10,6 @@ namespace Geo.Bing.DependencyInjection
     using Geo.Bing.Abstractions;
     using Geo.Bing.Models;
     using Geo.Bing.Services;
-    using Geo.Core.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -37,8 +36,6 @@ namespace Geo.Bing.DependencyInjection
             Action<BingOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new BingOptionsBuilder();

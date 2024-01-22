@@ -17,7 +17,6 @@ namespace Geo.MapBox.Tests.Services
     using Geo.Core;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
-    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Services;
     using Microsoft.Extensions.Localization;

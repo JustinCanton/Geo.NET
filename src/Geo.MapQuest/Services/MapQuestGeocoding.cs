@@ -14,7 +14,6 @@ namespace Geo.MapQuest.Services
     using Geo.Core.Extensions;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Enums;
-    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
     using Microsoft.Extensions.Logging;

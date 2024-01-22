@@ -15,11 +15,11 @@ namespace Geo.Core
     {
         private static readonly Action<ILogger, string, Exception> _apiCallFailed = LoggerMessage.Define<string>(
             LogLevel.Error,
-            new EventId(1, nameof(ClientExecutor)),
-            "ClientExecutor: The call to the API {URI} failed.");
+            new EventId(1, nameof(GeoClient)),
+            "GeoClient: The call to the API {URI} failed.");
 
         /// <summary>
-        /// "ClientExecutor: The call to the API {API} failed.".
+        /// "GeoClient: The call to the API {API} failed.".
         /// </summary>
         /// <param name="logger">An <see cref="ILogger"/> used to log the error message.</param>
         /// <param name="uri">The uri that failed.</param>

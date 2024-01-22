@@ -14,7 +14,6 @@ namespace Geo.Here.Services
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Here.Abstractions;
-    using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
     using Microsoft.Extensions.Logging;

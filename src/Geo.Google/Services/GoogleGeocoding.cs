@@ -17,7 +17,6 @@ namespace Geo.Google.Services
     using Geo.Google.Abstractions;
     using Geo.Google.Enums;
     using Geo.Google.Models;
-    using Geo.Google.Models.Exceptions;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
     using Microsoft.Extensions.Logging;

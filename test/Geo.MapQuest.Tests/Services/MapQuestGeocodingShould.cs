@@ -17,7 +17,6 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.Core;
     using Geo.MapQuest.Enums;
     using Geo.MapQuest.Models;
-    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Services;
     using Microsoft.Extensions.Localization;

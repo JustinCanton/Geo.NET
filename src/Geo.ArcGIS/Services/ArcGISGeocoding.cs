@@ -16,7 +16,6 @@ namespace Geo.ArcGIS.Services
     using System.Threading.Tasks;
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
-    using Geo.ArcGIS.Models.Exceptions;
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;

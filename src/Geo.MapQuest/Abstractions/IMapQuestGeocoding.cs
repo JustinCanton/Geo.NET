@@ -7,7 +7,6 @@ namespace Geo.MapQuest.Abstractions
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
 

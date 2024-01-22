@@ -16,7 +16,6 @@ namespace Geo.Here.Tests.Services
     using FluentAssertions;
     using Geo.Core;
     using Geo.Here.Models;
-    using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Services;
     using Microsoft.Extensions.Localization;

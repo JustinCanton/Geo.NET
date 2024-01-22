@@ -18,7 +18,6 @@ namespace Geo.MapBox.Services
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
-    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
     using Microsoft.Extensions.Logging;
