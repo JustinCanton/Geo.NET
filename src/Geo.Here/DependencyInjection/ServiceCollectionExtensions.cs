@@ -7,7 +7,6 @@ namespace Geo.Here.DependencyInjection
 {
     using System;
     using System.Net.Http;
-    using Geo.Core.DependencyInjection;
     using Geo.Here.Abstractions;
     using Geo.Here.Models;
     using Geo.Here.Services;
@@ -37,8 +36,6 @@ namespace Geo.Here.DependencyInjection
             Action<HereOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new HereOptionsBuilder();

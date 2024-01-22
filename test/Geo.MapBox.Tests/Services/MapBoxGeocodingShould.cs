@@ -15,9 +15,9 @@ namespace Geo.MapBox.Tests.Services
     using System.Web;
     using FluentAssertions;
     using Geo.Core;
+    using Geo.Core.Models.Exceptions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
-    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Services;
     using Microsoft.Extensions.Localization;
@@ -33,8 +33,6 @@ namespace Geo.MapBox.Tests.Services
     {
         private readonly HttpClient _httpClient;
         private readonly MapBoxKeyContainer _keyContainer;
-        private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -91,9 +89,7 @@ namespace Geo.MapBox.Tests.Services
                 .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
-            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -401,7 +397,7 @@ namespace Geo.MapBox.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(null, sut.BuildReverseGeocodingRequest);
 
             act.Should()
-                .Throw<MapBoxException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
@@ -417,7 +413,7 @@ namespace Geo.MapBox.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), sut.BuildReverseGeocodingRequest);
 
             act.Should()
-                .Throw<MapBoxException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
 #if NETCOREAPP3_1_OR_GREATER
@@ -546,7 +542,7 @@ namespace Geo.MapBox.Tests.Services
 
         private MapBoxGeocoding BuildService()
         {
-            return new MapBoxGeocoding(_httpClient, _keyContainer, _exceptionProvider, _resourceStringProviderFactory);
+            return new MapBoxGeocoding(_httpClient, _keyContainer);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Geo.ArcGIS.DependencyInjection
     using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Services;
-    using Geo.Core.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -37,8 +36,6 @@ namespace Geo.ArcGIS.DependencyInjection
             Action<ArcGISOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new ArcGISOptionsBuilder();

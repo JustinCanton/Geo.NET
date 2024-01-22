@@ -22,14 +22,14 @@ namespace Geo.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ClientExecutor {
+    internal class GeoClient {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ClientExecutor() {
+        internal GeoClient() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Geo.Core.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Geo.Core.Resources.ClientExecutor", typeof(ClientExecutor).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Geo.Core.Resources.GeoClient", typeof(GeoClient).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,11 +70,29 @@ namespace Geo.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} body is invalid..
+        /// </summary>
+        internal static string Null_Body {
+            get {
+                return ResourceManager.GetString("Null Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} uri is null..
         /// </summary>
         internal static string Null_Uri {
             get {
                 return ResourceManager.GetString("Null Uri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The parsing of the call to {0} failed with an exception..
+        /// </summary>
+        internal static string Parser_Failed {
+            get {
+                return ResourceManager.GetString("Parser Failed", resourceCulture);
             }
         }
         

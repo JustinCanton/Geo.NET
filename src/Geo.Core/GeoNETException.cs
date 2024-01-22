@@ -1,4 +1,4 @@
-﻿// <copyright file="GeoCoreException.cs" company="Geo.NET">
+﻿// <copyright file="GeoNETException.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -12,31 +12,33 @@ namespace Geo.Core.Models.Exceptions
     /// <summary>
     /// A base exception typ eused by all derived exceptions, which overrides the ToString method to display the Data in the exception as well.
     /// </summary>
-    public abstract class GeoCoreException : Exception
+    public sealed class GeoNETException : Exception
     {
+        private const string DefaultMessage = "{0} See the inner exception for more information.";
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeoCoreException"/> class.
+        /// Initializes a new instance of the <see cref="GeoNETException"/> class.
         /// </summary>
-        protected GeoCoreException()
+        public GeoNETException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeoCoreException"/> class.
+        /// Initializes a new instance of the <see cref="GeoNETException"/> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        protected GeoCoreException(string message)
+        public GeoNETException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeoCoreException"/> class.
+        /// Initializes a new instance of the <see cref="GeoNETException"/> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="inner">The exception that is the cause of the current exception.</param>
-        protected GeoCoreException(string message, Exception inner)
-            : base(message, inner)
+        public GeoNETException(string message, Exception inner)
+            : base(string.Format(CultureInfo.InvariantCulture, DefaultMessage, message), inner)
         {
         }
 

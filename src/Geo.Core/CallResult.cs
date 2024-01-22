@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.Core.Models
+namespace Geo.Core
 {
     using System.Net;
 
@@ -19,13 +19,11 @@ namespace Geo.Core.Models
         /// </summary>
         /// <param name="result">The result from the call.</param>
         /// <param name="statusCode">The status code of the call.</param>
-        /// <param name="body">The string body of the call.</param>
-        public CallResult(TResult result, HttpStatusCode statusCode, string body)
+        public CallResult(TResult result, HttpStatusCode statusCode)
         {
             IsSuccessful = true;
             Result = result;
             StatusCode = statusCode;
-            Body = body;
         }
 
         /// <summary>
@@ -36,7 +34,6 @@ namespace Geo.Core.Models
         public CallResult(HttpStatusCode statusCode, string body)
         {
             IsSuccessful = false;
-            Result = null;
             StatusCode = statusCode;
             Body = body;
         }
@@ -49,7 +46,11 @@ namespace Geo.Core.Models
         /// <summary>
         /// Gets the result of the call.
         /// </summary>
-        public TResult Result { get; }
+#if NETSTANDARD2_0
+        public TResult Result { get; } = null;
+#else
+        public TResult? Result { get; } = null;
+#endif
 
         /// <summary>
         /// Gets the status code resulting from the call.
@@ -59,6 +60,10 @@ namespace Geo.Core.Models
         /// <summary>
         /// Gets the body of the result.
         /// </summary>
-        public string Body { get; }
+#if NETSTANDARD2_0
+        public string Body { get; } = null;
+#else
+        public string? Body { get; } = null;
+#endif
     }
 }

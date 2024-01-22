@@ -16,7 +16,7 @@ namespace Geo.MapBox.Converters
     using Geo.MapBox.Models.Responses;
 
     /// <summary>
-    /// A converter for a <see cref="Dictionary{TKey, TValue}"/> to a <see cref="Context"/>.
+    /// A converter for a <see cref="object"/> to a <see cref="Context"/>.
     /// </summary>
     public class ContextConverter : JsonConverter<Context>
     {

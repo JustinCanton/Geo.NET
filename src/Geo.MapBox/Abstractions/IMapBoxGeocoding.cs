@@ -8,8 +8,8 @@ namespace Geo.MapBox.Abstractions
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Geo.Core.Models.Exceptions;
     using Geo.MapBox.Models;
-    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
 
@@ -24,7 +24,7 @@ namespace Geo.MapBox.Abstractions
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response{T}"/> with a <see cref="List{T}"/> of <see cref="string"/> with the response from MapBox.</returns>
-        /// <exception cref="MapBoxException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<List<string>>> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Geo.MapBox.Abstractions
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Response{Coordinate}"/> with the response from MapBox.</returns>
-        /// <exception cref="MapBoxException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<Coordinate>> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
     }
 }
