@@ -15,6 +15,7 @@ namespace Geo.MapQuest.Tests.Services
     using System.Web;
     using FluentAssertions;
     using Geo.Core;
+    using Geo.Core.Models.Exceptions;
     using Geo.MapQuest.Enums;
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Models.Parameters;
@@ -33,8 +34,6 @@ namespace Geo.MapQuest.Tests.Services
         private readonly HttpClient _httpClient;
         private readonly MapQuestKeyContainer _keyContainer;
         private readonly MapQuestEndpoint _endpoint;
-        private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -103,9 +102,7 @@ namespace Geo.MapQuest.Tests.Services
                 .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
-            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -415,7 +412,7 @@ namespace Geo.MapQuest.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(null, sut.BuildReverseGeocodingRequest);
 
             act.Should()
-                .Throw<MapQuestException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
@@ -431,7 +428,7 @@ namespace Geo.MapQuest.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<ReverseGeocodingParameters>(new ReverseGeocodingParameters(), sut.BuildReverseGeocodingRequest);
 
             act.Should()
-                .Throw<MapQuestException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
 #if NETCOREAPP3_1_OR_GREATER
@@ -534,7 +531,7 @@ namespace Geo.MapQuest.Tests.Services
 
         private MapQuestGeocoding BuildService(MapQuestEndpoint endpoint = null)
         {
-            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint, _exceptionProvider, _resourceStringProviderFactory);
+            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint);
         }
     }
 }

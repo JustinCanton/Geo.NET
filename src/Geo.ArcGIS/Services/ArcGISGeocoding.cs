@@ -20,22 +20,21 @@ namespace Geo.ArcGIS.Services
     using Geo.ArcGIS.Models.Responses;
     using Geo.Core;
     using Geo.Core.Extensions;
+    using Geo.Core.Models.Exceptions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
     /// <summary>
     /// A service to call the ArcGIS geocoding API.
     /// </summary>
-    public class ArcGISGeocoding : ClientExecutor, IArcGISGeocoding
+    public class ArcGISGeocoding : GeoClient, IArcGISGeocoding
     {
-        private const string ApiName = "ArcGIS";
         private const string CandidatesUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
         private const string SuggestUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
         private const string ReverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
         private const string GeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
 
         private readonly IArcGISTokenContainer _tokenContainer;
-        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
         private readonly ILogger<ArcGISGeocoding> _logger;
 
         /// <summary>
@@ -43,21 +42,19 @@ namespace Geo.ArcGIS.Services
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
         /// <param name="tokenContainer">An <see cref="IArcGISTokenContainer"/> used for retreiving the ArcGIS token.</param>
-        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public ArcGISGeocoding(
             HttpClient client,
             IArcGISTokenContainer tokenContainer,
-            IGeoNETExceptionProvider exceptionProvider,
-            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
+            : base(client, loggerFactory)
         {
             _tokenContainer = tokenContainer ?? throw new ArgumentNullException(nameof(tokenContainer));
-            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<ArcGISGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
             _logger = loggerFactory?.CreateLogger<ArcGISGeocoding>() ?? NullLogger<ArcGISGeocoding>.Instance;
         }
+
+        /// <inheritdoc/>
+        protected override string ApiName => "ArcGIS";
 
         /// <inheritdoc/>
         public async Task<CandidateResponse> AddressCandidateAsync(
@@ -66,7 +63,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<AddressCandidateParameters>(parameters, BuildAddressCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -76,7 +73,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<PlaceCandidateParameters>(parameters, BuildPlaceCandidateRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<CandidateResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -86,7 +83,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<SuggestParameters>(parameters, BuildSuggestRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<SuggestResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<SuggestResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -96,7 +93,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<ReverseGeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<ReverseGeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -106,7 +103,7 @@ namespace Geo.ArcGIS.Services
         {
             var uri = await ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest, cancellationToken).ConfigureAwait(false);
 
-            return await CallAsync<GeocodingResponse, ArcGISException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<GeocodingResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -137,9 +134,8 @@ namespace Geo.ArcGIS.Services
         {
             if (parameters is null)
             {
-                var error = _resourceStringProvider.GetString("Null Parameters");
-                _logger.ArcGISError(error);
-                throw new ArcGISException(error, new ArgumentNullException(nameof(parameters)));
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Null_Parameters);
+                throw new GeoNETException(Resources.Services.ArcGISGeocoding.Null_Parameters, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -148,9 +144,8 @@ namespace Geo.ArcGIS.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _resourceStringProvider.GetString("Failed To Create Uri");
-                _logger.ArcGISError(error);
-                throw new ArcGISException(error, ex);
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Failed_To_Create_Uri);
+                throw new GeoNETException(Resources.Services.ArcGISGeocoding.Failed_To_Create_Uri, ex);
             }
         }
 
@@ -164,9 +159,8 @@ namespace Geo.ArcGIS.Services
         {
             if (string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
             {
-                var error = _resourceStringProvider.GetString("Invalid Single Address Line");
-                _logger.ArcGISError(error);
-                throw new ArgumentException(error, nameof(parameters.SingleLineAddress));
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Invalid_Single_Address_Line);
+                throw new ArgumentException(Resources.Services.ArcGISGeocoding.Invalid_Single_Address_Line, nameof(parameters.SingleLineAddress));
             }
 
             var uriBuilder = new UriBuilder(CandidatesUri);
@@ -209,7 +203,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Address2))
@@ -218,7 +212,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address2"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address2);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Address3))
@@ -227,7 +221,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Address3"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address3);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Neighbourhood))
@@ -236,7 +230,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Neighbourhood"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Neighbourhood);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.City))
@@ -245,7 +239,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid City"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_City);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Subregion))
@@ -254,7 +248,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Subregion"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Subregion);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Region))
@@ -263,7 +257,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Region"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Region);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Postal))
@@ -272,7 +266,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Postal"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Postal);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.PostalExt))
@@ -281,7 +275,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid PostalExt"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_PostalExt);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.CountryCode))
@@ -290,7 +284,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Country_Code);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
@@ -299,7 +293,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Category"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Category);
             }
 
             if (parameters.Location != null)
@@ -308,7 +302,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Location"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Location);
             }
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations <= 50)
@@ -317,7 +311,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Maximum Locations"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Maximum_Locations);
             }
 
             if (parameters.OutSpatialReference > 0)
@@ -326,7 +320,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Out Spatial Reference"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Out_Spatial_Reference);
             }
 
             if (parameters.SearchExtent != null)
@@ -335,7 +329,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Search Extent"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Search_Extent);
             }
 
             if (parameters.LanguageCode != null)
@@ -344,7 +338,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Language Code"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Language_Code);
             }
 
             if (parameters.LocationType >= 0)
@@ -353,7 +347,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Location Type"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Location_Type);
             }
 
             AddStorageParameter(parameters, ref query);
@@ -379,9 +373,8 @@ namespace Geo.ArcGIS.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Text))
             {
-                var error = _resourceStringProvider.GetString("Invalid Text");
-                _logger.ArcGISError(error);
-                throw new ArgumentException(error, nameof(parameters.Text));
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Invalid_Text);
+                throw new ArgumentException(Resources.Services.ArcGISGeocoding.Invalid_Text, nameof(parameters.Text));
             }
 
             query = query.Add("text", parameters.Text);
@@ -392,7 +385,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Location"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Location);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
@@ -401,7 +394,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Category"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Category);
             }
 
             if (parameters.SearchExtent != null)
@@ -410,7 +403,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Search Extent"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Search_Extent);
             }
 
             if (parameters.MaximumLocations > 0 && parameters.MaximumLocations < 16)
@@ -419,7 +412,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Maximum Locations"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Maximum_Locations);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.CountryCode))
@@ -428,7 +421,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Country Code"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Country_Code);
             }
 
             if (parameters.SourceCountry.Count != 0)
@@ -437,7 +430,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Source Country"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Source_Country);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -446,7 +439,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Preferred Label Value"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
             uriBuilder.AddQuery(query);
@@ -468,9 +461,8 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.Location is null)
             {
-                var error = _resourceStringProvider.GetString("Invalid Location Error");
-                _logger.ArcGISError(error);
-                throw new ArgumentException(error, nameof(parameters.Location));
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Invalid_Location_Error);
+                throw new ArgumentException(Resources.Services.ArcGISGeocoding.Invalid_Location_Error, nameof(parameters.Location));
             }
 
             query = query.Add("location", parameters.Location.ToString());
@@ -481,7 +473,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Out Spatial Reference"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Out_Spatial_Reference);
             }
 
             if (parameters.LanguageCode != null)
@@ -490,7 +482,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Language Code"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Language_Code);
             }
 
             if (parameters.FeatureTypes != null)
@@ -505,7 +497,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Feature Types"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Feature_Types);
             }
 
             if (parameters.LocationType >= 0)
@@ -514,7 +506,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Location Type"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Location_Type);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -523,7 +515,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Preferred Label Value"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
             AddStorageParameter(parameters, ref query);
@@ -549,9 +541,8 @@ namespace Geo.ArcGIS.Services
 
             if (parameters.AddressAttributes is null || parameters.AddressAttributes.Count == 0)
             {
-                var error = _resourceStringProvider.GetString("Invalid Address Attributes");
-                _logger.ArcGISError(error);
-                throw new ArgumentException(error, nameof(parameters.AddressAttributes));
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Invalid_Address_Attributes);
+                throw new ArgumentException(Resources.Services.ArcGISGeocoding.Invalid_Address_Attributes, nameof(parameters.AddressAttributes));
             }
 
             List<object> attributes = new List<object>();
@@ -586,7 +577,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Category"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Category);
             }
 
             if (parameters.SourceCountry.Count != 0)
@@ -595,7 +586,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Source Country"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Source_Country);
             }
 
             if (parameters.OutSpatialReference > 0)
@@ -604,7 +595,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Out Spatial Reference"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Out_Spatial_Reference);
             }
 
             if (parameters.SearchExtent != null)
@@ -613,7 +604,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Search Extent"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Search_Extent);
             }
 
             if (parameters.LanguageCode != null)
@@ -622,7 +613,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISDebug(_resourceStringProvider.GetString("Invalid Language Code"));
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Language_Code);
             }
 
             if (parameters.LocationType >= 0)
@@ -631,7 +622,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Location Type"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Location_Type);
             }
 
             if (parameters.PreferredLabelValue >= 0)
@@ -640,7 +631,7 @@ namespace Geo.ArcGIS.Services
             }
             else
             {
-                _logger.ArcGISWarning(_resourceStringProvider.GetString("Invalid Preferred Label Value"));
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
             query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);

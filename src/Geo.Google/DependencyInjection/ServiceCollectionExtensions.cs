@@ -7,7 +7,6 @@ namespace Geo.Google.DependencyInjection
 {
     using System;
     using System.Net.Http;
-    using Geo.Core.DependencyInjection;
     using Geo.Google.Abstractions;
     using Geo.Google.Models;
     using Geo.Google.Services;
@@ -37,8 +36,6 @@ namespace Geo.Google.DependencyInjection
             Action<GoogleOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new GoogleOptionsBuilder();

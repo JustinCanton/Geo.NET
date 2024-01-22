@@ -197,7 +197,8 @@ namespace Geo.Core.Tests
             (await sut.Invoking(x => x.GetAsync<TestClass>(new Uri("http://test.com/Failure")))
                 .Should()
                 .ThrowAsync<GeoNETException>())
-                .WithMessage("{'Message':'Access denied'}");
+                .WithMessage("The Test request failed.")
+                .And.Data["responseBody"].Should().Be("{'Message':'Access denied'}");
         }
 
         /// <summary>

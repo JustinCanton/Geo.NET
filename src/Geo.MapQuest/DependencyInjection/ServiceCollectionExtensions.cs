@@ -7,7 +7,6 @@ namespace Geo.MapQuest.DependencyInjection
 {
     using System;
     using System.Net.Http;
-    using Geo.Core.DependencyInjection;
     using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Services;
@@ -37,8 +36,6 @@ namespace Geo.MapQuest.DependencyInjection
             Action<MapQuestOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new MapQuestOptionsBuilder();

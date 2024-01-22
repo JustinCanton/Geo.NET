@@ -5,6 +5,8 @@
 
 namespace Geo.Core.Tests.Models
 {
+    using System.Text.Json.Serialization;
+
     /// <summary>
     /// A test data class used during testing.
     /// </summary>
@@ -13,6 +15,7 @@ namespace Geo.Core.Tests.Models
         /// <summary>
         /// Gets or sets the test field.
         /// </summary>
+        [JsonPropertyName("TestField")]
         public int TestField { get; set; }
     }
 }

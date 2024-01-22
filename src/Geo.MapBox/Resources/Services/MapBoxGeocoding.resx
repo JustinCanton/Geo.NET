@@ -132,6 +132,9 @@
   <data name="Invalid Languages" xml:space="preserve">
     <value>The languages are invalid and will not be used.</value>
   </data>
+  <data name="Invalid Limit" xml:space="preserve">
+    <value>The limit is invalid and will not be used.</value>
+  </data>
   <data name="Invalid Proximity" xml:space="preserve">
     <value>The proximity is invalid and will not be used.</value>
   </data>

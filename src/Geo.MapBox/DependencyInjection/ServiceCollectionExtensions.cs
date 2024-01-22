@@ -7,7 +7,6 @@ namespace Geo.MapBox.DependencyInjection
 {
     using System;
     using System.Net.Http;
-    using Geo.Core.DependencyInjection;
     using Geo.MapBox.Abstractions;
     using Geo.MapBox.Models;
     using Geo.MapBox.Services;
@@ -37,8 +36,6 @@ namespace Geo.MapBox.DependencyInjection
             Action<MapBoxOptionsBuilder> optionsBuilder,
             Action<HttpClient> configureClient = null)
         {
-            services.AddCoreServices();
-
             if (optionsBuilder != null)
             {
                 var options = new MapBoxOptionsBuilder();

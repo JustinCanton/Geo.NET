@@ -112,8 +112,6 @@ namespace Geo.Core
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
 
-            options.Converters.Add(new JsonStringEnumConverter());
-
             return options;
         }
 
