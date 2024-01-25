@@ -11,7 +11,7 @@ This allows the simple calling of ArcGIS geocoding APIs. The supported ArcGIS ge
 
 In the startup `ConfigureServices` method, add the configuration for the ArcGIS service:
 ```
-using Geo.ArcGIS.DependencyInjection;
+using Geo.DependencyInjection;
 .
 .
 .
@@ -20,7 +20,9 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddArcGISServices(options => options.UseClientCredentials(your_arcgis_client_id_here, your_arcgis_client_secret_here));
+    var builder = services.AddArcGISServices();
+    builder.AddClientCredentials(your_arcgis_client_id_here, your_arcgis_client_secret_here);
+    builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .
     .
     .

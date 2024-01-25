@@ -23,6 +23,7 @@ namespace Geo.ArcGIS.Services
     using Geo.Core.Models.Exceptions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the ArcGIS geocoding API.
@@ -34,22 +35,26 @@ namespace Geo.ArcGIS.Services
         private const string ReverseGeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode";
         private const string GeocodingUri = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/geocodeAddresses";
 
-        private readonly IArcGISTokenContainer _tokenContainer;
+        private readonly IArcGISTokenProvider _tokenProvider;
+        private readonly IOptions<ClientCredentialsOptions<IArcGISGeocoding>> _options;
         private readonly ILogger<ArcGISGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArcGISGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
-        /// <param name="tokenContainer">An <see cref="IArcGISTokenContainer"/> used for retreiving the ArcGIS token.</param>
+        /// <param name="tokenProvider">An <see cref="IArcGISTokenContainer"/> used for retreiving an ArcGIS token.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="ClientCredentialsOptions{T}"/> containing ArcGIS client credential information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public ArcGISGeocoding(
             HttpClient client,
-            IArcGISTokenContainer tokenContainer,
+            IArcGISTokenProvider tokenProvider,
+            IOptions<ClientCredentialsOptions<IArcGISGeocoding>> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _tokenContainer = tokenContainer ?? throw new ArgumentNullException(nameof(tokenContainer));
+            _tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<ArcGISGeocoding>() ?? NullLogger<ArcGISGeocoding>.Instance;
         }
 
@@ -177,7 +182,7 @@ namespace Geo.ArcGIS.Services
 
             AddStorageParameter(parameters, ref query);
 
-            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.AddQuery(query);
 
@@ -352,7 +357,7 @@ namespace Geo.ArcGIS.Services
 
             AddStorageParameter(parameters, ref query);
 
-            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.AddQuery(query);
 
@@ -520,7 +525,7 @@ namespace Geo.ArcGIS.Services
 
             AddStorageParameter(parameters, ref query);
 
-            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.AddQuery(query);
 
@@ -634,7 +639,7 @@ namespace Geo.ArcGIS.Services
                 _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
-            query = await AddArcGISToken(query, cancellationToken).ConfigureAwait(false);
+            query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
 
             uriBuilder.AddQuery(query);
 
@@ -645,12 +650,22 @@ namespace Geo.ArcGIS.Services
         /// Adds the ArcGIS token to the query parameters.
         /// If the token cannot be generated, it will not be added to the request.
         /// </summary>
+        /// <param name="clientCredentials">An <see cref="IClientCredentialsParameters"/> to conditionally get the client credentials from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Task"/>.</returns>
-        internal async Task<QueryString> AddArcGISToken(QueryString query, CancellationToken cancellationToken)
+        internal async Task<QueryString> AddArcGISToken(IClientCredentialsParameters clientCredentials, QueryString query, CancellationToken cancellationToken)
         {
-            var token = await _tokenContainer.GetTokenAsync(cancellationToken).ConfigureAwait(false);
+            var clientId = _options.Value.ClientId;
+            var clientSecret = _options.Value.ClientSecret;
+
+            if (!string.IsNullOrWhiteSpace(clientCredentials.ClientId) && !string.IsNullOrWhiteSpace(clientCredentials.ClientSecret))
+            {
+                clientId = clientCredentials.ClientId;
+                clientSecret = clientCredentials.ClientSecret;
+            }
+
+            var token = await _tokenProvider.GetTokenAsync(clientId, clientSecret, cancellationToken).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(token))
             {
                 return query.Add("token", token);

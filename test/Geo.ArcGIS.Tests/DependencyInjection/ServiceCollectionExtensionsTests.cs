@@ -9,8 +9,9 @@ namespace Geo.ArcGIS.Tests.DependencyInjection
     using System.Net.Http;
     using FluentAssertions;
     using Geo.ArcGIS.Abstractions;
-    using Geo.ArcGIS.DependencyInjection;
+    using Geo.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Xunit;
 
     /// <summary>
@@ -25,14 +26,14 @@ namespace Geo.ArcGIS.Tests.DependencyInjection
             var services = new ServiceCollection();
 
             // Act
-            services.AddArcGISServices(options => options.UseClientCredentials("abc", "123"));
+            var builder = services.AddArcGISGeocoding();
+            builder.AddClientCredentials("abc", "123");
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IArcGISCredentialsContainer>().Should().NotBeNull();
-            provider.GetRequiredService<IArcGISTokenRetrevial>().Should().NotBeNull();
-            provider.GetRequiredService<IArcGISTokenContainer>().Should().NotBeNull();
+            provider.GetRequiredService<IOptions<ClientCredentialsOptions<IArcGISGeocoding>>>().Should().NotBeNull();
+            provider.GetRequiredService<IArcGISTokenProvider>().Should().NotBeNull();
             provider.GetRequiredService<IArcGISGeocoding>().Should().NotBeNull();
         }
 
@@ -43,14 +44,13 @@ namespace Geo.ArcGIS.Tests.DependencyInjection
             var services = new ServiceCollection();
 
             // Act
-            services.AddArcGISServices(null);
+            services.AddArcGISGeocoding();
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IArcGISCredentialsContainer>().Should().NotBeNull();
-            provider.GetRequiredService<IArcGISTokenRetrevial>().Should().NotBeNull();
-            provider.GetRequiredService<IArcGISTokenContainer>().Should().NotBeNull();
+            provider.GetRequiredService<IOptions<ClientCredentialsOptions<IArcGISGeocoding>>>().Should().NotBeNull();
+            provider.GetRequiredService<IArcGISTokenProvider>().Should().NotBeNull();
             provider.GetRequiredService<IArcGISGeocoding>().Should().NotBeNull();
         }
 
@@ -61,9 +61,9 @@ namespace Geo.ArcGIS.Tests.DependencyInjection
             var services = new ServiceCollection();
 
             // Act
-            services.AddArcGISServices(
-                options => options.UseClientCredentials("abc", "123"),
-                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(1));
+            var builder = services.AddArcGISGeocoding();
+            builder.AddClientCredentials("abc", "123");
+            builder.HttpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(1));
 
             // Assert
             var provider = services.BuildServiceProvider();

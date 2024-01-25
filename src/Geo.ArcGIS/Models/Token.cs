@@ -10,7 +10,7 @@ namespace Geo.ArcGIS.Models
     /// <summary>
     /// A token information class for the ArcGIS API.
     /// </summary>
-    public class Token
+    internal class Token
     {
         /// <summary>
         /// Gets or sets the access token for the ArcGIS API.
