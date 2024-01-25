@@ -8,7 +8,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used in an autocomplete request.
     /// </summary>
-    public class QueryAutocompleteParameters : CoordinateParameters
+    public class QueryAutocompleteParameters : CoordinateParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the text string on which to search.
@@ -24,5 +24,8 @@ namespace Geo.Google.Models.Parameters
         /// The offset should generally be set to the position of the text caret.
         /// </summary>
         public uint Offset { get; set; } = 0;
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Geo.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the Bing services to the service collection.
+        /// Adds the Bing geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">

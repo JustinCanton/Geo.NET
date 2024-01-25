@@ -15,13 +15,13 @@ namespace Geo.Google.Services
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;
-    using Geo.Google.Abstractions;
     using Geo.Google.Enums;
     using Geo.Google.Models;
     using Geo.Google.Models.Parameters;
     using Geo.Google.Models.Responses;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the Google geocoding API.
@@ -36,22 +36,22 @@ namespace Geo.Google.Services
         private const string PlaceAutocompleteUri = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
         private const string QueryAutocompleteUri = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json";
 
-        private readonly IGoogleKeyContainer _keyContainer;
+        private readonly IOptions<KeyOptions<IGoogleGeocoding>> _options;
         private readonly ILogger<GoogleGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Google Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IGoogleKeyContainer"/> used for fetching the Google key.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Google key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public GoogleGeocoding(
             HttpClient client,
-            IGoogleKeyContainer keyContainer,
+            IOptions<KeyOptions<IGoogleGeocoding>> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<GoogleGeocoding>() ?? NullLogger<GoogleGeocoding>.Instance;
         }
 
@@ -234,7 +234,7 @@ namespace Geo.Google.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -302,7 +302,7 @@ namespace Geo.Google.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -370,7 +370,7 @@ namespace Geo.Google.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -438,7 +438,7 @@ namespace Geo.Google.Services
 
             AddBaseSearchParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -475,7 +475,7 @@ namespace Geo.Google.Services
 
             AddBaseSearchParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -530,7 +530,7 @@ namespace Geo.Google.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -596,7 +596,7 @@ namespace Geo.Google.Services
 
             AddAutocompleteParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -622,7 +622,7 @@ namespace Geo.Google.Services
 
             AddAutocompleteParameters(parameters, ref query);
 
-            AddGoogleKey(ref query);
+            AddGoogleKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -754,11 +754,18 @@ namespace Geo.Google.Services
 
         /// <summary>
         /// Adds the Google key to the query parameters.
-        /// </summary>
+        /// </summary>/// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddGoogleKey(ref QueryString query)
+        internal void AddGoogleKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("key", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("key", key);
         }
     }
 }

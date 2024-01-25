@@ -9,7 +9,7 @@ This allows the simple calling of Bing geocoding APIs. The supported Bing geocod
 
 In the startup `ConfigureServices` method, add the configuration for the Bing service:
 ```
-using Geo.Bing.DependencyInjection;
+using Geo.DependencyInjection;
 .
 .
 .
@@ -18,7 +18,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    var builder = services.AddBingGeocoding(options => options.UseKey(your_bing_api_key_here));
+    var builder = services.AddBingGeocoding();
     builder.AddKey(your_bing_api_key_here);
     builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .

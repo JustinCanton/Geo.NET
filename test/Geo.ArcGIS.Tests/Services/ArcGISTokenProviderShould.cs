@@ -76,6 +76,8 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task BuildContent_WithValidInput_BuildsSuccessfully ()
         {
+            ArcGISTokenProvider._tokens.Clear();
+
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
                 var service = new ArcGISTokenProvider(httpClient);
@@ -97,6 +99,8 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenAsync_WithInvalidInput_ShouldReturnEmptyWithNoKey()
         {
+            ArcGISTokenProvider._tokens.Clear();
+
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
                 var service = new ArcGISTokenProvider(httpClient);
@@ -113,6 +117,8 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenAsync_WithValidInput_ShouldReturnValidToken()
         {
+            ArcGISTokenProvider._tokens.Clear();
+
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
                 var service = new ArcGISTokenProvider(httpClient);
@@ -125,6 +131,8 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenAsync_CalledTwice_ShouldFetchTokenOnce()
         {
+            ArcGISTokenProvider._tokens.Clear();
+
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
                 var service = new ArcGISTokenProvider(httpClient);
@@ -139,7 +147,7 @@ namespace Geo.ArcGIS.Tests.Services
                     .Protected()
                     .Verify(
                         "SendAsync",
-                        Times.Between(0, 1, Moq.Range.Inclusive),
+                        Times.Once(),
                         ItExpr.IsAny<HttpRequestMessage>(),
                         ItExpr.IsAny<CancellationToken>());
             }
@@ -148,6 +156,8 @@ namespace Geo.ArcGIS.Tests.Services
         [Fact]
         public async Task GetTokenAsync_CalledWithDifferentClientCredentials_ShouldFetchBothTokens()
         {
+            ArcGISTokenProvider._tokens.Clear();
+
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
                 var service = new ArcGISTokenProvider(httpClient);
@@ -164,7 +174,7 @@ namespace Geo.ArcGIS.Tests.Services
                     .Protected()
                     .Verify(
                         "SendAsync",
-                        Times.Between(1, 2, Moq.Range.Inclusive),
+                        Times.Exactly(2),
                         ItExpr.IsAny<HttpRequestMessage>(),
                         ItExpr.IsAny<CancellationToken>());
             }

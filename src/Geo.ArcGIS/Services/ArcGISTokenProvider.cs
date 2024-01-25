@@ -19,8 +19,8 @@ namespace Geo.ArcGIS.Services
     /// </summary>
     public class ArcGISTokenProvider : IArcGISTokenProvider
     {
+        internal static readonly ConcurrentDictionary<string, (string Token, DateTime Expiry)> _tokens = new ConcurrentDictionary<string, (string Token, DateTime Expiry)>();
         private static readonly Uri _tokenRefreshAddress = new Uri("https://www.arcgis.com/sharing/rest/oauth2/token");
-        private static readonly ConcurrentDictionary<string, (string Token, DateTime Expiry)> _tokens = new ConcurrentDictionary<string, (string Token, DateTime Expiry)>();
         private readonly HttpClient _client;
 
         /// <summary>

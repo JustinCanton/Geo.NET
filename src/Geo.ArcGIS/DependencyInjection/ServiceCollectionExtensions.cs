@@ -17,7 +17,7 @@ namespace Geo.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the ArcGIS services to the service collection.
+        /// Adds the ArcGIS geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">

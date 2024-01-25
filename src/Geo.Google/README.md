@@ -10,7 +10,7 @@ This allows the simple calling of Google geocoding APIs. The supported Google ge
 
 In the startup `ConfigureServices` method, add the configuration for the Google service:
 ```
-using Geo.Google.DependencyInjection;
+using Geo.DependencyInjection;
 .
 .
 .
@@ -19,7 +19,9 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddGoogleServices(options => options.UseKey(your_google_api_key_here));
+    var builder = services.AddGoogleGeocoding();
+    builder.AddKey(your_google_api_key_here);
+    builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .
     .
     .
@@ -28,7 +30,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Sample Usage
 
-By calling `AddGoogleServices`, the `IGoogleGeocoding` interface has been added to the IOC container. Just request it as a DI item:
+By calling `AddGoogleGeocoding`, the `IGoogleGeocoding` interface has been added to the IOC container. Just request it as a DI item:
 ```
 public MyService(IGoogleGeocoding googleGeocoding)
 {
