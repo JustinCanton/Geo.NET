@@ -6,7 +6,7 @@
 namespace Geo.DependencyInjection
 {
     using System;
-    using Geo.ArcGIS.Abstractions;
+    using Geo.ArcGIS;
     using Geo.ArcGIS.Services;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;

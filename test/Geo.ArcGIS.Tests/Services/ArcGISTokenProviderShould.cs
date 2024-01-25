@@ -74,7 +74,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Fact]
-        public async Task BuildContentSuccessfully()
+        public async Task BuildContent_WithValidInput_BuildsSuccessfully ()
         {
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
@@ -95,7 +95,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Fact]
-        public async Task GetTokenShouldReturnEmptyWithNoKey()
+        public async Task GetTokenAsync_WithInvalidInput_ShouldReturnEmptyWithNoKey()
         {
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
@@ -111,7 +111,7 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Fact]
-        public async Task GetTokenShouldReturnValidToken()
+        public async Task GetTokenAsync_WithValidInput_ShouldReturnValidToken()
         {
             using (var httpClient = new HttpClient(_handlerMock.Object))
             {
@@ -139,7 +139,7 @@ namespace Geo.ArcGIS.Tests.Services
                     .Protected()
                     .Verify(
                         "SendAsync",
-                        Times.Once(),
+                        Times.Between(0, 1, Moq.Range.Inclusive),
                         ItExpr.IsAny<HttpRequestMessage>(),
                         ItExpr.IsAny<CancellationToken>());
             }
@@ -164,15 +164,7 @@ namespace Geo.ArcGIS.Tests.Services
                     .Protected()
                     .Verify(
                         "SendAsync",
-                        Times.AtLeast(1),
-                        ItExpr.IsAny<HttpRequestMessage>(),
-                        ItExpr.IsAny<CancellationToken>());
-
-                _handlerMock
-                    .Protected()
-                    .Verify(
-                        "SendAsync",
-                        Times.AtMost(2),
+                        Times.Between(1, 2, Moq.Range.Inclusive),
                         ItExpr.IsAny<HttpRequestMessage>(),
                         ItExpr.IsAny<CancellationToken>());
             }

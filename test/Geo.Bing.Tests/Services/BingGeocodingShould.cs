@@ -30,7 +30,7 @@ namespace Geo.Bing.Tests.Services
     public class BingGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly BingKeyContainer _keyContainer;
+        private readonly Mock<IOptions<KeyOptions<IBingGeocoding>>> _options = new Mock<IOptions<KeyOptions<IBingGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -39,7 +39,12 @@ namespace Geo.Bing.Tests.Services
         /// </summary>
         public BingGeocodingShould()
         {
-            _keyContainer = new BingKeyContainer("123abc");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IBingGeocoding>()
+                {
+                    Key = "123abc",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -134,21 +139,32 @@ namespace Geo.Bing.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddBingKeySuccessfully()
+        public void AddBingKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddBingKey(ref query);
+            sut.AddBingKey(new GeocodingParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["key"].Should().Be("123abc");
+        }
+
+        [Fact]
+        public void AddBingKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddBingKey(new GeocodingParameters() { Key = "abc123" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("abc123");
         }
 
         /// <summary>
@@ -501,7 +517,7 @@ namespace Geo.Bing.Tests.Services
 
         private BingGeocoding BuildService()
         {
-            return new BingGeocoding(_httpClient, _keyContainer);
+            return new BingGeocoding(_httpClient, _options.Object);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Geo.Bing.Services
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.Bing.Abstractions;
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
@@ -19,6 +18,7 @@ namespace Geo.Bing.Services
     using Geo.Core.Models.Exceptions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the Bing geocoding API.
@@ -27,22 +27,22 @@ namespace Geo.Bing.Services
     {
         private const string BaseUri = "http://dev.virtualearth.net/REST/v1/Locations";
 
-        private readonly IBingKeyContainer _keyContainer;
+        private readonly IOptions<KeyOptions<IBingGeocoding>> _options;
         private readonly ILogger<BingGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
+        /// <param name="client">An <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Bing key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public BingGeocoding(
             HttpClient client,
-            IBingKeyContainer keyContainer,
+            IOptions<KeyOptions<IBingGeocoding>> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<BingGeocoding>() ?? NullLogger<BingGeocoding>.Instance;
         }
 
@@ -125,7 +125,7 @@ namespace Geo.Bing.Services
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -196,7 +196,7 @@ namespace Geo.Bing.Services
 
             BuildBaseQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -271,7 +271,7 @@ namespace Geo.Bing.Services
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -346,10 +346,18 @@ namespace Geo.Bing.Services
         /// <summary>
         /// Adds the Bing key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBingKey(ref QueryString query)
+        internal void AddBingKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("key", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("key", key);
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Geo.Bing.Tests.DependencyInjection
     using System;
     using System.Net.Http;
     using FluentAssertions;
-    using Geo.Bing.Abstractions;
-    using Geo.Bing.DependencyInjection;
+    using Geo.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Xunit;
 
     /// <summary>
@@ -19,47 +19,52 @@ namespace Geo.Bing.Tests.DependencyInjection
     public class ServiceCollectionExtensionsTests
     {
         [Fact]
-        public void AddBingServices_WithValidCall_ConfiguresAllServices()
+        public void AddBingGeocoding_WithValidCall_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddBingServices(options => options.UseKey("abc"));
+            var builder = services.AddBingGeocoding();
+            builder.AddKey("abc");
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IBingKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IBingGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be("abc");
             provider.GetRequiredService<IBingGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddBingServices_WithNullOptions_ConfiguresAllServices()
+        public void AddBingGeocoding_WithNullOptions_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddBingServices(null);
+            services.AddBingGeocoding();
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IBingKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IBingGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be(string.Empty);
             provider.GetRequiredService<IBingGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddBingServices_WithClientConfiguration_ConfiguresHttpClientAllServices()
+        public void AddBingGeocoding_WithClientConfiguration_ConfiguresHttpClientAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddBingServices(
-                options => options.UseKey("abc"),
-                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(2));
+            var builder = services.AddBingGeocoding();
+            builder.AddKey("abc");
+            builder.HttpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(2));
 
             // Assert
             var provider = services.BuildServiceProvider();

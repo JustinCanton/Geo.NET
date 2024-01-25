@@ -14,7 +14,6 @@ namespace Geo.ArcGIS.Services
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
@@ -43,7 +42,7 @@ namespace Geo.ArcGIS.Services
         /// Initializes a new instance of the <see cref="ArcGISGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for making calls to the ArcGIS system.</param>
-        /// <param name="tokenProvider">An <see cref="IArcGISTokenContainer"/> used for retreiving an ArcGIS token.</param>
+        /// <param name="tokenProvider">An <see cref="IArcGISTokenProvider"/> used for retreiving an ArcGIS token.</param>
         /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="ClientCredentialsOptions{T}"/> containing ArcGIS client credential information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public ArcGISGeocoding(

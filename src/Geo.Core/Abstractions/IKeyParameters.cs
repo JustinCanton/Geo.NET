@@ -13,6 +13,6 @@ namespace Geo
         /// <summary>
         /// Gets or sets the key used for an API key request.
         /// </summary>
-        string ClientId { get; set; }
+        string Key { get; set; }
     }
 }

@@ -8,12 +8,10 @@ namespace Geo.ArcGIS.Services
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Net;
     using System.Net.Http;
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Models;
 
     /// <summary>

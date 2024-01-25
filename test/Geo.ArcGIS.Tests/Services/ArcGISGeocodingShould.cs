@@ -14,7 +14,6 @@ namespace Geo.ArcGIS.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
-    using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Models.Parameters;

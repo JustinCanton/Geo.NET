@@ -20,7 +20,7 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    var builder = services.AddArcGISServices();
+    var builder = services.AddArcGISGeocoding();
     builder.AddClientCredentials(your_arcgis_client_id_here, your_arcgis_client_secret_here);
     builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .
@@ -47,7 +47,7 @@ The endpoints where it is not required at all:
 
 ## Sample Usage
 
-By calling `AddArcGISServices`, the `IArcGISGeocoding` interface has been added to the IOC container. Just request it as a DI item:
+By calling `AddArcGISGeocoding`, the `IArcGISGeocoding` interface has been added to the IOC container. Just request it as a DI item:
 ```
 public MyService(IArcGISGeocoding arcgisGeocoding)
 {
