@@ -8,7 +8,7 @@ This allows the simple calling of MapBox geocoding APIs. The supported MapBox ge
 
 In the startup `ConfigureServices` method, add the configuration for the MapBox service:
 ```
-using Geo.DependencyInjection;
+using Geo.Extensions.DependencyInjection;
 .
 .
 .

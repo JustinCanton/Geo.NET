@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.DependencyInjection
+namespace Geo.Extensions.DependencyInjection
 {
     using System;
     using Geo.MapBox;
@@ -17,7 +17,7 @@ namespace Geo.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the Mapbox geocoding services to the service collection.
+        /// Adds the MapBox geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">
@@ -26,8 +26,8 @@ namespace Geo.DependencyInjection
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">An <see cref="IServiceCollection"/> to add the Bing services to.</param>
-        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the MapBox services to.</param>
+        /// <returns>An <see cref="KeyBuilder{T}"/> to configure the MapBox geocoding.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
         public static KeyBuilder<IMapBoxGeocoding> AddMapBoxGeocoding(this IServiceCollection services)
         {

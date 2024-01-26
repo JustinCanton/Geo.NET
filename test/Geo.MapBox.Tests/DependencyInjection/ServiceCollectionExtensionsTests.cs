@@ -8,7 +8,7 @@ namespace Geo.MapBox.Tests.DependencyInjection
     using System;
     using System.Net.Http;
     using FluentAssertions;
-    using Geo.DependencyInjection;
+    using Geo.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Xunit;

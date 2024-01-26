@@ -8,7 +8,7 @@ namespace Geo.Core.Tests.DependencyInjection
     using System;
     using FluentAssertions;
     using Geo.Core.Tests.Models;
-    using Geo.DependencyInjection;
+    using Geo.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Xunit;

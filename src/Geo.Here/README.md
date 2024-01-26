@@ -12,7 +12,7 @@ This allows the simple calling of HERE geocoding APIs. The supported HERE geocod
 
 In the startup `ConfigureServices` method, add the configuration for the HERE service:
 ```
-using Geo.DependencyInjection;
+using Geo.Extensions.DependencyInjection;
 .
 .
 .

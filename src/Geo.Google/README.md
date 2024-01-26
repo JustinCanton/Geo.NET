@@ -10,7 +10,7 @@ This allows the simple calling of Google geocoding APIs. The supported Google ge
 
 In the startup `ConfigureServices` method, add the configuration for the Google service:
 ```
-using Geo.DependencyInjection;
+using Geo.Extensions.DependencyInjection;
 .
 .
 .
