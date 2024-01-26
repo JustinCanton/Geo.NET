@@ -8,7 +8,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a browse request.
     /// </summary>
-    public class BrowseParameters : AreaParameters
+    public class BrowseParameters : AreaParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a category filter consisting of a comma-separated list of category-Ids for Categories defined in the HERE Places Category System,
@@ -22,5 +22,8 @@ namespace Geo.Here.Models.Parameters
         /// Results with a partial match on the name parameter are included in the response.
         /// </summary>
         public string Name { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

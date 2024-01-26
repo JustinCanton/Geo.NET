@@ -115,11 +115,8 @@ namespace Geo.Google.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddBingKey_WithOptions_SuccessfullyAddsKey()
+        public void AddGoogleKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
@@ -133,7 +130,7 @@ namespace Geo.Google.Tests.Services
         }
 
         [Fact]
-        public void AddBingKey_WithParameterOverride_SuccessfullyAddsKey()
+        public void AddGoogleKey_WithParameterOverride_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 

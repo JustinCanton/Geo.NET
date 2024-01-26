@@ -754,7 +754,8 @@ namespace Geo.Google.Services
 
         /// <summary>
         /// Adds the Google key to the query parameters.
-        /// </summary>/// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
+        /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         internal void AddGoogleKey(IKeyParameters keyParameter, ref QueryString query)
         {

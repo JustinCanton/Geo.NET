@@ -12,7 +12,7 @@ This allows the simple calling of HERE geocoding APIs. The supported HERE geocod
 
 In the startup `ConfigureServices` method, add the configuration for the HERE service:
 ```
-using Geo.Here.DependencyInjection;
+using Geo.DependencyInjection;
 .
 .
 .
@@ -21,7 +21,9 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddHereServices(options => options.UseKey(your_here_api_key_here));
+    var builder = services.AddHereGeocoding();
+    builder.AddKey(your_here_api_key_here);
+    builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .
     .
     .
@@ -30,7 +32,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Sample Usage
 
-By calling `AddHereServices`, the `IHereGeocoding` interface has been added to the IOC container. Just request it as a DI item:
+By calling `AddHereGeocoding`, the `IHereGeocoding` interface has been added to the IOC container. Just request it as a DI item:
 ```
 public MyService(IHereGeocoding hereGeocoding)
 {

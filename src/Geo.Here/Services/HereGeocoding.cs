@@ -14,11 +14,11 @@ namespace Geo.Here.Services
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;
-    using Geo.Here.Abstractions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Models.Responses;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the HERE geocoding API.
@@ -32,22 +32,22 @@ namespace Geo.Here.Services
         private const string BrowseUri = "https://browse.search.hereapi.com/v1/browse";
         private const string LookupUri = "https://lookup.search.hereapi.com/v1/lookup";
 
-        private readonly IHereKeyContainer _keyContainer;
+        private readonly IOptions<KeyOptions<IHereGeocoding>> _options;
         private readonly ILogger<HereGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HereGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the HERE Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IHereKeyContainer"/> used for fetching the HERE key.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Google key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public HereGeocoding(
             HttpClient client,
-            IHereKeyContainer keyContainer,
+            IOptions<KeyOptions<IHereGeocoding>> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<HereGeocoding>() ?? NullLogger<HereGeocoding>.Instance;
         }
 
@@ -196,7 +196,7 @@ namespace Geo.Here.Services
 
             AddLocatingParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -241,7 +241,7 @@ namespace Geo.Here.Services
 
             AddLocatingParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -269,7 +269,7 @@ namespace Geo.Here.Services
 
             AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -306,7 +306,7 @@ namespace Geo.Here.Services
 
             AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -350,7 +350,7 @@ namespace Geo.Here.Services
 
             AddBoundingParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -378,7 +378,7 @@ namespace Geo.Here.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddHereKey(ref query);
+            AddHereKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -547,10 +547,18 @@ namespace Geo.Here.Services
         /// <summary>
         /// Adds the HERE key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddHereKey(ref QueryString query)
+        internal void AddHereKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("apiKey", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("apiKey", key);
         }
     }
 }
