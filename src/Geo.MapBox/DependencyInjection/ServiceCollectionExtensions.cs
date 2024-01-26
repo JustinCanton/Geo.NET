@@ -3,14 +3,13 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.MapBox.DependencyInjection
+namespace Geo.DependencyInjection
 {
     using System;
-    using System.Net.Http;
-    using Geo.MapBox.Abstractions;
-    using Geo.MapBox.Models;
+    using Geo.MapBox;
     using Geo.MapBox.Services;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Extension methods for the <see cref="IServiceCollection"/> class.
@@ -18,42 +17,28 @@ namespace Geo.MapBox.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the MapBox services to the service collection.
+        /// Adds the Mapbox geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">
+        /// <item><see cref="IOptions{TOptions}"/> of <see cref="IMapBoxGeocoding"/></item>
         /// <item><see cref="IMapBoxGeocoding"/></item>
         /// </list>
         /// </para>
         /// </summary>
-        /// <param name="services">An <see cref="IServiceCollection"/> to add the MapBox services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{MapBoxOptionsBuilder}"/> with the options to add to the MapBox configuration.</param>
-        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> to add the Bing services to.</param>
         /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
-        public static IHttpClientBuilder AddMapBoxServices(
-            this IServiceCollection services,
-            Action<MapBoxOptionsBuilder> optionsBuilder,
-            Action<HttpClient> configureClient = null)
+        public static KeyBuilder<IMapBoxGeocoding> AddMapBoxGeocoding(this IServiceCollection services)
         {
-            if (optionsBuilder != null)
+            if (services == null)
             {
-                var options = new MapBoxOptionsBuilder();
-                optionsBuilder(options);
-
-                services.AddSingleton<IMapBoxKeyContainer>(new MapBoxKeyContainer(options.Key));
-            }
-            else
-            {
-                services.AddSingleton<IMapBoxKeyContainer>(new MapBoxKeyContainer(string.Empty));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddHttpClient<IMapBoxGeocoding, MapBoxGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
-        }
+            services.AddKeyOptions<IMapBoxGeocoding>();
 
-        private static void DefaultHttpClientConfiguration(HttpClient client)
-        {
-            // No-op
+            return new KeyBuilder<IMapBoxGeocoding>(services.AddHttpClient<IMapBoxGeocoding, MapBoxGeocoding>());
         }
     }
 }

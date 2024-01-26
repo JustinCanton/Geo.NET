@@ -8,7 +8,7 @@ This allows the simple calling of MapBox geocoding APIs. The supported MapBox ge
 
 In the startup `ConfigureServices` method, add the configuration for the MapBox service:
 ```
-using Geo.MapBox.DependencyInjection;
+using Geo.DependencyInjection;
 .
 .
 .
@@ -17,7 +17,9 @@ public void ConfigureServices(IServiceCollection services)
     .
     .
     .
-    services.AddMapBoxServices(options => options.UseKey(your_mapbox_api_key_here));
+    var builder = services.AddMapBoxGeocoding();
+    builder.AddKey(your_mapbox_api_key_here);
+    builder.HttpClientBuilder.ConfigureHttpClient(configure_client);
     .
     .
     .
@@ -26,7 +28,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Sample Usage
 
-By calling `AddMapBoxServices`, the `IMapBoxGeocoding` interface has been added to the IOC container. Just request it as a DI item:
+By calling `AddMapBoxGeocoding`, the `IMapBoxGeocoding` interface has been added to the IOC container. Just request it as a DI item:
 ```
 public MyService(IMapBoxGeocoding mapBoxGeocoding)
 {
