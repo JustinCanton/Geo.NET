@@ -10,7 +10,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used for the nearby search request.
     /// </summary>
-    public class NearbySearchParameters : BaseSearchParameters
+    public class NearbySearchParameters : BaseSearchParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a term to be matched against all content that Google has indexed for this place,
@@ -23,5 +23,8 @@ namespace Geo.Google.Models.Parameters
         /// The default is prominence.
         /// </summary>
         public RankType RankBy { get; set; } = RankType.Prominence;
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodeParameters : BaseFilterParameters
+    public class GeocodeParameters : BaseFilterParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a free-text query.
@@ -58,5 +58,8 @@ namespace Geo.Here.Models.Parameters
         /// </list>
         /// </summary>
         public IList<string> Types { get; } = new List<string>();
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

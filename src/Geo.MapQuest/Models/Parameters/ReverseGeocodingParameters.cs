@@ -8,7 +8,7 @@ namespace Geo.MapQuest.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a reverse geocoding request.
     /// </summary>
-    public class ReverseGeocodingParameters : BaseParameters
+    public class ReverseGeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the latitude,longitude of the point to reverse geocode.
@@ -26,5 +26,8 @@ namespace Geo.MapQuest.Models.Parameters
         /// Defaut is false.
         /// </summary>
         public bool IncludeRoadMetadata { get; set; } = false;
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the geocoding ArcGIS request.
     /// </summary>
-    public class GeocodingParameters
+    public class GeocodingParameters : IClientCredentialsParameters
     {
         /// <summary>
         /// Gets a list of address attributes.
@@ -73,5 +73,11 @@ namespace Geo.ArcGIS.Models.Parameters
         /// The default value is postal city.
         /// </summary>
         public PreferredLabelValue PreferredLabelValue { get; set; } = PreferredLabelValue.PostalCity;
+
+        /// <inheritdoc/>
+        public string ClientId { get; set; }
+
+        /// <inheritdoc/>
+        public string ClientSecret { get; set; }
     }
 }

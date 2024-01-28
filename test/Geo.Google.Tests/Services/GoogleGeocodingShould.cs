@@ -33,7 +33,7 @@ namespace Geo.Google.Tests.Services
     public class GoogleGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly GoogleKeyContainer _keyContainer;
+        private readonly Mock<IOptions<KeyOptions<IGoogleGeocoding>>> _options = new Mock<IOptions<KeyOptions<IGoogleGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -42,7 +42,12 @@ namespace Geo.Google.Tests.Services
         /// </summary>
         public GoogleGeocodingShould()
         {
-            _keyContainer = new GoogleKeyContainer("abc123");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IGoogleGeocoding>()
+                {
+                    Key = "abc123",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -110,21 +115,32 @@ namespace Geo.Google.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddGoogleKeySuccessfully()
+        public void AddGoogleKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddGoogleKey(ref query);
+            sut.AddGoogleKey(new GeocodingParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["key"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddGoogleKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddGoogleKey(new GeocodingParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -1033,7 +1049,7 @@ namespace Geo.Google.Tests.Services
 
         private GoogleGeocoding BuildService()
         {
-            return new GoogleGeocoding(_httpClient, _keyContainer);
+            return new GoogleGeocoding(_httpClient, _options.Object);
         }
     }
 }

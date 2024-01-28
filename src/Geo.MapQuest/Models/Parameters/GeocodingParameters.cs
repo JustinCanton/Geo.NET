@@ -10,7 +10,7 @@ namespace Geo.MapQuest.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodingParameters : BaseParameters
+    public class GeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the location to geocode.
@@ -41,5 +41,8 @@ namespace Geo.MapQuest.Models.Parameters
         /// The default is auto.
         /// </summary>
         public InternationalMode IntlMode { get; set; } = InternationalMode.Auto;
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

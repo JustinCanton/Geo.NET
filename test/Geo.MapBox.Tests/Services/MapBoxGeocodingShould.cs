@@ -32,7 +32,7 @@ namespace Geo.MapBox.Tests.Services
     public class MapBoxGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly MapBoxKeyContainer _keyContainer;
+        private readonly Mock<IOptions<KeyOptions<IMapBoxGeocoding>>> _options = new Mock<IOptions<KeyOptions<IMapBoxGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -41,7 +41,12 @@ namespace Geo.MapBox.Tests.Services
         /// </summary>
         public MapBoxGeocodingShould()
         {
-            _keyContainer = new MapBoxKeyContainer("abc123");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IMapBoxGeocoding>()
+                {
+                    Key = "abc123",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -99,21 +104,32 @@ namespace Geo.MapBox.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddMapBoxKeySuccessfully()
+        public void AddMapBoxKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddMapBoxKey(ref query);
+            sut.AddMapBoxKey(new GeocodingParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["access_token"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddHereKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddMapBoxKey(new GeocodingParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["access_token"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -542,7 +558,7 @@ namespace Geo.MapBox.Tests.Services
 
         private MapBoxGeocoding BuildService()
         {
-            return new MapBoxGeocoding(_httpClient, _keyContainer);
+            return new MapBoxGeocoding(_httpClient, _options.Object);
         }
     }
 }

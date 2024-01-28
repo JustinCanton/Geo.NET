@@ -13,12 +13,13 @@ namespace Geo.MapQuest.Services
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;
-    using Geo.MapQuest.Abstractions;
     using Geo.MapQuest.Enums;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
+    using Geo.MapQuest.Settings;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the MapQuest geocoding API.
@@ -30,26 +31,22 @@ namespace Geo.MapQuest.Services
         private const string GeocodeUri = "http://www.mapquestapi.com/geocoding/v1/address";
         private const string ReverseGeocodeUri = "http://www.mapquestapi.com/geocoding/v1/reverse";
 
-        private readonly IMapQuestKeyContainer _keyContainer;
-        private readonly IMapQuestEndpoint _endpoint;
+        private readonly IOptions<MapQuestOptions> _options;
         private readonly ILogger<MapQuestGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
-        /// <param name="endpoint">An <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="MapQuestOptions"/> containing MapQuest information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapQuestGeocoding(
             HttpClient client,
-            IMapQuestKeyContainer keyContainer,
-            IMapQuestEndpoint endpoint,
+            IOptions<MapQuestOptions> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<MapQuestGeocoding>() ?? NullLogger<MapQuestGeocoding>.Instance;
         }
 
@@ -123,7 +120,7 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? GeocodeUri : OpenGeocodeUri);
+            var uriBuilder = new UriBuilder(_options.Value.UseLicensedEndpoint ? GeocodeUri : OpenGeocodeUri);
             var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
@@ -177,7 +174,7 @@ namespace Geo.MapQuest.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(ref query);
+            AddMapQuestKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -192,7 +189,7 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? ReverseGeocodeUri : OpenReverseGeocodeUri);
+            var uriBuilder = new UriBuilder(_options.Value.UseLicensedEndpoint ? ReverseGeocodeUri : OpenReverseGeocodeUri);
             var query = QueryString.Empty;
 
             if (parameters.Location is null)
@@ -213,7 +210,7 @@ namespace Geo.MapQuest.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(ref query);
+            AddMapQuestKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -223,10 +220,18 @@ namespace Geo.MapQuest.Services
         /// <summary>
         /// Adds the MapQuest key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddMapQuestKey(ref QueryString query)
+        internal void AddMapQuestKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("key", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("key", key);
         }
     }
 }

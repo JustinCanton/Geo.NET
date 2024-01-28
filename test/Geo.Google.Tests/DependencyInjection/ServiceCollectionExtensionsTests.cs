@@ -8,9 +8,9 @@ namespace Geo.Google.Tests.DependencyInjection
     using System;
     using System.Net.Http;
     using FluentAssertions;
-    using Geo.Google.Abstractions;
-    using Geo.Google.DependencyInjection;
+    using Geo.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Xunit;
 
     /// <summary>
@@ -19,47 +19,52 @@ namespace Geo.Google.Tests.DependencyInjection
     public class ServiceCollectionExtensionsTests
     {
         [Fact]
-        public void AddGoogleServices_WithValidCall_ConfiguresAllServices()
+        public void AddGoogleGeocoding_WithValidCall_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddGoogleServices(options => options.UseKey("abc"));
+            var builder = services.AddGoogleGeocoding();
+            builder.AddKey("abc");
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IGoogleKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IGoogleGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be("abc");
             provider.GetRequiredService<IGoogleGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddGoogleServices_WithNullOptions_ConfiguresAllServices()
+        public void AddGoogleGeocoding_WithNullOptions_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddGoogleServices(null);
+            services.AddGoogleGeocoding();
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IGoogleKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IGoogleGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be(string.Empty);
             provider.GetRequiredService<IGoogleGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddGoogleServices_WithClientConfiguration_ConfiguresHttpClientAllServices()
+        public void AddGoogleGeocoding_WithClientConfiguration_ConfiguresHttpClientAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddGoogleServices(
-                options => options.UseKey("abc"),
-                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(3));
+            var builder = services.AddGoogleGeocoding();
+            builder.AddKey("abc");
+            builder.HttpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(3));
 
             // Assert
             var provider = services.BuildServiceProvider();

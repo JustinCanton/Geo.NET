@@ -3,14 +3,14 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.MapQuest.DependencyInjection
+namespace Geo.Extensions.DependencyInjection
 {
     using System;
-    using System.Net.Http;
-    using Geo.MapQuest.Abstractions;
-    using Geo.MapQuest.Models;
+    using Geo.MapQuest;
     using Geo.MapQuest.Services;
+    using Geo.MapQuest.Settings;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Extension methods for the <see cref="IServiceCollection"/> class.
@@ -18,44 +18,32 @@ namespace Geo.MapQuest.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the MapQuest services to the service collection.
+        /// Adds the MapQuest geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">
+        /// <item><see cref="IOptions{TOptions}"/> of <see cref="IMapQuestGeocoding"/></item>
         /// <item><see cref="IMapQuestGeocoding"/></item>
         /// </list>
         /// </para>
         /// </summary>
         /// <param name="services">An <see cref="IServiceCollection"/> to add the MapQuest services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{MapQuestOptionsBuilder}"/> with the options to add to the MapQuest configuration.</param>
-        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
-        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <returns>An <see cref="MapQuestBuilder"/> to configure the MapQuest geocoding.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
-        public static IHttpClientBuilder AddMapQuestServices(
-            this IServiceCollection services,
-            Action<MapQuestOptionsBuilder> optionsBuilder,
-            Action<HttpClient> configureClient = null)
+        public static MapQuestBuilder AddMapQuestGeocoding(this IServiceCollection services)
         {
-            if (optionsBuilder != null)
+            if (services == null)
             {
-                var options = new MapQuestOptionsBuilder();
-                optionsBuilder(options);
-
-                services.AddSingleton<IMapQuestKeyContainer>(new MapQuestKeyContainer(options.Key));
-                services.AddSingleton<IMapQuestEndpoint>(new MapQuestEndpoint(options.UseLicensedEndpoint));
-            }
-            else
-            {
-                services.AddSingleton<IMapQuestKeyContainer>(new MapQuestKeyContainer(string.Empty));
-                services.AddSingleton<IMapQuestEndpoint>(new MapQuestEndpoint(false));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddHttpClient<IMapQuestGeocoding, MapQuestGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
-        }
+            services.Configure<MapQuestOptions>(x =>
+            {
+                x.Key = string.Empty;
+                x.UseLicensedEndpoint = false;
+            });
 
-        private static void DefaultHttpClientConfiguration(HttpClient client)
-        {
-            // No-op
+            return new MapQuestBuilder(services.AddHttpClient<IMapQuestGeocoding, MapQuestGeocoding>());
         }
     }
 }

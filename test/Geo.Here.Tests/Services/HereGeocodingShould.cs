@@ -31,7 +31,7 @@ namespace Geo.Here.Tests.Services
     public class HereGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly HereKeyContainer _keyContainer;
+        private readonly Mock<IOptions<KeyOptions<IHereGeocoding>>> _options = new Mock<IOptions<KeyOptions<IHereGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -40,7 +40,12 @@ namespace Geo.Here.Tests.Services
         /// </summary>
         public HereGeocodingShould()
         {
-            _keyContainer = new HereKeyContainer("abc123");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IHereGeocoding>()
+                {
+                    Key = "abc123",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -178,21 +183,32 @@ namespace Geo.Here.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddHereKeySuccessfully()
+        public void AddHereKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddHereKey(ref query);
+            sut.AddHereKey(new GeocodeParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["apiKey"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddHereKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddHereKey(new GeocodeParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["apiKey"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -1313,7 +1329,7 @@ namespace Geo.Here.Tests.Services
 
         private HereGeocoding BuildService()
         {
-            return new HereGeocoding(_httpClient, _keyContainer);
+            return new HereGeocoding(_httpClient, _options.Object);
         }
     }
 }

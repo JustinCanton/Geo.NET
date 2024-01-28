@@ -8,7 +8,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a discover request.
     /// </summary>
-    public class DiscoverParameters : AreaParameters
+    public class DiscoverParameters : AreaParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a free-text query.
@@ -18,5 +18,8 @@ namespace Geo.Here.Models.Parameters
         /// Schnurrbart German Pub and Restaurant, Hong Kong.
         /// </summary>
         public string Query { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

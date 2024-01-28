@@ -10,7 +10,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a autosuggest request.
     /// </summary>
-    public class AutosuggestParameters : AreaParameters
+    public class AutosuggestParameters : AreaParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a free-text query.
@@ -26,5 +26,8 @@ namespace Geo.Here.Models.Parameters
         /// </summary>
         [Range(0, 10)]
         public uint TermsLimit { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

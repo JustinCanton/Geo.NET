@@ -12,7 +12,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the place candidates ArcGIS request.
     /// </summary>
-    public class PlaceCandidateParameters : StorageParameters
+    public class PlaceCandidateParameters : StorageParameters, IClientCredentialsParameters
     {
         /// <summary>
         /// Gets or sets the address of the location.
@@ -111,5 +111,11 @@ namespace Geo.ArcGIS.Models.Parameters
         /// The default value is rooftop.
         /// </summary>
         public LocationType LocationType { get; set; } = LocationType.Rooftop;
+
+        /// <inheritdoc/>
+        public string ClientId { get; set; }
+
+        /// <inheritdoc/>
+        public string ClientSecret { get; set; }
     }
 }

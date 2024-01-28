@@ -16,13 +16,13 @@ namespace Geo.MapBox.Services
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;
-    using Geo.MapBox.Abstractions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the MapBox geocoding API.
@@ -34,22 +34,22 @@ namespace Geo.MapBox.Services
         private const string PlacesEndpoint = "mapbox.places";
         private const string PermanentEndpoint = "mapbox.places-permanent";
 
-        private readonly IMapBoxKeyContainer _keyContainer;
+        private readonly IOptions<KeyOptions<IMapBoxGeocoding>> _options;
         private readonly ILogger<MapBoxGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IMapBoxKeyContainer"/> used for fetching the here key.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Google key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,
-            IMapBoxKeyContainer keyContainer,
+            IOptions<KeyOptions<IMapBoxGeocoding>> options,
             ILoggerFactory loggerFactory = null)
             : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<MapBoxGeocoding>() ?? NullLogger<MapBoxGeocoding>.Instance;
         }
 
@@ -148,7 +148,7 @@ namespace Geo.MapBox.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(ref query);
+            AddMapBoxKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -178,7 +178,7 @@ namespace Geo.MapBox.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(ref query);
+            AddMapBoxKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -245,12 +245,20 @@ namespace Geo.MapBox.Services
         }
 
         /// <summary>
-        /// Adds the here key to the query parameters.
+        /// Adds the MapBox key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddMapBoxKey(ref QueryString query)
+        internal void AddMapBoxKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("access_token", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("access_token", key);
         }
     }
 }

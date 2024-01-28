@@ -8,7 +8,7 @@ namespace Geo.Bing.Models.Parameters
     /// <summary>
     /// Parameters for the Bing reverse geocoding query.
     /// </summary>
-    public class ReverseGeocodingParameters : BaseParameters
+    public class ReverseGeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a point on the Earth specified by a latitude and longitude.
@@ -49,5 +49,8 @@ namespace Geo.Bing.Models.Parameters
         /// Gets or sets a value indicating whether or not to return the country region information.
         /// </summary>
         public bool IncludeCountryRegion { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

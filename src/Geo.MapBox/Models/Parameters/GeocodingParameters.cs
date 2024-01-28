@@ -8,7 +8,7 @@ namespace Geo.MapBox.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodingParameters : BaseParameters
+    public class GeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the feature you’re trying to look up.
@@ -40,5 +40,8 @@ namespace Geo.MapBox.Models.Parameters
         /// Gets or sets a coordinate that will bias the response to favour results that are closer to this location.
         /// </summary>
         public Coordinate Proximity { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

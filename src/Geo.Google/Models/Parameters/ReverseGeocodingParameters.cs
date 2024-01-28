@@ -12,7 +12,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// The parameters for the reverse gecoding Google API.
     /// </summary>
-    public class ReverseGeocodingParameters : BaseParameters
+    public class ReverseGeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the latitude and longitude values specifying the location
@@ -38,5 +38,8 @@ namespace Geo.Google.Models.Parameters
         /// then discards those results that do not match the specified location type(s).
         /// </summary>
         public IEnumerable<LocationType> LocationTypes { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

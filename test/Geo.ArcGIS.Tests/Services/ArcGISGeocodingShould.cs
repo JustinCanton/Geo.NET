@@ -14,7 +14,6 @@ namespace Geo.ArcGIS.Tests.Services
     using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
-    using Geo.ArcGIS.Abstractions;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models;
     using Geo.ArcGIS.Models.Parameters;
@@ -33,7 +32,8 @@ namespace Geo.ArcGIS.Tests.Services
     public class ArcGISGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly Mock<IArcGISTokenContainer> _mockTokenContainer;
+        private readonly Mock<IArcGISTokenProvider> _tokenProvider = new Mock<IArcGISTokenProvider>();
+        private readonly Mock<IOptions<ClientCredentialsOptions<IArcGISGeocoding>>> _options = new Mock<IOptions<ClientCredentialsOptions<IArcGISGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -42,10 +42,9 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         public ArcGISGeocodingShould()
         {
-            _mockTokenContainer = new Mock<IArcGISTokenContainer>();
-            _mockTokenContainer
-                .Setup(x => x.GetTokenAsync(It.IsAny<CancellationToken>()))
-                .ReturnsAsync("token123");
+            _tokenProvider
+                .Setup(x => x.GetTokenAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string clientId, string clientSecret, CancellationToken token) => clientId == "parameter" ? "123token" : "token123");
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -140,6 +139,14 @@ namespace Geo.ArcGIS.Tests.Services
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             _httpClient = new HttpClient(mockHandler.Object);
+
+            _options
+                .Setup(x => x.Value)
+                .Returns(new ClientCredentialsOptions<IArcGISGeocoding>()
+                {
+                    ClientId = "abc",
+                    ClientSecret = "123",
+                });
         }
 
         /// <inheritdoc/>
@@ -154,17 +161,35 @@ namespace Geo.ArcGIS.Tests.Services
         /// </summary>
         /// <returns>A <see cref="Task"/> with the results.</returns>
         [Fact]
-        public async Task AddArcGISTokenSuccessfully()
+        public async Task AddArcGISToken_WithOptions_IsSuccessfully()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            query = await sut.AddArcGISToken(query, CancellationToken.None);
+            query = await sut.AddArcGISToken(new GeocodingParameters(), query, CancellationToken.None);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["token"].Should().Be("token123");
+        }
+
+        /// <summary>
+        /// Tests the token is properly set into the query string.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> with the results.</returns>
+        [Fact]
+        public async Task AddArcGISToken_WithParameters_IsSuccessfully()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            query = await sut.AddArcGISToken(new GeocodingParameters() { ClientId = "parameter", ClientSecret = "parameter123" }, query, CancellationToken.None);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["token"].Should().Be("123token");
         }
 
         /// <summary>
@@ -639,7 +664,7 @@ namespace Geo.ArcGIS.Tests.Services
 
         private ArcGISGeocoding BuildService()
         {
-            return new ArcGISGeocoding(_httpClient, _mockTokenContainer.Object);
+            return new ArcGISGeocoding(_httpClient, _tokenProvider.Object, _options.Object);
         }
     }
 }

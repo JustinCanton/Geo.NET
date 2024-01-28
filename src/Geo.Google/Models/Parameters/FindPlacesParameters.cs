@@ -11,7 +11,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used for the find places request.
     /// </summary>
-    public class FindPlacesParameters : BaseParameters
+    public class FindPlacesParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the text string on which to search.
@@ -40,5 +40,8 @@ namespace Geo.Google.Models.Parameters
         /// and will be passed on using that shape as the bounding information.
         /// </summary>
         public BaseBounding LocationBias { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

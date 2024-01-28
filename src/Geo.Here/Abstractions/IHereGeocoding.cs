@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.Here.Abstractions
+namespace Geo.Here
 {
     using System.Threading;
     using System.Threading.Tasks;

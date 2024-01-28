@@ -20,6 +20,7 @@ namespace Geo.MapQuest.Tests.Services
     using Geo.MapQuest.Models;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Services;
+    using Geo.MapQuest.Settings;
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;
@@ -32,8 +33,7 @@ namespace Geo.MapQuest.Tests.Services
     public class MapQuestGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly MapQuestKeyContainer _keyContainer;
-        private readonly MapQuestEndpoint _endpoint;
+        private readonly Mock<IOptions<MapQuestOptions>> _options = new Mock<IOptions<MapQuestOptions>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -42,8 +42,13 @@ namespace Geo.MapQuest.Tests.Services
         /// </summary>
         public MapQuestGeocodingShould()
         {
-            _keyContainer = new MapQuestKeyContainer("abc123");
-            _endpoint = new MapQuestEndpoint(true);
+            _options
+                .Setup(x => x.Value)
+                .Returns(new MapQuestOptions()
+                {
+                    Key = "abc123",
+                    UseLicensedEndpoint = true,
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -112,21 +117,32 @@ namespace Geo.MapQuest.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddMapBoxKeySuccessfully()
+        public void AddMapQuestKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddMapQuestKey(ref query);
+            sut.AddMapQuestKey(new GeocodingParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["key"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddMapQuestKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddMapQuestKey(new GeocodingParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -209,7 +225,15 @@ namespace Geo.MapQuest.Tests.Services
             var oldCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = culture;
 
-            var sut = BuildService(new MapQuestEndpoint(false));
+            _options
+                .Setup(x => x.Value)
+                .Returns(new MapQuestOptions()
+                {
+                    Key = "abc123",
+                    UseLicensedEndpoint = false,
+                });
+
+            var sut = BuildService();
 
             var parameters = new GeocodingParameters()
             {
@@ -319,7 +343,15 @@ namespace Geo.MapQuest.Tests.Services
             var oldCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = culture;
 
-            var sut = BuildService(new MapQuestEndpoint(false));
+            _options
+                .Setup(x => x.Value)
+                .Returns(new MapQuestOptions()
+                {
+                    Key = "abc123",
+                    UseLicensedEndpoint = false,
+                });
+
+            var sut = BuildService();
 
             var parameters = new ReverseGeocodingParameters()
             {
@@ -529,9 +561,9 @@ namespace Geo.MapQuest.Tests.Services
             _disposed = true;
         }
 
-        private MapQuestGeocoding BuildService(MapQuestEndpoint endpoint = null)
+        private MapQuestGeocoding BuildService()
         {
-            return new MapQuestGeocoding(_httpClient, _keyContainer, endpoint ?? _endpoint);
+            return new MapQuestGeocoding(_httpClient, _options.Object);
         }
     }
 }

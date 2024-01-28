@@ -8,9 +8,9 @@ namespace Geo.Here.Tests.DependencyInjection
     using System;
     using System.Net.Http;
     using FluentAssertions;
-    using Geo.Here.Abstractions;
-    using Geo.Here.DependencyInjection;
+    using Geo.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Xunit;
 
     /// <summary>
@@ -19,47 +19,52 @@ namespace Geo.Here.Tests.DependencyInjection
     public class ServiceCollectionExtensionsTests
     {
         [Fact]
-        public void AddHereServices_WithValidCall_ConfiguresAllServices()
+        public void AddHereGeocoding_WithValidCall_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddHereServices(options => options.UseKey("abc"));
+            var builder = services.AddHereGeocoding();
+            builder.AddKey("abc");
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IHereKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IHereGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be("abc");
             provider.GetRequiredService<IHereGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddHereServices_WithNullOptions_ConfiguresAllServices()
+        public void AddHereGeocoding_WithNullOptions_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddHereServices(null);
+            services.AddHereGeocoding();
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IHereKeyContainer>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<KeyOptions<IHereGeocoding>>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be(string.Empty);
             provider.GetRequiredService<IHereGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddHereServices_WithClientConfiguration_ConfiguresHttpClientAllServices()
+        public void AddHereGeocoding_WithClientConfiguration_ConfiguresHttpClientAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddHereServices(
-                options => options.UseKey("abc"),
-                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(4));
+            var builder = services.AddHereGeocoding();
+            builder.AddKey("abc");
+            builder.HttpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(4));
 
             // Assert
             var provider = services.BuildServiceProvider();
