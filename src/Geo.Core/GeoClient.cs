@@ -235,19 +235,19 @@ namespace Geo.Core
             if (!response.IsSuccessful)
             {
                 var ex = new GeoNETException(string.Format(CultureInfo.InvariantCulture, Resources.GeoClient.Request_Failed, ApiName));
-                ex.Data.Add("uri", uri);
+                ex.Data.Add(ErrorResponseFields.Uri, uri);
 
                 if (method == HttpMethod.Post && content != null)
                 {
 #if NETSTANDARD2_0
-                    ex.Data.Add("requestBody", await content.ReadAsStringAsync().ConfigureAwait(false));
+                    ex.Data.Add(ErrorResponseFields.RequestBody, await content.ReadAsStringAsync().ConfigureAwait(false));
 #else
-                    ex.Data.Add("requestBody", await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
+                    ex.Data.Add(ErrorResponseFields.RequestBody, await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
 #endif
                 }
 
-                ex.Data.Add("responseStatusCode", response.StatusCode);
-                ex.Data.Add("responseBody", response.Body);
+                ex.Data.Add(ErrorResponseFields.ResponseStatusCode, response.StatusCode);
+                ex.Data.Add(ErrorResponseFields.ResponseBody, response.Body);
 
                 _logger.ApiCallFailed(uri, ex);
 

@@ -198,7 +198,7 @@ namespace Geo.Core.Tests
                 .Should()
                 .ThrowAsync<GeoNETException>())
                 .WithMessage("The Test request failed.")
-                .And.Data["responseBody"].Should().Be("{'Message':'Access denied'}");
+                .And.Data[ErrorResponseFields.ResponseBody].Should().Be("{'Message':'Access denied'}");
         }
 
         /// <summary>
@@ -297,9 +297,9 @@ namespace Geo.Core.Tests
                 .ThrowAsync<GeoNETException>()
                 .Where(x =>
                     x.Data.Count == 3 &&
-                    x.Data["responseBody"].ToString() == "{'Message':'Access denied'}" &&
-                    (HttpStatusCode)x.Data["responseStatusCode"] == HttpStatusCode.Forbidden &&
-                    x.Data["uri"].ToString() == "http://test.com/Failure");
+                    x.Data[ErrorResponseFields.ResponseBody].ToString() == "{'Message':'Access denied'}" &&
+                    (HttpStatusCode)x.Data[ErrorResponseFields.ResponseStatusCode] == HttpStatusCode.Forbidden &&
+                    x.Data[ErrorResponseFields.Uri].ToString() == "http://test.com/Failure");
         }
 
         /// <summary>
