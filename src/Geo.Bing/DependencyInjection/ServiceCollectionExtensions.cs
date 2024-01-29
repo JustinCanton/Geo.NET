@@ -3,15 +3,13 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.Bing.DependencyInjection
+namespace Geo.Extensions.DependencyInjection
 {
     using System;
-    using System.Net.Http;
-    using Geo.Bing.Abstractions;
-    using Geo.Bing.Models;
+    using Geo.Bing;
     using Geo.Bing.Services;
-    using Geo.Core.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Extension methods for the <see cref="IServiceCollection"/> class.
@@ -19,44 +17,28 @@ namespace Geo.Bing.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the Bing services to the service collection.
+        /// Adds the Bing geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">
+        /// <item><see cref="IOptions{TOptions}"/> of <see cref="IBingGeocoding"/></item>
         /// <item><see cref="IBingGeocoding"/></item>
         /// </list>
         /// </para>
         /// </summary>
         /// <param name="services">An <see cref="IServiceCollection"/> to add the Bing services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{BingOptionsBuilder}"/> with the options to add to the Bing configuration.</param>
-        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
-        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <returns>An <see cref="KeyBuilder{T}"/> to configure the Bing geocoding.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
-        public static IHttpClientBuilder AddBingServices(
-            this IServiceCollection services,
-            Action<BingOptionsBuilder> optionsBuilder,
-            Action<HttpClient> configureClient = null)
+        public static KeyBuilder<IBingGeocoding> AddBingGeocoding(this IServiceCollection services)
         {
-            services.AddCoreServices();
-
-            if (optionsBuilder != null)
+            if (services == null)
             {
-                var options = new BingOptionsBuilder();
-                optionsBuilder(options);
-
-                services.AddSingleton<IBingKeyContainer>(new BingKeyContainer(options.Key));
-            }
-            else
-            {
-                services.AddSingleton<IBingKeyContainer>(new BingKeyContainer(string.Empty));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddHttpClient<IBingGeocoding, BingGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
-        }
+            services.AddKeyOptions<IBingGeocoding>();
 
-        private static void DefaultHttpClientConfiguration(HttpClient client)
-        {
-            // No-op
+            return new KeyBuilder<IBingGeocoding>(services.AddHttpClient<IBingGeocoding, BingGeocoding>());
         }
     }
 }

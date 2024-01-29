@@ -15,8 +15,8 @@ namespace Geo.Here.Tests.Services
     using System.Web;
     using FluentAssertions;
     using Geo.Core;
+    using Geo.Core.Models.Exceptions;
     using Geo.Here.Models;
-    using Geo.Here.Models.Exceptions;
     using Geo.Here.Models.Parameters;
     using Geo.Here.Services;
     using Microsoft.Extensions.Localization;
@@ -31,9 +31,7 @@ namespace Geo.Here.Tests.Services
     public class HereGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly HereKeyContainer _keyContainer;
-        private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
+        private readonly Mock<IOptions<KeyOptions<IHereGeocoding>>> _options = new Mock<IOptions<KeyOptions<IHereGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -42,7 +40,12 @@ namespace Geo.Here.Tests.Services
         /// </summary>
         public HereGeocodingShould()
         {
-            _keyContainer = new HereKeyContainer("abc123");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IHereGeocoding>()
+                {
+                    Key = "abc123",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
@@ -170,9 +173,7 @@ namespace Geo.Here.Tests.Services
                 .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
-            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -182,21 +183,32 @@ namespace Geo.Here.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddHereKeySuccessfully()
+        public void AddHereKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddHereKey(ref query);
+            sut.AddHereKey(new GeocodeParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["apiKey"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddHereKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddHereKey(new GeocodeParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["apiKey"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -1109,7 +1121,7 @@ namespace Geo.Here.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<LookupParameters>(null, sut.BuildLookupRequest);
 
             act.Should()
-                .Throw<HereException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentNullException>();
         }
@@ -1125,7 +1137,7 @@ namespace Geo.Here.Tests.Services
             Action act = () => sut.ValidateAndBuildUri<LookupParameters>(new LookupParameters(), sut.BuildLookupRequest);
 
             act.Should()
-                .Throw<HereException>()
+                .Throw<GeoNETException>()
                 .WithMessage("*See the inner exception for more information.")
                 .WithInnerException<ArgumentException>()
 #if NETCOREAPP3_1_OR_GREATER
@@ -1159,7 +1171,7 @@ namespace Geo.Here.Tests.Services
 
             parameters.InCountry.Add(new RegionInfo("DK"));
 
-            var result = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.GeocodingAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1183,7 +1195,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var result = await sut.ReverseGeocodingAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1211,7 +1223,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            var result = await sut.DiscoverAsync(parameters).ConfigureAwait(false);
+            var result = await sut.DiscoverAsync(parameters);
             result.Items.Count.Should().Be(1);
         }
 
@@ -1240,7 +1252,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.AutosuggestAsync(parameters).ConfigureAwait(false);
+            var result = await sut.AutosuggestAsync(parameters);
             result.Items.Count.Should().Be(2);
         }
 
@@ -1259,7 +1271,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("ja"),
             };
 
-            var result = await sut.LookupAsync(parameters).ConfigureAwait(false);
+            var result = await sut.LookupAsync(parameters);
             result.Title.Should().Be("Royal Oak");
             result.Id.Should().Be("here: pds:place: 826gcpue - d78485b762734169a8d1b4ac2311fd8f");
         }
@@ -1287,7 +1299,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("en"),
             };
 
-            var result = await sut.BrowseAsync(parameters).ConfigureAwait(false);
+            var result = await sut.BrowseAsync(parameters);
             result.Items.Count.Should().Be(2);
         }
 
@@ -1317,7 +1329,7 @@ namespace Geo.Here.Tests.Services
 
         private HereGeocoding BuildService()
         {
-            return new HereGeocoding(_httpClient, _keyContainer, _exceptionProvider, _resourceStringProviderFactory);
+            return new HereGeocoding(_httpClient, _options.Object);
         }
     }
 }

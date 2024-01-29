@@ -33,9 +33,7 @@ namespace Geo.Google.Tests.Services
     public class GoogleGeocodingShould : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly GoogleKeyContainer _keyContainer;
-        private readonly IGeoNETExceptionProvider _exceptionProvider;
-        private readonly IGeoNETResourceStringProviderFactory _resourceStringProviderFactory;
+        private readonly Mock<IOptions<KeyOptions<IGoogleGeocoding>>> _options = new Mock<IOptions<KeyOptions<IGoogleGeocoding>>>();
         private readonly List<HttpResponseMessage> _responseMessages = new List<HttpResponseMessage>();
         private bool _disposed;
 
@@ -44,31 +42,36 @@ namespace Geo.Google.Tests.Services
         /// </summary>
         public GoogleGeocodingShould()
         {
-            _keyContainer = new GoogleKeyContainer("abc123");
+            _options
+                .Setup(x => x.Value)
+                .Returns(new KeyOptions<IGoogleGeocoding>()
+                {
+                    Key = "abc123",
+                });
 
             var mockHandler = new Mock<HttpMessageHandler>();
 
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'results':[" +
-                    "{'address_components':[{'long_name':'1600','short_name':'1600','types':['street_number']}," +
-                    "{'long_name':'Amphitheatre Parkway','short_name':'Amphitheatre Pkwy','types':['route']},{'long_name':'Mountain View','short_name':'Mountain View','types':['locality','political']}," +
-                    "{'long_name':'Santa Clara County','short_name':'Santa Clara County','types':['administrative_area_level_2','political']}," +
-                    "{'long_name':'California','short_name':'CA','types':['administrative_area_level_1','political']},{'long_name':'United States','short_name':'US','types':['country','political']}," +
-                    "{'long_name':'94043','short_name':'94043','types':['postal_code']}],'formatted_address':'1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA'," +
-                    "'geometry':{'location':{'lat':37.4220578,'lng':-122.0840897},'location_type':'ROOFTOP'," +
-                    "'viewport':{'northeast':{'lat':37.4234067802915,'lng':-122.0827407197085},'southwest':{'lat':37.4207088197085,'lng':-122.0854386802915}}}," +
-                    "'place_id':'ChIJtYuu0V25j4ARwu5e4wwRYgE','plus_code':{'compound_code':'CWC8+R9 Mountain View, CA, USA','global_code':'849VCWC8+R9'},'types':['street_address']}," +
-                    "{'address_components':[{'long_name':'1600','short_name':'1600','types':['street_number']}," +
-                    "{'long_name':'Amphitheatre Parkway','short_name':'Amphitheatre Parkway','types':['route']},{'long_name':'Mountain View','short_name':'Mountain View','types':['locality','political']}," +
-                    "{'long_name':'Santa Clara County','short_name':'Santa Clara County','types':['administrative_area_level_2','political']}," +
-                    "{'long_name':'California','short_name':'CA','types':['administrative_area_level_1','political']},{'long_name':'United States','short_name':'US','types':['country','political']}," +
-                    "{'long_name':'94043','short_name':'94043','types':['postal_code']}],'formatted_address':'1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'," +
-                    "'geometry':{'location':{'lat':37.4121802,'lng':-122.0905099},'location_type':'ROOFTOP'," +
-                    "'viewport':{'northeast':{'lat':37.4135291802915,'lng':-122.0891609197085},'southwest':{'lat':37.41083121970851,'lng':-122.0918588802915}}}," +
-                    "'place_id':'ChIJVYBZP-Oxj4ARls-qJ_G3tgM','plus_code':{'compound_code':'CW65+VQ Mountain View, CA, USA','global_code':'849VCW65+VQ'},'types':['street_address']}]," +
-                    "'status':'OK'}"),
+                Content = new StringContent("{\"results\":[" +
+                    "{\"address_components\":[{\"long_name\":\"1600\",\"short_name\":\"1600\",\"types\":[\"street_number\"]}," +
+                    "{\"long_name\":\"Amphitheatre Parkway\",\"short_name\":\"Amphitheatre Pkwy\",\"types\":[\"route\"]},{\"long_name\":\"Mountain View\",\"short_name\":\"Mountain View\",\"types\":[\"locality\",\"political\"]}," +
+                    "{\"long_name\":\"Santa Clara County\",\"short_name\":\"Santa Clara County\",\"types\":[\"administrative_area_level_2\",\"political\"]}," +
+                    "{\"long_name\":\"California\",\"short_name\":\"CA\",\"types\":[\"administrative_area_level_1\",\"political\"]},{\"long_name\":\"United States\",\"short_name\":\"US\",\"types\":[\"country\",\"political\"]}," +
+                    "{\"long_name\":\"94043\",\"short_name\":\"94043\",\"types\":[\"postal_code\"]}],\"formatted_address\":\"1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA\"," +
+                    "\"geometry\":{\"location\":{\"lat\":37.4220578,\"lng\":-122.0840897},\"location_type\":\"ROOFTOP\"," +
+                    "\"viewport\":{\"northeast\":{\"lat\":37.4234067802915,\"lng\":-122.0827407197085},\"southwest\":{\"lat\":37.4207088197085,\"lng\":-122.0854386802915}}}," +
+                    "\"place_id\":\"ChIJtYuu0V25j4ARwu5e4wwRYgE\",\"plus_code\":{\"compound_code\":\"CWC8+R9 Mountain View, CA, USA\",\"global_code\":\"849VCWC8+R9\"},\"types\":[\"street_address\"]}," +
+                    "{\"address_components\":[{\"long_name\":\"1600\",\"short_name\":\"1600\",\"types\":[\"street_number\"]}," +
+                    "{\"long_name\":\"Amphitheatre Parkway\",\"short_name\":\"Amphitheatre Parkway\",\"types\":[\"route\"]},{\"long_name\":\"Mountain View\",\"short_name\":\"Mountain View\",\"types\":[\"locality\",\"political\"]}," +
+                    "{\"long_name\":\"Santa Clara County\",\"short_name\":\"Santa Clara County\",\"types\":[\"administrative_area_level_2\",\"political\"]}," +
+                    "{\"long_name\":\"California\",\"short_name\":\"CA\",\"types\":[\"administrative_area_level_1\",\"political\"]},{\"long_name\":\"United States\",\"short_name\":\"US\",\"types\":[\"country\",\"political\"]}," +
+                    "{\"long_name\":\"94043\",\"short_name\":\"94043\",\"types\":[\"postal_code\"]}],\"formatted_address\":\"1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\"," +
+                    "\"geometry\":{\"location\":{\"lat\":37.4121802,\"lng\":-122.0905099},\"location_type\":\"ROOFTOP\"," +
+                    "\"viewport\":{\"northeast\":{\"lat\":37.4135291802915,\"lng\":-122.0891609197085},\"southwest\":{\"lat\":37.41083121970851,\"lng\":-122.0918588802915}}}," +
+                    "\"place_id\":\"ChIJVYBZP-Oxj4ARls-qJ_G3tgM\",\"plus_code\":{\"compound_code\":\"CW65+VQ Mountain View, CA, USA\",\"global_code\":\"849VCW65+VQ\"},\"types\":[\"street_address\"]}]," +
+                    "\"status\":\"OK\"}"),
             });
 
             mockHandler
@@ -82,15 +85,15 @@ namespace Geo.Google.Tests.Services
             _responseMessages.Add(new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{'results':[" +
-                    "{'formattedAddress':'111 8th Ave, New York, NY 10011, USA','addressComponents':[{'longName':'111','shortName':'111','types':[34]}," +
-                    "{'longName':'8th Avenue','shortName':'8th Ave','types':[2]},{'longName':'Manhattan','shortName':'Manhattan','types':[4,13,14]}," +
-                    "{'longName':'New York','shortName':'New York','types':[12,4]},{'longName':'New York County','shortName':'New York County','types':[7,4]}," +
-                    "{'longName':'New York','shortName':'NY','types':[6,4]},{'longName':'United States','shortName':'US','types':[5,4]}," +
-                    "{'longName':'10011','shortName':'10011','types':[23]}],'types':[40,41,29,42,27],'geometry':{'location':{'latitude':40.7414688,'longitude':-74.0033873}," +
-                    "'locationType':1,'viewport':{'northeast':{'latitude':40.7428177802915,'longitude':-74.0020383197085},'southwest':{'latitude':40.7401198197085,'longitude':-74.00473628029151}}," +
-                    "'bounds':null},'plusCode':{'globalCode':'87G7PXRW+HJ','compoundCode':'PXRW+HJ New York, NY, USA'},'placeId':'ChIJj9Hwdun8ZUARbS4pqpAS_Qk','partialMatch':false,'postcodeLocalities':[]}]," +
-                    "'status':'OK'}"),
+                Content = new StringContent("{\"results\":[" +
+                    "{\"formattedAddress\":\"111 8th Ave, New York, NY 10011, USA\",\"addressComponents\":[{\"longName\":\"111\",\"shortName\":\"111\",\"types\":[34]}," +
+                    "{\"longName\":\"8th Avenue\",\"shortName\":\"8th Ave\",\"types\":[2]},{\"longName\":\"Manhattan\",\"shortName\":\"Manhattan\",\"types\":[4,13,14]}," +
+                    "{\"longName\":\"New York\",\"shortName\":\"New York\",\"types\":[12,4]},{\"longName\":\"New York County\",\"shortName\":\"New York County\",\"types\":[7,4]}," +
+                    "{\"longName\":\"New York\",\"shortName\":\"NY\",\"types\":[6,4]},{\"longName\":\"United States\",\"shortName\":\"US\",\"types\":[5,4]}," +
+                    "{\"longName\":\"10011\",\"shortName\":\"10011\",\"types\":[23]}],\"types\":[40,41,29,42,27],\"geometry\":{\"location\":{\"latitude\":40.7414688,\"longitude\":-74.0033873}," +
+                    "\"locationType\":1,\"viewport\":{\"northeast\":{\"latitude\":40.7428177802915,\"longitude\":-74.0020383197085},\"southwest\":{\"latitude\":40.7401198197085,\"longitude\":-74.00473628029151}}," +
+                    "\"bounds\":null},\"plusCode\":{\"globalCode\":\"87G7PXRW+HJ\",\"compoundCode\":\"PXRW+HJ New York, NY, USA\"},\"placeId\":\"ChIJj9Hwdun8ZUARbS4pqpAS_Qk\",\"partialMatch\":false,\"postcodeLocalities\":[]}]," +
+                    "\"status\":\"OK\"}"),
             });
 
             mockHandler
@@ -102,9 +105,7 @@ namespace Geo.Google.Tests.Services
                 .ReturnsAsync(_responseMessages[_responseMessages.Count - 1]);
 
             var options = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
-            _resourceStringProviderFactory = new GeoNETResourceStringProviderFactory();
             _httpClient = new HttpClient(mockHandler.Object);
-            _exceptionProvider = new GeoNETExceptionProvider();
         }
 
         /// <inheritdoc/>
@@ -114,21 +115,32 @@ namespace Geo.Google.Tests.Services
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Tests the key is properly set into the query string.
-        /// </summary>
         [Fact]
-        public void AddGoogleKeySuccessfully()
+        public void AddGoogleKey_WithOptions_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 
             var query = QueryString.Empty;
 
-            sut.AddGoogleKey(ref query);
+            sut.AddGoogleKey(new GeocodingParameters(), ref query);
 
             var queryParameters = HttpUtility.ParseQueryString(query.ToString());
             queryParameters.Count.Should().Be(1);
             queryParameters["key"].Should().Be("abc123");
+        }
+
+        [Fact]
+        public void AddGoogleKey_WithParameterOverride_SuccessfullyAddsKey()
+        {
+            var sut = BuildService();
+
+            var query = QueryString.Empty;
+
+            sut.AddGoogleKey(new GeocodingParameters() { Key = "123abc" }, ref query);
+
+            var queryParameters = HttpUtility.ParseQueryString(query.ToString());
+            queryParameters.Count.Should().Be(1);
+            queryParameters["key"].Should().Be("123abc");
         }
 
         /// <summary>
@@ -971,7 +983,7 @@ namespace Geo.Google.Tests.Services
                 Address = "1600 Amphitheatre Pkwy, Mountain View",
             };
 
-            var response = await sut.GeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.GeocodingAsync(parameters);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(2);
         }
@@ -994,7 +1006,7 @@ namespace Geo.Google.Tests.Services
                 },
             };
 
-            var response = await sut.ReverseGeocodingAsync(parameters).ConfigureAwait(false);
+            var response = await sut.ReverseGeocodingAsync(parameters);
             response.Status.Should().Be("OK");
             response.Results.Count().Should().Be(1);
         }
@@ -1037,7 +1049,7 @@ namespace Geo.Google.Tests.Services
 
         private GoogleGeocoding BuildService()
         {
-            return new GoogleGeocoding(_httpClient, _keyContainer, _exceptionProvider, _resourceStringProviderFactory);
+            return new GoogleGeocoding(_httpClient, _options.Object);
         }
     }
 }

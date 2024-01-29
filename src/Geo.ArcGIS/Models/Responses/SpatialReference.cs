@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The spatial reference information.
@@ -15,13 +15,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the well-known id for the spatial reference.
         /// </summary>
-        [JsonProperty("wkid")]
+        [JsonPropertyName("wkid")]
         public int WellKnownID { get; set; }
 
         /// <summary>
         /// Gets or sets the latest well-known id for the spatial reference.
         /// </summary>
-        [JsonProperty("latestWkid")]
+        [JsonPropertyName("latestWkid")]
         public int LatestWellKnownID { get; set; }
     }
 }

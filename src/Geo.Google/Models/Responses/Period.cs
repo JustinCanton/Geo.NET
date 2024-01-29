@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Open/close period for a place.
@@ -15,7 +15,7 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets a pair of day and time objects describing when the place opens.
         /// </summary>
-        [JsonProperty("open")]
+        [JsonPropertyName("open")]
         public DayTime Open { get; set; }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Geo.Google.Models.Responses
         /// Note: If a place is always open, the close section will be missing from the response.
         /// Clients can rely on always-open being represented as an open period containing day with value 0 and time with value 0000, and no close.
         /// </summary>
-        [JsonProperty("close")]
+        [JsonPropertyName("close")]
         public DayTime Close { get; set; }
     }
 }

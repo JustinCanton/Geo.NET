@@ -6,78 +6,114 @@
 namespace Geo.Here.Converters
 {
     using System;
+    using System.Globalization;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+    using Geo.Core;
+    using Geo.Core.Extensions;
     using Geo.Here.Models.Responses;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A json converter for the autosuggest json response.
     /// </summary>
-    public class AutosuggestJsonConverter : JsonConverter
+    public class AutosuggestJsonConverter : JsonConverter<BaseLocation>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-
-            return typeof(BaseLocation).IsAssignableFrom(objectType);
-        }
+        private static readonly Type EntityType = typeof(AutosuggestEntityLocation);
+        private static readonly Type QueryType = typeof(AutosuggestQueryLocation);
 
         /// <inheritdoc/>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override BaseLocation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            if (objectType == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (serializer == null)
+            var typeReader = reader;
+
+            if (typeReader.TokenType == JsonTokenType.Null)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                return null;
             }
 
-            var jobj = JObject.Load(reader);
-            if (jobj.TryGetValue(nameof(AutosuggestEntityLocation.Address), StringComparison.OrdinalIgnoreCase, out _))
+            if (typeReader.TokenType != JsonTokenType.StartObject)
             {
-                var obj = new AutosuggestEntityLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the autosuggest. Expected to find an object, instead found {0}", reader.TokenType.GetName()));
+            }
+
+            var isEntity = false;
+            var addressAttributeName = EntityType.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestEntityLocation.Address))?.Name;
+            var hrefAttributeName = QueryType.GetAttribute<JsonPropertyNameAttribute>(nameof(AutosuggestQueryLocation.Href))?.Name;
+
+            while (typeReader.Read())
+            {
+                if (typeReader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+
+                if (typeReader.TokenType != JsonTokenType.PropertyName)
+                {
+                    throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the autosuggest. Expected to find a property name, instead found {0}", reader.TokenType.GetName()));
+                }
+
+                if (typeReader.GetString() == addressAttributeName)
+                {
+                    isEntity = true;
+                    break;
+                }
+
+                if (typeReader.GetString() == hrefAttributeName)
+                {
+                    isEntity = false;
+                    break;
+                }
+
+                typeReader.Read();
+            }
+
+            if (isEntity)
+            {
+                return JsonSerializer.Deserialize<AutosuggestEntityLocation>(ref reader, options);
             }
             else
             {
-                var obj = new AutosuggestQueryLocation();
-                serializer.Populate(jobj.CreateReader(), obj);
-                return obj;
+                return JsonSerializer.Deserialize<AutosuggestQueryLocation>(ref reader, options);
             }
         }
 
         /// <inheritdoc/>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, BaseLocation value, JsonSerializerOptions options)
         {
             if (writer == null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                writer.WriteNullValue();
+                return;
             }
 
-            if (serializer == null)
+            if (value.GetType() == EntityType)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                JsonSerializer.Serialize(writer, value, EntityType, options);
             }
-
-            serializer.Serialize(writer, value);
+            else
+            {
+                JsonSerializer.Serialize(writer, value, QueryType, options);
+            }
         }
     }
 }

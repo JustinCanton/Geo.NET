@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A response for a character-by-character autocomplete suggestion to be generated for user input in a client application.
@@ -14,9 +14,9 @@ namespace Geo.ArcGIS.Models.Responses
     public class SuggestResponse
     {
         /// <summary>
-        /// Gets a list of suggestions based on a text input.
+        /// Gets or sets a list of suggestions based on a text input.
         /// </summary>
-        [JsonProperty("suggestions")]
-        public IList<Suggestion> Suggestions { get; } = new List<Suggestion>();
+        [JsonPropertyName("suggestions")]
+        public IList<Suggestion> Suggestions { get; set; } = new List<Suggestion>();
     }
 }

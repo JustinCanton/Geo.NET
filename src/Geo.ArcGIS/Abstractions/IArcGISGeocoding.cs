@@ -3,13 +3,13 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.ArcGIS.Abstractions
+namespace Geo.ArcGIS
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.ArcGIS.Models.Exceptions;
     using Geo.ArcGIS.Models.Parameters;
     using Geo.ArcGIS.Models.Responses;
+    using Geo.Core.Models.Exceptions;
 
     /// <summary>
     /// An interface for calling the ArcGIS geocoding API.
@@ -22,7 +22,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <param name="parameters">A <see cref="AddressCandidateParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="CandidateResponse"/> with the response from ArcGIS.</returns>
-        /// <exception cref="ArcGISException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<CandidateResponse> AddressCandidateAsync(AddressCandidateParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <param name="parameters">A <see cref="PlaceCandidateParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="CandidateResponse"/> with the response from ArcGIS.</returns>
-        /// <exception cref="ArcGISException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<CandidateResponse> PlaceCandidateAsync(PlaceCandidateParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <param name="parameters">A <see cref="SuggestParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="SuggestResponse"/> with the response from ArcGIS.</returns>
-        /// <exception cref="ArcGISException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<SuggestResponse> SuggestAsync(SuggestParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="ReverseGeocodingResponse"/> with the response from ArcGIS.</returns>
-        /// <exception cref="ArcGISException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<ReverseGeocodingResponse> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Geo.ArcGIS.Abstractions
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="GeocodingResponse"/> with the response from ArcGIS.</returns>
-        /// <exception cref="ArcGISException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<GeocodingResponse> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
     }
 }

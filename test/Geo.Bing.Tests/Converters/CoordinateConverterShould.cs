@@ -5,10 +5,10 @@
 
 namespace Geo.Bing.Tests.Converters
 {
+    using System.Text.Json;
     using FluentAssertions;
     using Geo.Bing.Converters;
     using Geo.Bing.Tests.Models;
-    using Newtonsoft.Json;
     using Xunit;
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Geo.Bing.Tests.Converters
         [Fact]
         public void CorrectlyParseCoordinate()
         {
-            var obj = JsonConvert.DeserializeObject<CoordinateObject>("{'Point':[43.6477298,-79.3802169]}");
+            var obj = JsonSerializer.Deserialize<CoordinateObject>("{\"Point\":[43.6477298,-79.3802169]}");
             obj.Point.Latitude.Should().Be(43.6477298);
             obj.Point.Longitude.Should().Be(-79.3802169);
         }

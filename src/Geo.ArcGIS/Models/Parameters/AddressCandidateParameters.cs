@@ -8,7 +8,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the address candidates ArcGIS request.
     /// </summary>
-    public class AddressCandidateParameters : StorageParameters
+    public class AddressCandidateParameters : StorageParameters, IClientCredentialsParameters
     {
         /// <summary>
         /// Gets or sets the address you want to geocode as a single line of text.
@@ -19,5 +19,11 @@ namespace Geo.ArcGIS.Models.Parameters
         /// Gets or sets an ID attribute value that, along with the text attribute, links a suggestion to an address or place.
         /// </summary>
         public string MagicKey { get; set; }
+
+        /// <inheritdoc/>
+        public string ClientId { get; set; }
+
+        /// <inheritdoc/>
+        public string ClientSecret { get; set; }
     }
 }

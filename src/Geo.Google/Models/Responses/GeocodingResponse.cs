@@ -6,7 +6,7 @@
 namespace Geo.Google.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The Google geocoding response object.
@@ -14,15 +14,15 @@ namespace Geo.Google.Models.Responses
     public class GeocodingResponse
     {
         /// <summary>
-        /// Gets a list of the results for the Google Geocoding API call.
+        /// Gets or sets a list of the results for the Google Geocoding API call.
         /// </summary>
-        [JsonProperty("results")]
-        public IEnumerable<Geocoding> Results { get; } = new List<Geocoding>();
+        [JsonPropertyName("results")]
+        public IEnumerable<Geocoding> Results { get; set; } = new List<Geocoding>();
 
         /// <summary>
         /// Gets or sets the status of the Google Geocoding API call.
         /// </summary>
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 }

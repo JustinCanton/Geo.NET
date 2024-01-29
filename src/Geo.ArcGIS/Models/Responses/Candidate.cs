@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A potential candidate from ArcGIS.
@@ -15,7 +15,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets a rectangular bounding box around the location lat/lng coordinates.
         /// </summary>
-        [JsonProperty("extent")]
+        [JsonPropertyName("extent")]
         public BoundingBox Extent { get; set; }
     }
 }

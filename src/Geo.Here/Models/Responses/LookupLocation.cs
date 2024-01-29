@@ -6,7 +6,7 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Lookup location matches.
@@ -14,39 +14,39 @@ namespace Geo.Here.Models.Responses
     public class LookupLocation : FullLocation
     {
         /// <summary>
-        /// Gets the list of chains assigned to this place.
+        /// Gets or sets the list of chains assigned to this place.
         /// </summary>
-        [JsonProperty("chains")]
-        public IList<Chain> Chains { get; } = new List<Chain>();
+        [JsonPropertyName("chains")]
+        public IList<Chain> Chains { get; set; } = new List<Chain>();
 
         /// <summary>
-        /// Gets the list of supplier references available for this place.
+        /// Gets or sets the list of supplier references available for this place.
         /// </summary>
-        [JsonProperty("references")]
-        public IList<Reference> References { get; } = new List<Reference>();
+        [JsonPropertyName("references")]
+        public IList<Reference> References { get; set; } = new List<Reference>();
 
         /// <summary>
-        /// Gets the list of contact information like phone, email, WWW.
+        /// Gets or sets the list of contact information like phone, email, WWW.
         /// </summary>
-        [JsonProperty("contacts")]
-        public IList<Contact> Contacts { get; } = new List<Contact>();
+        [JsonPropertyName("contacts")]
+        public IList<Contact> Contacts { get; set; } = new List<Contact>();
 
         /// <summary>
-        /// Gets a list of hours during which the place is open for business..
+        /// Gets or sets a list of hours during which the place is open for business..
         /// </summary>
-        [JsonProperty("openingHours")]
-        public IList<Hours> OpeningHours { get; } = new List<Hours>();
+        [JsonPropertyName("openingHours")]
+        public IList<Hours> OpeningHours { get; set; } = new List<Hours>();
 
         /// <summary>
-        /// Gets the phonemes for address and place names.
+        /// Gets or sets the phonemes for address and place names.
         /// </summary>
-        [JsonProperty("phonemes")]
-        public IList<LocationPhoneme> Phonemes { get; } = new List<LocationPhoneme>();
+        [JsonPropertyName("phonemes")]
+        public IList<LocationPhoneme> Phonemes { get; set; } = new List<LocationPhoneme>();
 
         /// <summary>
         /// Gets or sets the additional attributes are added for BYOD use cases. Can hold arbitrary data.
         /// </summary>
-        [JsonProperty("additionalAttributes")]
+        [JsonPropertyName("additionalAttributes")]
         public object AdditionalAttributes { get; set; }
     }
 }

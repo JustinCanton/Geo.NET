@@ -5,7 +5,7 @@
 
 namespace Geo.Here.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A category assigned to a location.
@@ -15,13 +15,13 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the identifier number for an associated category. For example: "900-9300-0000".
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not it is a primary category. This field is visible only when the value is 'true'.
         /// </summary>
-        [JsonProperty("primary")]
+        [JsonPropertyName("primary")]
         public bool Primary { get; set; }
     }
 }

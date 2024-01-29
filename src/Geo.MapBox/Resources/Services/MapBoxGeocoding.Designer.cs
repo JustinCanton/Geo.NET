@@ -106,6 +106,15 @@ namespace Geo.MapBox.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The limit is invalid and will not be used..
+        /// </summary>
+        internal static string Invalid_Limit {
+            get {
+                return ResourceManager.GetString("Invalid Limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The proximity is invalid and will not be used..
         /// </summary>
         internal static string Invalid_Proximity {

@@ -6,8 +6,8 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using Geo.Here.Enums;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Contains a partial view of the location.
@@ -17,43 +17,47 @@ namespace Geo.Here.Models.Responses
         /// <summary>
         /// Gets or sets the type of the house number.
         /// </summary>
-        [JsonProperty("houseNumberType")]
+        [JsonPropertyName("houseNumberType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public HouseNumberType HouseNumberType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the address block.
         /// </summary>
-        [JsonProperty("addressBlockType")]
+        [JsonPropertyName("addressBlockType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AddressBlockType AddressBlockType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the locality.
         /// </summary>
-        [JsonProperty("localityType")]
+        [JsonPropertyName("localityType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LocalityType LocalityType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the administrative area.
         /// </summary>
-        [JsonProperty("administrativeAreaType")]
+        [JsonPropertyName("administrativeAreaType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AdministrativeAreaType AdministrativeAreaType { get; set; }
 
         /// <summary>
         /// Gets or sets the postal address of the result item.
         /// </summary>
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public Address Address { get; set; }
 
         /// <summary>
-        /// Gets the list of categories assigned to this place.
+        /// Gets or sets the list of categories assigned to this place.
         /// </summary>
-        [JsonProperty("categories")]
-        public IList<Category> Categories { get; } = new List<Category>();
+        [JsonPropertyName("categories")]
+        public IList<Category> Categories { get; set; } = new List<Category>();
 
         /// <summary>
-        /// Gets the list of food types assigned to this place.
+        /// Gets or sets the list of food types assigned to this place.
         /// </summary>
-        [JsonProperty("foodTypes")]
-        public IList<Category> FoodTypes { get; } = new List<Category>();
+        [JsonPropertyName("foodTypes")]
+        public IList<Category> FoodTypes { get; set; } = new List<Category>();
     }
 }

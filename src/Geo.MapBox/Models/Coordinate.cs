@@ -6,8 +6,8 @@
 namespace Geo.MapBox.Models
 {
     using System.Globalization;
+    using System.Text.Json.Serialization;
     using Geo.MapBox.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The coordinates (latitude, longitude) of a pin on a map corresponding to the searched place.
@@ -18,13 +18,13 @@ namespace Geo.MapBox.Models
         /// <summary>
         /// Gets or sets the latitude of the address. For example: "52.19404".
         /// </summary>
-        [JsonProperty("latitude")]
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of the address. For example: "8.80135".
         /// </summary>
-        [JsonProperty("longitude")]
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
         /// <inheritdoc/>

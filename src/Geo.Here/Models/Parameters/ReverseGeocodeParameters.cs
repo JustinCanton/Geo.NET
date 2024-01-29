@@ -10,7 +10,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a reverse geocoding request.
     /// </summary>
-    public class ReverseGeocodeParameters : BaseFilterParameters
+    public class ReverseGeocodeParameters : BaseFilterParameters, IKeyParameters
     {
         /// <summary>
         /// Gets a list of the types that should be included in the response. If this parameter is not set, all types are considered for the response.
@@ -34,5 +34,8 @@ namespace Geo.Here.Models.Parameters
         /// Note: This parameter and the 'At' parameter are mutually exclusive. Only one of them is allowed.
         /// </summary>
         public Circle InCircle { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

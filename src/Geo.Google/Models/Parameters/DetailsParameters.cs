@@ -11,7 +11,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// Parameters used for the details request.
     /// </summary>
-    public class DetailsParameters : BaseParameters
+    public class DetailsParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a textual identifier that uniquely identifies a place, returned from a Place Search.
@@ -36,5 +36,8 @@ namespace Geo.Google.Models.Parameters
         /// If this parameter is omitted from an autocomplete request, the request is billed independently.
         /// </summary>
         public string SessionToken { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

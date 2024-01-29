@@ -10,7 +10,7 @@ namespace Geo.Bing.Models.Parameters
     /// <summary>
     /// Parameters for the Bing address geocoding query.
     /// </summary>
-    public class AddressGeocodingParameters : ResultParameters
+    public class AddressGeocodingParameters : ResultParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the subdivision name in the country or region for an address.
@@ -41,5 +41,8 @@ namespace Geo.Bing.Models.Parameters
         /// Gets or sets the region information for the country being looked for.
         /// </summary>
         public RegionInfo CountryRegion { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

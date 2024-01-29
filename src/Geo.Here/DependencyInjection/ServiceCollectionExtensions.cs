@@ -3,15 +3,13 @@
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
 
-namespace Geo.Here.DependencyInjection
+namespace Geo.Extensions.DependencyInjection
 {
     using System;
-    using System.Net.Http;
-    using Geo.Core.DependencyInjection;
-    using Geo.Here.Abstractions;
-    using Geo.Here.Models;
+    using Geo.Here;
     using Geo.Here.Services;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Extension methods for the <see cref="IServiceCollection"/> class.
@@ -19,44 +17,28 @@ namespace Geo.Here.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the HERE services to the service collection.
+        /// Adds the HERE geocoding services to the service collection.
         /// <para>
         /// Adds the services:
         /// <list type="bullet">
+        /// <item><see cref="IOptions{TOptions}"/> of <see cref="IHereGeocoding"/></item>
         /// <item><see cref="IHereGeocoding"/></item>
         /// </list>
         /// </para>
         /// </summary>
         /// <param name="services">An <see cref="IServiceCollection"/> to add the HERE services to.</param>
-        /// <param name="optionsBuilder">A <see cref="Action{HereOptionsBuilder}"/> with the options to add to the HERE configuration.</param>
-        /// <param name="configureClient">Optional. A delegate that is used to configure the <see cref="HttpClient"/>.</param>
-        /// <returns>An <see cref="IHttpClientBuilder"/> to configure the http client.</returns>
+        /// <returns>An <see cref="KeyBuilder{T}"/> to configure the HERE geocoding.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>
-        public static IHttpClientBuilder AddHereServices(
-            this IServiceCollection services,
-            Action<HereOptionsBuilder> optionsBuilder,
-            Action<HttpClient> configureClient = null)
+        public static KeyBuilder<IHereGeocoding> AddHereGeocoding(this IServiceCollection services)
         {
-            services.AddCoreServices();
-
-            if (optionsBuilder != null)
+            if (services == null)
             {
-                var options = new HereOptionsBuilder();
-                optionsBuilder(options);
-
-                services.AddSingleton<IHereKeyContainer>(new HereKeyContainer(options.Key));
-            }
-            else
-            {
-                services.AddSingleton<IHereKeyContainer>(new HereKeyContainer(string.Empty));
+                throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddHttpClient<IHereGeocoding, HereGeocoding>(configureClient ?? DefaultHttpClientConfiguration);
-        }
+            services.AddKeyOptions<IHereGeocoding>();
 
-        private static void DefaultHttpClientConfiguration(HttpClient client)
-        {
-            // No-op
+            return new KeyBuilder<IHereGeocoding>(services.AddHttpClient<IHereGeocoding, HereGeocoding>());
         }
     }
 }

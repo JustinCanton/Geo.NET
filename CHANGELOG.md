@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [2.0.0](https://github.com/JustinCanton/Geo.NET/compare/1.6.0...2.0.0) (2024-01-30)
+### ⚠ BREAKING CHANGES
+- removed native support for net5.0 since it is an out of support item, and dropped netstandard2.1 since this supports netstandard2.0
+- removed the usage of Newtonsoft.Json and moved to use System.Text.Json
+- changed the exceptions returned from all services to GeoNETException instead of individual exceptions per API, as well as removed some now-deprecated interface types and implementations
+- removed all key container types in favour of using `IOptions<T>`
+- changed how configuration is done for options during service configuration
+- changed the namespace of multiple classes/extension methods
+- changed the name of the extension methods to add the geocoding services
+
+### Features
+- **runtime**: updating the .net version support for net8.0, and removing native support for netstandard2.1 and net5.0 ([#58](https://github.com/JustinCanton/Geo.NET/issues/58)) ([4398a10](https://github.com/JustinCanton/Geo.NET/commit/4398a10afb21d3e7e86fba0fa4052adb67ca1faa))
+- **serialization**: updating to use System.Text.Json instead of Newtonsoft.Json ([#40](https://github.com/JustinCanton/Geo.NET/issues/40)) ([e108ec6](https://github.com/JustinCanton/Geo.NET/commit/e108ec65d895d8d7fa792845973f14cdcc7335ae))
+- **exceptions**: updating how exceptions are handled and removing unused interfaces ([#95](https://github.com/JustinCanton/Geo.NET/issues/95)) ([61a3e5f](https://github.com/JustinCanton/Geo.NET/commit/61a3e5f1b8bb2bd74cd7b11e92c91bcaf1e691ac))
+- **configuration**: updating to allow services to pass a key when sending requests and changing how option information is configured and stored ([#80](https://github.com/JustinCanton/Geo.NET/issues/80)) ([659288f](https://github.com/JustinCanton/Geo.NET/commit/659288f178605333cf43e81a624591d53ef48e22))
+
+## [1.6.0](https://github.com/JustinCanton/Geo.NET/compare/1.5.2...1.6.0) (2023-12-29)
+### Features
+- **arcgis**: updating the parameter objects to include new parameters for endpoints ([#88](https://github.com/JustinCanton/Geo.NET/issues/88)) ([0c9028a](https://github.com/JustinCanton/Geo.NET/commit/0c9028a76ecc4695f105062393203aae5a43eeff))
+
 ## [1.5.2](https://github.com/JustinCanton/Geo.NET/compare/1.5.1...1.5.2) (2023-09-18)
 ### Bug Fixes
 - **here**:  fixing an issue where the in parameter of the geocoding endpoint is not passed correctly ([#87](https://github.com/JustinCanton/Geo.NET/issues/87)) ([7f2adf0](https://github.com/JustinCanton/Geo.NET/commit/7f2adf0383c85bb8d79cf6b321d125bef9a4c7f8))

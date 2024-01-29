@@ -6,8 +6,8 @@
 namespace Geo.MapBox.Models.Responses
 {
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using Geo.MapBox.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The context information for a location.
@@ -18,24 +18,24 @@ namespace Geo.MapBox.Models.Responses
         /// <summary>
         /// Gets or sets the id of the context item.
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the wikidata for the context item.
         /// </summary>
-        [JsonProperty("wikidata")]
+        [JsonPropertyName("wikidata")]
         public string Wikidata { get; set; }
 
         /// <summary>
         /// Gets or sets the short code of the context item.
         /// </summary>
-        [JsonProperty("short_code")]
+        [JsonPropertyName("short_code")]
         public string ShortCode { get; set; }
 
         /// <summary>
-        /// Gets the text items of the context.
+        /// Gets or sets the text items of the context.
         /// </summary>
-        public IList<ContextText> ContextText { get; } = new List<ContextText>();
+        public IList<ContextText> ContextText { get; set; } = new List<ContextText>();
     }
 }

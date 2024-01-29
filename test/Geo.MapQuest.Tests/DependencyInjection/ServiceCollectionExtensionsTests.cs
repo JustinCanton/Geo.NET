@@ -8,9 +8,10 @@ namespace Geo.MapQuest.Tests.DependencyInjection
     using System;
     using System.Net.Http;
     using FluentAssertions;
-    using Geo.MapQuest.Abstractions;
-    using Geo.MapQuest.DependencyInjection;
+    using Geo.Extensions.DependencyInjection;
+    using Geo.MapQuest.Settings;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Xunit;
 
     /// <summary>
@@ -19,54 +20,80 @@ namespace Geo.MapQuest.Tests.DependencyInjection
     public class ServiceCollectionExtensionsTests
     {
         [Fact]
-        public void AddMapQuestServices_WithValidCall_ConfiguresAllServices()
+        public void AddMapQuestGeocoding_WithValidCall_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddMapQuestServices(options => options.UseKey("abc"));
+            var builder = services.AddMapQuestGeocoding();
+            builder.AddKey("abc");
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IMapQuestKeyContainer>().Should().NotBeNull();
-            provider.GetRequiredService<IMapQuestEndpoint>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<MapQuestOptions>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be("abc");
+            options.Value.UseLicensedEndpoint.Should().BeFalse();
             provider.GetRequiredService<IMapQuestGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddMapQuestServices_WithNullOptions_ConfiguresAllServices()
+        public void AddMapQuestGeocoding_WithNullOptions_ConfiguresAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddMapQuestServices(null);
+            services.AddMapQuestGeocoding();
 
             // Assert
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<IMapQuestKeyContainer>().Should().NotBeNull();
-            provider.GetRequiredService<IMapQuestEndpoint>().Should().NotBeNull();
+            var options = provider.GetRequiredService<IOptions<MapQuestOptions>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be(string.Empty);
+            options.Value.UseLicensedEndpoint.Should().BeFalse();
             provider.GetRequiredService<IMapQuestGeocoding>().Should().NotBeNull();
         }
 
         [Fact]
-        public void AddMapQuestServices_WithClientConfiguration_ConfiguresHttpClientAllServices()
+        public void AddMapQuestGeocoding_WithClientConfiguration_ConfiguresHttpClientAllServices()
         {
             // Arrange
             var services = new ServiceCollection();
 
             // Act
-            services.AddMapQuestServices(
-                options => options.UseKey("abc"),
-                httpClient => httpClient.Timeout = TimeSpan.FromSeconds(6));
+            var builder = services.AddMapQuestGeocoding();
+            builder.AddKey("abc");
+            builder.HttpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(6));
 
             // Assert
             var provider = services.BuildServiceProvider();
             var client = provider.GetRequiredService<IHttpClientFactory>().CreateClient("IMapQuestGeocoding");
             client.Timeout.Should().Be(TimeSpan.FromSeconds(6));
+        }
+
+        [Fact]
+        public void AddMapQuestGeocoding_WithLicensedEndpoints_ConfiguresAllServices()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            var builder = services.AddMapQuestGeocoding();
+            builder.AddKey("abc");
+            builder.UseLicensedEndpoints();
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<MapQuestOptions>>();
+            options.Should().NotBeNull();
+            options.Value.Key.Should().Be("abc");
+            options.Value.UseLicensedEndpoint.Should().BeTrue();
+            provider.GetRequiredService<IMapQuestGeocoding>().Should().NotBeNull();
         }
     }
 }

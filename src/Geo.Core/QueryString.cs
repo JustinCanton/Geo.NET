@@ -228,7 +228,7 @@ namespace Geo.Core
             }
 
             // ?name1=value1 Add ?name2=value2 returns ?name1=value1&name2=value2
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             return new QueryString(string.Concat(Value, "&", other.Value.AsSpan(1)));
 #elif NETSTANDARD2_1
             return new QueryString(Value + "&" + other.Value[1..]);

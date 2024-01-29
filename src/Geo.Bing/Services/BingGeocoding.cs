@@ -11,47 +11,43 @@ namespace Geo.Bing.Services
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Geo.Bing.Abstractions;
-    using Geo.Bing.Models.Exceptions;
     using Geo.Bing.Models.Parameters;
     using Geo.Bing.Models.Responses;
     using Geo.Core;
     using Geo.Core.Extensions;
+    using Geo.Core.Models.Exceptions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the Bing geocoding API.
     /// </summary>
-    public class BingGeocoding : ClientExecutor, IBingGeocoding
+    public class BingGeocoding : GeoClient, IBingGeocoding
     {
-        private const string ApiName = "Bing";
         private const string BaseUri = "http://dev.virtualearth.net/REST/v1/Locations";
 
-        private readonly IBingKeyContainer _keyContainer;
-        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
+        private readonly IOptions<KeyOptions<IBingGeocoding>> _options;
         private readonly ILogger<BingGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BingGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IBingKeyContainer"/> used for fetching the Bing key.</param>
-        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
+        /// <param name="client">An <see cref="HttpClient"/> used for placing calls to the Bing Geocoding API.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Bing key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public BingGeocoding(
             HttpClient client,
-            IBingKeyContainer keyContainer,
-            IGeoNETExceptionProvider exceptionProvider,
-            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
+            IOptions<KeyOptions<IBingGeocoding>> options,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
+            : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<BingGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<BingGeocoding>() ?? NullLogger<BingGeocoding>.Instance;
         }
+
+        /// <inheritdoc/>
+        protected override string ApiName => "Bing";
 
         /// <inheritdoc/>
         public async Task<Response> GeocodingAsync(
@@ -60,7 +56,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -70,7 +66,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -78,7 +74,7 @@ namespace Geo.Bing.Services
         {
             var uri = ValidateAndBuildUri<AddressGeocodingParameters>(parameters, BuildAddressGeocodingRequest);
 
-            return await CallAsync<Response, BingException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -93,9 +89,8 @@ namespace Geo.Bing.Services
         {
             if (parameters is null)
             {
-                var error = _resourceStringProvider.GetString("Null Parameters");
-                _logger.BingError(error);
-                throw new BingException(error, new ArgumentNullException(nameof(parameters)));
+                _logger.BingError(Resources.Services.BingGeocoding.Null_Parameters);
+                throw new GeoNETException(Resources.Services.BingGeocoding.Null_Parameters, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -104,9 +99,8 @@ namespace Geo.Bing.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _resourceStringProvider.GetString("Failed To Create Uri");
-                _logger.BingError(error);
-                throw new BingException(error, ex);
+                _logger.BingError(Resources.Services.BingGeocoding.Failed_To_Create_Uri);
+                throw new GeoNETException(Resources.Services.BingGeocoding.Failed_To_Create_Uri, ex);
             }
         }
 
@@ -123,16 +117,15 @@ namespace Geo.Bing.Services
 
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                var error = _resourceStringProvider.GetString("Invalid Query");
-                _logger.BingError(error);
-                throw new ArgumentException(error, nameof(parameters.Query));
+                _logger.BingError(Resources.Services.BingGeocoding.Invalid_Query);
+                throw new ArgumentException(Resources.Services.BingGeocoding.Invalid_Query, nameof(parameters.Query));
             }
 
             query = query.Add("query", parameters.Query);
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -149,9 +142,8 @@ namespace Geo.Bing.Services
         {
             if (parameters.Point is null)
             {
-                var error = _resourceStringProvider.GetString("Invalid Point");
-                _logger.BingError(error);
-                throw new ArgumentException(error, nameof(parameters.Point));
+                _logger.BingError(Resources.Services.BingGeocoding.Invalid_Point);
+                throw new ArgumentException(Resources.Services.BingGeocoding.Invalid_Point, nameof(parameters.Point));
             }
 
             var uriBuilder = new UriBuilder(BaseUri + $"/{parameters.Point}");
@@ -199,12 +191,12 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Do Not Include Entity Types"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Do_Not_Include_Entity_Types);
             }
 
             BuildBaseQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -225,9 +217,8 @@ namespace Geo.Bing.Services
                 string.IsNullOrWhiteSpace(parameters.AddressLine) &&
                 parameters.CountryRegion == null)
             {
-                var error = _resourceStringProvider.GetString("Invalid Address Information");
-                _logger.BingError(error);
-                throw new ArgumentException(error, nameof(parameters));
+                _logger.BingError(Resources.Services.BingGeocoding.Invalid_Address_Information);
+                throw new ArgumentException(Resources.Services.BingGeocoding.Invalid_Address_Information, nameof(parameters));
             }
 
             var uriBuilder = new UriBuilder(BaseUri);
@@ -239,7 +230,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Administration District"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Administration_District);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Locality))
@@ -248,7 +239,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Locality"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Locality);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.PostalCode))
@@ -257,7 +248,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Postal Code"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Postal_Code);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.AddressLine))
@@ -266,7 +257,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Address Line"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Address_Line);
             }
 
             if (parameters.CountryRegion != null)
@@ -275,12 +266,12 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Country Region"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Country_Region);
             }
 
             BuildLimitedResultQuery(parameters, ref query);
 
-            AddBingKey(ref query);
+            AddBingKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -300,7 +291,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingWarning(_resourceStringProvider.GetString("Invalid Maximum Results"));
+                _logger.BingWarning(Resources.Services.BingGeocoding.Invalid_Maximum_Results);
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -319,7 +310,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Do Not Include Neighbourhood"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Do_Not_Include_Neighbourhood);
             }
 
             var includes = new CommaDelimitedStringCollection();
@@ -339,7 +330,7 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Do Not Include Types"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Do_Not_Include_Types);
             }
 
             if (parameters.Culture != null && !string.IsNullOrWhiteSpace(parameters.Culture.Name))
@@ -348,17 +339,25 @@ namespace Geo.Bing.Services
             }
             else
             {
-                _logger.BingDebug(_resourceStringProvider.GetString("Invalid Culuture"));
+                _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Culture);
             }
         }
 
         /// <summary>
         /// Adds the Bing key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBingKey(ref QueryString query)
+        internal void AddBingKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("key", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("key", key);
         }
     }
 }

@@ -12,53 +12,46 @@ namespace Geo.MapQuest.Services
     using System.Threading.Tasks;
     using Geo.Core;
     using Geo.Core.Extensions;
-    using Geo.MapQuest.Abstractions;
+    using Geo.Core.Models.Exceptions;
     using Geo.MapQuest.Enums;
-    using Geo.MapQuest.Models.Exceptions;
     using Geo.MapQuest.Models.Parameters;
     using Geo.MapQuest.Models.Responses;
+    using Geo.MapQuest.Settings;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the MapQuest geocoding API.
     /// </summary>
-    public class MapQuestGeocoding : ClientExecutor, IMapQuestGeocoding
+    public class MapQuestGeocoding : GeoClient, IMapQuestGeocoding
     {
-        private const string ApiName = "MapQuest";
         private const string OpenGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/address";
         private const string OpenReverseGeocodeUri = "http://open.mapquestapi.com/geocoding/v1/reverse";
         private const string GeocodeUri = "http://www.mapquestapi.com/geocoding/v1/address";
         private const string ReverseGeocodeUri = "http://www.mapquestapi.com/geocoding/v1/reverse";
 
-        private readonly IMapQuestKeyContainer _keyContainer;
-        private readonly IMapQuestEndpoint _endpoint;
-        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
+        private readonly IOptions<MapQuestOptions> _options;
         private readonly ILogger<MapQuestGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapQuestGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IMapQuestKeyContainer"/> used for fetching the MapQuest key.</param>
-        /// <param name="endpoint">An <see cref="IMapQuestEndpoint"/> used for fetching which MapQuest endpoint to use.</param>
-        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="MapQuestOptions"/> containing MapQuest information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapQuestGeocoding(
             HttpClient client,
-            IMapQuestKeyContainer keyContainer,
-            IMapQuestEndpoint endpoint,
-            IGeoNETExceptionProvider exceptionProvider,
-            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
+            IOptions<MapQuestOptions> options,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
+            : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
-            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<MapQuestGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<MapQuestGeocoding>() ?? NullLogger<MapQuestGeocoding>.Instance;
         }
+
+        /// <inheritdoc/>
+        protected override string ApiName => "MapQuest";
 
         /// <inheritdoc/>
         public async Task<Response<GeocodeResult>> GeocodingAsync(
@@ -67,7 +60,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<GeocodeResult>, MapQuestException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response<GeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -77,7 +70,7 @@ namespace Geo.MapQuest.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response<ReverseGeocodeResult>, MapQuestException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response<ReverseGeocodeResult>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -104,9 +97,8 @@ namespace Geo.MapQuest.Services
         {
             if (parameters is null)
             {
-                var error = _resourceStringProvider.GetString("Null Parameters");
-                _logger.MapQuestError(error);
-                throw new MapQuestException(error, new ArgumentNullException(nameof(parameters)));
+                _logger.MapQuestError(Resources.Services.MapQuestGeocoding.Null_Parameters);
+                throw new GeoNETException(Resources.Services.MapQuestGeocoding.Null_Parameters, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -115,9 +107,8 @@ namespace Geo.MapQuest.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _resourceStringProvider.GetString("Failed To Create Uri");
-                _logger.MapQuestError(error);
-                throw new MapQuestException(error, ex);
+                _logger.MapQuestError(Resources.Services.MapQuestGeocoding.Failed_To_Create_Uri);
+                throw new GeoNETException(Resources.Services.MapQuestGeocoding.Failed_To_Create_Uri, ex);
             }
         }
 
@@ -129,14 +120,13 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildGeocodingRequest(GeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? GeocodeUri : OpenGeocodeUri);
+            var uriBuilder = new UriBuilder(_options.Value.UseLicensedEndpoint ? GeocodeUri : OpenGeocodeUri);
             var query = QueryString.Empty;
 
             if (string.IsNullOrWhiteSpace(parameters.Location))
             {
-                var error = _resourceStringProvider.GetString("Invalid Location");
-                _logger.MapQuestError(error);
-                throw new ArgumentException(error, nameof(parameters.Location));
+                _logger.MapQuestError(Resources.Services.MapQuestGeocoding.Invalid_Location);
+                throw new ArgumentException(Resources.Services.MapQuestGeocoding.Invalid_Location, nameof(parameters.Location));
             }
 
             query = query.Add("location", parameters.Location);
@@ -149,7 +139,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Bounding Box"));
+                _logger.MapQuestWarning(Resources.Services.MapQuestGeocoding.Invalid_Bounding_Box);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -162,7 +152,7 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Maximum Results"));
+                _logger.MapQuestWarning(Resources.Services.MapQuestGeocoding.Invalid_Maximum_Results);
             }
 
             if (parameters.IntlMode == InternationalMode.FiveBox)
@@ -179,12 +169,12 @@ namespace Geo.MapQuest.Services
             }
             else
             {
-                _logger.MapQuestWarning(_resourceStringProvider.GetString("Invalid Intl Mode"));
+                _logger.MapQuestWarning(Resources.Services.MapQuestGeocoding.Invalid_Intl_Mode);
             }
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(ref query);
+            AddMapQuestKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -199,14 +189,13 @@ namespace Geo.MapQuest.Services
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(_endpoint.UseLicensedEndpoint() ? ReverseGeocodeUri : OpenReverseGeocodeUri);
+            var uriBuilder = new UriBuilder(_options.Value.UseLicensedEndpoint ? ReverseGeocodeUri : OpenReverseGeocodeUri);
             var query = QueryString.Empty;
 
             if (parameters.Location is null)
             {
-                var error = _resourceStringProvider.GetString("Invalid Location");
-                _logger.MapQuestError(error);
-                throw new ArgumentException(error, nameof(parameters.Location));
+                _logger.MapQuestError(Resources.Services.MapQuestGeocoding.Invalid_Location);
+                throw new ArgumentException(Resources.Services.MapQuestGeocoding.Invalid_Location, nameof(parameters.Location));
             }
 
             query = query.Add("location", parameters.Location.ToString());
@@ -221,7 +210,7 @@ namespace Geo.MapQuest.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapQuestKey(ref query);
+            AddMapQuestKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -231,10 +220,18 @@ namespace Geo.MapQuest.Services
         /// <summary>
         /// Adds the MapQuest key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddMapQuestKey(ref QueryString query)
+        internal void AddMapQuestKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("key", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("key", key);
         }
     }
 }

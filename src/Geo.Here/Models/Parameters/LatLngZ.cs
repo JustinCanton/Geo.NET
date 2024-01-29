@@ -5,8 +5,6 @@
 
 namespace Geo.Here.Models.Parameters
 {
-    using System;
-
     /// <summary>
     /// A coordinate triple.
     /// </summary>

@@ -15,50 +15,46 @@ namespace Geo.MapBox.Services
     using System.Threading.Tasks;
     using Geo.Core;
     using Geo.Core.Extensions;
-    using Geo.MapBox.Abstractions;
+    using Geo.Core.Models.Exceptions;
     using Geo.MapBox.Enums;
     using Geo.MapBox.Models;
-    using Geo.MapBox.Models.Exceptions;
     using Geo.MapBox.Models.Parameters;
     using Geo.MapBox.Models.Responses;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// A service to call the MapBox geocoding API.
     /// </summary>
-    public class MapBoxGeocoding : ClientExecutor, IMapBoxGeocoding
+    public class MapBoxGeocoding : GeoClient, IMapBoxGeocoding
     {
-        private const string ApiName = "MapBox";
         private const string GeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
         private const string ReverseGeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
         private const string PlacesEndpoint = "mapbox.places";
         private const string PermanentEndpoint = "mapbox.places-permanent";
 
-        private readonly IMapBoxKeyContainer _keyContainer;
-        private readonly IGeoNETResourceStringProvider _resourceStringProvider;
+        private readonly IOptions<KeyOptions<IMapBoxGeocoding>> _options;
         private readonly ILogger<MapBoxGeocoding> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapBoxGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
-        /// <param name="keyContainer">An <see cref="IMapBoxKeyContainer"/> used for fetching the here key.</param>
-        /// <param name="exceptionProvider">An <see cref="IGeoNETExceptionProvider"/> used to provide exceptions based on an exception type.</param>
-        /// <param name="resourceStringProviderFactory">An <see cref="IGeoNETResourceStringProviderFactory"/> used to create a resource string provider for log or exception messages.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Google key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,
-            IMapBoxKeyContainer keyContainer,
-            IGeoNETExceptionProvider exceptionProvider,
-            IGeoNETResourceStringProviderFactory resourceStringProviderFactory,
+            IOptions<KeyOptions<IMapBoxGeocoding>> options,
             ILoggerFactory loggerFactory = null)
-            : base(client, exceptionProvider, resourceStringProviderFactory, loggerFactory)
+            : base(client, loggerFactory)
         {
-            _keyContainer = keyContainer ?? throw new ArgumentNullException(nameof(keyContainer));
-            _resourceStringProvider = resourceStringProviderFactory?.CreateResourceStringProvider<MapBoxGeocoding>() ?? throw new ArgumentNullException(nameof(resourceStringProviderFactory));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<MapBoxGeocoding>() ?? NullLogger<MapBoxGeocoding>.Instance;
         }
+
+        /// <inheritdoc/>
+        protected override string ApiName => "MapBox";
 
         /// <inheritdoc/>
         public async Task<Response<List<string>>> GeocodingAsync(
@@ -67,7 +63,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await CallAsync<Response<List<string>>, MapBoxException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response<List<string>>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -77,7 +73,7 @@ namespace Geo.MapBox.Services
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await CallAsync<Response<Coordinate>, MapBoxException>(uri, ApiName, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response<Coordinate>>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -92,9 +88,8 @@ namespace Geo.MapBox.Services
         {
             if (parameters is null)
             {
-                var error = _resourceStringProvider.GetString("Null Parameters");
-                _logger.MapBoxError(error);
-                throw new MapBoxException(error, new ArgumentNullException(nameof(parameters)));
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Null_Parameters);
+                throw new GeoNETException(Resources.Services.MapBoxGeocoding.Null_Parameters, new ArgumentNullException(nameof(parameters)));
             }
 
             try
@@ -103,9 +98,8 @@ namespace Geo.MapBox.Services
             }
             catch (ArgumentException ex)
             {
-                var error = _resourceStringProvider.GetString("Failed To Create Uri");
-                _logger.MapBoxError(error);
-                throw new MapBoxException(error, ex);
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Failed_To_Create_Uri);
+                throw new GeoNETException(Resources.Services.MapBoxGeocoding.Failed_To_Create_Uri, ex);
             }
         }
 
@@ -119,9 +113,8 @@ namespace Geo.MapBox.Services
         {
             if (string.IsNullOrWhiteSpace(parameters.Query))
             {
-                var error = _resourceStringProvider.GetString("Invalid Query");
-                _logger.MapBoxError(error);
-                throw new ArgumentException(error, nameof(parameters.Query));
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Invalid_Query);
+                throw new ArgumentException(Resources.Services.MapBoxGeocoding.Invalid_Query, nameof(parameters.Query));
             }
 
             var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, GeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, UrlEncoder.Default.Encode(parameters.Query)));
@@ -137,7 +130,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Bounding Box"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Bounding_Box);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -150,12 +143,12 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Proximity"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Proximity);
             }
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(ref query);
+            AddMapBoxKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -172,9 +165,8 @@ namespace Geo.MapBox.Services
         {
             if (parameters.Coordinate is null)
             {
-                var error = _resourceStringProvider.GetString("Invalid Coordinate");
-                _logger.MapBoxError(error);
-                throw new ArgumentException(error, nameof(parameters.Coordinate));
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Invalid_Coordinate);
+                throw new ArgumentException(Resources.Services.MapBoxGeocoding.Invalid_Coordinate, nameof(parameters.Coordinate));
             }
 
             var uriBuilder = new UriBuilder(string.Format(CultureInfo.InvariantCulture, ReverseGeocodeUri, parameters.EndpointType == EndpointType.Places ? PlacesEndpoint : PermanentEndpoint, parameters.Coordinate));
@@ -186,7 +178,7 @@ namespace Geo.MapBox.Services
 
             AddBaseParameters(parameters, ref query);
 
-            AddMapBoxKey(ref query);
+            AddMapBoxKey(parameters, ref query);
 
             uriBuilder.AddQuery(query);
 
@@ -206,7 +198,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Countries"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Countries);
             }
 
             if (parameters.Languages.Count > 0)
@@ -215,7 +207,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Languages"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Languages);
             }
 
             if (parameters.Limit > 0 && parameters.Limit < 6)
@@ -224,7 +216,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Languages"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Limit);
             }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -239,7 +231,7 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Types"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Types);
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.Worldview))
@@ -248,17 +240,25 @@ namespace Geo.MapBox.Services
             }
             else
             {
-                _logger.MapBoxDebug(_resourceStringProvider.GetString("Invalid Worldview"));
+                _logger.MapBoxDebug(Resources.Services.MapBoxGeocoding.Invalid_Worldview);
             }
         }
 
         /// <summary>
-        /// Adds the here key to the query parameters.
+        /// Adds the MapBox key to the query parameters.
         /// </summary>
+        /// <param name="keyParameter">An <see cref="IKeyParameters"/> to conditionally get the key from.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddMapBoxKey(ref QueryString query)
+        internal void AddMapBoxKey(IKeyParameters keyParameter, ref QueryString query)
         {
-            query = query.Add("access_token", _keyContainer.GetKey());
+            var key = _options.Value.Key;
+
+            if (!string.IsNullOrWhiteSpace(keyParameter.Key))
+            {
+                key = keyParameter.Key;
+            }
+
+            query = query.Add("access_token", key);
         }
     }
 }

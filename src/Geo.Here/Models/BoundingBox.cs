@@ -6,7 +6,7 @@
 namespace Geo.Here.Models
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The north/south/east/west bounding box for a map view.
@@ -16,25 +16,25 @@ namespace Geo.Here.Models
         /// <summary>
         /// Gets or sets the longitude of the western-side of the box.For example: "8.80068".
         /// </summary>
-        [JsonProperty("west")]
+        [JsonPropertyName("west")]
         public double West { get; set; }
 
         /// <summary>
         /// Gets or sets the latitude of the southern-side of the box. For example: "52.19333".
         /// </summary>
-        [JsonProperty("south")]
+        [JsonPropertyName("south")]
         public double South { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of the eastern-side of the box. For example: "8.8167".
         /// </summary>
-        [JsonProperty("east")]
+        [JsonPropertyName("east")]
         public double East { get; set; }
 
         /// <summary>
         /// Gets or sets the latitude of the northern-side of the box. For example: "52.19555".
         /// </summary>
-        [JsonProperty("north")]
+        [JsonPropertyName("north")]
         public double North { get; set; }
 
         /// <inheritdoc/>

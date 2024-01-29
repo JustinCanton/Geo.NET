@@ -5,7 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The address information.
@@ -15,121 +15,121 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the match address.
         /// </summary>
-        [JsonProperty("Match_addr")]
+        [JsonPropertyName("Match_addr")]
         public string MatchAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the long label string for the address.
         /// </summary>
-        [JsonProperty("LongLabel")]
+        [JsonPropertyName("LongLabel")]
         public string LongLabel { get; set; }
 
         /// <summary>
         /// Gets or sets the short label string for the address.
         /// </summary>
-        [JsonProperty("ShortLabel")]
+        [JsonPropertyName("ShortLabel")]
         public string ShortLabel { get; set; }
 
         /// <summary>
         /// Gets or sets the address type.
         /// </summary>
-        [JsonProperty("Addr_type")]
+        [JsonPropertyName("Addr_type")]
         public string AddressType { get; set; }
 
         /// <summary>
         /// Gets or sets the type of address.
         /// </summary>
-        [JsonProperty("Type")]
+        [JsonPropertyName("Type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the place name if the address has a name.
         /// </summary>
-        [JsonProperty("PlaceName")]
+        [JsonPropertyName("PlaceName")]
         public string PlaceName { get; set; }
 
         /// <summary>
         /// Gets or sets the address number.
         /// </summary>
-        [JsonProperty("AddNum")]
+        [JsonPropertyName("AddNum")]
         public string AddressNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the address.
         /// </summary>
-        [JsonProperty("Address")]
+        [JsonPropertyName("Address")]
         public string AddressName { get; set; }
 
         /// <summary>
         /// Gets or sets the block name.
         /// </summary>
-        [JsonProperty("Block")]
+        [JsonPropertyName("Block")]
         public string Block { get; set; }
 
         /// <summary>
         /// Gets or sets the sector of the address.
         /// </summary>
-        [JsonProperty("Sector")]
+        [JsonPropertyName("Sector")]
         public string Sector { get; set; }
 
         /// <summary>
         /// Gets or sets the neighbourhood information for the address.
         /// </summary>
-        [JsonProperty("Neighborhood")]
+        [JsonPropertyName("Neighborhood")]
         public string Neighbourhood { get; set; }
 
         /// <summary>
         /// Gets or sets the district of the address.
         /// </summary>
-        [JsonProperty("District")]
+        [JsonPropertyName("District")]
         public string District { get; set; }
 
         /// <summary>
         /// Gets or sets the city of the address.
         /// </summary>
-        [JsonProperty("City")]
+        [JsonPropertyName("City")]
         public string City { get; set; }
 
         /// <summary>
         /// Gets or sets the metropolitian area of the address.
         /// </summary>
-        [JsonProperty("MetroArea")]
+        [JsonPropertyName("MetroArea")]
         public string MetropolitanArea { get; set; }
 
         /// <summary>
         /// Gets or sets the sub-region of the address.
         /// </summary>
-        [JsonProperty("Subregion")]
+        [JsonPropertyName("Subregion")]
         public string Subregion { get; set; }
 
         /// <summary>
         /// Gets or sets the region of the address.
         /// </summary>
-        [JsonProperty("Region")]
+        [JsonPropertyName("Region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Gets or sets the territory of the address.
         /// </summary>
-        [JsonProperty("Territory")]
+        [JsonPropertyName("Territory")]
         public string Territory { get; set; }
 
         /// <summary>
         /// Gets or sets the postal code of the address.
         /// </summary>
-        [JsonProperty("Postal")]
+        [JsonPropertyName("Postal")]
         public string PostalCode { get; set; }
 
         /// <summary>
         /// Gets or sets the postal code extension of the address.
         /// </summary>
-        [JsonProperty("PostalExt")]
+        [JsonPropertyName("PostalExt")]
         public string PostalCodeExtension { get; set; }
 
         /// <summary>
         /// Gets or sets the country code of the address.
         /// </summary>
-        [JsonProperty("CountryCode")]
+        [JsonPropertyName("CountryCode")]
         public string CountryCode { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Geo.MapBox.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a reverse geocoding request.
     /// </summary>
-    public class ReverseGeocodingParameters : BaseParameters
+    public class ReverseGeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the location being queried.
@@ -22,5 +22,8 @@ namespace Geo.MapBox.Models.Parameters
         /// The default is distance.
         /// </summary>
         public ReverseMode ReverseMode { get; set; } = ReverseMode.Distance;
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

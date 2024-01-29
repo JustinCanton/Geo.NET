@@ -5,7 +5,7 @@
 
 namespace Geo.MapQuest.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The location for a reverse geocode request.
@@ -15,13 +15,13 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the speed limit and toll road data, when available.
         /// </summary>
-        [JsonProperty("roadMetadata")]
+        [JsonPropertyName("roadMetadata")]
         public RoadMetadata RoadMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the nearest intersection (street pair) to a given point.
         /// </summary>
-        [JsonProperty("nearestIntersection")]
+        [JsonPropertyName("nearestIntersection")]
         public NearestIntersection NearestIntersection { get; set; }
     }
 }

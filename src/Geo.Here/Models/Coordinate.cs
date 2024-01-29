@@ -6,7 +6,7 @@
 namespace Geo.Here.Models
 {
     using System.Globalization;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The coordinates (latitude, longitude) of a pin on a map corresponding to the searched place.
@@ -16,13 +16,13 @@ namespace Geo.Here.Models
         /// <summary>
         /// Gets or sets the latitude of the address. For example: "52.19404".
         /// </summary>
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of the address. For example: "8.80135".
         /// </summary>
-        [JsonProperty("lng")]
+        [JsonPropertyName("lng")]
         public double Longitude { get; set; }
 
         /// <inheritdoc/>

@@ -5,7 +5,7 @@
 
 namespace Geo.MapQuest.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The meta data information about the road.
@@ -15,19 +15,19 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the unit for the street speed limit.
         /// </summary>
-        [JsonProperty("speedLimitUnits")]
+        [JsonPropertyName("speedLimitUnits")]
         public string SpeedLimitUnits { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not the road is a toll road.
         /// </summary>
-        [JsonProperty("tollRoad")]
+        [JsonPropertyName("tollRoad")]
         public string ToadRoad { get; set; }
 
         /// <summary>
         /// Gets or sets the speed limit of the road.
         /// </summary>
-        [JsonProperty("speedLimit")]
+        [JsonPropertyName("speedLimit")]
         public int SpeedLimit { get; set; }
     }
 }

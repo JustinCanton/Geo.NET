@@ -6,7 +6,7 @@
 namespace Geo.Bing.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A ResourceSet is a container of Resources returned by the request.
@@ -16,13 +16,13 @@ namespace Geo.Bing.Models.Responses
         /// <summary>
         /// Gets or sets an estimate of the total number of resources in the ResourceSet.
         /// </summary>
-        [JsonProperty("estimatedTotal")]
+        [JsonPropertyName("estimatedTotal")]
         public long EstimatedTotal { get; set; }
 
         /// <summary>
-        /// Gets a collection of one or more resources. The resources that are returned depend on the request.
+        /// Gets or sets a collection of one or more resources. The resources that are returned depend on the request.
         /// </summary>
-        [JsonProperty("resources")]
-        public IList<Location> Resources { get; } = new List<Location>();
+        [JsonPropertyName("resources")]
+        public IList<Location> Resources { get; set; } = new List<Location>();
     }
 }

@@ -5,7 +5,7 @@
 
 namespace Geo.MapQuest.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The nearest intersection information.
@@ -15,25 +15,25 @@ namespace Geo.MapQuest.Models.Responses
         /// <summary>
         /// Gets or sets the nearest street name.
         /// </summary>
-        [JsonProperty("streetDisplayName")]
+        [JsonPropertyName("streetDisplayName")]
         public string StreetDisplayName { get; set; }
 
         /// <summary>
         /// Gets or sets the distance in meters to the nearest intersection.
         /// </summary>
-        [JsonProperty("distanceMeters")]
+        [JsonPropertyName("distanceMeters")]
         public double DistanceMeters { get; set; }
 
         /// <summary>
         /// Gets or sets the coordinates of the nearest intersection.
         /// </summary>
-        [JsonProperty("latLng")]
+        [JsonPropertyName("latLng")]
         public Coordinate Coordinate { get; set; }
 
         /// <summary>
         /// Gets or sets the label of the nearest intersection.
         /// </summary>
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Label { get; set; }
     }
 }

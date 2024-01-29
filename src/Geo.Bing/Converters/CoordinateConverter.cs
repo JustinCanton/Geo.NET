@@ -6,84 +6,93 @@
 namespace Geo.Bing.Converters
 {
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using Geo.Bing.Models;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using Geo.Core.Extensions;
 
     /// <summary>
     /// A converter for a <see cref="double"/>[] to a <see cref="Coordinate"/>.
     /// </summary>
-    public class CoordinateConverter : JsonConverter
+    public class CoordinateConverter : JsonConverter<Coordinate>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        /// <inheritdoc/>
+        public override Coordinate Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (objectType == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            return objectType == typeof(double[]);
-        }
-
-        /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            var token = JArray.Load(reader);
-            double[] items = token.Select(jv => (double)jv).ToArray();
-
-            if (items is null)
+            if (reader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
-            if (items.Length != 2)
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                return null;
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the coordinate. Expected to find an array, instead found {0}", reader.TokenType.GetName()));
+            }
+
+            var coordinate = new List<double>();
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndArray)
+                {
+                    break;
+                }
+                else if (reader.TokenType == JsonTokenType.Number)
+                {
+                    coordinate.Add(reader.GetDouble());
+                }
+                else
+                {
+                    throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the coordinate. Expected to find a double, instead found '{0}'", reader.GetString()));
+                }
+            }
+
+            if (coordinate.Count != 2)
+            {
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected end of array while parsing the coordinate. Expected to find a 2 doubles, instead found {0}", coordinate.Count));
             }
 
             return new Coordinate()
             {
-                Latitude = items[0],
-                Longitude = items[1],
+                Latitude = coordinate[0],
+                Longitude = coordinate[1],
             };
         }
 
-        /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <inheritdoc/>
+        public override void Write(Utf8JsonWriter writer, Coordinate value, JsonSerializerOptions options)
         {
             if (writer == null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                writer.WriteNullValue();
+                return;
             }
 
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            serializer.Serialize(writer, value);
+            writer.WriteStartArray();
+            writer.WriteNumberValue(value.Latitude);
+            writer.WriteNumberValue(value.Longitude);
+            writer.WriteEndArray();
         }
     }
 }

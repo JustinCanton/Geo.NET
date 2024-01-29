@@ -11,7 +11,7 @@ namespace Geo.Google.Models.Parameters
     /// <summary>
     /// The parameters for the gecoding Google API.
     /// </summary>
-    public class GeocodingParameters : BaseParameters
+    public class GeocodingParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the street address or plus code that you want to geocode.
@@ -35,5 +35,8 @@ namespace Geo.Google.Models.Parameters
         /// This parameter will only influence, not fully restrict, results from the geocoder.
         /// </summary>
         public RegionInfo Region { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

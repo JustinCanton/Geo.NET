@@ -8,11 +8,14 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a lookup request.
     /// </summary>
-    public class LookupParameters : BaseParameters
+    public class LookupParameters : BaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the location ID, which is the ID of a result item eg. of a Discover request.
         /// </summary>
         public string Id { get; set; }
+
+        /// <inheritdoc/>
+        public string Key { get; set; }
     }
 }

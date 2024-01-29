@@ -5,7 +5,7 @@
 
 namespace Geo.Google.Models.Responses
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A substring match information for an autocomplete result.
@@ -15,13 +15,13 @@ namespace Geo.Google.Models.Responses
         /// <summary>
         /// Gets or sets the length of the matched substring in the main term.
         /// </summary>
-        [JsonProperty("length")]
+        [JsonPropertyName("length")]
         public int Length { get; set; }
 
         /// <summary>
         /// Gets or sets the offset of the matched substring in the main term.
         /// </summary>
-        [JsonProperty("offset")]
+        [JsonPropertyName("offset")]
         public int Offset { get; set; }
     }
 }

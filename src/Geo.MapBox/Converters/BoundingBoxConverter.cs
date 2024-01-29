@@ -6,86 +6,97 @@
 namespace Geo.MapBox.Converters
 {
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+    using Geo.Core.Extensions;
     using Geo.MapBox.Models;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A converter for a <see cref="double"/>[] to a <see cref="BoundingBox"/>.
     /// </summary>
-    public class BoundingBoxConverter : JsonConverter
+    public class BoundingBoxConverter : JsonConverter<BoundingBox>
     {
-        /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        /// <inheritdoc/>
+        public override BoundingBox Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (objectType == null)
+            if (typeToConvert == null)
             {
-                throw new ArgumentNullException(nameof(objectType));
+                throw new ArgumentNullException(nameof(typeToConvert));
             }
 
-            return objectType == typeof(double[]);
-        }
-
-        /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            var token = JArray.Load(reader);
-            double[] items = token.Select(jv => (double)jv).ToArray();
-
-            if (items is null)
+            if (reader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
-            if (items.Length != 4)
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                return null;
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the bounding box. Expected to find an array, instead found {0}", reader.TokenType.GetName()));
+            }
+
+            var box = new List<double>();
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndArray)
+                {
+                    break;
+                }
+                else if (reader.TokenType == JsonTokenType.Number)
+                {
+                    box.Add(reader.GetDouble());
+                }
+                else
+                {
+                    throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected token while parsing the bounding box. Expected to find a double, instead found '{0}'", reader.GetString()));
+                }
+            }
+
+            if (box.Count != 4)
+            {
+                throw new JsonException(string.Format(CultureInfo.InvariantCulture, "Unexpected end of array while parsing the bounding box. Expected to find a 4 doubles, instead found {0}", box.Count));
             }
 
             return new BoundingBox()
             {
-                West = items[0],
-                South = items[1],
-                East = items[2],
-                North = items[3],
+                West = box[0],
+                South = box[1],
+                East = box[2],
+                North = box[3],
             };
         }
 
-        /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <inheritdoc/>
+        public override void Write(Utf8JsonWriter writer, BoundingBox value, JsonSerializerOptions options)
         {
             if (writer == null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                writer.WriteNullValue();
+                return;
             }
 
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
-
-            serializer.Serialize(writer, value);
+            writer.WriteStartArray();
+            writer.WriteNumberValue(value.South);
+            writer.WriteNumberValue(value.West);
+            writer.WriteNumberValue(value.East);
+            writer.WriteNumberValue(value.North);
+            writer.WriteEndArray();
         }
     }
 }

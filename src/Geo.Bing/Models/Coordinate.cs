@@ -6,8 +6,8 @@
 namespace Geo.Bing.Models
 {
     using System.Globalization;
+    using System.Text.Json.Serialization;
     using Geo.Bing.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A latitude/longitude combination to form a coordinate.
@@ -18,13 +18,13 @@ namespace Geo.Bing.Models
         /// <summary>
         /// Gets or sets the latitude of the coordinate.
         /// </summary>
-        [JsonProperty("latitude")]
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the longitude of the coordinate.
         /// </summary>
-        [JsonProperty("longitude")]
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
         /// <inheritdoc/>

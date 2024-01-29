@@ -6,7 +6,7 @@
 namespace Geo.ArcGIS.Models.Responses
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A candidate response from ArcGIS.
@@ -17,13 +17,13 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets or sets a spatial reference.
         /// A spatial reference helps describe where features are located in the real world.
         /// </summary>
-        [JsonProperty("spatialReference")]
+        [JsonPropertyName("spatialReference")]
         public SpatialReference SpatialReference { get; set; }
 
         /// <summary>
-        /// Gets an array of possible matches for the place and location passed in.
+        /// Gets or sets an array of possible matches for the place and location passed in.
         /// </summary>
-        [JsonProperty("candidates")]
-        public IList<Candidate> Candidates { get; } = new List<Candidate>();
+        [JsonPropertyName("candidates")]
+        public IList<Candidate> Candidates { get; set; } = new List<Candidate>();
     }
 }

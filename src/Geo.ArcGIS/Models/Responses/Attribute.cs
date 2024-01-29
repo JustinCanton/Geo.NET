@@ -5,8 +5,8 @@
 
 namespace Geo.ArcGIS.Models.Responses
 {
+    using System.Text.Json.Serialization;
     using Geo.ArcGIS.Converters;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A base attribute class.

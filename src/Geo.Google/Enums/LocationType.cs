@@ -6,10 +6,13 @@
 namespace Geo.Google.Enums
 {
     using System.Runtime.Serialization;
+    using System.Text.Json.Serialization;
+    using Geo.Core.Converters;
 
     /// <summary>
     /// Additional data about the specified location.
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumMemberConverter<LocationType>))]
     public enum LocationType
     {
         /// <summary>
