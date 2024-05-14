@@ -16,7 +16,7 @@ namespace Geo.Radar.Models.Parameters
         /// <summary>
         /// Gets or sets the coordinates to reverse geocode.
         /// </summary>
-        public Coordinate Coordinates { get; set; }
+        public Coordinate Coordinate { get; set; }
 
         /// <inheritdoc/>
         public IList<Layer> Layers { get; } = new List<Layer>();

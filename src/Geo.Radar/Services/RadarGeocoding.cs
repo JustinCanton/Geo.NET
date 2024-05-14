@@ -11,6 +11,7 @@ namespace Geo.Radar.Services
     using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;
@@ -142,19 +143,19 @@ namespace Geo.Radar.Services
         /// </summary>
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the reverse geocoding parameters to build the uri with.</param>
         /// <returns>A <see cref="Uri"/> with the completed Radar reverse geocoding uri.</returns>
-        /// <exception cref="ArgumentException">Thrown when the <see cref="ReverseGeocodingParameters.Coordinates"/> parameter is null or invalid.</exception>
+        /// <exception cref="ArgumentException">Thrown when the <see cref="ReverseGeocodingParameters.Coordinate"/> parameter is null or invalid.</exception>
         internal Uri BuildReverseGeocodingRequest(ReverseGeocodingParameters parameters)
         {
             var uriBuilder = new UriBuilder(ReverseGeocodeUri);
             var query = QueryString.Empty;
 
-            if (parameters.Coordinates is null)
+            if (parameters.Coordinate is null)
             {
                 _logger.RadarError(Resources.Services.RadarGeocoding.Invalid_Coordinates);
-                throw new ArgumentException(Resources.Services.RadarGeocoding.Invalid_Coordinates, nameof(parameters.Coordinates));
+                throw new ArgumentException(Resources.Services.RadarGeocoding.Invalid_Coordinates, nameof(parameters.Coordinate));
             }
 
-            query = query.Add("coordinates", parameters.Coordinates.ToString());
+            query = query.Add("coordinates", parameters.Coordinate.ToString());
 
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
@@ -201,7 +202,7 @@ namespace Geo.Radar.Services
                 _logger.RadarDebug(Resources.Services.RadarGeocoding.Invalid_Limit);
             }
 
-            query = query.Add("mailable", parameters.Mailable.ToString());
+            query = query.Add("mailable", parameters.Mailable.ToString().ToLowerInvariant());
 
             AddCountry(parameters, ref query);
             AddLayers(parameters, ref query);
@@ -221,9 +222,9 @@ namespace Geo.Radar.Services
         {
             var countries = string.Join(",", countryParameter.Countries ?? Array.Empty<string>());
 
-            if (string.IsNullOrWhiteSpace(countries))
+            if (!string.IsNullOrWhiteSpace(countries))
             {
-                query.Add("country", countries);
+                query = query.Add("country", countries);
             }
             else
             {
@@ -238,11 +239,15 @@ namespace Geo.Radar.Services
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         internal void AddLayers(ILayersParameter layersParameter, ref QueryString query)
         {
-            var layers = string.Join(",", layersParameter.Layers.Select(x => x.GetName()) ?? Array.Empty<string>());
-
-            if (string.IsNullOrWhiteSpace(layers))
+            var layers = string.Join(",", layersParameter.Layers.Select(x =>
             {
-                query.Add("layers", layers);
+                var name = x.GetName();
+                return char.ToLowerInvariant(name[0]) + name.Substring(1);
+            }) ?? Array.Empty<string>());
+
+            if (!string.IsNullOrWhiteSpace(layers))
+            {
+                query = query.Add("layers", layers);
             }
             else
             {
