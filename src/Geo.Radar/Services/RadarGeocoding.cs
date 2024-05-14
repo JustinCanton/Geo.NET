@@ -11,7 +11,6 @@ namespace Geo.Radar.Services
     using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
     using Geo.Core;
     using Geo.Core.Extensions;
     using Geo.Core.Models.Exceptions;

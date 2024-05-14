@@ -44,7 +44,7 @@ namespace Geo.Core
         }
 
         /// <summary>
-        /// Gets or
+        /// Gets the http client associated with the <see cref="GeoClient"/>.
         /// </summary>
         protected HttpClient Client { get; private set; }
 

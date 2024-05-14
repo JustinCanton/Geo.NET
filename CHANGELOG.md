@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [2.1.0](https://github.com/JustinCanton/Geo.NET/compare/2.0.0...2.1.0) (2024-06-30)
+### Features
+- **radar**: adding support for the Radar geocoding API ([#100](https://github.com/JustinCanton/Geo.NET/issues/100) ([](https://github.com/JustinCanton/Geo.NET/commit/))
+
 ## [2.0.0](https://github.com/JustinCanton/Geo.NET/compare/1.6.0...2.0.0) (2024-01-28)
 ### ⚠ BREAKING CHANGES
 - removed native support for net5.0 since it is an out of support item, and dropped netstandard2.1 since this supports netstandard2.0
