@@ -23,7 +23,6 @@ namespace Geo.Core
     {
         private static readonly JsonSerializerOptions _options = GetJsonSerializerOptions();
 
-        private readonly HttpClient _client;
         private readonly ILogger<GeoClient> _logger;
 
         /// <summary>
@@ -40,9 +39,14 @@ namespace Geo.Core
 #endif
         {
             Resources.GeoClient.Culture = CultureInfo.InvariantCulture;
-            _client = client ?? throw new ArgumentNullException(nameof(client));
+            Client = client ?? throw new ArgumentNullException(nameof(client));
             _logger = loggerFactory?.CreateLogger<GeoClient>() ?? NullLogger<GeoClient>.Instance;
         }
+
+        /// <summary>
+        /// Gets or
+        /// </summary>
+        protected HttpClient Client { get; private set; }
 
         /// <summary>
         /// Gets the name of the API being called for exception logging purposes.
@@ -287,11 +291,11 @@ namespace Geo.Core
         {
             if (method.Method == HttpMethod.Get.Method)
             {
-                return await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
+                return await Client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                return await _client.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
+                return await Client.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
             }
         }
     }

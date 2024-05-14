@@ -41,7 +41,7 @@ namespace Geo.MapBox.Services
         /// Initializes a new instance of the <see cref="MapBoxGeocoding"/> class.
         /// </summary>
         /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the here Geocoding API.</param>
-        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing Google key information.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="KeyOptions{T}"/> containing MapBox key information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public MapBoxGeocoding(
             HttpClient client,

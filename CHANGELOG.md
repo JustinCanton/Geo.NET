@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
-## [2.0.0](https://github.com/JustinCanton/Geo.NET/compare/1.6.0...2.0.0) (2024-01-30)
+## [2.0.0](https://github.com/JustinCanton/Geo.NET/compare/1.6.0...2.0.0) (2024-01-28)
 ### ⚠ BREAKING CHANGES
 - removed native support for net5.0 since it is an out of support item, and dropped netstandard2.1 since this supports netstandard2.0
 - removed the usage of Newtonsoft.Json and moved to use System.Text.Json
