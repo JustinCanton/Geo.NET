@@ -21,17 +21,17 @@ namespace Geo.Positionstack
         /// </summary>
         /// <param name="parameters">A <see cref="GeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="Response{T}"/> of <see cref="GeocodeAddress"/> with the response from Positionstack.</returns>
+        /// <returns>A <see cref="Response"/> with the response from Positionstack.</returns>
         /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
-        Task<Response<GeocodeAddress>> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
+        Task<Response> GeocodingAsync(GeocodingParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Calls the Positionstack reverse geocoding API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="ReverseGeocodingParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
-        /// <returns>A <see cref="Response{T}"/> of <see cref="ReverseGeocodeAddress"/> with the response from Positionstack.</returns>
+        /// <returns>A <see cref="Response"/> with the response from Positionstack.</returns>
         /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
-        Task<Response<ReverseGeocodeAddress>> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
+        Task<Response> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
     }
 }

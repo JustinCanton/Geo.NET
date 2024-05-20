@@ -13,22 +13,88 @@ namespace Geo.Positionstack.Models.Responses
     public class Address
     {
         /// <summary>
-        /// Gets or sets the latitude of the address. For example: "52.19404".
+        /// Gets or sets the latitude coordinate associated with the location result.
         /// </summary>
         [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the longitude of the address. For example: "8.80135".
+        /// Gets or sets the longitude coordinate associated with the location result.
         /// </summary>
         [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the geometry information for the address.
+        /// Gets or sets the formatted place name or address.
         /// </summary>
-        [JsonPropertyName("geometry")]
-        public Geometry Geometry { get; set; }
+        [JsonPropertyName("label")]
+        public string Label { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the location result. This could be a place name, address, postal code, and more.
+        /// </summary>
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of location result.
+        /// </summary>
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the distance (in meters) between the location result and the coordinates specified in the query parameter. Only applicable for reverse geocoding.
+        /// </summary>
+        [JsonPropertyName("distance")]
+        public uint? Distance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the street or house number associated with the location result.
+        /// </summary>
+        [JsonPropertyName("number")]
+        public string Number { get; set; }
+
+        /// <summary>
+        /// Gets or sets the street name associated with the location result.
+        /// </summary>
+        [JsonPropertyName("street")]
+        public string Street { get; set; }
+
+        /// <summary>
+        /// Gets or sets the postal or ZIP code associated with the location result.
+        /// </summary>
+        [JsonPropertyName("postal_code")]
+        public string PostalCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a confidence score between 0 (0% confidence) and 1 (100% confidence) associated with the location result.
+        /// </summary>
+        [JsonPropertyName("confidence")]
+        public double? Confidence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the region associated with the location result.
+        /// </summary>
+        [JsonPropertyName("region")]
+        public string Region { get; set; }
+
+        /// <summary>
+        /// Gets or sets the region code associated with the location result.
+        /// </summary>
+        [JsonPropertyName("region_code")]
+        public string RegionCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the administrative area associated with the location result.
+        /// </summary>
+        [JsonPropertyName("administrative_area")]
+        public string AdministrativeArea { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the neighbourhood associated with the location result.
+        /// </summary>
+        [JsonPropertyName("neighborhood")]
+        public string Neighborhood { get; set; }
 
         /// <summary>
         /// Gets or sets the localised country name. For example: "United States".
@@ -37,88 +103,39 @@ namespace Geo.Positionstack.Models.Responses
         public string Country { get; set; }
 
         /// <summary>
-        /// Gets or sets a two-letter country code. For example: "US".
+        /// Gets or sets the ISO 3166 Alpha 2 (two letters) code of the country associated with the location result.
         /// </summary>
-        [JsonPropertyName("countryCode")]
+        [JsonPropertyName("country_code")]
         public string CountryCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the country flag.
+        /// Gets or sets an embeddable map associated with the location result.
         /// </summary>
-        [JsonPropertyName("countryFlag")]
-        public string CountryFlag { get; set; }
+        [JsonPropertyName("map_url")]
+        public string MapUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the county information for an address.
+        /// Gets or sets an extensive set of country information.
         /// </summary>
-        [JsonPropertyName("county")]
-        public string County { get; set; }
+        [JsonPropertyName("country_module")]
+        public CountryModule CountryModule { get; set; }
 
         /// <summary>
-        /// Gets or sets the borough information for an address.
+        /// Gets or sets astrology data for a location.
         /// </summary>
-        [JsonPropertyName("borough")]
-        public string Borough { get; set; }
+        [JsonPropertyName("sun_module")]
+        public SunModule SunModule { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the primary locality of the place. For example: "Bad Oyenhausen".
+        /// Gets or sets timezone information for a location.
         /// </summary>
-        [JsonPropertyName("city")]
-        public string City { get; set; }
+        [JsonPropertyName("timezone_module")]
+        public TimezoneModule TimezoneModule { get; set; }
 
         /// <summary>
-        /// Gets or sets the number. For example: "32547".
+        /// Gets or sets bounding box coordinates for a location.
         /// </summary>
-        [JsonPropertyName("number")]
-        public string Number { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of neighbourhood of the address.
-        /// </summary>
-        [JsonPropertyName("neighborhood")]
-        public string Neighborhood { get; set; }
-
-        /// <summary>
-        /// Gets or sets an alphanumeric string included in a postal address to facilitate mail sorting, such as post code, postcode, or ZIP code.
-        /// For example: "32547".
-        /// </summary>
-        [JsonPropertyName("postalCode")]
-        public string PostalCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the state code for the state. For example: "NY".
-        /// </summary>
-        [JsonPropertyName("stateCode")]
-        public string StateCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets a code/abbreviation for the state division of a country. For example: "North Rhine-Westphalia".
-        /// </summary>
-        [JsonPropertyName("state")]
-        public string State { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of street. For example: "Schulstrasse".
-        /// </summary>
-        [JsonPropertyName("street")]
-        public string Street { get; set; }
-
-        /// <summary>
-        /// Gets or sets the layer information for the address.
-        /// </summary>
-        [JsonPropertyName("layer")]
-        public string Layer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the formatted address. For example: "20 Jay St, Brooklyn, New York, NY 11201 USA".
-        /// </summary>
-        [JsonPropertyName("formattedAddress")]
-        public string FormattedAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the address label. For example: "20 Jay St".
-        /// </summary>
-        [JsonPropertyName("addressLabel")]
-        public string AddressLabel { get; set; }
+        [JsonPropertyName("bbox_module")]
+        public BoundingBoxModule BoundingBoxModule { get; set; }
     }
 }

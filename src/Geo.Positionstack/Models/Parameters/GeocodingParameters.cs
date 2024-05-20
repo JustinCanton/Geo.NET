@@ -19,7 +19,7 @@ namespace Geo.Positionstack.Models.Parameters
         public string Query { get; set; }
 
         /// <inheritdoc/>
-        public IList<string> Country { get; } = new List<string>();
+        public IList<string> Countries { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Region { get; set; }

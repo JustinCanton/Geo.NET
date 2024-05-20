@@ -5,25 +5,17 @@
 
 namespace Geo.Positionstack.Models.Responses
 {
-    using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
     /// <summary>
     /// The result of a request.
     /// </summary>
-    /// <typeparam name="T">The type of the address.</typeparam>
-    public class Response<T>
+    public class Response
     {
         /// <summary>
-        /// Gets or sets the metadata associate with the request.
+        /// Gets or sets the data with the location information.
         /// </summary>
-        [JsonPropertyName("meta")]
-        public Meta Meta { get; set; }
-
-        /// <summary>
-        /// Gets or sets the addresses that are associated with the request.
-        /// </summary>
-        [JsonPropertyName("addresses")]
-        public IList<T> Addresses { get; set; } = new List<T>();
+        [JsonPropertyName("data")]
+        public Data Data { get; set; }
     }
 }

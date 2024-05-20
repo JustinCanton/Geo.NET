@@ -16,7 +16,7 @@ namespace Geo.Positionstack.Models
         /// Gets one or more 2-letter(e.g.AU) or 3-letter country codes(e.g.AUS) to filter the geocoding results.
         /// <para>Optional.</para>
         /// </summary>
-        IList<string> Country { get; }
+        IList<string> Countries { get; }
 
         /// <summary>
         /// Gets or sets a filter for the geocoding results specifying a region. This could be a neighbourhood, district, city, county, state or administrative area. Example: region= Berlin to filter by locations in Berlin.

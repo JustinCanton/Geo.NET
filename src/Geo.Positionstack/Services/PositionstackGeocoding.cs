@@ -50,23 +50,23 @@ namespace Geo.Positionstack.Services
         protected override string ApiName => "Positionstack";
 
         /// <inheritdoc/>
-        public async Task<Response<GeocodeAddress>> GeocodingAsync(
+        public async Task<Response> GeocodingAsync(
             GeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
             var uri = ValidateAndBuildUri<GeocodingParameters>(parameters, BuildGeocodingRequest);
 
-            return await GetAsync<Response<GeocodeAddress>>(uri, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<Response<ReverseGeocodeAddress>> ReverseGeocodingAsync(
+        public async Task<Response> ReverseGeocodingAsync(
             ReverseGeocodingParameters parameters,
             CancellationToken cancellationToken = default)
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
 
-            return await GetAsync<Response<ReverseGeocodeAddress>>(uri, cancellationToken).ConfigureAwait(false);
+            return await GetAsync<Response>(uri, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -159,9 +159,9 @@ namespace Geo.Positionstack.Services
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
         internal void AddLocationParameters(ILocationGeocodeParameters locationParameters, ref QueryString query)
         {
-            if (locationParameters.Country?.Count > 0)
+            if (locationParameters.Countries?.Count > 0)
             {
-                var countries = string.Join(",", locationParameters.Country ?? Array.Empty<string>());
+                var countries = string.Join(",", locationParameters.Countries ?? Array.Empty<string>());
                 query = query.Add("country", countries);
             }
             else
