@@ -6,6 +6,7 @@
 namespace Geo.Positionstack.Services
 {
     using System;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -242,7 +243,7 @@ namespace Geo.Positionstack.Services
 
             if (filterParameters.Fields?.Count > 0)
             {
-                var fields = string.Join(",", filterParameters.Fields ?? Array.Empty<string>());
+                var fields = string.Join(",", filterParameters.Fields.Where(x => !string.IsNullOrWhiteSpace(x)) ?? Array.Empty<string>());
                 query = query.Add("fields", fields);
             }
             else
