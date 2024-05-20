@@ -36,6 +36,9 @@ The support for this project includes:
 	 - Licensed API
 		 - [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
+ - Positionstack
+	 - [Geocoding](https://positionstack.com/documentation#forward_geocoding)
+	 - [Reverse Geocoding](https://positionstack.com/documentation#reverse_geocoding)
  - Radar
 	 - [Geocoding](https://radar.com/documentation/api#geocoding)
 	 - [Reverse Geocoding](https://radar.com/documentation/api#reverse-geocode)
@@ -51,6 +54,7 @@ The configuration and sample usage for each supported interface can be found wit
  - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
+ - [Positionstack](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Positionstack)
  - [Radar](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Radar)
 
 
