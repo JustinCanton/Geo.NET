@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
-## [2.1.0](https://github.com/JustinCanton/Geo.NET/compare/2.0.0...2.1.0) (2024-06-30)
+## [2.1.0](https://github.com/JustinCanton/Geo.NET/compare/2.0.0...2.1.0) (2024-05-20)
 ### Features
 - **radar**: adding support for the Radar geocoding API ([#100](https://github.com/JustinCanton/Geo.NET/issues/100)) ([448b087](https://github.com/JustinCanton/Geo.NET/commit/448b0876a0fb36fc74f348752e7dd77f63f3f7dd))
 - **positionstack**: adding support for the positionstack geocoding API ([#65](https://github.com/JustinCanton/Geo.NET/issues/65)) ([205676b](https://github.com/JustinCanton/Geo.NET/commit/205676ba8a27451caf9000333fb0d8f67223b796))
