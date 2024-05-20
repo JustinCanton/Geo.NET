@@ -119,7 +119,7 @@ namespace Geo.MapBox.Tests.Services
         }
 
         [Fact]
-        public void AddHereKey_WithParameterOverride_SuccessfullyAddsKey()
+        public void AddMapBoxKey_WithParameterOverride_SuccessfullyAddsKey()
         {
             var sut = BuildService();
 

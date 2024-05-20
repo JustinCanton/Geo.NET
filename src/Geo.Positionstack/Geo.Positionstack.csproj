@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <Authors>Justin Canton</Authors>
+    <Company>Geo.NET</Company>
+    <Product>Geo.NET Positionstack</Product>
+    <PackageTags>geocoding geo.net Positionstack</PackageTags>
+    <Description>A lightweight method for communicating with the Positionstack geocoding APIs. This includes models and interfaces for calling Positionstack.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <Import Project="..\Source.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Geo.Core\Geo.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Services\PositionstackGeocoding.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PositionstackGeocoding.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Services\PositionstackGeocoding.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PositionstackGeocoding.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
