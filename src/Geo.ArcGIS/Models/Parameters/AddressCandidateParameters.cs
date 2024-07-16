@@ -20,6 +20,11 @@ namespace Geo.ArcGIS.Models.Parameters
         /// </summary>
         public string MagicKey { get; set; }
 
+        /// <summary>
+        /// Comma-separated list of attribute fields to include in the response. To return all fields, specify the wildcard '*' as the value of this parameter.
+        /// </summary>
+        public string OutFields { get; set; } = "Match_addr,Addr_type";
+
         /// <inheritdoc/>
         public string ClientId { get; set; }
 

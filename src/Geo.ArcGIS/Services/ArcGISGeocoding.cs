@@ -170,7 +170,7 @@ namespace Geo.ArcGIS.Services
             var uriBuilder = new UriBuilder(CandidatesUri);
             var query = QueryString.Empty;
             query = query.Add("f", "json");
-            query = query.Add("outFields", "Match_addr,Addr_type");
+            query = query.Add("outFields", parameters.OutFields);
 
             query = query.Add("singleLine", parameters.SingleLineAddress);
 
@@ -199,7 +199,7 @@ namespace Geo.ArcGIS.Services
             var uriBuilder = new UriBuilder(CandidatesUri);
             var query = QueryString.Empty;
             query = query.Add("f", "json");
-            query = query.Add("outFields", "Place_addr,PlaceName");
+            query = query.Add("outFields", parameters.OutFields);
 
             if (!string.IsNullOrWhiteSpace(parameters.Address))
             {
