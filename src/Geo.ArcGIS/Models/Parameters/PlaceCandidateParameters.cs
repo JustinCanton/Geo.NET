@@ -112,6 +112,11 @@ namespace Geo.ArcGIS.Models.Parameters
         /// </summary>
         public LocationType LocationType { get; set; } = LocationType.Rooftop;
 
+        /// <summary>
+        /// Comma-separated list of attribute fields to include in the response. To return all fields, specify the wildcard '*' as the value of this parameter.
+        /// </summary>
+        public string OutFields { get; set; } = "Place_addr,PlaceName";
+
         /// <inheritdoc/>
         public string ClientId { get; set; }
 
