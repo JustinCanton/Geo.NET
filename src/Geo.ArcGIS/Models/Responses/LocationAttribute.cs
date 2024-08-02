@@ -167,7 +167,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// Gets or sets the rank of the location.
         /// </summary>
         [JsonPropertyName("Rank")]
-        public int Rank { get; set; }
+        public float Rank { get; set; }
 
         /// <summary>
         /// Gets or sets the additional building information for a location.
