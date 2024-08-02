@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [2.1.1](https://github.com/JustinCanton/Geo.NET/compare/2.1.0...2.1.1) (2024-08-02)
+### Bug Fixes
+- **security**: fixing a security vulnerability in the System.Text.Json nuget ([c700660](https://github.com/JustinCanton/Geo.NET/commit/c700660bda59ec5946a95d0ff4de69633946ef6e))
+- **arcgis**: fixing the Rank property to be a float instead of an int ([#108](https://github.com/JustinCanton/Geo.NET/issues/108)) ([0187c59](https://github.com/JustinCanton/Geo.NET/commit/0187c59815e344b5bcfd6a8a59cf3676b2806684))
+
 ## [2.1.0](https://github.com/JustinCanton/Geo.NET/compare/2.0.0...2.1.0) (2024-05-20)
 ### Features
 - **radar**: adding support for the Radar geocoding API ([#100](https://github.com/JustinCanton/Geo.NET/issues/100)) ([448b087](https://github.com/JustinCanton/Geo.NET/commit/448b0876a0fb36fc74f348752e7dd77f63f3f7dd))
