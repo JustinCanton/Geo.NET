@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See  [Conventional Commits](https://conventionalcommits.org/)  for commit guidelines.
 
+## [2.1.2](https://github.com/JustinCanton/Geo.NET/compare/2.1.1...2.1.2) (2024-10-15)
+### Bug Fixes
+- **core**: updating the System.Text.Json package references to fix the vulnerabilities ([#114](https://github.com/JustinCanton/Geo.NET/issues/114)) ([f218ce2](https://github.com/JustinCanton/Geo.NET/commit/f218ce298e295830bcb193781e9fb0b57b11328a))
+- **arcgis**: updating the parameter names for deserialization of country information ([#113](https://github.com/JustinCanton/Geo.NET/issues/113)) ([d74864e](https://github.com/JustinCanton/Geo.NET/commit/d74864e70b2106dedf4b6c7373d5d5b7c712403f))
+
 ## [2.1.1](https://github.com/JustinCanton/Geo.NET/compare/2.1.0...2.1.1) (2024-08-02)
 ### Bug Fixes
 - **security**: fixing a security vulnerability in the System.Text.Json nuget ([c700660](https://github.com/JustinCanton/Geo.NET/commit/c700660bda59ec5946a95d0ff4de69633946ef6e))
