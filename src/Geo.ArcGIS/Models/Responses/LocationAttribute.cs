@@ -128,6 +128,15 @@ namespace Geo.ArcGIS.Models.Responses
         public string CountryCode { get; set; }
 
         /// <summary>
+        /// Sets the country code by an alternate name.
+        /// </summary>
+        [JsonPropertyName("Country")]
+        public string AlternateCountryCode
+        {
+            set { CountryCode = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the location name.
         /// </summary>
         [JsonPropertyName("Loc_name")]
@@ -304,7 +313,7 @@ namespace Geo.ArcGIS.Models.Responses
         /// <summary>
         /// Gets or sets the country of a location.
         /// </summary>
-        [JsonPropertyName("Country")]
+        [JsonPropertyName("CntryName")]
         public string Country { get; set; }
 
         /// <summary>

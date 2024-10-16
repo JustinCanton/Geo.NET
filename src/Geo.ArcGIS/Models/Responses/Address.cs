@@ -127,6 +127,12 @@ namespace Geo.ArcGIS.Models.Responses
         public string PostalCodeExtension { get; set; }
 
         /// <summary>
+        /// Gets or sets the country of the address.
+        /// </summary>
+        [JsonPropertyName("CntryName")]
+        public string Country { get; set; }
+
+        /// <summary>
         /// Gets or sets the country code of the address.
         /// </summary>
         [JsonPropertyName("CountryCode")]

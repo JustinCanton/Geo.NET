@@ -77,7 +77,7 @@ namespace Geo.ArcGIS.Tests.Services
                         "{ \"address\":{ \"Match_addr\":\"Cali's California Style Burritos\", \"LongLabel\":\"Cali's California Style Burritos, 3046 Dolphin Dr, Elizabethtown, KY, 42701, USA\"," +
                         "\"ShortLabel\":\"Cali's California Style Burritos\", \"Addr_type\":\"POI\", \"Type\":\"Mexican Food\", \"PlaceName\":\"Cali's California Style Burritos\"," +
                         "\"AddNum\":\"3046\", \"Address\":\"3046 Dolphin Dr\", \"Block\":\"\", \"Sector\":\"\", \"Neighborhood\":\"\", \"District\":\"\", \"City\":\"Elizabethtown\", \"MetroArea\":\"\"," +
-                        "\"Subregion\":\"Hardin County\", \"Region\":\"Kentucky\", \"Territory\":\"\", \"Postal\":\"42701\", \"PostalExt\":\"\", \"CountryCode\":\"USA\" }," +
+                        "\"Subregion\":\"Hardin County\", \"Region\":\"Kentucky\", \"Territory\":\"\", \"Postal\":\"42701\", \"PostalExt\":\"\", \"CountryCode\":\"USA\", \"CntryName\":\"United States of America\" }," +
                         "\"location\":{ \"x\":-85.837039999999945,\"y\":37.710620000000063,\"spatialReference\":{ \"wkid\":4326,\"latestWkid\":4326} }}"),
             });
 
@@ -112,7 +112,8 @@ namespace Geo.ArcGIS.Tests.Services
             {
                 StatusCode = HttpStatusCode.OK,
                 Content = new StringContent("{\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"candidates\":[{\"address\":\"123 East\",\"location\":{\"x\":-85.837039999999945,\"y\":37.710620000000063}," +
-                        "\"score\":100,\"attributes\":{\"Match_addr\":\"123 East\",\"Addr_type\":\"POI\"},\"extent\":{\"xmin\":-85.84203999999994,\"ymin\":37.70562000000006,\"xmax\":-85.832039999999949,\"ymax\":37.715620000000065}}]}"),
+                        "\"score\":100,\"attributes\":{\"LongLabel\": \"123 Main Street, Walton, Street, Somerset, England, BA16 9QL, GBR\",\"ShortLabel\": \"123 Main Street\",\"Addr_type\": \"StreetAddress\"," +
+                        "\"CntryName\":\"United States of America\", \"Country\":\"USA\"},\"extent\":{\"xmin\":-85.84203999999994,\"ymin\":37.70562000000006,\"xmax\":-85.832039999999949,\"ymax\":37.715620000000065}}]}"),
             });
 
             mockHandler
@@ -580,6 +581,8 @@ namespace Geo.ArcGIS.Tests.Services
             var response = await sut.ReverseGeocodingAsync(parameters);
             response.Address.MatchAddress.Should().Be("Cali's California Style Burritos");
             response.Location.Longitude.Should().Be(-85.837039999999945);
+            response.Address.Country.Should().Be("United States of America");
+            response.Address.CountryCode.Should().Be("USA");
         }
 
         /// <summary>
@@ -636,6 +639,9 @@ namespace Geo.ArcGIS.Tests.Services
             var response = await sut.AddressCandidateAsync(parameters);
             response.Candidates.Count.Should().Be(1);
             response.SpatialReference.WellKnownID.Should().Be(4326);
+            response.Candidates[0].Attributes.Should().NotBeNull();
+            (response.Candidates[0].Attributes as LocationAttribute).Country.Should().Be("United States of America");
+            (response.Candidates[0].Attributes as LocationAttribute).CountryCode.Should().Be("USA");
         }
 
         /// <summary>
