@@ -6,17 +6,13 @@
 namespace Geo.Here.Models.Responses
 {
     using System.Collections.Generic;
-    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The response from a reverse geocoding request.
     /// </summary>
-    public class ReverseGeocodingResponse
+    public class ReverseGeocodingResponse : IItemsResponse<GeocodeLocation>
     {
-        /// <summary>
-        /// Gets or sets the list of locations that match the reverse geocoding request.
-        /// </summary>
-        [JsonPropertyName("items")]
+        /// <inheritdoc/>
         public IList<GeocodeLocation> Items { get; set; } = new List<GeocodeLocation>();
     }
 }

@@ -5,15 +5,26 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The parameters possible to use during a lookup request.
     /// </summary>
-    public class LookupParameters : BaseParameters, IKeyParameters
+    public class LookupParameters : IBaseParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets the location ID, which is the ID of a result item eg. of a Discover request.
         /// </summary>
         public string Id { get; set; }
+
+        /// <inheritdoc/>
+        public System.Globalization.CultureInfo Language { get; set; }
+
+        /// <inheritdoc/>
+        public string PoliticalView { get; set; }
+
+        /// <inheritdoc/>
+        public IList<string> Show { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }

@@ -11,7 +11,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodeParameters : BaseFilterParameters, IKeyParameters
+    public class GeocodeParameters : IBaseFilterParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a free-text query.
@@ -58,6 +58,21 @@ namespace Geo.Here.Models.Parameters
         /// </list>
         /// </summary>
         public IList<string> Types { get; } = new List<string>();
+
+        /// <inheritdoc/>
+        public Coordinate At { get; set; }
+
+        /// <inheritdoc/>
+        public uint Limit { get; set; }
+
+        /// <inheritdoc/>
+        public System.Globalization.CultureInfo Language { get; set; }
+
+        /// <inheritdoc/>
+        public string PoliticalView { get; set; }
+
+        /// <inheritdoc/>
+        public IList<string> Show { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }

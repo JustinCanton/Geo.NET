@@ -9,14 +9,11 @@ namespace Geo.Here.Models.Responses
     using System.Text.Json.Serialization;
 
     /// <summary>
-    /// The response from a autosuggest request.
+    /// The response from an autosuggest request.
     /// </summary>
-    public class AutosuggestResponse
+    public class AutosuggestResponse : IItemsResponse<BaseLocation>
     {
-        /// <summary>
-        /// Gets or sets the list of locations that match the discover request.
-        /// </summary>
-        [JsonPropertyName("items")]
+        /// <inheritdoc/>
         public IList<BaseLocation> Items { get; set; } = new List<BaseLocation>();
 
         /// <summary>

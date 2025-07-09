@@ -220,7 +220,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new BaseParameters()
+            var parameters = new ReverseGeocodeParameters()
             {
                 Language = new CultureInfo("es"),
                 PoliticalView = "IND",
@@ -243,7 +243,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new BaseParameters()
+            var parameters = new ReverseGeocodeParameters()
             {
                 Language = CultureInfo.InvariantCulture,
                 PoliticalView = "IND",
@@ -268,7 +268,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new BaseFilterParameters()
+            var parameters = new ReverseGeocodeParameters()
             {
                 Limit = 17,
                 Language = new CultureInfo("da"),
@@ -291,7 +291,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new BaseFilterParameters()
+            var parameters = new ReverseGeocodeParameters()
             {
                 At = new Coordinate()
                 {
@@ -320,7 +320,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new AreaParameters()
+            var parameters = new AutosuggestParameters()
             {
                 At = new Coordinate()
                 {
@@ -340,7 +340,7 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("fr");
 
             query = QueryString.Empty;
-            parameters = new AreaParameters()
+            parameters = new AutosuggestParameters()
             {
                 InCountry = "BEL",
                 At = new Coordinate()
@@ -362,7 +362,7 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("nl");
 
             query = QueryString.Empty;
-            parameters = new AreaParameters()
+            parameters = new AutosuggestParameters()
             {
                 InCircle = new Circle()
                 {
@@ -386,7 +386,7 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("gl");
 
             query = QueryString.Empty;
-            parameters = new AreaParameters()
+            parameters = new AutosuggestParameters()
             {
                 InCountry = "DNK",
                 InCircle = new Circle()
@@ -411,7 +411,7 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("da");
 
             query = QueryString.Empty;
-            parameters = new AreaParameters()
+            parameters = new AutosuggestParameters()
             {
                 InBoundingBox = new BoundingBox()
                 {
@@ -433,7 +433,7 @@ namespace Geo.Here.Tests.Services
             queryParameters["lang"].Should().Be("ca");
 
             query = QueryString.Empty;
-            parameters = new AreaParameters()
+            parameters = new AutosuggestParameters()
             {
                 InCountry = "POL",
                 InBoundingBox = new BoundingBox()
@@ -463,7 +463,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new AreaParameters()
+            var parameters = new AutosuggestParameters()
             {
                 At = new Coordinate()
                 {
@@ -512,7 +512,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new AreaParameters()
+            var parameters = new AutosuggestParameters()
             {
                 At = new Coordinate()
                 {
@@ -543,7 +543,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            var parameters = new AreaParameters()
+            var parameters = new AutosuggestParameters()
             {
                 At = new Coordinate()
                 {
@@ -595,7 +595,7 @@ namespace Geo.Here.Tests.Services
             var sut = BuildService();
 
             var query = QueryString.Empty;
-            Action act = () => sut.AddBoundingParameters(new AreaParameters(), ref query);
+            Action act = () => sut.AddBoundingParameters(new AutosuggestParameters(), ref query);
 
             act.Should()
                 .Throw<ArgumentException>()
@@ -605,7 +605,7 @@ namespace Geo.Here.Tests.Services
                 .WithMessage("*Parameter name: parameters");
 #endif
 
-            var parameters = new AreaParameters()
+            var parameters = new AutosuggestParameters()
             {
                 InCountry = "POL",
                 InBoundingBox = new BoundingBox()
@@ -633,7 +633,7 @@ namespace Geo.Here.Tests.Services
                 Language = new CultureInfo("pl"),
             };
 
-            act = () => sut.AddBoundingParameters(new AreaParameters(), ref query);
+            act = () => sut.AddBoundingParameters(new AutosuggestParameters(), ref query);
 
             act.Should()
                 .Throw<ArgumentException>()

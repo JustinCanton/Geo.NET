@@ -390,7 +390,7 @@ namespace Geo.Here.Services
         /// </summary>
         /// <param name="parameters">A <see cref="DiscoverParameters"/> with the bounding parameters to build the uri with.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBoundingParameters(AreaParameters parameters, ref QueryString query)
+        internal void AddBoundingParameters(IAreaParameters parameters, ref QueryString query)
         {
             var hasAt = parameters.At != null && parameters.At.IsValid();
             var hasCircle = parameters.InCircle != null && parameters.InCircle.IsValid();
@@ -474,9 +474,9 @@ namespace Geo.Here.Services
         /// <summary>
         /// Adds the locating query parameters based on the allowed logic.
         /// </summary>
-        /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="IBaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddLocatingParameters(BaseFilterParameters parameters, ref QueryString query)
+        internal void AddLocatingParameters(IBaseFilterParameters parameters, ref QueryString query)
         {
             if (parameters.At != null)
             {
@@ -493,9 +493,9 @@ namespace Geo.Here.Services
         /// <summary>
         /// Adds the base limiting query parameters based on the allowed logic.
         /// </summary>
-        /// <param name="parameters">A <see cref="BaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="IBaseFilterParameters"/> with the base limiting parameters to build the uri with.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddLimitingParameters(BaseFilterParameters parameters, ref QueryString query)
+        internal void AddLimitingParameters(IBaseFilterParameters parameters, ref QueryString query)
         {
             if (parameters.Limit > 0 && parameters.Limit <= 100)
             {
@@ -512,9 +512,9 @@ namespace Geo.Here.Services
         /// <summary>
         /// Adds the base query parameters based on the allowed logic.
         /// </summary>
-        /// <param name="parameters">A <see cref="BaseParameters"/> with the base parameters to build the uri with.</param>
+        /// <param name="parameters">A <see cref="IBaseParameters"/> with the base parameters to build the uri with.</param>
         /// <param name="query">A <see cref="QueryString"/> with the query parameters.</param>
-        internal void AddBaseParameters(BaseParameters parameters, ref QueryString query)
+        internal void AddBaseParameters(IBaseParameters parameters, ref QueryString query)
         {
             if (parameters.Language != null && !string.IsNullOrWhiteSpace(parameters.Language.Name))
             {

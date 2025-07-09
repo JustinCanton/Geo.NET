@@ -5,10 +5,12 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The parameters possible to use during a browse request.
     /// </summary>
-    public class BrowseParameters : AreaParameters, IKeyParameters
+    public class BrowseParameters : IAreaParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a category filter consisting of a comma-separated list of category-Ids for Categories defined in the HERE Places Category System,
@@ -22,6 +24,36 @@ namespace Geo.Here.Models.Parameters
         /// Results with a partial match on the name parameter are included in the response.
         /// </summary>
         public string Name { get; set; }
+
+        /// <inheritdoc/>
+        public string InCountry { get; set; }
+
+        /// <inheritdoc/>
+        public Circle InCircle { get; set; }
+
+        /// <inheritdoc/>
+        public BoundingBox InBoundingBox { get; set; }
+
+        /// <inheritdoc/>
+        public string Route { get; set; }
+
+        /// <inheritdoc/>
+        public FlexiblePolyline FlexiblePolyline { get; set; }
+
+        /// <inheritdoc/>
+        public Coordinate At { get; set; }
+
+        /// <inheritdoc/>
+        public uint Limit { get; set; }
+
+        /// <inheritdoc/>
+        public System.Globalization.CultureInfo Language { get; set; }
+
+        /// <inheritdoc/>
+        public string PoliticalView { get; set; }
+
+        /// <inheritdoc/>
+        public IList<string> Show { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }

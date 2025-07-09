@@ -5,12 +5,14 @@
 
 namespace Geo.Here.Models.Parameters
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
 
     /// <summary>
     /// The parameters possible to use during a autosuggest request.
     /// </summary>
-    public class AutosuggestParameters : AreaParameters, IKeyParameters
+    public class AutosuggestParameters : IAreaParameters, IKeyParameters
     {
         /// <summary>
         /// Gets or sets a free-text query.
@@ -26,6 +28,36 @@ namespace Geo.Here.Models.Parameters
         /// </summary>
         [Range(0, 10)]
         public uint TermsLimit { get; set; }
+
+        /// <inheritdoc/>
+        public string InCountry { get; set; }
+
+        /// <inheritdoc/>
+        public Circle InCircle { get; set; }
+
+        /// <inheritdoc/>
+        public BoundingBox InBoundingBox { get; set; }
+
+        /// <inheritdoc/>
+        public string Route { get; set; }
+
+        /// <inheritdoc/>
+        public FlexiblePolyline FlexiblePolyline { get; set; }
+
+        /// <inheritdoc/>
+        public Coordinate At { get; set; }
+
+        /// <inheritdoc/>
+        public uint Limit { get; set; }
+
+        /// <inheritdoc/>
+        public System.Globalization.CultureInfo Language { get; set; }
+
+        /// <inheritdoc/>
+        public string PoliticalView { get; set; }
+
+        /// <inheritdoc/>
+        public IList<string> Show { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }

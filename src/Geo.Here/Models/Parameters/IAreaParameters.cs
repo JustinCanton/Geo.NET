@@ -1,4 +1,4 @@
-﻿// <copyright file="AreaParameters.cs" company="Geo.NET">
+﻿// <copyright file="IAreaParameters.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -8,7 +8,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// Parameters used for narrowing down the geographical area in a HERE request.
     /// </summary>
-    public class AreaParameters : BaseFilterParameters
+    public interface IAreaParameters : IBaseFilterParameters
     {
         /// <summary>
         /// Gets or sets the search within a geographic area. This is a hard filter. Results will be returned if they are located within the specified area.
@@ -19,19 +19,19 @@ namespace Geo.Here.Models.Parameters
         /// countryCode:CAN,MEX,USA.
         /// Note: This parameter must be accompanied by the 'At' parameter.
         /// </summary>
-        public string InCountry { get; set; }
+        string InCountry { get; set; }
 
         /// <summary>
         /// Gets or sets a circular area, provided as latitude, longitude, and radius(in meters).
         /// Note: This parameter and the 'At' parameter are mutually exclusive. Only one of them is allowed.
         /// </summary>
-        public Circle InCircle { get; set; }
+        Circle InCircle { get; set; }
 
         /// <summary>
         /// Gets or sets a bounding box, provided as west longitude, south latitude, east longitude, north latitude.
         /// Note: This parameter and the 'At' parameter are mutually exclusive. Only one of them is allowed.
         /// </summary>
-        public BoundingBox InBoundingBox { get; set; }
+        BoundingBox InBoundingBox { get; set; }
 
         /// <summary>
         /// Gets or sets a geographic corridor. This is a hard filter. Results will be returned if they are located within the specified area.
@@ -47,12 +47,12 @@ namespace Geo.Here.Models.Parameters
         /// More information can be found at https://github.com/heremaps/flexible-polyline.
         /// </summary>
         /// <remarks>Only one of <see cref="Route"/> or <see cref="FlexiblePolyline"/> will be applied to the request. If both are present, only <see cref="FlexiblePolyline"/> will be used.</remarks>
-        public string Route { get; set; }
+        string Route { get; set; }
 
         /// <summary>
         /// Gets or sets the polyline information to be added as a filter.
         /// </summary>
         /// <remarks>Only one of <see cref="Route"/> or <see cref="FlexiblePolyline"/> will be applied to the request. If both are present, only <see cref="FlexiblePolyline"/> will be used.</remarks>
-        public FlexiblePolyline FlexiblePolyline { get; set; }
+        FlexiblePolyline FlexiblePolyline { get; set; }
     }
 }
