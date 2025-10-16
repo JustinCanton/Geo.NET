@@ -6,12 +6,9 @@
 namespace Geo.Positionstack.Tests.Services
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
-    using System.Net;
     using System.Net.Http;
     using System.Threading;
-    using System.Threading.Tasks;
     using System.Web;
     using FluentAssertions;
     using Geo.Core;
@@ -21,7 +18,6 @@ namespace Geo.Positionstack.Tests.Services
     using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Options;
     using Moq;
-    using Moq.Protected;
     using Xunit;
 
     /// <summary>
