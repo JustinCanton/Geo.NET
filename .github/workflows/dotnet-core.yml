@@ -80,10 +80,14 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Restore
+      run: dotnet restore
+
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: build-output
+
     - name: Test (net6.0)
       run: dotnet test --no-build --configuration Release --framework net6.0
     - name: Test (net8.0)
@@ -109,10 +113,14 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Restore
+      run: dotnet restore
+
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: build-output
+
     - name: Test (netcoreapp3.1)
       run: dotnet test --no-build --configuration Release --framework netcoreapp3.1
     - name: Test (net48)
