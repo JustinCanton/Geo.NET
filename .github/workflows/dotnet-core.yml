@@ -11,7 +11,10 @@ on:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
+    outputs:
+      semver: ${{ steps.gitversion.outputs.semVer }}
 
     steps:
     - name: Checkout
@@ -39,7 +42,10 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-restore --configuration Release
+      run: |
+        dotnet test --no-restore --configuration Release --framework netcoreapp3.1
+        dotnet test --no-restore --configuration Release --framework net6.0
+        dotnet test --no-restore --configuration Release --framework net8.0
 
     # Get the version information
     - name: Install GitVersion
@@ -48,6 +54,7 @@ jobs:
       with:
         versionSpec: '5.x'
     - name: Determine Version
+      id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.7
       if: ${{ success() && contains(github.event_name, 'push') }}
       with:
@@ -57,12 +64,52 @@ jobs:
       run: |
         echo "SemVer: $GITVERSION_SEMVER"
 
-    # Package and publish
+  test-net48:
+    name: Test (.NET Framework 4.8)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    - name: Test (net48)
+      run: dotnet test --no-restore --configuration Release --framework net48
+
+  publish:
+    name: Package and Publish
+    needs: [build, test-net48]
+    runs-on: ubuntu-latest
+    if: ${{ success() && contains(github.event_name, 'push') }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
     - name: Package
-      if: ${{ success() && contains(github.event_name, 'push') }}
-      run: dotnet pack --no-build --configuration Release --output ./Packages -p:PackageVersion=$GITVERSION_SEMVER
+      run: dotnet pack --no-build --configuration Release --output ./Packages -p:PackageVersion=${{ needs.build.outputs.semver }}
     - name: Push
-      if: ${{ success() && contains(github.event_name, 'push') }}
       run: |
         cd Packages
         dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
