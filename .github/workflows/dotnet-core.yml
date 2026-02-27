@@ -143,10 +143,14 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Restore
+      run: dotnet restore
+
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: build-output
+
     - name: Package
       run: dotnet pack --no-build --configuration Release --output ./Packages -p:PackageVersion=${{ needs.build.outputs.semver }}
     - name: Push
