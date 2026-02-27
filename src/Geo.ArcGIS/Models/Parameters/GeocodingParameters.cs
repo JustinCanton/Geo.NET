@@ -74,6 +74,12 @@ namespace Geo.ArcGIS.Models.Parameters
         /// </summary>
         public PreferredLabelValue PreferredLabelValue { get; set; } = PreferredLabelValue.PostalCity;
 
+        /// <summary>
+        /// Gets or sets a comma-separated list of attribute fields to include in the response.
+        /// Use <c>*</c> to return all fields.
+        /// </summary>
+        public string OutFields { get; set; }
+
         /// <inheritdoc/>
         public string ClientId { get; set; }
 

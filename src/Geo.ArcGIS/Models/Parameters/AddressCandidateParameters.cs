@@ -5,9 +5,12 @@
 
 namespace Geo.ArcGIS.Models.Parameters
 {
+    using System;
+
     /// <summary>
     /// A parameters object for the address candidates ArcGIS request.
     /// </summary>
+    [Obsolete("Use FindAddressCandidatesParameters instead.")]
     public class AddressCandidateParameters : StorageParameters, IClientCredentialsParameters
     {
         /// <summary>

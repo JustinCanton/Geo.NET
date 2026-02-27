@@ -248,7 +248,16 @@ namespace Geo.ArcGIS.Resources.Services {
                 return ResourceManager.GetString("Invalid Search Extent", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Either a single-line address or at least one structured address field must be provided..
+        /// </summary>
+        internal static string Invalid_Find_Address_Candidates {
+            get {
+                return ResourceManager.GetString("Invalid Find Address Candidates", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to The single line address cannot be null or empty..
         /// </summary>
