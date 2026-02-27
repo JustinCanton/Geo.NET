@@ -10,7 +10,9 @@ namespace Geo.MapBox.Tests
     using System.Globalization;
 
     /// <summary>
-    /// Test data when testing different cultures. This test data returns all cultures in dotnet.
+    /// Test data when testing different cultures. This test data returns a representative set of cultures
+    /// to test culture-invariant behaviour without running tests for every culture in dotnet.
+    /// Covers: invariant, period-decimal (en-US), comma-decimal (de-DE, fr-FR, ru-RU), Arabic, and Chinese.
     /// </summary>
     public class CultureTestData : IEnumerable<object[]>
     {
@@ -20,11 +22,13 @@ namespace Geo.MapBox.Tests
         /// <returns>An <see cref="IEnumerator{T}"/> of <see cref="object"/>[].</returns>
         public IEnumerator<object[]> GetEnumerator()
         {
-            var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            foreach (var culture in cultures)
-            {
-                yield return new object[] { culture };
-            }
+            yield return new object[] { CultureInfo.InvariantCulture };
+            yield return new object[] { new CultureInfo("en-US") };
+            yield return new object[] { new CultureInfo("de-DE") };
+            yield return new object[] { new CultureInfo("fr-FR") };
+            yield return new object[] { new CultureInfo("ar-SA") };
+            yield return new object[] { new CultureInfo("zh-CN") };
+            yield return new object[] { new CultureInfo("ru-RU") };
         }
 
         /// <summary>

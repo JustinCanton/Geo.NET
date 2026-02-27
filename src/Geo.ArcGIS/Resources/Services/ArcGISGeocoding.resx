@@ -180,6 +180,9 @@
   <data name="Invalid Search Extent" xml:space="preserve">
     <value>The search extent is invalid and will not be used.</value>
   </data>
+  <data name="Invalid Find Address Candidates" xml:space="preserve">
+    <value>Either a single-line address or at least one structured address field must be provided.</value>
+  </data>
   <data name="Invalid Single Address Line" xml:space="preserve">
     <value>The single line address cannot be null or empty.</value>
   </data>

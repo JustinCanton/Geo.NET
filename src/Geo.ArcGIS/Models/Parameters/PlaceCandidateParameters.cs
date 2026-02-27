@@ -5,6 +5,7 @@
 
 namespace Geo.ArcGIS.Models.Parameters
 {
+    using System;
     using System.Globalization;
     using Geo.ArcGIS.Enums;
     using Geo.ArcGIS.Models.Responses;
@@ -12,6 +13,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the place candidates ArcGIS request.
     /// </summary>
+    [Obsolete("Use FindAddressCandidatesParameters instead.")]
     public class PlaceCandidateParameters : StorageParameters, IClientCredentialsParameters
     {
         /// <summary>
