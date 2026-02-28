@@ -5,10 +5,12 @@
 
 namespace Geo.ArcGIS.Models.Parameters
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// A parameters object for the storage flag information in ArcGIS request.
     /// </summary>
-    public class StorageParameters
+    public class StorageParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets a value indicating whether the results of the operation will be persisted.
@@ -31,5 +33,8 @@ namespace Geo.ArcGIS.Models.Parameters
         /// (https://developers.arcgis.com/rest/geocode/api-reference/geocoding-free-vs-paid.htm).
         /// </summary>
         public bool ForStorage { get; set; } = false;
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

@@ -5,16 +5,20 @@
 
 namespace Geo.Google.Models.Parameters
 {
+    using System.Collections.Generic;
     using System.Globalization;
 
     /// <summary>
     /// The base parameters shared across all requests.
     /// </summary>
-    public class BaseParameters
+    public class BaseParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the language in which to return results.
         /// </summary>
         public CultureInfo Language { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

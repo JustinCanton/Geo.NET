@@ -11,7 +11,7 @@ namespace Geo.Radar.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a reverse geocoding request.
     /// </summary>
-    public class ReverseGeocodingParameters : ILayersParameter, IKeyParameters
+    public class ReverseGeocodingParameters : ILayersParameter, IKeyParameters, IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the coordinates to reverse geocode.
@@ -23,5 +23,8 @@ namespace Geo.Radar.Models.Parameters
 
         /// <inheritdoc/>
         public string Key { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

@@ -278,6 +278,25 @@ namespace Geo.ArcGIS.Tests.Services
 #endif
         }
 
+        [Fact]
+        public async Task BuildAddressCandidateRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new AddressCandidateParameters()
+            {
+                SingleLineAddress = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildAddressCandidateRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the place candidate uri is built properly.
         /// </summary>
@@ -319,6 +338,22 @@ namespace Geo.ArcGIS.Tests.Services
             query.Should().Contain("token=token123");
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        [Fact]
+        public async Task BuildPlaceCandidateRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new PlaceCandidateParameters();
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildPlaceCandidateRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>
@@ -526,6 +561,25 @@ namespace Geo.ArcGIS.Tests.Services
 #endif
         }
 
+        [Fact]
+        public async Task BuildSuggestRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new SuggestParameters()
+            {
+                Text = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildSuggestRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
@@ -592,6 +646,29 @@ namespace Geo.ArcGIS.Tests.Services
 #else
                 .WithMessage("*Parameter name: Location");
 #endif
+        }
+
+        [Fact]
+        public async Task BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Location = new Coordinate()
+                {
+                    Latitude = 80.012,
+                    Longitude = 123.456,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildReverseGeocodingRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>
@@ -673,6 +750,29 @@ namespace Geo.ArcGIS.Tests.Services
 #else
                 .WithMessage("*Parameter name: AddressAttributes");
 #endif
+        }
+
+        [Fact]
+        public async Task BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters();
+
+            parameters.AddressAttributes.Add(
+                new AddressAttributeParameter()
+                {
+                    ObjectId = 1,
+                    SingleLine = "123 East",
+                });
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>

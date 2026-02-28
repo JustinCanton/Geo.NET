@@ -131,6 +131,7 @@ namespace Geo.Radar.Services
             AddCountry(parameters, ref query);
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -158,6 +159,7 @@ namespace Geo.Radar.Services
 
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -206,6 +208,7 @@ namespace Geo.Radar.Services
             AddCountry(parameters, ref query);
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

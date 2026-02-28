@@ -11,7 +11,7 @@ namespace Geo.Positionstack.Models.Parameters
     /// <summary>
     /// The parameters possible to use during a geocoding request.
     /// </summary>
-    public class GeocodingParameters : ILocationGeocodeParameters, IFilterGeocodeParameters, IKeyParameters
+    public class GeocodingParameters : ILocationGeocodeParameters, IFilterGeocodeParameters, IKeyParameters, IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the address to geocode.
@@ -47,5 +47,8 @@ namespace Geo.Positionstack.Models.Parameters
 
         /// <inheritdoc/>
         public string Key { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

@@ -175,6 +175,7 @@ namespace Geo.MapQuest.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapQuestKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -211,6 +212,7 @@ namespace Geo.MapQuest.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapQuestKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

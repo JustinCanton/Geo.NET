@@ -12,7 +12,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the geocoding ArcGIS request.
     /// </summary>
-    public class GeocodingParameters : IClientCredentialsParameters
+    public class GeocodingParameters : IClientCredentialsParameters, IAdditionalParameters
     {
         /// <summary>
         /// Gets a list of address attributes.
@@ -85,5 +85,8 @@ namespace Geo.ArcGIS.Models.Parameters
 
         /// <inheritdoc/>
         public string ClientSecret { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

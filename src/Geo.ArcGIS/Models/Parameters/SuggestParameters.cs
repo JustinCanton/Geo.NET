@@ -13,7 +13,7 @@ namespace Geo.ArcGIS.Models.Parameters
     /// <summary>
     /// A parameters object for the suggest ArcGIS request.
     /// </summary>
-    public class SuggestParameters
+    public class SuggestParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the input text entered by a user, which is used by the suggest operation to generate a list of possible matches.
@@ -65,5 +65,8 @@ namespace Geo.ArcGIS.Models.Parameters
         /// The default value is postal city.
         /// </summary>
         public PreferredLabelValue PreferredLabelValue { get; set; } = PreferredLabelValue.PostalCity;
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

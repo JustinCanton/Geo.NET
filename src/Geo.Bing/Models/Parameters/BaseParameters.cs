@@ -5,12 +5,13 @@
 
 namespace Geo.Bing.Models.Parameters
 {
+    using System.Collections.Generic;
     using System.Globalization;
 
     /// <summary>
     /// Base parameters across all Bing geocoding APIs.
     /// </summary>
-    public class BaseParameters
+    public class BaseParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets a value indicating whether or not to include the neighbourhood information.
@@ -34,5 +35,8 @@ namespace Geo.Bing.Models.Parameters
         /// Gets or sets the culture to use for the request.
         /// </summary>
         public CultureInfo Culture { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }
