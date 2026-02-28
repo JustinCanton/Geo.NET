@@ -295,6 +295,25 @@ namespace Geo.Bing.Tests.Services
             Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
+        [Fact]
+        public void BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Query = "1 Microsoft Way Redmond WA",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the reverse geocoding uri isn't built if a point isn't passed in.
         /// </summary>
@@ -361,6 +380,29 @@ namespace Geo.Bing.Tests.Services
             Thread.CurrentThread.CurrentCulture = oldCulture;
         }
 
+        [Fact]
+        public void BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Point = new Coordinate()
+                {
+                    Latitude = 40.7567,
+                    Longitude = -73.9897,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the address geocoding uri isn't built if not enought information is passed in.
         /// </summary>
@@ -423,6 +465,25 @@ namespace Geo.Bing.Tests.Services
             query.Should().Contain("key=123abc");
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        [Fact]
+        public void BuildAddressGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new AddressGeocodingParameters()
+            {
+                AddressLine = "222 Bay Street",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildAddressGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>

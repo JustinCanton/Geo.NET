@@ -11,7 +11,7 @@ namespace Geo.Here.Models.Parameters
     /// <summary>
     /// The base parameters that are used with all HERE requests.
     /// </summary>
-    public class BaseParameters
+    public class BaseParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the language to be used for result rendering from a list of BCP47 compliant Language Codes.
@@ -36,5 +36,8 @@ namespace Geo.Here.Models.Parameters
         /// </list>
         /// </summary>
         public IList<string> Show { get; } = new List<string>();
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

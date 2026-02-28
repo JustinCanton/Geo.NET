@@ -420,6 +420,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -597,6 +598,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -686,6 +688,8 @@ namespace Geo.ArcGIS.Services
                 _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
+            query = query.AddAdditionalParameters(parameters);
+
             uriBuilder.AddQuery(query);
 
             return Task.FromResult<Uri>(uriBuilder.Uri);
@@ -765,6 +769,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -884,6 +889,7 @@ namespace Geo.ArcGIS.Services
             }
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

@@ -235,6 +235,7 @@ namespace Geo.Google.Services
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -303,6 +304,7 @@ namespace Geo.Google.Services
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -371,6 +373,7 @@ namespace Geo.Google.Services
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -439,6 +442,7 @@ namespace Geo.Google.Services
             AddBaseSearchParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -476,6 +480,7 @@ namespace Geo.Google.Services
             AddBaseSearchParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -531,6 +536,7 @@ namespace Geo.Google.Services
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -597,6 +603,7 @@ namespace Geo.Google.Services
             AddAutocompleteParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -623,6 +630,7 @@ namespace Geo.Google.Services
             AddAutocompleteParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

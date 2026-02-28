@@ -126,6 +126,7 @@ namespace Geo.Bing.Services
             BuildLimitedResultQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -197,6 +198,7 @@ namespace Geo.Bing.Services
             BuildBaseQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -272,6 +274,7 @@ namespace Geo.Bing.Services
             BuildLimitedResultQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

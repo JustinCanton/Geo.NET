@@ -12,7 +12,7 @@ namespace Geo.MapBox.Models.Parameters
     /// <summary>
     /// The parameters possible to use for all requests.
     /// </summary>
-    public class BaseParameters
+    public class BaseParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the type of endpoint to call.
@@ -52,5 +52,8 @@ namespace Geo.MapBox.Models.Parameters
         /// Available worldviews are: ar,cn,in,jp,ma,ru,tr,us. If worldview is not set, the us worldview boundaries are returned by default.
         /// </summary>
         public string Worldview { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

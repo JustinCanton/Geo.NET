@@ -149,6 +149,7 @@ namespace Geo.MapBox.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -179,6 +180,7 @@ namespace Geo.MapBox.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

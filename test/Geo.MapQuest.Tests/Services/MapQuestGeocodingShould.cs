@@ -288,6 +288,25 @@ namespace Geo.MapQuest.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Location = "1 Microsoft Way Redmond WA",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the building of the licensed reverse geocoding parameters is done successfully.
         /// </summary>
@@ -399,6 +418,29 @@ namespace Geo.MapQuest.Tests.Services
 #else
                 .WithMessage("*Parameter name: Location");
 #endif
+        }
+
+        [Fact]
+        public void BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Location = new Coordinate()
+                {
+                    Latitude = 56.78,
+                    Longitude = 78.91,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>

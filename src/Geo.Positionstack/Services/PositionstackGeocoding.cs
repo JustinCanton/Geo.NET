@@ -119,6 +119,7 @@ namespace Geo.Positionstack.Services
             AddFilterParameters(parameters, ref query);
             AddLocationParameters(parameters, ref query);
             AddPositionstackKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -147,6 +148,7 @@ namespace Geo.Positionstack.Services
             AddFilterParameters(parameters, ref query);
             AddLocationParameters(parameters, ref query);
             AddPositionstackKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

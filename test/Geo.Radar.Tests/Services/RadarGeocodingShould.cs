@@ -217,6 +217,25 @@ namespace Geo.Radar.Tests.Services
         }
 
         [Fact]
+        public void BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Query = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        [Fact]
         public void BuildGeocodingRequest_WithInvalidParameters_FailsWithException()
         {
             var sut = BuildService();
@@ -284,6 +303,29 @@ namespace Geo.Radar.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Coordinate = new Coordinate()
+                {
+                    Latitude = 56.78,
+                    Longitude = 78.91,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         [Theory]
         [ClassData(typeof(CultureTestData))]
         public void BuildAutocompleteRequest_WithValidParameters_SuccessfullyBuildsUrl(CultureInfo culture)
@@ -343,6 +385,25 @@ namespace Geo.Radar.Tests.Services
 #else
                 .WithMessage("*Parameter name: Query");
 #endif
+        }
+
+        [Fact]
+        public void BuildAutocompleteRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new AutocompleteParameters()
+            {
+                Query = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildAutocompleteRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         [Fact]
