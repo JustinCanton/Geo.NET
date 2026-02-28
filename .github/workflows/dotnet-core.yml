@@ -96,6 +96,8 @@ jobs:
       run: dotnet test --no-build --configuration Release --framework net6.0
     - name: Test (net8.0)
       run: dotnet test --no-build --configuration Release --framework net8.0
+    - name: Test (net10.0)
+      run: dotnet test --no-build --configuration Release --framework net10.0
 
   test-windows:
     name: Test (Windows)
