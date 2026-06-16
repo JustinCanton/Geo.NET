@@ -16,5 +16,11 @@ namespace Geo.Bing.Models.Parameters
         /// If the value is 0, the default value will be used.
         /// </summary>
         public int MaximumResults { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to restrict results to the country/region and adminDistrict specified.
+        /// When true, results outside the specified countryRegion and adminDistrict will not be returned. Optional.
+        /// </summary>
+        public bool StrictMatch { get; set; } = false;
     }
 }
