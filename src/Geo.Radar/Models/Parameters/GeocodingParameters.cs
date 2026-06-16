@@ -18,6 +18,12 @@ namespace Geo.Radar.Models.Parameters
         /// </summary>
         public string Query { get; set; }
 
+        /// <summary>
+        /// Gets or sets the language for the results.
+        /// Supported values: ar, de, en, es, fr, ja, ko, pt, ru, zh. Defaults to en. Optional.
+        /// </summary>
+        public string Language { get; set; }
+
         /// <inheritdoc/>
         public IList<string> Countries { get; } = new List<string>();
 
