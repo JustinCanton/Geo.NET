@@ -88,3 +88,8 @@ node_modules/
 .sonarqube/
 
 **/appsettings.Development.json
+
+src/TestApi/*
+package.json
+package-lock.json
+
