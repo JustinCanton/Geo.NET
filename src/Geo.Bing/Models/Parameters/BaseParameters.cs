@@ -36,6 +36,23 @@ namespace Geo.Bing.Models.Parameters
         /// </summary>
         public CultureInfo Culture { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user's current location to help determine better results.
+        /// Format: latitude,longitude (e.g., "47.608,-122.337"). Optional.
+        /// </summary>
+        public string UserLocation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IP address of the user's device to help determine better results. Optional.
+        /// </summary>
+        public string UserIp { get; set; }
+
+        /// <summary>
+        /// Gets or sets the map area currently shown to the user to help determine better results.
+        /// Format: southLatitude,westLongitude,northLatitude,eastLongitude. Optional.
+        /// </summary>
+        public string UserMapView { get; set; }
+
         /// <inheritdoc/>
         public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }

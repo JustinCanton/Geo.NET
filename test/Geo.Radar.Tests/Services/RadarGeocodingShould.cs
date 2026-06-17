@@ -363,7 +363,7 @@ namespace Geo.Radar.Tests.Services
             query.Should().Contain("near=56.78,78.91");
             query.Should().Contain("limit=14");
             query.Should().Contain("mailable=true");
-            query.Should().Contain("country=CA");
+            query.Should().Contain("countryCode=CA");
             query.Should().Contain("layers=postalCode,country");
 
             _httpClient.DefaultRequestHeaders.Authorization.Scheme.Should().Be("123abc");
