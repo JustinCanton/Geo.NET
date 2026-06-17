@@ -23,7 +23,7 @@ namespace Geo.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Gets the <see cref="IHttpClientBuilder"/> used to configure the HttpClient of the <typeparamref name="T"/> instance.
+        /// Gets the <see cref="IHttpClientBuilder"/> used to configure the HttpClient instance.
         /// </summary>
         public IHttpClientBuilder HttpClientBuilder { get; }
     }
