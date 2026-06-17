@@ -41,5 +41,11 @@ namespace Geo.Google.Models.Parameters
         /// This is a restriction, rather than a bias, meaning that results outside this region will not be returned even if they match the user input.
         /// </summary>
         public bool StrictBounds { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a hard restriction on the area in which results are returned.
+        /// Results outside this region will not be returned. Accepts a <see cref="Circle"/> or <see cref="Boundaries"/> value. Optional.
+        /// </summary>
+        public object LocationRestriction { get; set; }
     }
 }

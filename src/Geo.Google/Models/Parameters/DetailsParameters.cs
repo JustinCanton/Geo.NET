@@ -37,6 +37,18 @@ namespace Geo.Google.Models.Parameters
         /// </summary>
         public string SessionToken { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to disable translation of reviews.
+        /// When true, the language code is included in the response along with the original-language review text. Optional.
+        /// </summary>
+        public bool? ReviewsNoTranslations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sort order for reviews.
+        /// Accepted values: most_relevant, newest. Optional.
+        /// </summary>
+        public string ReviewsSort { get; set; }
+
         /// <inheritdoc/>
         public string Key { get; set; }
     }

@@ -50,6 +50,12 @@ namespace Geo.Bing.Models.Parameters
         /// </summary>
         public bool IncludeCountryRegion { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether AdminDistrict names are returned in expanded form.
+        /// When true, returns "Washington" instead of "WA". Defaults to false. Optional.
+        /// </summary>
+        public bool VerbosePlaceNames { get; set; } = false;
+
         /// <inheritdoc/>
         public string Key { get; set; }
     }

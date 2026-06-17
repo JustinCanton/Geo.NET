@@ -35,5 +35,23 @@ namespace Geo.MapBox
         /// <returns>A <see cref="Response{Coordinate}"/> with the response from MapBox.</returns>
         /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
         Task<Response<Coordinate>> ReverseGeocodingAsync(ReverseGeocodingParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calls the MapBox Geocoding API v6 (forward) and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="GeocodingV6Parameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="Response{T}"/> with a <see cref="List{T}"/> of <see cref="string"/> with the response from MapBox.</returns>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        Task<Response<List<string>>> GeocodingV6Async(GeocodingV6Parameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Calls the MapBox Geocoding API v6 (reverse) and returns the results.
+        /// </summary>
+        /// <param name="parameters">A <see cref="ReverseGeocodingV6Parameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="Response{Coordinate}"/> with the response from MapBox.</returns>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        Task<Response<Coordinate>> ReverseGeocodingV6Async(ReverseGeocodingV6Parameters parameters, CancellationToken cancellationToken = default);
     }
 }

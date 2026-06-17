@@ -5,6 +5,7 @@
 
 namespace Geo.Google.Models.Parameters
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
 
@@ -35,6 +36,12 @@ namespace Geo.Google.Models.Parameters
         /// This parameter will only influence, not fully restrict, results from the geocoder.
         /// </summary>
         public RegionInfo Region { get; set; }
+
+        /// <summary>
+        /// Gets the list of extra computations to apply to the geocoding request.
+        /// Supported values: ADDRESS_DESCRIPTORS, BUILDING_AND_ENTRANCES. Optional.
+        /// </summary>
+        public IList<string> ExtraComputations { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }
