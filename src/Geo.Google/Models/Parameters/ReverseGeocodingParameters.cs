@@ -7,6 +7,7 @@ namespace Geo.Google.Models.Parameters
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using Geo.Google.Enums;
 
     /// <summary>
@@ -38,6 +39,12 @@ namespace Geo.Google.Models.Parameters
         /// then discards those results that do not match the specified location type(s).
         /// </summary>
         public IEnumerable<LocationType> LocationTypes { get; set; }
+
+        /// <summary>
+        /// Gets the list of extra computations to apply to the reverse geocoding request.
+        /// Supported values: ADDRESS_DESCRIPTORS, BUILDING_AND_ENTRANCES. Optional.
+        /// </summary>
+        public IList<string> ExtraComputations { get; } = new List<string>();
 
         /// <inheritdoc/>
         public string Key { get; set; }
