@@ -28,7 +28,7 @@ namespace Geo.Trimble.Models.Responses
         /// Gets or sets the legacy numeric error code.
         /// </summary>
         [JsonPropertyName("LegacyErrorCode")]
-        public int LegacyErrorCode { get; set; }
+        public int? LegacyErrorCode { get; set; }
 
         /// <summary>
         /// Gets or sets a human-readable description of the error.

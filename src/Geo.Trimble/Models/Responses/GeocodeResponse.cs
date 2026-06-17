@@ -41,7 +41,7 @@ namespace Geo.Trimble.Models.Responses
         /// Gets or sets the numeric geographic region code.
         /// </summary>
         [JsonPropertyName("Region")]
-        public int Region { get; set; }
+        public int? Region { get; set; }
 
         /// <summary>
         /// Gets or sets the time zone name.
@@ -59,7 +59,7 @@ namespace Geo.Trimble.Models.Responses
         /// Gets or sets a value indicating whether daylight saving time is in effect.
         /// </summary>
         [JsonPropertyName("isDST")]
-        public bool IsDst { get; set; }
+        public bool? IsDst { get; set; }
 
         /// <summary>
         /// Gets or sets the confidence level of the match (Exact, Good, Uncertain, or Failed).
@@ -71,7 +71,7 @@ namespace Geo.Trimble.Models.Responses
         /// Gets or sets the distance in miles from the input coordinates to the nearest road.
         /// </summary>
         [JsonPropertyName("DistanceFromRoad")]
-        public double DistanceFromRoad { get; set; }
+        public double? DistanceFromRoad { get; set; }
 
         /// <summary>
         /// Gets or sets the speed limit information for the nearest road.

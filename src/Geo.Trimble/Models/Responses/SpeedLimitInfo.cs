@@ -16,19 +16,19 @@ namespace Geo.Trimble.Models.Responses
         /// Gets or sets the speed limit value.
         /// </summary>
         [JsonPropertyName("Speed")]
-        public int Speed { get; set; }
+        public int? Speed { get; set; }
 
         /// <summary>
         /// Gets or sets the speed limit type classification.
         /// </summary>
         [JsonPropertyName("SpeedType")]
-        public int SpeedType { get; set; }
+        public int? SpeedType { get; set; }
 
         /// <summary>
         /// Gets or sets the road link identifiers.
         /// </summary>
         [JsonPropertyName("LinkIds")]
-        public long LinkIds { get; set; }
+        public long? LinkIds { get; set; }
 
         /// <summary>
         /// Gets or sets the road class designation.
