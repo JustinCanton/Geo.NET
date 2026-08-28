@@ -138,4 +138,16 @@
   <data name="Invalid Limit" xml:space="preserve">
     <value>The limit value wasn't valid and will not be used.</value>
   </data>
+  <data name="No Email" xml:space="preserve">
+    <value>No email has been configured and none will be sent with the request.</value>
+  </data>
+  <data name="No Server" xml:space="preserve">
+    <value>No Nominatim server has been configured and the public instance will be used.</value>
+  </data>
+  <data name="No User Agent" xml:space="preserve">
+    <value>No user agent has been configured. The public Nominatim instance requires requests to identify the calling application.</value>
+  </data>
+  <data name="No Zoom" xml:space="preserve">
+    <value>No zoom level was supplied and the Nominatim default will be used.</value>
+  </data>
 </root>

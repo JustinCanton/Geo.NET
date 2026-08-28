@@ -115,6 +115,42 @@ namespace Geo.Nominatim.Resources.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No email has been configured and none will be sent with the request..
+        /// </summary>
+        internal static string No_Email {
+            get {
+                return ResourceManager.GetString("No Email", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No Nominatim server has been configured and the public instance will be used..
+        /// </summary>
+        internal static string No_Server {
+            get {
+                return ResourceManager.GetString("No Server", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No user agent has been configured. The public Nominatim instance requires requests to identify the calling application..
+        /// </summary>
+        internal static string No_User_Agent {
+            get {
+                return ResourceManager.GetString("No User Agent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No zoom level was supplied and the Nominatim default will be used..
+        /// </summary>
+        internal static string No_Zoom {
+            get {
+                return ResourceManager.GetString("No Zoom", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The Nominatim parameters are null..
         /// </summary>
         internal static string Null_Parameters {

@@ -23,13 +23,13 @@ namespace Geo.Nominatim.Services
     using Microsoft.Extensions.Options;
 
     /// <summary>
-    /// A service to call the MapQuest geocoding API.
+    /// A service to call the Nominatim geocoding API.
     /// </summary>
     public class NominatimGeocoding : GeoClient, INominatimGeocoding
     {
-        private const string SearchUri = " https://nominatim.openstreetmap.org/search";
-        private const string ReverseUri = " https://nominatim.openstreetmap.org/reverse";
-        private const string LookupUri = " https://nominatim.openstreetmap.org/lookup";
+        private const string SearchEndpoint = "search";
+        private const string ReverseEndpoint = "reverse";
+        private const string LookupEndpoint = "lookup";
 
         private readonly IOptions<NominatimOptions> _options;
         private readonly ILogger<NominatimGeocoding> _logger;
@@ -37,8 +37,8 @@ namespace Geo.Nominatim.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="NominatimGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
-        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="NominatimOptions"/> containing MapQuest information.</param>
+        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Nominatim Geocoding API.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="NominatimOptions"/> containing Nominatim information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public NominatimGeocoding(
             HttpClient client,
@@ -48,6 +48,8 @@ namespace Geo.Nominatim.Services
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<NominatimGeocoding>() ?? NullLogger<NominatimGeocoding>.Instance;
+
+            AddUserAgent();
         }
 
         /// <inheritdoc/>
@@ -103,6 +105,45 @@ namespace Geo.Nominatim.Services
         }
 
         /// <summary>
+        /// Builds the uri of a Nominatim endpoint based on the configured server.
+        /// </summary>
+        /// <param name="endpoint">The name of the Nominatim endpoint to build the uri for.</param>
+        /// <returns>A <see cref="UriBuilder"/> for the endpoint on the configured Nominatim server.</returns>
+        internal UriBuilder BuildEndpointUri(string endpoint)
+        {
+            var server = _options.Value.Server;
+
+            if (string.IsNullOrWhiteSpace(server))
+            {
+                _logger.NominatimDebug(Resources.Services.NominatimGeocoding.No_Server);
+                server = NominatimOptions.DefaultServer;
+            }
+
+            return new UriBuilder(string.Concat(server.Trim().TrimEnd('/'), "/", endpoint));
+        }
+
+        /// <summary>
+        /// Adds the configured user agent to the http client, if one is configured and the client does not already have one.
+        /// </summary>
+        internal void AddUserAgent()
+        {
+            var userAgent = _options.Value.UserAgent;
+
+            if (string.IsNullOrWhiteSpace(userAgent))
+            {
+                _logger.NominatimDebug(Resources.Services.NominatimGeocoding.No_User_Agent);
+                return;
+            }
+
+            if (Client.DefaultRequestHeaders.UserAgent.Count > 0)
+            {
+                return;
+            }
+
+            Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", userAgent);
+        }
+
+        /// <summary>
         /// Validates the uri and builds it based on the parameter type.
         /// </summary>
         /// <typeparam name="TParameters">The type of the parameters.</typeparam>
@@ -146,7 +187,7 @@ namespace Geo.Nominatim.Services
         /// </remarks>
         internal Uri BuildSearchRequest(SearchParameters parameters)
         {
-            var uriBuilder = new UriBuilder(SearchUri);
+            var uriBuilder = BuildEndpointUri(SearchEndpoint);
             var query = QueryString.Empty;
 
             if (!string.IsNullOrWhiteSpace(parameters.Query) &&
@@ -221,7 +262,7 @@ namespace Geo.Nominatim.Services
 
             if (parameters.Limit > 0 && parameters.Limit <= 40)
             {
-                query = query.Add("limit", parameters.Limit.ToString());
+                query = query.Add("limit", parameters.Limit.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
@@ -254,6 +295,7 @@ namespace Geo.Nominatim.Services
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -276,17 +318,26 @@ namespace Geo.Nominatim.Services
         /// </remarks>
         internal Uri BuildReverseGeocodeRequest(ReverseGeocodingParameters parameters)
         {
-            var uriBuilder = new UriBuilder(ReverseUri);
+            var uriBuilder = BuildEndpointUri(ReverseEndpoint);
             var query = QueryString.Empty;
 
             query = query.Add("lat", parameters.Latitude.ToString(CultureInfo.InvariantCulture));
             query = query.Add("lon", parameters.Longitude.ToString(CultureInfo.InvariantCulture));
-            query = query.Add("zoom", parameters.Zoom.ToString());
+
+            if (parameters.Zoom.HasValue)
+            {
+                query = query.Add("zoom", parameters.Zoom.Value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _logger.NominatimDebug(Resources.Services.NominatimGeocoding.No_Zoom);
+            }
 
             AddLayerParameter(parameters, ref query);
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -297,11 +348,11 @@ namespace Geo.Nominatim.Services
         /// Builds the lookup uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="LookupParameters"/> with the lookup parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed MapQuest lookup uri.</returns>
-        /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
+        /// <returns>A <see cref="Uri"/> with the completed Nominatim lookup uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'OsmIds' parameter is empty or holds more than 50 ids.</exception>
         internal Uri BuildLookupRequest(LookupParameters parameters)
         {
-            var uriBuilder = new UriBuilder(LookupUri);
+            var uriBuilder = BuildEndpointUri(LookupEndpoint);
             var query = QueryString.Empty;
 
             if (parameters.OsmIds.Count > 50 || parameters.OsmIds.Count < 1)
@@ -315,6 +366,7 @@ namespace Geo.Nominatim.Services
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -400,6 +452,12 @@ namespace Geo.Nominatim.Services
             if (!string.IsNullOrWhiteSpace(baseParameters.Email))
             {
                 email = baseParameters.Email;
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                _logger.NominatimDebug(Resources.Services.NominatimGeocoding.No_Email);
+                return;
             }
 
             query = query.Add("email", email);

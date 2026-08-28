@@ -8,7 +8,7 @@ namespace Geo.Nominatim.Models.Parameters
     /// <summary>
     /// The base parameters that are used with all Nominatim requests.
     /// </summary>
-    public interface IBaseParameters
+    public interface IBaseParameters : IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets a value indicating whether to include a breakdown of the address into elements.

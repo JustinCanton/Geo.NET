@@ -93,6 +93,124 @@ namespace Geo.Nominatim.Tests.DependencyInjection
         }
 
         [Fact]
+        public void AddNominatimGeocoding_WithNoServer_DefaultsToThePublicInstance()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddNominatimGeocoding();
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<NominatimOptions>>();
+            options.Value.Server.Should().Be("https://nominatim.openstreetmap.org");
+        }
+
+        [Fact]
+        public void AddServer_WithAlternatePublicServer_ConfiguresServer()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            var builder = services.AddNominatimGeocoding();
+            builder.AddServer("https://nominatim.qgis.org");
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<NominatimOptions>>();
+            options.Value.Server.Should().Be("https://nominatim.qgis.org");
+        }
+
+        [Fact]
+        public void AddServer_WithSelfHostedServer_ConfiguresServer()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            var builder = services.AddNominatimGeocoding();
+            builder.AddServer("https://my-server.example.com/nominatim");
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<NominatimOptions>>();
+            options.Value.Server.Should().Be("https://my-server.example.com/nominatim");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddServer_WithMissingServer_ThrowsException(string server)
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var builder = services.AddNominatimGeocoding();
+
+            // Act & Assert
+            Action act = () => builder.AddServer(server);
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The server cannot be null or empty");
+        }
+
+        [Fact]
+        public void AddServer_WithRelativeServer_ThrowsException()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var builder = services.AddNominatimGeocoding();
+
+            // Act & Assert
+            Action act = () => builder.AddServer("nominatim.openstreetmap.org");
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The server is not a valid absolute url");
+        }
+
+        [Fact]
+        public void AddUserAgent_WithValidUserAgent_ConfiguresUserAgent()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            var builder = services.AddNominatimGeocoding();
+            builder.AddUserAgent("MyApplication/1.0");
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<NominatimOptions>>();
+            options.Value.UserAgent.Should().Be("MyApplication/1.0");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddUserAgent_WithMissingUserAgent_ThrowsException(string userAgent)
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var builder = services.AddNominatimGeocoding();
+
+            // Act & Assert
+            Action act = () => builder.AddUserAgent(userAgent);
+
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("The user agent cannot be null or empty");
+        }
+
+        [Fact]
         public void AddEmail_WithNullEmail_ThrowsException()
         {
             // Arrange

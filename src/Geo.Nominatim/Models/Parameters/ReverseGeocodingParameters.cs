@@ -70,5 +70,8 @@ namespace Geo.Nominatim.Models.Parameters
 
         /// <inheritdoc/>
         public string Email { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }

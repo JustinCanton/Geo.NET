@@ -36,6 +36,10 @@ The support for this project includes:
 	 - Licensed API
 		 - [Geocoding](https://developer.mapquest.com/documentation/geocoding-api/address/get/)
 		 - [Reverse Geocoding](https://developer.mapquest.com/documentation/geocoding-api/reverse/get/)
+ - Nominatim (OpenStreetMap, using the public instance or a self hosted one)
+	 - [Search](https://nominatim.org/release-docs/latest/api/Search/)
+	 - [Reverse Geocoding](https://nominatim.org/release-docs/latest/api/Reverse/)
+	 - [Lookup](https://nominatim.org/release-docs/latest/api/Lookup/)
  - Positionstack
 	 - [Geocoding](https://positionstack.com/documentation#forward_geocoding)
 	 - [Reverse Geocoding](https://positionstack.com/documentation#reverse_geocoding)
@@ -54,6 +58,7 @@ The configuration and sample usage for each supported interface can be found wit
  - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)
  - [MapQuest](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapQuest)
+ - [Nominatim](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Nominatim)
  - [Positionstack](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Positionstack)
  - [Radar](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Radar)
 

@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0;net10.0</TargetFrameworks>
     <Authors>Justin Canton</Authors>
     <Company>Geo.NET</Company>
-    <Product>Geo.NET MapQuest</Product>
-    <PackageTags>geocoding geo.net mapquest</PackageTags>
-    <Description>A lightweight method for communicating with the MapQuest geocoding APIs. This includes models and interfaces for calling MapQuest.</Description>
+    <Product>Geo.NET Nominatim</Product>
+    <PackageTags>geocoding geo.net nominatim openstreetmap</PackageTags>
+    <Description>A lightweight method for communicating with the Nominatim geocoding APIs of OpenStreetMap. This includes models and interfaces for calling Nominatim, against the public instance or a self hosted one.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/JustinCanton/Geo.NET</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

@@ -39,7 +39,9 @@ namespace Geo.Extensions.DependencyInjection
 
             services.Configure<NominatimOptions>(x =>
             {
+                x.Server = NominatimOptions.DefaultServer;
                 x.Email = null;
+                x.UserAgent = null;
             });
 
             return new NominatimBuilder(services.AddHttpClient<INominatimGeocoding, NominatimGeocoding>());

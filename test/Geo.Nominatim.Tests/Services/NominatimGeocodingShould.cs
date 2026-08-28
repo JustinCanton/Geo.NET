@@ -491,6 +491,203 @@ namespace Geo.Nominatim.Tests.Services
         }
 
         /// <summary>
+        /// Tests the default public Nominatim instance is used when no server is configured.
+        /// </summary>
+        [Fact]
+        public void BuildEndpointUri_WithNoConfiguredServer_UsesThePublicInstance()
+        {
+            var sut = BuildService(new NominatimOptions() { Server = null });
+
+            var uri = sut.BuildEndpointUri("search").Uri;
+
+            uri.AbsoluteUri.Should().Be("https://nominatim.openstreetmap.org/search");
+        }
+
+        /// <summary>
+        /// Tests an alternative publicly hosted Nominatim instance is used when it is configured.
+        /// </summary>
+        [Fact]
+        public void BuildEndpointUri_WithAlternatePublicServer_UsesThatServer()
+        {
+            var sut = BuildService(new NominatimOptions() { Server = "https://nominatim.qgis.org" });
+
+            var uri = sut.BuildEndpointUri("reverse").Uri;
+
+            uri.AbsoluteUri.Should().Be("https://nominatim.qgis.org/reverse");
+        }
+
+        /// <summary>
+        /// Tests a self hosted Nominatim instance served under a path keeps that path.
+        /// </summary>
+        [Fact]
+        public void BuildEndpointUri_WithSelfHostedServerUnderAPath_KeepsThePath()
+        {
+            var sut = BuildService(new NominatimOptions() { Server = "https://my-server.example.com/nominatim/" });
+
+            var uri = sut.BuildEndpointUri("lookup").Uri;
+
+            uri.AbsoluteUri.Should().Be("https://my-server.example.com/nominatim/lookup");
+        }
+
+        /// <summary>
+        /// Tests a self hosted Nominatim instance on a non standard port is used as configured.
+        /// </summary>
+        [Fact]
+        public void BuildEndpointUri_WithSelfHostedServerOnAPort_UsesThatServer()
+        {
+            var sut = BuildService(new NominatimOptions() { Server = "http://localhost:8080" });
+
+            var uri = sut.BuildEndpointUri("search").Uri;
+
+            uri.AbsoluteUri.Should().Be("http://localhost:8080/search");
+        }
+
+        /// <summary>
+        /// Tests the configured server is used when building each of the request types.
+        /// </summary>
+        [Fact]
+        public void BuildRequests_WithConfiguredServer_UseThatServer()
+        {
+            var sut = BuildService(new NominatimOptions() { Server = "https://my-server.example.com/nominatim" });
+
+            var searchParameters = new SearchParameters() { Query = "Berlin" };
+            var reverseParameters = new ReverseGeocodingParameters() { Latitude = 52.517037, Longitude = 13.388860 };
+            var lookupParameters = new LookupParameters();
+            lookupParameters.OsmIds.Add("N240109189");
+
+            sut.BuildSearchRequest(searchParameters).AbsoluteUri
+                .Should().StartWith("https://my-server.example.com/nominatim/search?");
+            sut.BuildReverseGeocodeRequest(reverseParameters).AbsoluteUri
+                .Should().StartWith("https://my-server.example.com/nominatim/reverse?");
+            sut.BuildLookupRequest(lookupParameters).AbsoluteUri
+                .Should().StartWith("https://my-server.example.com/nominatim/lookup?");
+        }
+
+        /// <summary>
+        /// Tests no email parameter is sent when no email has been configured or supplied.
+        /// </summary>
+        [Fact]
+        public void AddEmail_WithNoEmailConfigured_DoesNotAddTheParameter()
+        {
+            var sut = BuildService(new NominatimOptions() { Email = null });
+
+            var query = QueryString.Empty;
+            sut.AddEmail(new SearchParameters(), ref query);
+
+            query.HasValue.Should().BeFalse();
+        }
+
+        /// <summary>
+        /// Tests no email parameter is present on a built request when no email has been configured.
+        /// </summary>
+        [Fact]
+        public void BuildSearchRequest_WithNoEmailConfigured_DoesNotAddTheParameter()
+        {
+            var sut = BuildService(new NominatimOptions() { Email = null });
+
+            var uri = sut.BuildSearchRequest(new SearchParameters() { Query = "Berlin" });
+
+            HttpUtility.UrlDecode(uri.PathAndQuery).Should().NotContain("email=");
+        }
+
+        /// <summary>
+        /// Tests the zoom parameter is omitted when no zoom is supplied.
+        /// </summary>
+        [Fact]
+        public void BuildReverseGeocodeRequest_WithNoZoom_DoesNotAddTheParameter()
+        {
+            var sut = BuildService();
+
+            var uri = sut.BuildReverseGeocodeRequest(new ReverseGeocodingParameters()
+            {
+                Latitude = 52.517037,
+                Longitude = 13.388860,
+                Zoom = null,
+            });
+
+            HttpUtility.UrlDecode(uri.PathAndQuery).Should().NotContain("zoom=");
+        }
+
+        /// <summary>
+        /// Tests the additional parameters are added to each of the request types.
+        /// </summary>
+        [Fact]
+        public void BuildRequests_WithAdditionalParameters_AddThemToTheQueryString()
+        {
+            var sut = BuildService();
+
+            var searchParameters = new SearchParameters() { Query = "Berlin" };
+            searchParameters.AdditionalParameters.Add("customKey1", "customValue1");
+
+            var reverseParameters = new ReverseGeocodingParameters() { Latitude = 52.517037, Longitude = 13.388860 };
+            reverseParameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var lookupParameters = new LookupParameters();
+            lookupParameters.OsmIds.Add("N240109189");
+            lookupParameters.AdditionalParameters.Add("customKey3", "customValue3");
+
+            HttpUtility.UrlDecode(sut.BuildSearchRequest(searchParameters).PathAndQuery)
+                .Should().Contain("customKey1=customValue1");
+            HttpUtility.UrlDecode(sut.BuildReverseGeocodeRequest(reverseParameters).PathAndQuery)
+                .Should().Contain("customKey2=customValue2");
+            HttpUtility.UrlDecode(sut.BuildLookupRequest(lookupParameters).PathAndQuery)
+                .Should().Contain("customKey3=customValue3");
+        }
+
+        /// <summary>
+        /// Tests the configured user agent is applied to the http client.
+        /// </summary>
+        [Fact]
+        public void AddUserAgent_WithConfiguredUserAgent_SetsTheHeader()
+        {
+            using (var client = new HttpClient(new Mock<HttpMessageHandler>().Object))
+            {
+                var options = new Mock<IOptions<NominatimOptions>>();
+                options.Setup(x => x.Value).Returns(new NominatimOptions() { UserAgent = "MyApplication/1.0" });
+
+                _ = new NominatimGeocoding(client, options.Object);
+
+                client.DefaultRequestHeaders.UserAgent.ToString().Should().Be("MyApplication/1.0");
+            }
+        }
+
+        /// <summary>
+        /// Tests a user agent already set on the http client is not overwritten.
+        /// </summary>
+        [Fact]
+        public void AddUserAgent_WithUserAgentAlreadyOnTheClient_DoesNotOverwriteIt()
+        {
+            using (var client = new HttpClient(new Mock<HttpMessageHandler>().Object))
+            {
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "ConfiguredElsewhere/2.0");
+
+                var options = new Mock<IOptions<NominatimOptions>>();
+                options.Setup(x => x.Value).Returns(new NominatimOptions() { UserAgent = "MyApplication/1.0" });
+
+                _ = new NominatimGeocoding(client, options.Object);
+
+                client.DefaultRequestHeaders.UserAgent.ToString().Should().Be("ConfiguredElsewhere/2.0");
+            }
+        }
+
+        /// <summary>
+        /// Tests no user agent is set on the http client when none is configured.
+        /// </summary>
+        [Fact]
+        public void AddUserAgent_WithNoConfiguredUserAgent_LeavesTheHeaderUnset()
+        {
+            using (var client = new HttpClient(new Mock<HttpMessageHandler>().Object))
+            {
+                var options = new Mock<IOptions<NominatimOptions>>();
+                options.Setup(x => x.Value).Returns(new NominatimOptions() { UserAgent = null });
+
+                _ = new NominatimGeocoding(client, options.Object);
+
+                client.DefaultRequestHeaders.UserAgent.Count.Should().Be(0);
+            }
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         /// <param name="disposing">A boolean flag indicating whether or not to dispose of objects.</param>
@@ -517,6 +714,14 @@ namespace Geo.Nominatim.Tests.Services
         private NominatimGeocoding BuildService()
         {
             return new NominatimGeocoding(_httpClient, _options.Object);
+        }
+
+        private NominatimGeocoding BuildService(NominatimOptions options)
+        {
+            var serviceOptions = new Mock<IOptions<NominatimOptions>>();
+            serviceOptions.Setup(x => x.Value).Returns(options);
+
+            return new NominatimGeocoding(_httpClient, serviceOptions.Object);
         }
     }
 }
