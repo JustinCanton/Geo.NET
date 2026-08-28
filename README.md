@@ -14,6 +14,10 @@ The support for this project includes:
 	 - [Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query)
 	 - [Reverse Geocoding](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-point)
 	 - [By Address](https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-address)
+ - Geoapify
+	 - [Geocoding](https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/)
+	 - [Reverse Geocoding](https://apidocs.geoapify.com/docs/geocoding/reverse-geocoding/)
+	 - [Autocomplete](https://apidocs.geoapify.com/docs/geocoding/address-autocomplete/)
  - Google
 	 - [Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
 	 - [Reverse Geocoding](https://developers.google.com/maps/documentation/geocoding/start)
@@ -50,6 +54,7 @@ The configuration and sample usage for each supported interface can be found wit
 
  - [ArcGIS](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.ArcGIS)
  - [Bing](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Bing)
+ - [Geoapify](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Geoapify)
  - [Google](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Google)
  - [HERE](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.Here)
  - [MapBox](https://github.com/JustinCanton/Geo.NET/tree/master/src/Geo.MapBox)

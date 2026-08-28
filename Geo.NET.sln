@@ -61,6 +61,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.OpenRouteService", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.OpenRouteService.Tests", "test\Geo.OpenRouteService.Tests\Geo.OpenRouteService.Tests.csproj", "{F62B53A7-CD72-6BDD-4F81-5E2B2F9A044E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Geoapify", "src\Geo.Geoapify\Geo.Geoapify.csproj", "{C7E3DF3A-B271-4EBA-942D-3D1770C63279}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Geoapify.Tests", "test\Geo.Geoapify.Tests\Geo.Geoapify.Tests.csproj", "{044FBED3-E719-4CD1-8592-E8E5817B9191}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +159,14 @@ Global
 		{F62B53A7-CD72-6BDD-4F81-5E2B2F9A044E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F62B53A7-CD72-6BDD-4F81-5E2B2F9A044E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F62B53A7-CD72-6BDD-4F81-5E2B2F9A044E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7E3DF3A-B271-4EBA-942D-3D1770C63279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7E3DF3A-B271-4EBA-942D-3D1770C63279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7E3DF3A-B271-4EBA-942D-3D1770C63279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7E3DF3A-B271-4EBA-942D-3D1770C63279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{044FBED3-E719-4CD1-8592-E8E5817B9191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{044FBED3-E719-4CD1-8592-E8E5817B9191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{044FBED3-E719-4CD1-8592-E8E5817B9191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{044FBED3-E719-4CD1-8592-E8E5817B9191}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -182,6 +194,8 @@ Global
 		{B2D5A7F3-6E1C-4B9A-8D2F-3C7E5A1B4D60} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 		{A93DD279-64E8-EBD9-8A86-C3009B3477D9} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
 		{F62B53A7-CD72-6BDD-4F81-5E2B2F9A044E} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
+		{C7E3DF3A-B271-4EBA-942D-3D1770C63279} = {8F3BA9BC-542C-450C-96C9-F0D72FECC930}
+		{044FBED3-E719-4CD1-8592-E8E5817B9191} = {67253D97-9FC9-4749-80DC-A5D84339DC05}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4B688C4-40EC-4577-9EB2-4CF2412DA0B1}
