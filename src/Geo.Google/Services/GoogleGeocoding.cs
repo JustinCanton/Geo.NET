@@ -232,9 +232,21 @@ namespace Geo.Google.Services
                 _logger.GoogleDebug(Resources.Services.GoogleGeocoding.Invalid_Region);
             }
 
+            if (parameters.ExtraComputations != null)
+            {
+                foreach (var computation in parameters.ExtraComputations)
+                {
+                    if (!string.IsNullOrWhiteSpace(computation))
+                    {
+                        query = query.Add("extra_computations", computation);
+                    }
+                }
+            }
+
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -300,9 +312,21 @@ namespace Geo.Google.Services
                 _logger.GoogleDebug(Resources.Services.GoogleGeocoding.Invalid_Location_Types);
             }
 
+            if (parameters.ExtraComputations != null)
+            {
+                foreach (var computation in parameters.ExtraComputations)
+                {
+                    if (!string.IsNullOrWhiteSpace(computation))
+                    {
+                        query = query.Add("extra_computations", computation);
+                    }
+                }
+            }
+
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -371,6 +395,7 @@ namespace Geo.Google.Services
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -439,6 +464,7 @@ namespace Geo.Google.Services
             AddBaseSearchParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -476,6 +502,7 @@ namespace Geo.Google.Services
             AddBaseSearchParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -528,9 +555,22 @@ namespace Geo.Google.Services
                 _logger.GoogleDebug(Resources.Services.GoogleGeocoding.Invalid_Fields);
             }
 
+            if (parameters.ReviewsNoTranslations.HasValue)
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                query = query.Add("reviews_no_translations", parameters.ReviewsNoTranslations.Value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.ReviewsSort))
+            {
+                query = query.Add("reviews_sort", parameters.ReviewsSort);
+            }
+
             AddBaseParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -594,9 +634,26 @@ namespace Geo.Google.Services
             query = query.Add("strictbounds", parameters.StrictBounds.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
+            if (parameters.LocationRestriction != null)
+            {
+                switch (parameters.LocationRestriction)
+                {
+                    case Circle circle:
+                        query = query.Add("locationrestriction", $"circle:{circle}");
+                        break;
+                    case Boundaries boundary:
+                        query = query.Add("locationrestriction", $"rectangle:{boundary}");
+                        break;
+                    default:
+                        _logger.GoogleWarning(Resources.Services.GoogleGeocoding.Invalid_Location_Bias_Type);
+                        break;
+                }
+            }
+
             AddAutocompleteParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -623,6 +680,7 @@ namespace Geo.Google.Services
             AddAutocompleteParameters(parameters, ref query);
 
             AddGoogleKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

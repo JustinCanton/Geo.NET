@@ -126,6 +126,7 @@ namespace Geo.Bing.Services
             BuildLimitedResultQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -194,9 +195,15 @@ namespace Geo.Bing.Services
                 _logger.BingDebug(Resources.Services.BingGeocoding.Do_Not_Include_Entity_Types);
             }
 
+            if (parameters.VerbosePlaceNames)
+            {
+                query = query.Add("verboseplacenames", "true");
+            }
+
             BuildBaseQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -272,6 +279,7 @@ namespace Geo.Bing.Services
             BuildLimitedResultQuery(parameters, ref query);
 
             AddBingKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -292,6 +300,11 @@ namespace Geo.Bing.Services
             else
             {
                 _logger.BingWarning(Resources.Services.BingGeocoding.Invalid_Maximum_Results);
+            }
+
+            if (parameters.StrictMatch)
+            {
+                query = query.Add("strictMatch", "1");
             }
 
             BuildBaseQuery(parameters, ref query);
@@ -340,6 +353,21 @@ namespace Geo.Bing.Services
             else
             {
                 _logger.BingDebug(Resources.Services.BingGeocoding.Invalid_Culture);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.UserLocation))
+            {
+                query = query.Add("userLocation", parameters.UserLocation);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.UserIp))
+            {
+                query = query.Add("userIp", parameters.UserIp);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.UserMapView))
+            {
+                query = query.Add("usermapView", parameters.UserMapView);
             }
         }
 

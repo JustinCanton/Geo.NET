@@ -278,6 +278,25 @@ namespace Geo.ArcGIS.Tests.Services
 #endif
         }
 
+        [Fact]
+        public async Task BuildAddressCandidateRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new AddressCandidateParameters()
+            {
+                SingleLineAddress = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildAddressCandidateRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the place candidate uri is built properly.
         /// </summary>
@@ -319,6 +338,160 @@ namespace Geo.ArcGIS.Tests.Services
             query.Should().Contain("token=token123");
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        [Fact]
+        public async Task BuildPlaceCandidateRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new PlaceCandidateParameters();
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildPlaceCandidateRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        /// <summary>
+        /// Tests the findAddressCandidates uri is built properly using a single-line address.
+        /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        /// <returns>A <see cref="Task"/> with the results.</returns>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildFindAddressCandidatesRequestWithSingleLineSuccessfully(CultureInfo culture)
+        {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
+            var sut = BuildService();
+
+            var parameters = new FindAddressCandidatesParameters()
+            {
+                SingleLineAddress = "123 East",
+                MagicKey = "myMagicKey",
+                Location = new Coordinate()
+                {
+                    Latitude = 56.789,
+                    Longitude = 123.456,
+                },
+                SearchExtent = new BoundingBox()
+                {
+                    EastLongitude = 123.456,
+                    WestLongitude = 121.323,
+                    NorthLatitude = 67.89,
+                    SouthLatitude = 65.432,
+                },
+                MaximumLocations = 5,
+                OutSpatialReference = 12345,
+                LanguageCode = new CultureInfo("en-CA"),
+                ForStorage = true,
+            };
+
+            parameters.SourceCountry.Add(new RegionInfo("FR"));
+
+            // Act
+            var uri = await sut.BuildFindAddressCandidatesRequest(parameters, CancellationToken.None);
+
+            // Assert
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("f=json");
+            query.Should().Contain("outFields=Match_addr,Addr_type");
+            query.Should().Contain("singleLine=123 East");
+            query.Should().Contain("magicKey=myMagicKey");
+            query.Should().Contain("location=123.456,56.789");
+            query.Should().Contain("searchExtent=121.323,67.89,123.456,65.432");
+            query.Should().Contain("maxLocations=5");
+            query.Should().Contain("outSR=12345");
+            query.Should().Contain("langCode=en");
+            query.Should().Contain("locationType=rooftop");
+            query.Should().Contain("preferredLabelValues=postalCity");
+            query.Should().Contain("sourceCountry=FRA");
+            query.Should().Contain("forStorage=true");
+            query.Should().Contain("token=token123");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        /// <summary>
+        /// Tests the findAddressCandidates uri is built properly using structured address fields.
+        /// </summary>
+        /// <param name="culture">The culture to set the current running thread to.</param>
+        /// <returns>A <see cref="Task"/> with the results.</returns>
+        [Theory]
+        [ClassData(typeof(CultureTestData))]
+        public async Task BuildFindAddressCandidatesRequestWithStructuredAddressSuccessfully(CultureInfo culture)
+        {
+            // Arrange
+            var oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
+            var sut = BuildService();
+
+            var parameters = new FindAddressCandidatesParameters()
+            {
+                Address = "123 East",
+                Address2 = "Suite 100",
+                Address3 = "Building C",
+                Neighbourhood = "Downtown",
+                City = "Eastville",
+                Subregion = "East County",
+                Region = "East State",
+                Postal = "12345",
+                PostalExt = "6789",
+                CountryCode = "USA",
+                Category = "restaurant",
+                OutSpatialReference = 12345,
+                ForStorage = false,
+            };
+
+            // Act
+            var uri = await sut.BuildFindAddressCandidatesRequest(parameters, CancellationToken.None);
+
+            // Assert
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("f=json");
+            query.Should().Contain("address=123 East");
+            query.Should().Contain("address2=Suite 100");
+            query.Should().Contain("address3=Building C");
+            query.Should().Contain("neighborhood=Downtown");
+            query.Should().Contain("city=Eastville");
+            query.Should().Contain("subregion=East County");
+            query.Should().Contain("region=East State");
+            query.Should().Contain("postal=12345");
+            query.Should().Contain("postalExt=6789");
+            query.Should().Contain("countryCode=USA");
+            query.Should().Contain("category=restaurant");
+            query.Should().Contain("outSR=12345");
+            query.Should().Contain("forStorage=false");
+            query.Should().Contain("token=token123");
+            query.Should().NotContain("singleLine");
+
+            Thread.CurrentThread.CurrentCulture = oldCulture;
+        }
+
+        /// <summary>
+        /// Tests the findAddressCandidates uri isn't built if neither a single-line address nor any structured address field is provided.
+        /// </summary>
+        [Fact]
+        public void BuildFindAddressCandidatesRequestWithException()
+        {
+            var sut = BuildService();
+
+            Action act = () => sut.BuildFindAddressCandidatesRequest(new FindAddressCandidatesParameters(), CancellationToken.None).GetAwaiter().GetResult();
+
+            act.Should()
+                .Throw<ArgumentException>()
+#if NETCOREAPP3_1_OR_GREATER
+                .WithMessage("*(Parameter 'SingleLineAddress')");
+#else
+                .WithMessage("*Parameter name: SingleLineAddress");
+#endif
         }
 
         /// <summary>
@@ -388,6 +561,25 @@ namespace Geo.ArcGIS.Tests.Services
 #endif
         }
 
+        [Fact]
+        public async Task BuildSuggestRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new SuggestParameters()
+            {
+                Text = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildSuggestRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the reverse geocoding uri is built properly.
         /// </summary>
@@ -454,6 +646,29 @@ namespace Geo.ArcGIS.Tests.Services
 #else
                 .WithMessage("*Parameter name: Location");
 #endif
+        }
+
+        [Fact]
+        public async Task BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Location = new Coordinate()
+                {
+                    Latitude = 80.012,
+                    Longitude = 123.456,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildReverseGeocodingRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>
@@ -535,6 +750,56 @@ namespace Geo.ArcGIS.Tests.Services
 #else
                 .WithMessage("*Parameter name: AddressAttributes");
 #endif
+        }
+
+        [Fact]
+        public async Task BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters();
+
+            parameters.AddressAttributes.Add(
+                new AddressAttributeParameter()
+                {
+                    ObjectId = 1,
+                    SingleLine = "123 East",
+                });
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        /// <summary>
+        /// Tests the geocoding uri includes outFields when the parameter is set.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> with the results.</returns>
+        [Fact]
+        public async Task BuildGeocodingRequestWithOutFieldsSuccessfully()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                OutFields = "*",
+            };
+
+            parameters.AddressAttributes.Add(
+                new AddressAttributeParameter()
+                {
+                    ObjectId = 1,
+                    SingleLine = "123 East",
+                });
+
+            var uri = await sut.BuildGeocodingRequest(parameters, CancellationToken.None);
+
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("outFields=*");
         }
 
         /// <summary>
@@ -640,8 +905,50 @@ namespace Geo.ArcGIS.Tests.Services
             response.Candidates.Count.Should().Be(1);
             response.SpatialReference.WellKnownID.Should().Be(4326);
             response.Candidates[0].Attributes.Should().NotBeNull();
-            (response.Candidates[0].Attributes as LocationAttribute).Country.Should().Be("United States of America");
-            (response.Candidates[0].Attributes as LocationAttribute).CountryCode.Should().Be("USA");
+            response.Candidates[0].Attributes.Country.Should().Be("United States of America");
+            response.Candidates[0].Attributes.CountryCode.Should().Be("USA");
+        }
+
+        /// <summary>
+        /// Tests the findAddressCandidates returns a response successfully using a single-line address.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Fact]
+        public async Task FindAddressCandidatesAsyncWithSingleLineSuccessfully()
+        {
+            var sut = BuildService();
+
+            var parameters = new FindAddressCandidatesParameters()
+            {
+                SingleLineAddress = "123 East",
+            };
+
+            var response = await sut.FindAddressCandidatesAsync(parameters);
+            response.Candidates.Count.Should().Be(1);
+            response.SpatialReference.WellKnownID.Should().Be(4326);
+            response.Candidates[0].Attributes.Should().NotBeNull();
+            response.Candidates[0].Attributes.Country.Should().Be("United States of America");
+            response.Candidates[0].Attributes.CountryCode.Should().Be("USA");
+        }
+
+        /// <summary>
+        /// Tests the findAddressCandidates returns a response successfully using structured address fields.
+        /// </summary>
+        /// <returns>A <see cref="Task"/>.</returns>
+        [Fact]
+        public async Task FindAddressCandidatesAsyncWithStructuredAddressSuccessfully()
+        {
+            var sut = BuildService();
+
+            var parameters = new FindAddressCandidatesParameters()
+            {
+                City = "Eastville",
+                Category = "restaurants",
+            };
+
+            var response = await sut.FindAddressCandidatesAsync(parameters);
+            response.Candidates.Count.Should().Be(0);
+            response.SpatialReference.WellKnownID.Should().Be(4326);
         }
 
         /// <summary>

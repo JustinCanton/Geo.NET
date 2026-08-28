@@ -130,7 +130,14 @@ namespace Geo.Radar.Services
 
             AddCountry(parameters, ref query);
             AddLayers(parameters, ref query);
+
+            if (!string.IsNullOrWhiteSpace(parameters.Language))
+            {
+                query = query.Add("lang", parameters.Language);
+            }
+
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -158,6 +165,7 @@ namespace Geo.Radar.Services
 
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -203,9 +211,19 @@ namespace Geo.Radar.Services
 
             query = query.Add("mailable", parameters.Mailable.ToString().ToLowerInvariant());
 
-            AddCountry(parameters, ref query);
+            var autocompleteCountries = string.Join(",", parameters.Countries ?? Array.Empty<string>());
+            if (!string.IsNullOrWhiteSpace(autocompleteCountries))
+            {
+                query = query.Add("countryCode", autocompleteCountries);
+            }
+            else
+            {
+                _logger.RadarDebug(Resources.Services.RadarGeocoding.Invalid_Country);
+            }
+
             AddLayers(parameters, ref query);
             AddRadarKey(parameters);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

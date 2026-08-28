@@ -714,6 +714,25 @@ namespace Geo.Here.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodeParameters()
+            {
+                Query = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the building of the reverse geocoding parameters is done successfully.
         /// </summary>
@@ -815,6 +834,29 @@ namespace Geo.Here.Tests.Services
         /// Tests the building of the reverse geocoding parameters fails if no query is provided.
         /// </summary>
         [Fact]
+        public void BuildReverseGeocodingRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodeParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 56.78,
+                    Longitude = 78.91,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildReverseGeocodingRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        [Fact]
         public void BuildReverseGeocodingRequest_WithBothInAndAt_FailsWithException()
         {
             var sut = BuildService();
@@ -910,6 +952,30 @@ namespace Geo.Here.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildDiscoverRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new DiscoverParameters()
+            {
+                Query = "123 East",
+                At = new Coordinate()
+                {
+                    Latitude = 54.2,
+                    Longitude = 45.2,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildDiscoverRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the building of the autosuggest parameters is done successfully.
         /// </summary>
@@ -975,6 +1041,30 @@ namespace Geo.Here.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildAutosuggestRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new AutosuggestParameters()
+            {
+                Query = "123 East",
+                At = new Coordinate()
+                {
+                    Latitude = 54.2,
+                    Longitude = 45.2,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildAutosuggestRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the building of the browse parameters is done successfully.
         /// </summary>
@@ -1038,6 +1128,29 @@ namespace Geo.Here.Tests.Services
 #endif
         }
 
+        [Fact]
+        public void BuildBrowseRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new BrowseParameters()
+            {
+                At = new Coordinate()
+                {
+                    Latitude = 54.2,
+                    Longitude = 45.2,
+                },
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildBrowseRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the building of the lookup parameters is done successfully.
         /// </summary>
@@ -1087,6 +1200,25 @@ namespace Geo.Here.Tests.Services
 #else
                 .WithMessage("*Parameter name: Id");
 #endif
+        }
+
+        [Fact]
+        public void BuildLookupRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new LookupParameters()
+            {
+                Id = "12345sudfinm",
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildLookupRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
         }
 
         /// <summary>

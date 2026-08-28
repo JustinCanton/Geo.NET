@@ -33,6 +33,8 @@ namespace Geo.MapBox.Services
         private const string ReverseGeocodeUri = "https://api.mapbox.com/geocoding/v5/{0}/{1}.json";
         private const string PlacesEndpoint = "mapbox.places";
         private const string PermanentEndpoint = "mapbox.places-permanent";
+        private const string GeocodeV6Uri = "https://api.mapbox.com/search/geocode/v6/forward";
+        private const string ReverseGeocodeV6Uri = "https://api.mapbox.com/search/geocode/v6/reverse";
 
         private readonly IOptions<KeyOptions<IMapBoxGeocoding>> _options;
         private readonly ILogger<MapBoxGeocoding> _logger;
@@ -72,6 +74,26 @@ namespace Geo.MapBox.Services
             CancellationToken cancellationToken = default)
         {
             var uri = ValidateAndBuildUri<ReverseGeocodingParameters>(parameters, BuildReverseGeocodingRequest);
+
+            return await GetAsync<Response<Coordinate>>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Response<List<string>>> GeocodingV6Async(
+            GeocodingV6Parameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var uri = ValidateAndBuildUri<GeocodingV6Parameters>(parameters, BuildGeocodingV6Request);
+
+            return await GetAsync<Response<List<string>>>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Response<Coordinate>> ReverseGeocodingV6Async(
+            ReverseGeocodingV6Parameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var uri = ValidateAndBuildUri<ReverseGeocodingV6Parameters>(parameters, BuildReverseGeocodingV6Request);
 
             return await GetAsync<Response<Coordinate>>(uri, cancellationToken).ConfigureAwait(false);
         }
@@ -149,6 +171,7 @@ namespace Geo.MapBox.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -179,10 +202,146 @@ namespace Geo.MapBox.Services
             AddBaseParameters(parameters, ref query);
 
             AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
             return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the Geocoding API v6 forward geocoding uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="GeocodingV6Parameters"/> with the v6 geocoding parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed MapBox v6 geocoding uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Query' parameter is null or invalid.</exception>
+        internal Uri BuildGeocodingV6Request(GeocodingV6Parameters parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters.Query))
+            {
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Invalid_Query);
+                throw new ArgumentException(Resources.Services.MapBoxGeocoding.Invalid_Query, nameof(parameters.Query));
+            }
+
+            var uriBuilder = new UriBuilder(GeocodeV6Uri);
+            var query = QueryString.Empty;
+
+            query = query.Add("q", parameters.Query);
+
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query = query.Add("permanent", parameters.Permanent.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+            if (parameters.Autocomplete.HasValue)
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                query = query.Add("autocomplete", parameters.Autocomplete.Value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+
+            if (parameters.BoundingBox != null)
+            {
+                query = query.Add("bbox", parameters.BoundingBox.ToString());
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Format))
+            {
+                query = query.Add("format", parameters.Format);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Proximity))
+            {
+                query = query.Add("proximity", parameters.Proximity);
+            }
+
+            if (parameters.Entrances.HasValue)
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                query = query.Add("entrances", parameters.Entrances.Value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+
+            AddBaseV6Parameters(parameters.Countries, parameters.Languages, parameters.Limit, parameters.Types, parameters.Worldview, ref query);
+
+            AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
+
+            uriBuilder.AddQuery(query);
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Builds the Geocoding API v6 reverse geocoding uri based on the passed parameters.
+        /// </summary>
+        /// <param name="parameters">A <see cref="ReverseGeocodingV6Parameters"/> with the v6 reverse geocoding parameters to build the uri with.</param>
+        /// <returns>A <see cref="Uri"/> with the completed MapBox v6 reverse geocoding uri.</returns>
+        /// <exception cref="ArgumentException">Thrown when the 'Coordinate' parameter is null or invalid.</exception>
+        internal Uri BuildReverseGeocodingV6Request(ReverseGeocodingV6Parameters parameters)
+        {
+            if (parameters.Coordinate is null)
+            {
+                _logger.MapBoxError(Resources.Services.MapBoxGeocoding.Invalid_Coordinate);
+                throw new ArgumentException(Resources.Services.MapBoxGeocoding.Invalid_Coordinate, nameof(parameters.Coordinate));
+            }
+
+            var uriBuilder = new UriBuilder(ReverseGeocodeV6Uri);
+            var query = QueryString.Empty;
+
+            query = query.Add("longitude", parameters.Coordinate.Longitude.ToString(CultureInfo.InvariantCulture));
+            query = query.Add("latitude", parameters.Coordinate.Latitude.ToString(CultureInfo.InvariantCulture));
+
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            query = query.Add("permanent", parameters.Permanent.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+            AddBaseV6Parameters(parameters.Countries, parameters.Languages, parameters.Limit, parameters.Types, parameters.Worldview, ref query);
+
+            AddMapBoxKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
+
+            uriBuilder.AddQuery(query);
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Adds shared v6 query parameters (countries, languages, limit, types, worldview).
+        /// </summary>
+        internal void AddBaseV6Parameters(
+            IList<RegionInfo> countries,
+            IList<CultureInfo> languages,
+            uint? limit,
+            IList<FeatureType> types,
+            string worldview,
+            ref QueryString query)
+        {
+            if (countries != null && countries.Count > 0)
+            {
+                query = query.Add("country", string.Join(",", countries.Select(x => x.TwoLetterISORegionName)));
+            }
+
+            if (languages != null && languages.Count > 0)
+            {
+                query = query.Add("language", string.Join(",", languages.Select(x => x.Name)));
+            }
+
+            if (limit.HasValue && limit.Value > 0)
+            {
+                query = query.Add("limit", limit.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (types != null && types.Count > 0)
+            {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                query = query.Add("types", string.Join(",", types.Select(x => x.ToString().ToLowerInvariant())));
+#pragma warning restore CA1308 // Normalize strings to uppercase
+            }
+
+            if (!string.IsNullOrWhiteSpace(worldview))
+            {
+                query = query.Add("worldview", worldview);
+            }
         }
 
         /// <summary>

@@ -1047,6 +1047,29 @@ namespace Geo.Google.Tests.Services
             _disposed = true;
         }
 
+        /// <summary>
+        /// Tests the additional parameters are properly included in the geocoding request uri.
+        /// </summary>
+        [Fact]
+        public void BuildGeocodingRequest_WithAdditionalParameters_IncludesThemInUri()
+        {
+            var sut = BuildService();
+
+            var parameters = new GeocodingParameters()
+            {
+                Address = "123 East",
+            };
+
+            parameters.AdditionalParameters.Add("custom_param", "custom_value");
+            parameters.AdditionalParameters.Add("version", "2");
+
+            var uri = sut.BuildGeocodingRequest(parameters);
+
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+            query.Should().Contain("custom_param=custom_value");
+            query.Should().Contain("version=2");
+        }
+
         private GoogleGeocoding BuildService()
         {
             return new GoogleGeocoding(_httpClient, _options.Object);

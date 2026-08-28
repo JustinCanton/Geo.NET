@@ -1,4 +1,4 @@
-﻿// <copyright file="Address.cs" company="Geo.NET">
+// <copyright file="Address.cs" company="Geo.NET">
 // Copyright (c) Geo.NET.
 // Licensed under the MIT license. See the LICENSE file in the solution root for full license information.
 // </copyright>
@@ -8,7 +8,7 @@ namespace Geo.ArcGIS.Models.Responses
     using System.Text.Json.Serialization;
 
     /// <summary>
-    /// The address information.
+    /// The address information returned by a reverseGeocode request.
     /// </summary>
     public class Address
     {
@@ -109,6 +109,12 @@ namespace Geo.ArcGIS.Models.Responses
         public string Region { get; set; }
 
         /// <summary>
+        /// Gets or sets the abbreviated region (e.g. CA for California).
+        /// </summary>
+        [JsonPropertyName("RegionAbbr")]
+        public string RegionAbbreviation { get; set; }
+
+        /// <summary>
         /// Gets or sets the territory of the address.
         /// </summary>
         [JsonPropertyName("Territory")]
@@ -137,5 +143,41 @@ namespace Geo.ArcGIS.Models.Responses
         /// </summary>
         [JsonPropertyName("CountryCode")]
         public string CountryCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the longitude of the matched location.
+        /// </summary>
+        [JsonPropertyName("X")]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the latitude of the matched location.
+        /// </summary>
+        [JsonPropertyName("Y")]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the longitude of the input point used for the reverse geocode.
+        /// </summary>
+        [JsonPropertyName("InputX")]
+        public double InputLongitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the latitude of the input point used for the reverse geocode.
+        /// </summary>
+        [JsonPropertyName("InputY")]
+        public double InputLatitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the structure type of the address.
+        /// </summary>
+        [JsonPropertyName("StrucType")]
+        public string StructureType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the structure details of the address.
+        /// </summary>
+        [JsonPropertyName("StrucDet")]
+        public string StructureDetails { get; set; }
     }
 }

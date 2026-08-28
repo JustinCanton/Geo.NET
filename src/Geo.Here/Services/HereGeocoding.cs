@@ -197,6 +197,7 @@ namespace Geo.Here.Services
             AddLocatingParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -242,6 +243,7 @@ namespace Geo.Here.Services
             AddLocatingParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -270,6 +272,7 @@ namespace Geo.Here.Services
             AddBoundingParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -307,6 +310,7 @@ namespace Geo.Here.Services
             AddBoundingParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -351,6 +355,7 @@ namespace Geo.Here.Services
             AddBoundingParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -379,6 +384,7 @@ namespace Geo.Here.Services
             AddBaseParameters(parameters, ref query);
 
             AddHereKey(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

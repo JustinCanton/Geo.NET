@@ -5,6 +5,7 @@
 
 namespace Geo.ArcGIS
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Geo.ArcGIS.Models.Parameters;
@@ -17,12 +18,23 @@ namespace Geo.ArcGIS
     public interface IArcGISGeocoding
     {
         /// <summary>
+        /// Calls the ArcGIS findAddressCandidates API and returns the results.
+        /// Supports both single-line and structured (multi-field) address input.
+        /// </summary>
+        /// <param name="parameters">A <see cref="FindAddressCandidatesParameters"/> with the parameters of the request.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="CandidateResponse"/> with the response from ArcGIS.</returns>
+        /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        Task<CandidateResponse> FindAddressCandidatesAsync(FindAddressCandidatesParameters parameters, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Calls the ArcGIS address candidate API and returns the results.
         /// </summary>
         /// <param name="parameters">A <see cref="AddressCandidateParameters"/> with the parameters of the request.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="CandidateResponse"/> with the response from ArcGIS.</returns>
         /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        [Obsolete("Use FindAddressCandidatesAsync instead.")]
         Task<CandidateResponse> AddressCandidateAsync(AddressCandidateParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -32,6 +44,7 @@ namespace Geo.ArcGIS
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="CandidateResponse"/> with the response from ArcGIS.</returns>
         /// <exception cref="GeoNETException">Thrown for multiple different reasons. Check the inner exception for more information.</exception>
+        [Obsolete("Use FindAddressCandidatesAsync instead.")]
         Task<CandidateResponse> PlaceCandidateAsync(PlaceCandidateParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>

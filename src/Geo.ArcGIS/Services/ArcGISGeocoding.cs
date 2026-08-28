@@ -61,6 +61,18 @@ namespace Geo.ArcGIS.Services
         protected override string ApiName => "ArcGIS";
 
         /// <inheritdoc/>
+        public async Task<CandidateResponse> FindAddressCandidatesAsync(
+            FindAddressCandidatesParameters parameters,
+            CancellationToken cancellationToken = default)
+        {
+            var uri = await ValidateAndBuildUri<FindAddressCandidatesParameters>(parameters, BuildFindAddressCandidatesRequest, cancellationToken).ConfigureAwait(false);
+
+            return await GetAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+#pragma warning disable CS0618
+        [Obsolete("Use FindAddressCandidatesAsync instead.")]
         public async Task<CandidateResponse> AddressCandidateAsync(
             AddressCandidateParameters parameters,
             CancellationToken cancellationToken = default)
@@ -69,8 +81,11 @@ namespace Geo.ArcGIS.Services
 
             return await GetAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
+#pragma warning restore CS0618
 
         /// <inheritdoc/>
+#pragma warning disable CS0618
+        [Obsolete("Use FindAddressCandidatesAsync instead.")]
         public async Task<CandidateResponse> PlaceCandidateAsync(
             PlaceCandidateParameters parameters,
             CancellationToken cancellationToken = default)
@@ -79,6 +94,7 @@ namespace Geo.ArcGIS.Services
 
             return await GetAsync<CandidateResponse>(uri, cancellationToken).ConfigureAwait(false);
         }
+#pragma warning restore CS0618
 
         /// <inheritdoc/>
         public async Task<SuggestResponse> SuggestAsync(
@@ -154,12 +170,234 @@ namespace Geo.ArcGIS.Services
         }
 
         /// <summary>
+        /// Builds the findAddressCandidates uri based on the passed parameters.
+        /// Supports both single-line and structured (multi-field) address input.
+        /// </summary>
+        /// <param name="parameters">A <see cref="FindAddressCandidatesParameters"/> with the parameters to build the uri with.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
+        /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
+        internal async Task<Uri> BuildFindAddressCandidatesRequest(FindAddressCandidatesParameters parameters, CancellationToken cancellationToken)
+        {
+            var uriBuilder = new UriBuilder(CandidatesUri);
+            var query = QueryString.Empty;
+            query = query.Add("f", "json");
+            query = query.Add("outFields", parameters.OutFields);
+
+            if (!string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
+            {
+                query = query.Add("singleLine", parameters.SingleLineAddress);
+
+                if (!string.IsNullOrWhiteSpace(parameters.MagicKey))
+                {
+                    query = query.Add("magicKey", parameters.MagicKey);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(parameters.Address) ||
+                     !string.IsNullOrWhiteSpace(parameters.Address2) ||
+                     !string.IsNullOrWhiteSpace(parameters.Address3) ||
+                     !string.IsNullOrWhiteSpace(parameters.Neighbourhood) ||
+                     !string.IsNullOrWhiteSpace(parameters.City) ||
+                     !string.IsNullOrWhiteSpace(parameters.Subregion) ||
+                     !string.IsNullOrWhiteSpace(parameters.Region) ||
+                     !string.IsNullOrWhiteSpace(parameters.Postal) ||
+                     !string.IsNullOrWhiteSpace(parameters.PostalExt) ||
+                     !string.IsNullOrWhiteSpace(parameters.CountryCode))
+            {
+                if (!string.IsNullOrWhiteSpace(parameters.Address))
+                {
+                    query = query.Add("address", parameters.Address);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Address2))
+                {
+                    query = query.Add("address2", parameters.Address2);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address2);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Address3))
+                {
+                    query = query.Add("address3", parameters.Address3);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Address3);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Neighbourhood))
+                {
+                    query = query.Add("neighborhood", parameters.Neighbourhood);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Neighbourhood);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.City))
+                {
+                    query = query.Add("city", parameters.City);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_City);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Subregion))
+                {
+                    query = query.Add("subregion", parameters.Subregion);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Subregion);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Region))
+                {
+                    query = query.Add("region", parameters.Region);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Region);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.Postal))
+                {
+                    query = query.Add("postal", parameters.Postal);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Postal);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.PostalExt))
+                {
+                    query = query.Add("postalExt", parameters.PostalExt);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_PostalExt);
+                }
+
+                if (!string.IsNullOrWhiteSpace(parameters.CountryCode))
+                {
+                    query = query.Add("countryCode", parameters.CountryCode);
+                }
+                else
+                {
+                    _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Country_Code);
+                }
+            }
+            else
+            {
+                _logger.ArcGISError(Resources.Services.ArcGISGeocoding.Invalid_Find_Address_Candidates);
+                throw new ArgumentException(Resources.Services.ArcGISGeocoding.Invalid_Find_Address_Candidates, nameof(parameters.SingleLineAddress));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Category))
+            {
+                query = query.Add("category", parameters.Category);
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Category);
+            }
+
+            if (parameters.Location != null)
+            {
+                query = query.Add("location", parameters.Location.ToString());
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Location);
+            }
+
+            if (parameters.SearchExtent != null)
+            {
+                query = query.Add("searchExtent", parameters.SearchExtent.ToString());
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Search_Extent);
+            }
+
+            if (parameters.MaximumLocations > 0 && parameters.MaximumLocations <= 50)
+            {
+                query = query.Add("maxLocations", parameters.MaximumLocations.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Maximum_Locations);
+            }
+
+            if (parameters.OutSpatialReference > 0)
+            {
+                query = query.Add("outSR", parameters.OutSpatialReference.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Out_Spatial_Reference);
+            }
+
+            if (parameters.LanguageCode != null)
+            {
+                query = query.Add("langCode", parameters.LanguageCode.TwoLetterISOLanguageName);
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Language_Code);
+            }
+
+            if (parameters.LocationType >= 0)
+            {
+                query = query.Add("locationType", parameters.LocationType.ToEnumString<LocationType>());
+            }
+            else
+            {
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Location_Type);
+            }
+
+            if (parameters.PreferredLabelValue >= 0)
+            {
+                query = query.Add("preferredLabelValues", parameters.PreferredLabelValue.ToEnumString<PreferredLabelValue>());
+            }
+            else
+            {
+                _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
+            }
+
+            if (parameters.SourceCountry.Count != 0)
+            {
+                query = query.Add("sourceCountry", string.Join(",", parameters.SourceCountry.Select(x => x.ThreeLetterISORegionName)));
+            }
+            else
+            {
+                _logger.ArcGISDebug(Resources.Services.ArcGISGeocoding.Invalid_Source_Country);
+            }
+
+            AddStorageParameter(parameters, ref query);
+
+            query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+
+            uriBuilder.AddQuery(query);
+
+            return uriBuilder.Uri;
+        }
+
+        /// <summary>
         /// Builds the address candidate uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="AddressCandidateParameters"/> with the address candidate parameters to build the uri with.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
+#pragma warning disable CS0618
         internal async Task<Uri> BuildAddressCandidateRequest(AddressCandidateParameters parameters, CancellationToken cancellationToken)
+#pragma warning restore CS0618
         {
             if (string.IsNullOrWhiteSpace(parameters.SingleLineAddress))
             {
@@ -182,6 +420,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -194,7 +433,9 @@ namespace Geo.ArcGIS.Services
         /// <param name="parameters">A <see cref="PlaceCandidateParameters"/> with the place candidate parameters to build the uri with.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the request.</param>
         /// <returns>A <see cref="Uri"/> with the completed ArcGIS geocoding uri.</returns>
+#pragma warning disable CS0618
         internal async Task<Uri> BuildPlaceCandidateRequest(PlaceCandidateParameters parameters, CancellationToken cancellationToken)
+#pragma warning restore CS0618
         {
             var uriBuilder = new UriBuilder(CandidatesUri);
             var query = QueryString.Empty;
@@ -357,6 +598,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -446,6 +688,8 @@ namespace Geo.ArcGIS.Services
                 _logger.ArcGISWarning(Resources.Services.ArcGISGeocoding.Invalid_Preferred_Label_Value);
             }
 
+            query = query.AddAdditionalParameters(parameters);
+
             uriBuilder.AddQuery(query);
 
             return Task.FromResult<Uri>(uriBuilder.Uri);
@@ -525,6 +769,7 @@ namespace Geo.ArcGIS.Services
             AddStorageParameter(parameters, ref query);
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -574,6 +819,11 @@ namespace Geo.ArcGIS.Services
 #pragma warning disable CA1308 // Normalize strings to uppercase
             query = query.Add("matchOutOfRange", parameters.MatchOutOfRange.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
+
+            if (!string.IsNullOrWhiteSpace(parameters.OutFields))
+            {
+                query = query.Add("outFields", parameters.OutFields);
+            }
 
             if (!string.IsNullOrWhiteSpace(parameters.Category))
             {
@@ -639,6 +889,7 @@ namespace Geo.ArcGIS.Services
             }
 
             query = await AddArcGISToken(parameters, query, cancellationToken).ConfigureAwait(false);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 

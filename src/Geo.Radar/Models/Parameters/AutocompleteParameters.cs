@@ -10,7 +10,7 @@ namespace Geo.Radar.Models.Parameters
     /// <summary>
     /// The parameters possible to use during an autocomplete request.
     /// </summary>
-    public class AutocompleteParameters : ICountryParameter, ILayersParameter, IKeyParameters
+    public class AutocompleteParameters : ICountryParameter, ILayersParameter, IKeyParameters, IAdditionalParameters
     {
         /// <summary>
         /// Gets or sets the partial address or place name to autocomplete.
@@ -40,5 +40,8 @@ namespace Geo.Radar.Models.Parameters
 
         /// <inheritdoc/>
         public string Key { get; set; }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }
