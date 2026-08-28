@@ -23,13 +23,13 @@ namespace Geo.Nominatim.Services
     using Microsoft.Extensions.Options;
 
     /// <summary>
-    /// A service to call the MapQuest geocoding API.
+    /// A service to call the Nominatim geocoding API.
     /// </summary>
     public class NominatimGeocoding : GeoClient, INominatimGeocoding
     {
-        private const string SearchUri = " https://nominatim.openstreetmap.org/search";
-        private const string ReverseUri = " https://nominatim.openstreetmap.org/reverse";
-        private const string LookupUri = " https://nominatim.openstreetmap.org/lookup";
+        private const string SearchUri = "https://nominatim.openstreetmap.org/search";
+        private const string ReverseUri = "https://nominatim.openstreetmap.org/reverse";
+        private const string LookupUri = "https://nominatim.openstreetmap.org/lookup";
 
         private readonly IOptions<NominatimOptions> _options;
         private readonly ILogger<NominatimGeocoding> _logger;
@@ -37,8 +37,8 @@ namespace Geo.Nominatim.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="NominatimGeocoding"/> class.
         /// </summary>
-        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the MapQuest Geocoding API.</param>
-        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="NominatimOptions"/> containing MapQuest information.</param>
+        /// <param name="client">A <see cref="HttpClient"/> used for placing calls to the Nominatim Geocoding API.</param>
+        /// <param name="options">An <see cref="IOptions{TOptions}"/> of <see cref="NominatimOptions"/> containing Nominatim information.</param>
         /// <param name="loggerFactory">An <see cref="ILoggerFactory"/> used to create a logger used for logging information.</param>
         public NominatimGeocoding(
             HttpClient client,
@@ -254,6 +254,7 @@ namespace Geo.Nominatim.Services
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -281,12 +282,17 @@ namespace Geo.Nominatim.Services
 
             query = query.Add("lat", parameters.Latitude.ToString(CultureInfo.InvariantCulture));
             query = query.Add("lon", parameters.Longitude.ToString(CultureInfo.InvariantCulture));
-            query = query.Add("zoom", parameters.Zoom.ToString());
+
+            if (parameters.Zoom.HasValue)
+            {
+                query = query.Add("zoom", parameters.Zoom.Value.ToString(CultureInfo.InvariantCulture));
+            }
 
             AddLayerParameter(parameters, ref query);
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -297,7 +303,7 @@ namespace Geo.Nominatim.Services
         /// Builds the lookup uri based on the passed parameters.
         /// </summary>
         /// <param name="parameters">A <see cref="LookupParameters"/> with the lookup parameters to build the uri with.</param>
-        /// <returns>A <see cref="Uri"/> with the completed MapQuest lookup uri.</returns>
+        /// <returns>A <see cref="Uri"/> with the completed Nominatim lookup uri.</returns>
         /// <exception cref="ArgumentException">Thrown when the 'Location' parameter is null or invalid.</exception>
         internal Uri BuildLookupRequest(LookupParameters parameters)
         {
@@ -315,6 +321,7 @@ namespace Geo.Nominatim.Services
             AddPolygonParameters(parameters, ref query);
             AddBaseParameters(parameters, ref query);
             AddEmail(parameters, ref query);
+            query = query.AddAdditionalParameters(parameters);
 
             uriBuilder.AddQuery(query);
 
@@ -390,6 +397,7 @@ namespace Geo.Nominatim.Services
         /// The email is used to identify the requester, as recommended by Nominatim for responsible use.
         /// If the <paramref name="baseParameters"/> contains a non-empty <c>Email</c> property, it will be used;
         /// otherwise, the email from the configured <see cref="NominatimOptions"/> will be used.
+        /// If neither is set, the email parameter is not added to the query.
         /// </summary>
         /// <param name="baseParameters">A <see cref="IBaseParameters"/> instance containing request parameters, possibly including an email address.</param>
         /// <param name="query">A <see cref="QueryString"/> containing the current query parameters. The email parameter will be added or updated.</param>
@@ -400,6 +408,11 @@ namespace Geo.Nominatim.Services
             if (!string.IsNullOrWhiteSpace(baseParameters.Email))
             {
                 email = baseParameters.Email;
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return;
             }
 
             query = query.Add("email", email);

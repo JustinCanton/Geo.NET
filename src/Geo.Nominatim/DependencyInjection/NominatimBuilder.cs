@@ -10,7 +10,7 @@ namespace Geo.Extensions.DependencyInjection
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Options for the MapQuest configuration.
+    /// Options for the Nominatim configuration.
     /// </summary>
     public class NominatimBuilder : BaseBuilder
     {

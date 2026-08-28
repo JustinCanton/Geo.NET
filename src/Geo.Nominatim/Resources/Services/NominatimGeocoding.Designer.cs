@@ -61,7 +61,7 @@ namespace Geo.Nominatim.Resources.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to create the MapQuest uri..
+        ///   Looks up a localized string similar to Failed to create the Nominatim uri..
         /// </summary>
         internal static string Failed_To_Create_Uri {
             get {

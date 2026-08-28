@@ -179,6 +179,108 @@ namespace Geo.Nominatim.Tests.Services
             queryParameters["email"].Should().Be("override@example.com");
         }
 
+        [Fact]
+        public void AddEmail_WithNoEmailConfigured_DoesNotAddEmail()
+        {
+            var options = new Mock<IOptions<NominatimOptions>>();
+            options
+                .Setup(x => x.Value)
+                .Returns(new NominatimOptions());
+
+            var sut = new NominatimGeocoding(_httpClient, options.Object);
+
+            var query = QueryString.Empty;
+            var parameters = new SearchParameters();
+
+            sut.AddEmail(parameters, ref query);
+
+            query.HasValue.Should().BeFalse();
+        }
+
+        /// <summary>
+        /// Tests the additional parameters are added to the search query string.
+        /// </summary>
+        [Fact]
+        public void BuildSearchRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new SearchParameters() { Query = "Berlin" };
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildSearchRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        /// <summary>
+        /// Tests the additional parameters are added to the reverse geocoding query string.
+        /// </summary>
+        [Fact]
+        public void BuildReverseGeocodeRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Latitude = 52.517037,
+                Longitude = 13.388860,
+            };
+
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildReverseGeocodeRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
+        /// <summary>
+        /// Tests the zoom parameter is not added when it is not set.
+        /// </summary>
+        [Fact]
+        public void BuildReverseGeocodeRequest_WithoutZoom_DoesNotAddZoom()
+        {
+            var sut = BuildService();
+
+            var parameters = new ReverseGeocodingParameters()
+            {
+                Latitude = 52.517037,
+                Longitude = 13.388860,
+                Zoom = null,
+            };
+
+            var uri = sut.BuildReverseGeocodeRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+
+            query.Should().NotContain("zoom=");
+        }
+
+        /// <summary>
+        /// Tests the additional parameters are added to the lookup query string.
+        /// </summary>
+        [Fact]
+        public void BuildLookupRequest_WithAdditionalParameters_AddsThemToQueryString()
+        {
+            var sut = BuildService();
+
+            var parameters = new LookupParameters();
+            parameters.OsmIds.Add("R146656");
+            parameters.AdditionalParameters.Add("customKey1", "customValue1");
+            parameters.AdditionalParameters.Add("customKey2", "customValue2");
+
+            var uri = sut.BuildLookupRequest(parameters);
+            var query = HttpUtility.UrlDecode(uri.PathAndQuery);
+
+            query.Should().Contain("customKey1=customValue1");
+            query.Should().Contain("customKey2=customValue2");
+        }
+
         /// <summary>
         /// Tests the base parameters are properly set into the query string.
         /// </summary>

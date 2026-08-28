@@ -70,5 +70,10 @@ namespace Geo.Nominatim.Models.Parameters
 
         /// <inheritdoc/>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Gets additional parameters to append to the request query string.
+        /// </summary>
+        public IDictionary<string, string> AdditionalParameters { get; } = new Dictionary<string, string>();
     }
 }
